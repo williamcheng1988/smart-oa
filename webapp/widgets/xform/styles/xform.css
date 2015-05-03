@@ -1,0 +1,185 @@
+/**layout3.css**/
+
+label {
+	display: block;
+	margin-top: 8px;
+	margin-bottom: 5px;
+}
+
+select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input {
+    font-size: 12px;
+    height: 16px;
+    line-height: 16px;
+    width:135px;
+}
+
+
+textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+    transition: border 0.2s linear 0s, box-shadow 0.2s linear 0s;
+}
+
+
+select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input {
+	border-radius: 4px;
+    color: #555;
+    display: inline-block;
+    padding: 4px 6px;
+    vertical-align: middle;
+}
+
+
+select {
+    height: 26px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+}
+
+[class^="icon-"],
+[class*=" icon-"] {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-top: 1px;
+  *margin-right: .3em;
+  line-height: 14px;
+  vertical-align: text-top;
+  background-image: url("../img/glyphicons-halflings.png");
+  background-position: 14px 14px;
+  background-repeat: no-repeat;
+}
+
+.icon-user {
+    background-position: -168px 0;
+}
+.icon-calendar {
+  background-position: -192px -120px;
+}
+
+.input-append .add-on:last-child, .input-append .btn:last-child, .input-append .btn-group:last-child > .dropdown-toggle {
+    border-radius: 0 4px 4px 0;
+}
+.input-append .add-on, .input-append .btn, .input-append .btn-group {
+    margin-left: -1px;
+}
+.input-append .add-on, .input-prepend .add-on, .input-append .btn, .input-prepend .btn, .input-append .btn-group > .dropdown-toggle, .input-prepend .btn-group > .dropdown-toggle {
+    border-radius: 0;
+    vertical-align: top;
+}
+.input-append .add-on, .input-prepend .add-on {
+    padding-top: 2px; padding-bottom: 2px;
+    background-color: #eee;
+    border: 1px solid #ccc;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: normal;
+    height: 20px;
+    line-height: 20px;
+    min-width: 16px;
+    padding: 4px 5px;
+    text-align: center;
+    text-shadow: 0 1px 0 #fff;
+    width: auto;
+}
+
+
+
+
+
+
+#xf-pallete {
+	float:left;
+	width: 20%;
+}
+
+#xf-form {
+	float:left;
+	width: 100%;
+}
+
+.xf-button {
+	width: 80%;
+	border: 1px dotted gray;
+	margin: 2px;
+	text-align: center;
+	cursor: pointer;
+	-moz-user-select: none;
+}
+
+.xf-pallete {
+	width: 80%;
+	border: 1px dotted gray;
+	margin: 2px;
+	text-align: left;
+	cursor: move;
+	-moz-user-select: none;
+}
+
+table.xf-table {
+}
+
+table {
+	line-height: 20px;
+	font-size: 12px;
+}
+
+td.xf-cell {
+	-moz-user-select: none;
+}
+
+td.xf-cell div {
+	height: 22px;
+}
+
+td.xf-cell-top {
+	border-top: black 1px solid;
+}
+
+td.xf-cell-bottom {
+	border-bottom: black 1px solid;
+}
+
+td.xf-cell-left {
+	border-left: black 1px solid;
+}
+
+td.xf-cell-right {
+	border-right: black 1px solid;
+}
+
+td.xf-cell.active {
+	background-color: #EEEEEE;
+}
+
+td.xf-cell-top.active {
+	border-top: black 1px dotted;
+	background-color: #EEEEEE;
+}
+
+td.xf-cell-bottom.active {
+	border-bottom: black 1px dotted;
+	background-color: #EEEEEE;
+}
+
+td.xf-cell-left.active {
+	border-left: black 1px dotted;
+	background-color: #EEEEEE;
+}
+
+td.xf-cell-right.active {
+	border-right: black 1px dotted;
+	background-color: #EEEEEE;
+}
+
+td.xf-cell-right.over {
+	background-color: #EEEEEE;
+}
+
+.xf-handler {
+	cursor: move;
+	height: auto;
+	text-align:left;
+	padding-left:2px;
+}
