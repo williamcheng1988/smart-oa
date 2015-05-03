@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- Always ensure to use the correct XML header as above! -->
+<sqlMap namespace="FormTemplate">
+	<cacheModel id="formTemplate-cache" type="LRU" readOnly="false">
+        <flushInterval hours="24" />
+        <flushOnExecute statement="FormTemplate_insertFormTemplate" />
+        <flushOnExecute statement="FormTemplate_deleteFormTemplate" />
+        <flushOnExecute statement="FormTemplate_updateFormTemplate" />
+        <property value="100" name="size" />
+    </cacheModel>
+
+	<typeAlias alias="formTemplate" type="com.chz.smartoa.dynamicForm.pojo.FormTemplate"/> 
+	
+	<resultMap id="formTemplate_result" class="formTemplate">
+		<result column="id" property="id"/>
+		<result column="sequence" property="sequence"/>
+		<result column="name" property="name"/>
+		<result column="description" property="description"/>
+		<result column="content" property="content"/>
+		<result column="status" property="status"/>
+		<result column="docNoRule" property="docNoRule"/>
+		<result column="repNoRule" property="repNoRule"/>
+		<result column="proNameRule" property="proNameRule"/>
+		<result column="projectFlag" property="projectFlag"/>
+		<result column="exportFlag" property="exportFlag"/>
+		<result column="createUser" property="createUser"/>
+		<result column="createDate" property="createDate"/>
+		<result column="updateUser" property="updateUser"/>
+		<result column="updateDate" property="updateDate"/>
+		<result column="viewUrl" property="viewUrl"/>
+		<result column="attachment" property="attachment"/>
+		<result column="handleClass" property="handleClass"/>
+		<result column="dynamicForm" property="dynamicForm"/>
+		<result column="processName" property="processName"/>
+		<result column="typeId" property="ftType.id"/>
+		<result column="type" property="ftType.type"/>
+		<result column="typeStatus" property="ftType.status"/>
+		<result column="typeDescription" property="ftType.description"/>
+	</resultMap>
+
+
+	<insert id="FormTemplate_insertFormTemplate" parameterClass="formTemplate">
+		<![CDATA[
+		    INSERT INTO T_FORM_TEMPLATE(ID,SEQUENCE,TYPE_ID,NAME,DESCRIPTION,CONTENT,STATUS,DOC_NO_RULE,REP_NO_RULE,PRO_NAME_RULE,PROJECTFLAG,EXPORT_FLAG,CREATE_USER,CREATE_DATE,UPDATE_USER,UPDATE_DATE,ATTACHMENT,PROCESS_NAME)
+		    VALUES(#id#,#sequence#,#typeId#,#name#,#description#,#content#,#status#,#docNoRule#,#repNoRule#,#proNameRule#,#projectFlag#,#exportFlag#,#createUser#,SYSDATE(),#updateUser#,SYSDATE(),#attachment#,#processName#)
+		]]>
+	</insert>
+	
+	<delete id="FormTemplate_deleteFormTemplate" parameterClass="formTemplate">
+		<![CDATA[
+		    DELETE FROM T_FORM_TEMPLATE WHERE ID=#id#
+		]]>
+	</delete>
+	
+	<update id="FormTemplate_updateFormTemplate" parameterClass="formTemplate">
+	    UPDATE T_FORM_TEMPLATE SET ID=#id#,UPDATE_DATE=SYSDATE()
+	    <isNotEmpty prepend="," property="sequence">
+   	   		SEQUENCE = #sequence#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="typeId">
+   	   		TYPE_ID = #typeId#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="name">
+   	   		NAME = #name#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="description">
+   	   		DESCRIPTION = #description#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="content">
+   	   		CONTENT = #content#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="status">
+   	   		STATUS = #status#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="docNoRule">
+   	   		DOC_NO_RULE = #docNoRule#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="repNoRule">
+   	   		REP_NO_RULE = #repNoRule#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="proNameRule">
+   	   		PRO_NAME_RULE = #proNameRule#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="projectFlag">
+   	   		PROJECTFLAG = #projectFlag#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="exportFlag">
+   	   		EXPORT_FLAG = #exportFlag#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="updateUser">
+   	   		UPDATE_USER = #updateUser#
+		</isNotEmpty>
+		<!-- <isNotEmpty prepend="," property="updateDate">
+   	   		UPDATE_DATE = #updateDate#
+		</isNotEmpty> -->
+		<isNotEmpty prepend="," property="viewUrl">
+   	   		VIEW_URL = #viewUrl#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="attachment">
+   	   		ATTACHMENT = #attachment#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="handleClass">
+   	   		HANDLE_CLASS = #handleClass#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="dynamicForm">
+   	   		DYNAMIC_FORM = #dynamicForm#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="processName">
+   	   		PROCESS_NAME = #processName#
+		</isNotEmpty>
+	    WHERE ID=#id#
+	</update>
+	
+	<sql id="FormTemplate_sql">
+		SELECT
+			FT.ID AS id,
+			FT.SEQUENCE AS sequence,
+			FT.NAME AS name,
+			FT.DESCRIPTION AS description,
+			FT.CONTENT AS content,
+			FT.STATUS AS status,
+			FT.DOC_NO_RULE AS docNoRule,
+			FT.REP_NO_RULE AS repNoRule,
+			FT.PRO_NAME_RULE AS proNameRule,
+			FT.CREATE_USER AS createUser,
+			date_format(FT.CREATE_DATE,'%Y-%m-%d %H:%i:%S') AS createDate,
+			FT.UPDATE_USER AS updateUser,
+			date_format(FT.UPDATE_DATE,'%Y-%m-%d %H:%i:%S') AS updateDate,
+			FT.VIEW_URL 	AS viewUrl,
+			FT.ATTACHMENT 	AS attachment,
+			FT.HANDLE_CLASS AS handleClass,
+			FT.DYNAMIC_FORM AS dynamicForm,
+			FT.PROCESS_NAME AS processName,
+			FT.PROJECTFLAG	AS projectFlag,
+			FT.EXPORT_FLAG	AS exportFlag,
+			FTT.ID AS typeId,
+			FTT.TYPE AS type,
+			FTT.STATUS AS typeStatus,
+			FTT.DESCRIPTION AS typeDescription
+		FROM T_FORM_TEMPLATE FT LEFT JOIN T_FORM_TEMPLATE_TYPE FTT ON FTT.ID=FT.TYPE_ID
+	</sql>
+
+	<select id="FormTemplate_findFormTemplate" resultMap="formTemplate_result" parameterClass="formTemplate" cacheModel="formTemplate-cache">
+		<include refid="FormTemplate_sql"/>
+		WHERE FT.ID = #id#
+	</select>
+	
+	<!-- 查询数据集条件 -->
+	<!-- FormTemplate_listFormTemplate  与    FormTemplate_listFormTemplateCount  查询条件保持一致-->
+	<sql id="FormTemplate_list_where">
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="and" property = "id">
+				FT.ID = #id#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "typeId">
+				FT.TYPE_ID = #typeId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "name">
+				FT.NAME = #name#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "status">
+				FT.STATUS = #status#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "dynamicForm">
+				FT.DYNAMIC_FORM = #dynamicForm#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "projectFlag">
+				FT.PROJECTFLAG = #projectFlag#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "exportFlag">
+				FT.EXPORT_FLAG = #exportFlag#
+			</isNotEmpty>
+			
+			<isNotEmpty prepend="and" property = "type">
+				FTT.TYPE = #type#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "typeStatus">
+				FTT.STATUS = #typeStatus#
+			</isNotEmpty>
+		</dynamic>
+	</sql>
+	
+	<select id="FormTemplate_listFormTemplate" resultMap="formTemplate_result" parameterClass="formTemplate" cacheModel="formTemplate-cache">
+		<include refid="FormTemplate_sql"/>
+		<include refid="FormTemplate_list_where"/>
+		<!-- ORDER BY FT.ID DESC -->
+		<!-- ORDER BY FT.UPDATE_DATE DESC,FT.CREATE_DATE DESC -->
+		ORDER BY FT.UPDATE_DATE DESC,FT.CREATE_DATE DESC
+	</select>
+	
+	<select id="FormTemplate_listFormTemplateCount" resultClass="java.lang.Integer" parameterClass="formTemplate">
+		<![CDATA[
+		    SELECT
+				COUNT(*)
+		    FROM T_FORM_TEMPLATE FT LEFT JOIN T_FORM_TEMPLATE_TYPE FTT ON FTT.ID=FT.TYPE_ID
+		]]>
+		<include refid="FormTemplate_list_where"/>
+	</select>
+	
+	<!-- 首页显示根据 模板类型表中的 sequence 升序 /  UPDATE_DATE降序-->
+	<select id="FormTemplate_listByTemplateTypeSeq" resultMap="formTemplate_result" parameterClass="formTemplate" cacheModel="formTemplate-cache">
+		SELECT
+			FT.ID AS id,
+			FT.SEQUENCE AS sequence,
+			FT.NAME AS name,
+			FT.DESCRIPTION AS description,
+			FT.CONTENT AS content,
+			FT.STATUS AS status,
+			FT.DOC_NO_RULE AS docNoRule,
+			FT.REP_NO_RULE AS repNoRule,
+			FT.PRO_NAME_RULE AS proNameRule,
+			FT.CREATE_USER AS createUser,
+			date_format(FT.CREATE_DATE,'%Y-%m-%d %H:%i:%S') AS createDate,
+			FT.UPDATE_USER AS updateUser,
+			date_format(FT.UPDATE_DATE,'%Y-%m-%d %H:%i:%S') AS updateDate,
+			FT.VIEW_URL 	AS viewUrl,
+			FT.ATTACHMENT 	AS attachment,
+			FT.HANDLE_CLASS AS handleClass,
+			FT.DYNAMIC_FORM AS dynamicForm,
+			FT.PROCESS_NAME AS processName,
+			FT.PROJECTFLAG	AS projectFlag,
+			FT.EXPORT_FLAG	AS exportFlag,
+			FTT.ID AS typeId,
+			FTT.TYPE AS type,
+			FTT.STATUS AS typeStatus,
+			FTT.DESCRIPTION AS typeDescription
+		FROM T_FORM_TEMPLATE FT RIGHT JOIN T_FORM_TEMPLATE_TYPE FTT ON FTT.ID=FT.TYPE_ID
+		<include refid="FormTemplate_list_where"/>
+		ORDER BY FT.SEQUENCE ASC,FTT.UPDATE_DATE DESC
+	</select>
+		
+</sqlMap>

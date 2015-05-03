@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ReConf_">
+<typeAlias alias="reConf" type="com.chz.smartoa.task.pojo.ReConf"/> 
+<resultMap id="reConf_result" class="reConf">
+    <result property="conf_id_" column="conf_id_"/>
+    <result property="sort_num_" column="sort_num_"/>
+    <result property="procdef_id_" column="procdef_id_"/>
+    <result property="task_desc_" column="task_desc_"/>
+    <result property="action_type_" column="action_type_"/>
+    <result property="action_obj_type_" column="action_obj_type_"/>
+    <result property="action_obj_" column="action_obj_"/>
+    <result property="is_turn_" column="is_turn_"/>
+    <result property="is_ask_" column="is_ask_"/>
+    <result property="arrive_remind_" column="arrive_remind_"/>
+    <result property="expiry_remind_" column="expiry_remind_"/>
+    <result property="expiry_days_" column="expiry_days_"/>
+    <result property="template_id_" column="template_id_"/>
+    <result property="action_obj_name_" column="action_obj_name_"/>
+</resultMap>
+
+<insert id="ReConf_insertReConf_" parameterClass="reConf" >
+<![CDATA[
+    INSERT INTO t_re_conf (
+			procdef_id_,
+			sort_num_,
+			task_desc_,
+			action_type_,
+			action_obj_,
+			action_obj_type_,
+			is_turn_,
+			is_ask_,
+			expiry_days_,
+			arrive_remind_,
+			expiry_remind_,
+			template_id_
+        )
+    VALUES (
+			#procdef_id_#,
+			#sort_num_#,
+			#task_desc_#,
+			#action_type_#,
+			#action_obj_#,
+			#action_obj_type_#,
+			#is_turn_#,
+			#is_ask_#,
+			#expiry_days_#,
+			#arrive_remind_#,
+			#expiry_remind_#,
+			#template_id_#
+	)
+]]>
+</insert>
+
+<delete id="ReConf_deleteReConf" parameterClass="java.lang.String">
+<![CDATA[
+    DELETE  FROM  t_re_conf WHERE procdef_id_ = #procdef_id_#
+]]>
+</delete> 
+
+<select id="ReConf_listReConf_" resultMap="reConf_result" parameterClass="java.util.Map">
+    SELECT
+       		conf_id_,
+       		sort_num_,
+			procdef_id_,
+			task_desc_,
+			action_type_,
+			action_obj_,
+			action_obj_type_,
+			is_turn_,
+			is_ask_,
+			expiry_days_,
+			arrive_remind_,
+			expiry_remind_,
+			template_id_,
+			CASE action_obj_type_
+					WHEN 1 THEN (select real_name from t_staff where login_name = action_obj_)
+					WHEN 2 THEN (select role_name from t_role where role_id = action_obj_)
+					END action_obj_name_
+			from t_re_conf
+	where procdef_id_ = #procdef_id_#
+<dynamic>
+	<isNotEmpty prepend="and" property = "sort_num_">
+		sort_num_ = #sort_num_#
+	</isNotEmpty>
+</dynamic>
+	order by sort_num_,conf_id_
+</select>
+
+<select id="ReConf_getActionType_" resultClass="java.lang.Integer" parameterClass="java.lang.Integer">
+    SELECT action_type_ from t_re_conf where conf_id_ = #conf_id_#
+</select>
+
+</sqlMap>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- Always ensure to use the correct XML header as above! -->
+<sqlMap namespace="StaffRole">
+<typeAlias alias="staffRole" type="com.chz.smartoa.system.pojo.StaffRole"/> 
+<resultMap id="staffRole_result" class="staffRole">
+    <result property="roleId" column="ROLE_ID"/>
+    <result property="staffId" column="STAFF_ID"/>
+</resultMap>
+
+<insert id="StaffRole_insertStaffRole" parameterClass="staffRole" >
+<![CDATA[
+    INSERT INTO t_staff_role (
+            ROLE_ID, 
+            STAFF_ID
+        )
+    VALUES (
+       		#roleId#,
+		       		#staffId#
+		    )
+]]>
+</insert>
+
+<delete id="StaffRole_deleteStaffRole" parameterClass="java.lang.String">
+<![CDATA[
+    DELETE  FROM  t_staff_role WHERE ROLE_ID = #roleId#
+]]>
+</delete>    
+
+<select id="StaffRole_findStaffRole" resultMap="staffRole_result" parameterClass="string">
+<![CDATA[
+    SELECT
+       		ROLE_ID,
+		       		STAFF_ID
+		    FROM t_staff_role WHERE ROLE_ID = #roleId#
+]]>
+</select>
+
+<select id="StaffRole_listStaffRole" resultMap="staffRole_result" parameterClass="staffRole">
+<![CDATA[
+    SELECT
+       		ROLE_ID,
+		       		STAFF_ID
+		    FROM t_staff_role
+]]>
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="and" property = "roleId">
+				ROLE_ID = #roleId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "staffId">
+				STAFF_ID = #staffId#
+			</isNotEmpty>
+		</dynamic>
+</select>
+
+<select id="StaffRole_listStaffRolePage" resultMap="staffRole_result" parameterClass="java.lang.String">
+<![CDATA[
+ $sql$
+]]>
+</select>
+
+
+<select id="StaffRole_listStaffRoleCount" resultClass="java.lang.Integer" parameterClass="staffRole">
+<![CDATA[
+    SELECT
+		COUNT(*)
+    FROM t_staff_role
+]]>
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="and" property = "roleId">
+				ROLE_ID = #roleId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "staffId">
+				STAFF_ID = #staffId#
+			</isNotEmpty>
+		</dynamic>
+</select>
+
+</sqlMap>

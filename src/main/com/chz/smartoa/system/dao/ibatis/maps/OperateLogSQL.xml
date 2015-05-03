@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- Always ensure to use the correct XML header as above! -->
+<sqlMap namespace="OperateLog">
+<typeAlias alias="operateLog" type="com.chz.smartoa.system.pojo.OperateLog"/> 
+
+<resultMap id="operateLog_result" class="operateLog">
+    <result property="logId" column="LOG_ID"/>
+    <result property="entityId" column="ENTITY_ID"/>
+    <result property="operateResult" column="OPERATE_RESULT"/>
+    <result property="clientIp" column="CLIENT_IP"/>
+    <result property="operatorId" column="OPERATOR_ID"/>
+    <result property="description" column="DESCRIPTION"/>
+    <result property="operateDate" column="OPERATE_DATE"/>
+    <result property="entityName" column="ENTITY_NAME"/>
+    <result property="operatorName" column="OPERATOR_NAME"/>
+    <result property="logType" column="LOG_TYPE"/>
+</resultMap>
+
+<insert id="OperateLog_insertOperateLog" parameterClass="operateLog" >
+<![CDATA[
+    INSERT INTO t_operate_log (
+            ENTITY_ID, 
+            OPERATE_RESULT, 
+            CLIENT_IP, 
+            OPERATOR_ID, 
+            DESCRIPTION, 
+            OPERATE_DATE, 
+            ENTITY_NAME, 
+            OPERATOR_NAME, 
+            LOG_TYPE
+        )
+    VALUES (
+		       		#entityId#,
+		       		#operateResult#,
+		       		#clientIp#,
+		       		#operatorId#,
+		       		#description#,
+		        	now(),
+		       		#entityName#,
+		       		#operatorName#,
+		       		#logType#
+		    )
+]]>
+</insert>
+
+<select id="OperateLog_listOperateLog" resultMap="operateLog_result" parameterClass="operateLog">
+<![CDATA[
+    SELECT
+       		LOG_ID,
+		       		ENTITY_ID,
+		       		OPERATE_RESULT,
+		       		CLIENT_IP,
+		       		OPERATOR_ID,
+		       		DESCRIPTION,
+		        	date_format(OPERATE_DATE,'%Y-%m-%d %k:%i:%s') OPERATE_DATE,
+		       		ENTITY_NAME,
+		       		OPERATOR_NAME,
+		       		LOG_TYPE
+		    FROM t_operate_log
+]]>
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="and" property = "logId">
+				LOG_ID = #logId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "entityId">
+				ENTITY_ID = #entityId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "operateResult">
+				OPERATE_RESULT = #operateResult#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "operatorId">
+				OPERATOR_ID = #operatorId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "description">
+				DESCRIPTION = #description#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "operateDate">
+				OPERATE_DATE = #operateDate#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "entityName">
+				ENTITY_NAME LIKE '%$entityName$%'
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "operatorName">
+				OPERATOR_NAME LIKE '%$operatorName$%'
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "logType">
+				LOG_TYPE != #logType#
+			</isNotEmpty>
+		</dynamic>
+</select>
+
+<select id="OperateLog_listOperateLogCount" resultClass="java.lang.Integer" parameterClass="operateLog">
+<![CDATA[
+    SELECT
+		COUNT(*)
+    FROM t_operate_log
+]]>
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="and" property = "logId">
+				LOG_ID = #logId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "entityId">
+				ENTITY_ID = #entityId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "operateResult">
+				OPERATE_RESULT = #operateResult#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "operatorId">
+				OPERATOR_ID = #operatorId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "description">
+				DESCRIPTION = #description#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "operateDate">
+				OPERATE_DATE = #operateDate#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "entityName">
+				ENTITY_NAME LIKE '%$entityName$%'
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "operatorName">
+				OPERATOR_NAME LIKE '%$operatorName$%'
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "logType">
+				LOG_TYPE != #logType#
+			</isNotEmpty>
+		</dynamic>
+</select>
+
+
+<select id="OperateLog_listLoginLog" resultMap="operateLog_result" parameterClass="operateLog">
+<![CDATA[
+    SELECT
+       		LOG_ID,
+		       		ENTITY_ID,
+		       		OPERATE_RESULT,
+		       		CLIENT_IP,
+		       		OPERATOR_ID,
+		       		DESCRIPTION,
+		        	date_format(OPERATE_DATE,'%Y-%m-%d %k:%i:%s') OPERATE_DATE,
+		       		ENTITY_NAME,
+		       		OPERATOR_NAME,
+		       		LOG_TYPE
+		    FROM t_operate_log
+]]>
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="and" property = "logId">
+				LOG_ID = #logId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "entityId">
+				ENTITY_ID = #entityId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "operateResult">
+				OPERATE_RESULT = #operateResult#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "operatorId">
+				OPERATOR_ID = #operatorId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "description">
+				DESCRIPTION = #description#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "operateDate">
+				OPERATE_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL #operateDate# MONTH )
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "entityName">
+				ENTITY_NAME = #entityName#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "operatorName">
+				OPERATOR_NAME LIKE '%$operatorName$%'
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "logType">
+				LOG_TYPE = #logType#
+			</isNotEmpty>
+		</dynamic>
+</select>
+
+<select id="OperateLog_listLoginLogCount" resultClass="java.lang.Integer" parameterClass="operateLog">
+<![CDATA[
+    SELECT
+		COUNT(*)
+    FROM t_operate_log
+]]>
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="and" property = "logId">
+				LOG_ID = #logId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "entityId">
+				ENTITY_ID = #entityId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "operateResult">
+				OPERATE_RESULT = #operateResult#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "operatorId">
+				OPERATOR_ID = #operatorId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "description">
+				DESCRIPTION = #description#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "operateDate">
+				OPERATE_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL #operateDate# MONTH )
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "entityName">
+				ENTITY_NAME = #entityName#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "operatorName">
+				OPERATOR_NAME LIKE '%$operatorName$%'
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "logType">
+				LOG_TYPE = #logType#
+			</isNotEmpty>
+		</dynamic>
+</select>
+
+</sqlMap>

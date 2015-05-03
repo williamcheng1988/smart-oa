@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- Always ensure to use the correct XML header as above! -->
+<sqlMap namespace="AffManager">
+	
+	<!-- 公告管理表实体类  -->
+	<typeAlias alias="ache" type="com.chz.smartoa.system.pojo.AfficheInfo"/>  
+	
+	
+	<!-- 新增 -->
+	<insert id="ache_insertAche" parameterClass="ache">
+		INSERT INTO T_AFFICHE_INFO(AFFICHE_TITLE,AFFICHE_CONTENT,AFFICHE_STATUS,START_LIFEDATE,END_LIFEDATE,CREATE_USER,CREATE_DT,UPDATE_USER,UPDATE_DT)
+		VALUES(#afficheTitle#,#afficheContent#,#afficheStatus#,#startLifedate#,#endLifedate#,#createUser#,SYSDATE(),#updateUser#,SYSDATE())
+	</insert>
+	
+	<!-- 删除  -->
+	<delete id="ache_deleteAche" parameterClass="java.lang.Long">
+		DELETE FROM T_AFFICHE_INFO WHERE AFFICHE_ID = #id#
+	</delete>
+	
+	
+	<!-- 修改  -->
+	<update id="ache_updateAche" parameterClass="ache">
+		UPDATE T_AFFICHE_INFO FM 
+		SET FM.AFFICHE_TITLE = #afficheTitle#,
+		    FM.AFFICHE_CONTENT = #afficheContent#,
+		    FM.AFFICHE_STATUS = #afficheStatus#,
+		    FM.START_LIFEDATE = #startLifedate#,
+		    FM.END_LIFEDATE = #endLifedate#,
+		    FM.UPDATE_USER = #updateUser#,
+		    FM.UPDATE_DT = SYSDATE()
+		WHERE FM.AFFICHE_ID = #id#
+	</update>
+	
+	
+	<!--  查找 (根据主键唯一编号查询数据对象) -->
+	<select id="ache_findAcheById" resultClass="ache" parameterClass="java.lang.Long">
+		<![CDATA[
+		    SELECT 
+		    	AFFICHE_ID AS id,
+		    	AFFICHE_TITLE AS afficheTitle,
+		    	AFFICHE_CONTENT AS afficheContent,
+		    	AFFICHE_STATUS AS afficheStatus,
+		    	START_LIFEDATE AS startLifedate,
+		    	END_LIFEDATE AS endLifedate,
+		    	CREATE_USER AS createUser,
+		    	CREATE_DT AS createDt,
+		    	UPDATE_USER AS updateUser,
+		    	UPDATE_DT AS updateDt
+		    FROM T_AFFICHE_INFO WHERE AFFICHE_ID = #id#
+		]]>
+	</select>
+	
+	
+	<!--  根据页面条件查找数据列表 -->
+	<select id="ache_findAcheByQueryCondition" resultClass="ache" parameterClass="ache">
+		<![CDATA[
+		    SELECT 
+		    	AFFICHE_ID AS id,
+		    	AFFICHE_TITLE AS afficheTitle,
+		    	AFFICHE_CONTENT AS afficheContent,
+		    	AFFICHE_STATUS AS afficheStatus,
+		    	START_LIFEDATE AS startLifedate,
+		    	END_LIFEDATE AS endLifedate,
+		    	CREATE_USER AS createUser,
+		    	CREATE_DT AS createDt,
+		    	UPDATE_USER AS updateUser,
+		    	UPDATE_DT AS updateDt
+		    FROM T_AFFICHE_INFO WHERE 1 = 1
+		]]>
+		<isNotEmpty prepend="and" property = "afficheTitle">
+			AFFICHE_TITLE like '%$afficheTitle$%'
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property = "afficheStatus">
+			AFFICHE_STATUS = #afficheStatus#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property = "startDate">
+			<![CDATA[DATEDIFF(START_LIFEDATE,#startDate#)>=0]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property = "endDate">
+			<![CDATA[DATEDIFF(END_LIFEDATE,#endDate#)<=0]]>
+		</isNotEmpty>
+		ORDER BY UPDATE_DT DESC
+	</select>
+
+    
+    <select id="ache_listAcheCount" resultClass="java.lang.Integer" parameterClass="ache">
+		<![CDATA[
+		    SELECT 
+		      COUNT(*)
+		    FROM T_AFFICHE_INFO 
+		   WHERE 1 = 1
+		]]>
+		<isNotEmpty prepend="and" property = "afficheTitle">
+			AFFICHE_TITLE like '%$afficheTitle$%'
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property = "afficheStatus">
+			AFFICHE_STATUS = #afficheStatus#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property = "startDate">
+			<![CDATA[DATEDIFF(START_LIFEDATE,#startDate#)>=0]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property = "endDate">
+			<![CDATA[DATEDIFF(END_LIFEDATE,#endDate#)<=0]]>
+		</isNotEmpty>
+	</select>
+	
+	
+	<!--  根据流程分组ID获取List数据 -->
+	<select id="ache_getAcheListForNew" resultClass="ache" >
+		<![CDATA[
+		    SELECT 
+		    	AFFICHE_ID AS id,
+		    	AFFICHE_TITLE AS afficheTitle,
+		    	AFFICHE_CONTENT AS afficheContent,
+		    	AFFICHE_STATUS AS afficheStatus,
+		    	START_LIFEDATE AS startLifedate,
+		    	END_LIFEDATE AS endLifedate,
+		    	CREATE_USER AS createUser,
+		    	CREATE_DT AS createDt,
+		    	UPDATE_USER AS updateUser,
+		    	UPDATE_DT AS updateDt
+		    FROM T_AFFICHE_INFO 
+		    WHERE AFFICHE_STATUS = 1 
+		      AND DATEDIFF(START_LIFEDATE,SYSDATE())<=0
+		      AND DATEDIFF(END_LIFEDATE,SYSDATE())>=0
+		      ORDER BY UPDATE_DT DESC LIMIT 0,4 
+		]]>
+	</select>
+	
+	
+		
+</sqlMap>

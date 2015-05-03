@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- Always ensure to use the correct XML header as above! -->
+<sqlMap namespace="CdarManager">
+	
+	<!-- 日历管理表实体类  -->
+	<typeAlias alias="cdar" type="com.chz.smartoa.system.pojo.Calendar"/>  
+	
+	
+	<!-- 新增 -->
+	<insert id="cdar_insertCdar" parameterClass="cdar">
+		INSERT INTO T_CALENDAR(DATE_SET,HOLIDAY_TYPE,HOLIDAY_DESC,CREATE_USER,CREATE_DT,UPDATE_USER,UPDATE_DT)
+		VALUES(#dateSet#,#holidayType#,#holidayDesc#,#createUser#,SYSDATE(),#updateUser#,SYSDATE())
+	</insert>
+	
+	<!-- 删除  -->
+	<delete id="cdar_deleteCdar" parameterClass="java.lang.Long">
+		DELETE FROM T_CALENDAR WHERE C_ID = #id#
+	</delete>
+	
+	
+	<!-- 修改  -->
+	<update id="cdar_updateCdar" parameterClass="cdar">
+		UPDATE T_CALENDAR FM 
+		SET FM.HOLIDAY_TYPE = #holidayType#,
+		    FM.HOLIDAY_DESC = #holidayDesc#,
+		    FM.UPDATE_USER = #updateUser#,
+		    FM.UPDATE_DT = SYSDATE()
+		WHERE FM.C_ID = #id#
+	</update>
+	
+	
+	<!--  查找 (根据主键唯一编号查询数据对象) -->
+	<select id="cdar_findCdarByDate" resultClass="cdar" parameterClass="java.lang.String">
+		<![CDATA[
+		    SELECT 
+		    	C_ID AS id,
+		    	DATE_SET AS dateSet,
+		    	HOLIDAY_TYPE AS holidayType,
+		    	HOLIDAY_DESC AS holidayDesc,
+		    	CREATE_USER AS createUser,
+		    	CREATE_DT AS createDt,
+		    	UPDATE_USER AS updateUser,
+		    	UPDATE_DT AS updateDt
+		    FROM T_CALENDAR WHERE DATEDIFF(DATE_SET,#selectDate#)=0
+		]]>
+	</select>
+	
+	<!--  查找 (根据主键唯一编号查询数据对象) -->
+	<select id="cdar_findCdarById" resultClass="cdar" parameterClass="java.lang.Long">
+		<![CDATA[
+		    SELECT 
+		    	C_ID AS id,
+		    	DATE_SET AS dateSet,
+		    	HOLIDAY_TYPE AS holidayType,
+		    	HOLIDAY_DESC AS holidayDesc,
+		    	CREATE_USER AS createUser,
+		    	CREATE_DT AS createDt,
+		    	UPDATE_USER AS updateUser,
+		    	UPDATE_DT AS updateDt
+		    FROM T_CALENDAR WHERE C_ID = #id#
+		]]>
+	</select>
+	
+	<!--  获取当前月的前一个月和后一个月的数据 -->
+	<select id="cdar_findCdarByBetweenDate" resultClass="cdar" parameterClass="cdar">
+		<![CDATA[
+		    SELECT 
+		    	C_ID AS id,
+		    	DATE_SET AS dateSet,
+		    	HOLIDAY_TYPE AS holidayType,
+		    	HOLIDAY_DESC AS holidayDesc,
+		    	CREATE_USER AS createUser,
+		    	CREATE_DT AS createDt,
+		    	UPDATE_USER AS updateUser,
+		    	UPDATE_DT AS updateDt
+		    FROM T_CALENDAR WHERE 1 = 1
+		]]>
+		<isNotEmpty prepend="and" property = "startDt">
+			<![CDATA[DATEDIFF(DATE_SET,#startDt#)>=0]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property = "endDt">
+			<![CDATA[DATEDIFF(DATE_SET,#endDt#)<0]]>
+		</isNotEmpty>
+	</select>
+	
+	
+		
+</sqlMap>

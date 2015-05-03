@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- Always ensure to use the correct XML header as above! -->
+<sqlMap namespace="GeExecution">
+<typeAlias alias="geExecution" type="com.chz.smartoa.task.pojo.GeExecution"/> 
+<resultMap id="geExecution_result" class="geExecution">
+    <result property="executionId" column="EXECUTION_ID_"/>
+    <result property="owner" column="OWNER_"/>
+    <result property="taskStatus" column="TASK_STATUS_"/>
+    <result property="version" column="VERSION_"/>
+    <result property="templateId" column="TEMPLATE_ID_"/>
+    <result property="businessTitle" column="BUSINESS_TITLE_"/>
+    <result property="taskNum" column="TASK_NUM_"/>
+    <result property="priority" column="PRIORITY_"/>
+    <result property="endTime" column="END_TIME_"/>
+    <result property="startTime" column="START_TIME_"/>
+    <result property="businessKey" column="BUSINESS_KEY_"/>
+    <result property="procdefId" column="PROCDEF_ID_"/>
+    <result property="projectId" column="PROJECT_ID_"/>
+</resultMap>
+
+<resultMap id="geExecution_result2" class="geExecution">
+    <result property="executionId" column="EXECUTION_ID_"/>
+    <result property="owner" column="OWNER_"/>
+    <result property="taskStatus" column="TASK_STATUS_"/>
+    <result property="version" column="VERSION_"/>
+    <result property="templateId" column="TEMPLATE_ID_"/>
+    <result property="businessTitle" column="BUSINESS_TITLE_"/>
+    <result property="taskNum" column="TASK_NUM_"/>
+    <result property="priority" column="PRIORITY_"/>
+    <result property="endTime" column="END_TIME_"/>
+    <result property="startTime" column="START_TIME_"/>
+    <result property="businessKey" column="BUSINESS_KEY_"/>
+    <result property="procdefId" column="PROCDEF_ID_"/>
+    <result property="projectId" column="PROJECT_ID_"/>
+    <result property="desc" column="desc_"/>
+</resultMap>
+
+<insert id="GeExecution_insertGeExecution" parameterClass="geExecution" >
+<![CDATA[
+    INSERT INTO T_GE_EXECUTION (
+            EXECUTION_ID_, 
+            OWNER_, 
+            TASK_STATUS_, 
+            VERSION_, 
+            TEMPLATE_ID_, 
+            BUSINESS_TITLE_, 
+            TASK_NUM_, 
+            PRIORITY_, 
+            START_TIME_, 
+            BUSINESS_KEY_, 
+            DESC_,
+            PROCDEF_ID_
+        )
+    VALUES (
+       		#executionId#,
+		       		#owner#,
+		       		#taskStatus#,
+		       		#version#,
+		       		#templateId#,
+		       		#businessTitle#,
+		       		#taskNum#,
+		       		#priority#,
+		        	now(),
+		       		#businessKey#,
+		       		#desc#,
+		       		#procdefId#
+		    )
+]]>
+</insert>
+
+<select id="GeExecution_getNextSortNum" resultClass="java.lang.Integer" parameterClass="java.lang.String">
+   select MIN(sort_num_)
+	  from t_re_conf c
+	  LEFT JOIN t_ge_execution e ON c.procdef_id_ = e.procdef_id_
+	where e.execution_id_ = #executionId#
+	 and c.sort_num_ > e.task_num_
+</select>
+
+<update id="GeExecution_resetGeExecution" parameterClass="string">
+	UPDATE T_GE_EXECUTION 
+	    SET
+	    	VERSION_ = VERSION_+1,
+	    	TASK_NUM_ = 0
+    WHERE EXECUTION_ID_ = #executionId#
+</update> 
+
+<update id="GeExecution_updateGeExecution" parameterClass="geExecution">
+    UPDATE T_GE_EXECUTION 
+    SET
+    	EXECUTION_ID_ = #executionId#
+	<isNotEmpty prepend="," property="taskStatus">
+     	   		TASK_STATUS_ = #taskStatus#
+				</isNotEmpty>
+	<isNotEmpty prepend="," property="version">
+     	   		VERSION_ = #version#
+				</isNotEmpty>
+	<isNotEmpty prepend="," property="businessTitle">
+     	   		BUSINESS_TITLE_ = #businessTitle#
+				</isNotEmpty>
+	<isNotEmpty prepend="," property="taskNum">
+     	   		TASK_NUM_ = #taskNum#
+				</isNotEmpty>
+	<isNotEmpty prepend="," property="priority">
+     	   		PRIORITY_ = #priority#
+				</isNotEmpty>
+	<isNotEmpty prepend="," property="endTime">
+     	   		END_TIME_ = now()
+	</isNotEmpty>
+	<isNotEmpty prepend="," property="businessKey">
+     	   		BUSINESS_KEY_ = #businessKey#
+				</isNotEmpty>
+	<isNotEmpty prepend="," property="procdefId">
+     	   		PROCDEF_ID_ = #procdefId#
+				</isNotEmpty>
+	<isNotEmpty prepend="," property="desc">
+     	   		DESC_ = #desc#
+				</isNotEmpty>				
+    WHERE EXECUTION_ID_ = #executionId#
+</update> 
+
+<select id="GeExecution_findGeExecution" resultMap="geExecution_result2" parameterClass="string">
+<![CDATA[
+    SELECT
+       		EXECUTION_ID_,
+		       		OWNER_,
+		       		TASK_STATUS_,
+		       		VERSION_,
+		       		TEMPLATE_ID_,
+		       		BUSINESS_TITLE_,
+		       		TASK_NUM_,
+		       		PRIORITY_,
+		        	date_format(END_TIME_,'%Y-%m-%d') END_TIME_,
+		        	date_format(START_TIME_,'%Y-%m-%d') START_TIME_,
+		       		BUSINESS_KEY_,
+		       		PROCDEF_ID_,
+		       		PROJECT_ID_,
+		       		DESC_
+		    FROM T_GE_EXECUTION WHERE EXECUTION_ID_ = #executionId#
+]]>
+</select>
+
+<!-- 查询草稿列表 -->
+<select id="GeExecution_draftList" resultMap="geExecution_result" parameterClass="string">
+<![CDATA[
+    SELECT
+       		EXECUTION_ID_,
+		       		OWNER_,
+		       		TASK_STATUS_,
+		       		VERSION_,
+		       		TEMPLATE_ID_,
+		       		BUSINESS_TITLE_,
+		       		TASK_NUM_,
+		       		PRIORITY_,
+		        	date_format(END_TIME_,'%Y-%m-%d') END_TIME_,
+		        	date_format(START_TIME_,'%Y-%m-%d') START_TIME_,
+		       		BUSINESS_KEY_,
+		       		PROCDEF_ID_,
+		       		PROJECT_ID_
+		    FROM T_GE_EXECUTION
+		    WHERE TASK_STATUS_ = 0
+		    AND OWNER_ = #owner#
+		    ORDER BY START_TIME_ DESC
+]]>
+</select>
+
+<select id="GeExecution_findTaskGeExecution" resultClass="java.util.HashMap" parameterClass="string">
+<![CDATA[
+	SELECT 
+		   e.execution_id_,
+	  	   e.business_key_,
+	       e.business_title_,
+	       e.template_id_,
+	       e.task_status_,
+	       e.desc_,
+	       e.procdef_id_,
+	       e.task_num_,
+	       e.task_status_,
+		   s.real_name,
+		   s.mobile
+	  FROM T_GE_EXECUTION e LEFT JOIN t_staff s on e.owner_ = s.login_name
+WHERE e.execution_id_ = #executionId#
+ ]]>
+</select>
+
+</sqlMap>

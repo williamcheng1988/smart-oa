@@ -1,0 +1,570 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- Always ensure to use the correct XML header as above! -->
+<sqlMap namespace="FManager">
+	
+	<!-- 附件管理表实体类  -->
+	<typeAlias alias="fmger" type="com.chz.smartoa.fileUpload.pojo.FileManager"/>  
+	<typeAlias alias="fq" type="com.chz.smartoa.fileUpload.util.FileQuery"/> 
+	<typeAlias alias="fg" type="com.chz.smartoa.fileUpload.pojo.FileGroup"/>
+	<typeAlias alias="rf" type="com.chz.smartoa.fileUpload.pojo.RoleFiletype"/>
+	
+	
+	
+	<!-- 新增 -->
+	<insert id="fmger_insertFmger" parameterClass="fmger">
+		INSERT INTO T_FILE_MANAGER(FILE_ID,FILE_NUMBER,FILE_NAME,FILE_DISPLAYNAME,FILE_TYPE_ID,FILE_TYPE_SUB_ID,FILE_ADDRESS,IS_PUBLIC,IS_VALID,VERSION,FILE_FIX,CREATE_USER,CREATE_DT,UPDATE_USER,UPDATE_DT,UPDATE_ID)
+		VALUES(#id#,#fileNumber#,#fileName#,#fileDisplayname#,#fileTypeId#,#fileTypeSubId#,#fileAddress#,#isPublic#,#isValid#,#version#,#fileFix#,#createUser#,SYSDATE(),#updateUser#,SYSDATE(),#updateId#)
+	</insert>
+	
+	
+	<!-- 根据修改的字段一次更新  -->
+	<update id="fmger_updateFileByObject" parameterClass="fmger">
+		UPDATE T_FILE_MANAGER FM 
+		SET FM.FILE_NUMBER = #fileNumber#,
+		    FM.FILE_NAME = #fileName#,
+		    FM.FILE_DISPLAYNAME = #fileDisplayname#,
+		    FM.FILE_TYPE_ID = #fileTypeId#,
+		    FM.FILE_TYPE_SUB_ID = #fileTypeSubId#,
+		    FM.IS_PUBLIC = #isPublic#,
+			FM.IS_VALID = #isValid#,
+		    FM.UPDATE_ID = #updateId#,
+		    FM.UPDATE_DT = SYSDATE()
+		WHERE FM.FILE_ID = #id#
+	</update>
+	
+	
+	<!--  查找 (根据主键唯一编号查询数据对象) -->
+	<select id="fmger_findFmgerById" resultClass="fmger" parameterClass="java.lang.String">
+		<![CDATA[
+		    SELECT 
+		    	FILE_ID AS id,
+		    	FILE_NUMBER AS fileNumber,
+		    	FILE_NAME AS fileName,
+		    	FILE_DISPLAYNAME AS fileDisplayname,
+		    	FILE_TYPE_ID AS fileTypeId,
+		    	FILE_TYPE_SUB_ID AS fileTypeSubId,
+		    	FILE_ADDRESS AS fileAddress,
+		    	IS_PUBLIC AS isPublic,
+		    	IS_VALID AS isValid,
+		    	VERSION AS version,
+		    	FILE_FIX AS fileFix,
+		    	CREATE_USER AS createUser,
+		    	CREATE_DT AS createDt,
+		    	UPDATE_USER AS UPDATE_USER,
+				UPDATE_DT AS UPDATE_DT,
+		    	UPDATE_ID AS updateId
+		    FROM T_FILE_MANAGER WHERE FILE_ID = #id#
+		]]>
+	</select>
+	
+	<!--  查找 (根据文件编号查询数据对象) -->
+	<select id="fmger_findFmgerByFileNumber" resultClass="fmger" parameterClass="java.lang.String">
+		<![CDATA[
+		    SELECT 
+		    	FILE_ID AS id,
+		    	FILE_NUMBER AS fileNumber,
+		    	FILE_NAME AS fileName,
+		    	FILE_DISPLAYNAME AS fileDisplayname,
+		    	FILE_TYPE_ID AS fileTypeId,
+		    	FILE_TYPE_SUB_ID AS fileTypeSubId,
+		    	FILE_ADDRESS AS fileAddress,
+		    	IS_PUBLIC AS isPublic,
+		    	IS_VALID AS isValid,
+		    	VERSION AS version,
+		    	FILE_FIX AS fileFix,
+		    	CREATE_USER AS createUser,
+		    	CREATE_DT AS createDt,
+		    	UPDATE_USER AS UPDATE_USER,
+				UPDATE_DT AS UPDATE_DT,
+		    	UPDATE_ID AS updateId
+		    FROM T_FILE_MANAGER WHERE FILE_NUMBER = #fileNumber#
+		]]>
+	</select>
+	
+	
+	<!--  根据文件修改ID获取List数据 -->
+	<select id="fmger_findFmgerByFileUpdateId" resultClass="fmger" parameterClass="java.lang.String">
+		<![CDATA[
+		    SELECT 
+		    	FILE_ID AS id,
+		    	FILE_NUMBER AS fileNumber,
+		    	FILE_NAME AS fileName,
+		    	FILE_DISPLAYNAME AS fileDisplayname,
+		    	FILE_TYPE_ID AS fileTypeId,
+		    	FILE_TYPE_SUB_ID AS fileTypeSubId,
+		    	FILE_ADDRESS AS fileAddress,
+		    	IS_PUBLIC AS isPublic,
+		    	IS_VALID AS isValid,
+		    	VERSION AS version,
+		    	FILE_FIX AS fileFix,
+		    	CREATE_USER AS createUser,
+		    	CREATE_DT AS createDt,
+		    	UPDATE_USER AS UPDATE_USER,
+				UPDATE_DT AS UPDATE_DT,
+		    	UPDATE_ID AS updateId
+		    FROM T_FILE_MANAGER 
+		    WHERE UPDATE_ID = #updateId#
+		    ORDER BY VERSION DESC
+		      
+		]]>
+	</select>
+	
+	
+	 
+	 
+	 <select id="fmger_findFmgerByQueryCondition" resultClass="fmger" parameterClass="fq">
+		<![CDATA[
+		    SELECT 
+		    	FM.FILE_ID AS id,
+		    	FM.FILE_NUMBER AS fileNumber,
+		    	FM.FILE_NAME AS fileName,
+		    	CONCAT(FM.FILE_NUMBER,FM.FILE_DISPLAYNAME) AS fileDisplayname,
+		    	FM.FILE_TYPE_ID AS fileTypeId,
+		    	FM.FILE_TYPE_SUB_ID AS fileTypeSubId,
+		    	FM.FILE_ADDRESS AS fileAddress,
+		    	FM.IS_PUBLIC AS isPublic,
+		    	FM.IS_VALID AS isValid,
+		    	FM.VERSION AS version,
+		    	FM.FILE_FIX AS fileFix,
+		    	FM.CREATE_USER AS createUser,
+		    	FM.CREATE_DT AS createDt,
+		    	FM.UPDATE_USER AS UPDATE_USER,
+				FM.UPDATE_DT AS UPDATE_DT,
+		    	FM.UPDATE_ID AS updateId,
+		    	FV.STATUS AS fileStatus,
+		    	SF.REAL_NAME AS realName
+		    FROM T_FILE_MANAGER FM,
+		         T_STAFF SF,
+		         T_DICTIONARY_CONFIG CG,
+		         (SELECT FP.FILE_ID,VU.STATUS FROM T_FILE_GROUP FP,
+                                        (SELECT U.EXECUTIONID,U.STATUS FROM VIEW_PROCESS_USER U 
+                                          WHERE 1= 1 
+           ]]>
+           <isNotEmpty prepend="AND" property = "loginName">
+				U.LOGINNAME = #loginName#
+			</isNotEmpty>
+           <isNotEmpty prepend="AND" property = "fileStatus">
+				U.STATUS = #fileStatus# 
+			</isNotEmpty>
+           <![CDATA[
+           ) VU WHERE FP.GROUP_ID = VU.executionId GROUP BY FP.FILE_ID) FV
+		   WHERE FM.FILE_ID = FV.FILE_ID
+		     AND FM.IS_VALID <> 3
+		     AND FM.FILE_TYPE_ID = CG.FILETYPE_ID
+		     AND CG.PARENT_ID = 93
+		     AND CG.DIC_TYPE = #dicType#
+		     AND SF.LOGIN_NAME = FM.UPDATE_USER
+		]]>
+		<isNotEmpty prepend="AND" property="unAllowFileTypes">
+		    FM.FILE_TYPE_SUB_ID NOT IN 
+			<iterate property="unAllowFileTypes" conjunction="," open="(" close=")"> 
+				#unAllowFileTypes[]# 
+			</iterate>
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property = "queryName">
+			(FM.FILE_NUMBER like '%$queryName$%'
+			OR
+			FM.FILE_DISPLAYNAME like '%$queryName$%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property = "menuType">
+			<isEqual property="menuType" compareValue="1">
+		 		FM.FILE_TYPE_ID = #fileTypeId#
+		 	</isEqual>
+		 	<isEqual property="menuType" compareValue="2">
+		 		FM.FILE_TYPE_SUB_ID = #fileTypeId#
+		 	</isEqual>
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property = "startDt">
+			<![CDATA[DATEDIFF(FM.CREATE_DT,#startDt#)>=0]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property = "endDt">
+			<![CDATA[DATEDIFF(FM.CREATE_DT,#endDt#)<=0]]>
+		</isNotEmpty>
+		ORDER BY CREATE_DT DESC
+	</select>
+	 
+	 
+	
+	
+	<!--  根据登录用户获取文件权限列表 -->
+	<select id="fmger_getFileListByPerssion" resultClass="java.lang.String" parameterClass="fq">
+		<![CDATA[
+		    SELECT GP.FILE_ID
+		    FROM T_FILE_GROUP GP,VIEW_PROCESS_PUBLIC_INFO VW
+		   WHERE GP.GROUP_ID = VW.EXECUTIONID
+		     AND VW.STATUS = 2
+		     AND VW.OWNER = #loginName#
+		]]>
+		<isNotEmpty prepend="or" property="projectIds">
+			VW.PROJECTID IN 
+			<iterate property="projectIds" conjunction="," open="(" close=")"> 
+				#projectIds[]# 
+			</iterate>
+		</isNotEmpty>
+	</select>
+
+    
+	
+	
+	
+	<select id="fmger_listfmgerCount" resultClass="java.lang.Integer" parameterClass="fq">
+		<![CDATA[
+		    SELECT 
+		    	COUNT(*)
+		    FROM T_FILE_MANAGER FM,
+		         T_DICTIONARY_CONFIG CG,
+		         (SELECT FP.FILE_ID FROM T_FILE_GROUP FP,
+                                        (SELECT U.EXECUTIONID FROM VIEW_PROCESS_USER U 
+                                          WHERE 1 = 1  
+       ]]>  
+        <isNotEmpty prepend="AND" property = "loginName">
+			U.LOGINNAME = #loginName#
+		</isNotEmpty>    
+	    <isNotEmpty prepend="AND" property = "fileStatus">
+			U.STATUS = #fileStatus# 
+		</isNotEmpty>                  
+       <![CDATA[                                 
+           ) VU  WHERE FP.GROUP_ID = VU.executionId GROUP BY FP.FILE_ID) FV
+		   WHERE FM.FILE_ID = FV.FILE_ID
+		     AND FM.IS_VALID <> 3
+		     AND FM.FILE_TYPE_ID = CG.FILETYPE_ID
+		     AND CG.PARENT_ID = 93
+		     AND CG.DIC_TYPE = #dicType#
+		]]>
+		<isNotEmpty prepend="AND" property="unAllowFileTypes">
+		    FM.FILE_TYPE_SUB_ID NOT IN 
+			<iterate property="unAllowFileTypes" conjunction="," open="(" close=")"> 
+				#unAllowFileTypes[]# 
+			</iterate>
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property = "queryName">
+			(FM.FILE_NUMBER like '%$queryName$%'
+			OR
+			FM.FILE_DISPLAYNAME like '%$queryName$%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property = "menuType">
+			<isEqual property="menuType" compareValue="1">
+		 		FM.FILE_TYPE_ID = #fileTypeId#
+		 	</isEqual>
+		 	<isEqual property="menuType" compareValue="2">
+		 		FM.FILE_TYPE_SUB_ID = #fileTypeId#
+		 	</isEqual>
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property = "startDt">
+			<![CDATA[DATEDIFF(FM.CREATE_DT,#startDt#)>=0]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property = "endDt">
+			<![CDATA[DATEDIFF(FM.CREATE_DT,#endDt#)<=0]]>
+		</isNotEmpty>
+	</select>
+	
+	
+	<!--  根据流程分组ID获取List数据 -->
+	<select id="fmger_getFileListByGroupId" resultClass="fmger" parameterClass="fq">
+		<![CDATA[
+		    SELECT 
+		    	F.FILE_ID AS id,
+		    	F.FILE_NUMBER AS fileNumber,
+		    	F.FILE_NAME AS fileName,
+		    	F.FILE_DISPLAYNAME AS fileDisplayname,
+		    	F.FILE_TYPE_ID AS fileTypeId,
+		    	F.FILE_TYPE_SUB_ID AS fileTypeSubId,
+		    	F.FILE_ADDRESS AS fileAddress,
+		    	F.IS_PUBLIC AS isPublic,
+		    	F.IS_VALID AS isValid,
+		    	F.VERSION AS version,
+		    	F.FILE_FIX AS fileFix,
+		    	F.CREATE_USER AS createUser,
+		    	F.CREATE_DT AS createDt,
+		    	F.UPDATE_USER AS UPDATE_USER,
+				F.UPDATE_DT AS UPDATE_DT,
+		    	F.UPDATE_ID AS updateId
+		    FROM T_FILE_MANAGER F,
+		         (SELECT G.FILE_ID FROM T_FILE_GROUP G,VIEW_PROCESS_USER V
+				   WHERE G.GROUP_ID = V.EXECUTIONID
+					 AND V.EXECUTIONID = #groupId#
+					 AND V.LOGINNAME = #loginName#) B
+		   WHERE F.FILE_ID = B.FILE_ID
+		     AND F.IS_VALID <> 3
+		]]>
+		<isNotEmpty prepend="and" property="unAllowFileTypes">
+			(F.FILE_TYPE_SUB_ID NOT IN
+			<iterate property="unAllowFileTypes" conjunction="," open="(" close=")"> 
+				#unAllowFileTypes[]# 
+			</iterate>
+			OR (F.CREATE_USER = #loginName#))
+		</isNotEmpty>
+		ORDER BY F.FILE_NUMBER ASC
+	</select>
+	
+	
+	<!-- 根据流程分组ID更新附件状态  -->
+	<update id="fmger_updateStatusByGroupId" parameterClass="fmger">
+		UPDATE T_FILE_MANAGER FM 
+		   SET FM.IS_VALID = #isValid#,
+		       FM.UPDATE_DT = SYSDATE()
+		 WHERE FILE_ID IN (SELECT G.FILE_ID FROM T_FILE_GROUP G WHERE G.GROUP_ID = #groupId#)
+	</update>
+	
+	
+	<!-- 新增 -->
+	<insert id="fg_insertFg" parameterClass="fg">
+		INSERT INTO T_FILE_GROUP(GROUP_ID,FILE_ID)
+		VALUES(#groupId#,#fileId#)
+	</insert>
+	
+	
+	<!--  根据流程分组ID获取List数据 -->
+	<select id="fg_getGroupIdByFileId" resultClass="java.lang.String" parameterClass="java.lang.String">
+		<![CDATA[
+		    SELECT 
+		    	F.GROUP_ID AS groupId
+		    FROM T_FILE_GROUP F
+		   WHERE F.FILE_ID = #fileId#
+		]]>
+	</select>
+	
+	
+	<select id="fg_fileIdsByGroupId" resultClass="java.lang.String" parameterClass="java.lang.String">
+		<![CDATA[
+		    SELECT 
+		    	F.FILE_ID AS fileId
+		    FROM T_FILE_GROUP F
+		   WHERE F.GROUP_ID = #groupId#
+		]]>
+	</select>
+	
+	
+	<delete id="fmger_deleteForPage" parameterClass="java.lang.String">
+		DELETE FROM T_FILE_MANAGER WHERE FILE_ID = #id#
+	</delete>
+	
+	
+	<select id="fmger_getLastFiles" resultClass="fmger" parameterClass="fq">
+		<![CDATA[
+		    SELECT 
+		    	FM.FILE_ID AS id,
+		    	FM.FILE_NUMBER AS fileNumber,
+		    	FM.FILE_NAME AS fileName,
+		    	FM.FILE_DISPLAYNAME AS fileDisplayname,
+		    	FM.FILE_TYPE_ID AS fileTypeId,
+		    	FM.FILE_TYPE_SUB_ID AS fileTypeSubId,
+		    	FM.FILE_ADDRESS AS fileAddress,
+		    	FM.IS_PUBLIC AS isPublic,
+		    	FM.IS_VALID AS isValid,
+		    	FM.VERSION AS version,
+		    	FM.FILE_FIX AS fileFix,
+		    	FM.CREATE_USER AS createUser,
+		    	FM.CREATE_DT AS createDt,
+		    	FM.UPDATE_USER AS UPDATE_USER,
+				FM.UPDATE_DT AS UPDATE_DT,
+		    	FM.UPDATE_ID AS updateId
+		    FROM T_FILE_MANAGER FM,T_DICTIONARY_CONFIG C
+		   WHERE FM.IS_VALID = 2
+		     AND C.FILETYPE_ID = FM.FILE_TYPE_ID
+		]]>
+		<isNotEmpty prepend="and" property = "dicType">
+			C.DIC_TYPE = #dicType#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="fileIds">
+			FM.FILE_ID IN 
+			<iterate property="fileIds" conjunction="," open="(" close=")"> 
+				#fileIds[]# 
+			</iterate>
+		</isNotEmpty>
+		ORDER BY FM.CREATE_DT DESC LIMIT 0,8
+	</select>
+	
+	
+	<select id="fmger_getFileNumberByName" resultClass="java.lang.Integer" parameterClass="map">
+		<![CDATA[
+		    SELECT 
+		      COUNT(*)
+		    FROM T_FILE_MANAGER 
+		   WHERE FILE_NUMBER like CONCAT(#rule_finalRule#,'%')
+		]]>
+		
+	</select>
+	
+	
+	<!-- 根据用户登录的角色获取所有有权限查看的附件列表  -->
+	<select id="fmger_findFileListByRole" resultClass="fmger" parameterClass="fq">
+		<![CDATA[
+		    SELECT 
+		      SS.FILE_ID AS id,
+		      SS.FILE_NUMBER AS fileNumber,
+			  SS.FILE_NAME AS fileName,
+			  CONCAT(FILE_NUMBER,FILE_DISPLAYNAME) AS fileDisplayname,
+			  SS.FILE_TYPE_ID AS fileTypeId,
+			  SS.FILE_TYPE_SUB_ID AS fileTypeSubId,
+			  SS.FILE_ADDRESS AS fileAddress,
+			  SS.IS_VALID AS isValid,
+			  SS.CREATE_USER AS createUser,
+			  SS.CREATE_DT AS createDt,
+			  SS.UPDATE_USER AS updateUser,
+			  SS.UPDATE_DT AS updateDt,
+			  SS.UPDATE_ID AS updateId,
+			  SS.REAL_NAME AS realName 
+		    FROM 
+			(
+				SELECT 
+					F.FILE_ID AS FILE_ID,
+					MAX(F.FILE_NUMBER) AS FILE_NUMBER,
+					MAX(F.FILE_NAME) AS FILE_NAME,
+					MAX(F.FILE_DISPLAYNAME) AS FILE_DISPLAYNAME,
+					MAX(F.FILE_TYPE_ID) AS FILE_TYPE_ID,
+					MAX(F.FILE_TYPE_SUB_ID) AS FILE_TYPE_SUB_ID,
+					MAX(F.FILE_ADDRESS) AS FILE_ADDRESS,
+					MAX(F.IS_VALID) AS IS_VALID,
+					MAX(F.CREATE_USER) AS CREATE_USER,
+					MAX(F.CREATE_DT) AS CREATE_DT,
+					MAX(F.UPDATE_USER) AS UPDATE_USER,
+					MAX(F.UPDATE_DT) AS UPDATE_DT,
+					MAX(F.UPDATE_ID) AS UPDATE_ID,
+					MAX(G.GROUP_ID) AS GROUP_ID,
+					MAX(SF.REAL_NAME) AS REAL_NAME 
+				FROM T_FILE_MANAGER F,T_FILE_GROUP G,T_DICTIONARY_CONFIG CG,T_STAFF SF
+				WHERE F.FILE_ID = G.FILE_ID
+		          AND F.FILE_TYPE_ID = CG.FILETYPE_ID
+		          AND F.IS_VALID <> 3
+		          AND CG.PARENT_ID = 93
+		          AND SF.LOGIN_NAME = F.CREATE_USER
+		    ]]>
+		    
+		    <isNotEmpty prepend="and" property = "dicType">
+				CG.DIC_TYPE = #dicType#
+			</isNotEmpty>  
+			
+		    <![CDATA[
+				 AND(
+		           (G.GROUP_ID IN (SELECT U.EXECUTIONID FROM VIEW_PROCESS_USER U WHERE U.LOGINNAME = #loginName#) 
+		            OR F.IS_PUBLIC = 1
+                    OR F.CREATE_USER = #loginName#
+		           )
+				      
+			]]>
+					<isNotEmpty prepend="AND" property="unAllowFileTypes">
+					    FILE_TYPE_SUB_ID NOT IN 
+						<iterate property="unAllowFileTypes" conjunction="," open="(" close=")"> 
+							#unAllowFileTypes[]# 
+						</iterate>
+					</isNotEmpty>
+			) GROUP BY F.FILE_ID) SS,VIEW_PROCESS_USER VW
+			WHERE SS.GROUP_ID = VW.executionId AND VW.STATUS = #fileStatus#
+			<isNotEmpty prepend="and" property = "isValid">
+				SS.IS_VALID = #isValid#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "queryName">
+				(SS.FILE_NUMBER like '%$queryName$%'
+				OR
+				SS.FILE_DISPLAYNAME like '%$queryName$%')
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "startDt">
+				<![CDATA[DATEDIFF(SS.CREATE_DT,#startDt#)>=0]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "endDt">
+				<![CDATA[DATEDIFF(SS.CREATE_DT,#endDt#)<=0]]>
+			</isNotEmpty>
+			GROUP BY SS.FILE_ID ORDER BY SS.CREATE_DT DESC
+	</select>
+	
+	
+	<!-- 根据用户登录的角色获取所有有权限查看的附件列表  -->
+	<select id="fmger_getFileCountByRole" resultClass="java.lang.Integer" parameterClass="fq">
+		<![CDATA[
+		   SELECT COUNT(*) FROM(
+		    SELECT 
+		      SS.FILE_ID AS FILE_ID
+		    FROM 
+			(
+				SELECT 
+					F.FILE_ID AS FILE_ID,
+					MAX(F.FILE_NAME) AS FILE_NAME,
+					MAX(F.FILE_NUMBER) AS FILE_NUMBER,
+					MAX(F.FILE_DISPLAYNAME) AS FILE_DISPLAYNAME,
+					MAX(F.IS_VALID) AS IS_VALID,
+					MAX(F.CREATE_DT) AS CREATE_DT,
+					MAX(G.GROUP_ID) AS GROUP_ID
+				FROM T_FILE_MANAGER F,T_FILE_GROUP G,T_DICTIONARY_CONFIG CG
+				WHERE F.FILE_ID = G.FILE_ID
+				  AND F.FILE_TYPE_ID = CG.FILETYPE_ID
+		          AND F.IS_VALID <> 3
+		          AND CG.PARENT_ID = 93
+		  ]]>
+		    
+		    <isNotEmpty prepend="and" property = "dicType">
+				CG.DIC_TYPE = #dicType#
+			</isNotEmpty>  
+			
+		    <![CDATA[
+				 AND(
+		           (G.GROUP_ID IN (SELECT U.EXECUTIONID FROM VIEW_PROCESS_USER U WHERE U.LOGINNAME = #loginName#) 
+		            OR F.IS_PUBLIC = 1
+                    OR F.CREATE_USER = #loginName#
+		           )
+				      
+			]]>
+					<isNotEmpty prepend="AND" property="unAllowFileTypes">
+					    FILE_TYPE_SUB_ID NOT IN 
+						<iterate property="unAllowFileTypes" conjunction="," open="(" close=")"> 
+							#unAllowFileTypes[]# 
+						</iterate>
+					</isNotEmpty>
+			) GROUP BY F.FILE_ID) SS,VIEW_PROCESS_USER VW
+			WHERE SS.GROUP_ID = VW.executionId AND VW.STATUS = #fileStatus#
+			<isNotEmpty prepend="and" property = "isValid">
+				SS.IS_VALID = #isValid#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "queryName">
+				(SS.FILE_NUMBER like '%$queryName$%'
+				OR 
+				SS.FILE_DISPLAYNAME like '%$queryName$%')
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "startDt">
+				<![CDATA[DATEDIFF(SS.CREATE_DT,#startDt#)>=0]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "endDt">
+				<![CDATA[DATEDIFF(SS.CREATE_DT,#endDt#)<=0]]>
+			</isNotEmpty>
+			GROUP BY SS.FILE_ID ) CC
+	</select>
+	
+	
+	
+	<insert id="rf_insertRoleFile" parameterClass="rf">
+		INSERT INTO T_ROLE_FILETYPE(ROLE_ID,FILE_ID,IS_SEE)
+		VALUES(#roleId#,#fileId#,#isSee#)
+	</insert>
+	
+	
+	<delete id="rf_batchDeleteByIsSee" parameterClass="rf">
+		DELETE FROM T_ROLE_FILETYPE WHERE ROLE_ID = #roleId# AND IS_SEE = #isSee#
+	</delete>
+	
+	
+	<select id="rf_getListByRole" resultClass="java.lang.String" parameterClass="rf">
+		<![CDATA[
+		    SELECT FILE_ID AS fileId 
+		      FROM T_ROLE_FILETYPE
+		     WHERE IS_SEE = #isSee#
+		]]>
+		<isNotEmpty prepend="and" property="roleIds">
+			ROLE_ID IN 
+			<iterate property="roleIds" conjunction="," open="(" close=")"> 
+				#roleIds[]# 
+			</iterate>
+		</isNotEmpty>
+	</select>
+	
+	
+	<select id="rf_getListByRoleId" resultClass="java.lang.String" parameterClass="rf">
+		<![CDATA[
+		    SELECT FILE_ID AS fileId 
+		      FROM T_ROLE_FILETYPE
+		     WHERE ROLE_ID = #roleId# AND IS_SEE = #isSee#
+		]]>
+	</select>
+		
+</sqlMap>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- Always ensure to use the correct XML header as above! -->
+<sqlMap namespace="RoleResource">
+<typeAlias alias="roleResource" type="com.chz.smartoa.system.pojo.RoleResource"/> 
+<resultMap id="roleResource_result" class="roleResource">
+    <result property="resourceKey" column="RESOURCE_KEY"/>
+    <result property="roleId" column="ROLE_ID"/>
+</resultMap>
+
+<insert id="RoleResource_insertRoleResource" parameterClass="java.util.Map" >
+<![CDATA[
+    INSERT INTO t_role_resource (
+            RESOURCE_KEY, 
+            ROLE_ID
+        )
+    VALUES (
+       		#resourceKey#,
+		       		#roleId#
+		    )
+]]>
+</insert>
+
+<delete id="RoleResource_deleteRoleResource" parameterClass="java.lang.String">
+<![CDATA[
+    DELETE  FROM  t_role_resource WHERE RESOURCE_KEY = #resourceKey#
+]]>
+		
+</delete>    
+
+<update id="RoleResource_updateRoleResource" parameterClass="roleResource">
+    UPDATE t_role_resource 
+    SET
+    	RESOURCE_KEY = #resourceKey#
+	<isNotEmpty prepend="," property="roleId">
+     	   		ROLE_ID = #roleId#
+				</isNotEmpty>
+    WHERE RESOURCE_KEY = #resourceKey#
+</update> 
+
+<select id="RoleResource_findRoleResource" resultMap="roleResource_result" parameterClass="string">
+<![CDATA[
+    SELECT
+       		RESOURCE_KEY,
+		       		ROLE_ID
+		    FROM t_role_resource WHERE RESOURCE_KEY = #resourceKey#
+]]>
+</select>
+
+<select id="RoleResource_listRoleResource" resultMap="roleResource_result" parameterClass="roleResource">
+<![CDATA[
+    SELECT
+       		RESOURCE_KEY,
+		       		ROLE_ID
+		    FROM t_role_resource
+]]>
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="and" property = "resourceKey">
+				RESOURCE_KEY = #resourceKey#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "roleId">
+				ROLE_ID = #roleId#
+			</isNotEmpty>
+		</dynamic>
+</select>
+
+<select id="RoleResource_listRoleResourcePage" resultMap="roleResource_result" parameterClass="java.lang.String">
+<![CDATA[
+ $sql$
+]]>
+</select>
+
+
+<select id="RoleResource_listRoleResourceCount" resultClass="java.lang.Integer" parameterClass="roleResource">
+<![CDATA[
+    SELECT
+		COUNT(*)
+    FROM t_role_resource
+]]>
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="and" property = "resourceKey">
+				RESOURCE_KEY = #resourceKey#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "roleId">
+				ROLE_ID = #roleId#
+			</isNotEmpty>
+		</dynamic>
+</select>
+
+</sqlMap>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- Always ensure to use the correct XML header as above! -->
+<sqlMap namespace="Notice">
+<typeAlias alias="notice" type="com.chz.smartoa.system.pojo.Notice"/> 
+
+<insert id="Notice_insertNotice" parameterClass="notice" >
+<![CDATA[
+    INSERT INTO t_notice (
+    		row_id,
+            to_people, 
+            cc_people, 
+            title, 
+            content, 
+            html_content,
+            station, 
+            email,
+            sms, 
+            create_time
+        )
+    VALUES (
+    	   #rowId#,
+		   #toPeople#,
+		   #ccPeople#,
+		   #title#,
+		   #content#,
+		   #htmlContent#,
+		   #station#,
+		   #email#,
+		   #sms#,
+		   sysdate()
+		    )
+]]>
+</insert>
+
+<delete id="Notice_deleteNotice" parameterClass="java.lang.String">
+<![CDATA[
+     DELETE FROM T_NOTICE WHERE ROW_ID = #rowId#
+]]>
+</delete>  
+
+
+<update id="Notice_updateNoticeSendCount" parameterClass="notice">
+    UPDATE t_notice 
+    SET
+    	row_id = #rowId#
+		<isGreaterThan prepend="," compareValue="0" property="station">
+			station = station + 1
+		</isGreaterThan>
+		<isGreaterThan prepend="," compareValue="0" property="email">
+			email = email + 1
+		</isGreaterThan>
+		<isGreaterThan prepend="," compareValue="0" property="sms">
+			sms = sms + 1
+		</isGreaterThan>
+    WHERE row_id = #rowId#
+</update> 
+
+<update id="Notice_updateNoticeSendSuccess" parameterClass="notice">
+    UPDATE t_notice 
+    SET
+    	row_id = #rowId#
+		<isGreaterThan prepend="," compareValue="0" property="station">
+			station = -1
+		</isGreaterThan>
+		<isGreaterThan prepend="," compareValue="0" property="email">
+			email = -1
+		</isGreaterThan>
+		<isGreaterThan prepend="," compareValue="0" property="sms">
+			sms = -1
+		</isGreaterThan>
+    WHERE row_id = #rowId#
+</update> 
+
+<select id="Notice_listNotice" resultClass="notice" parameterClass="notice">
+<![CDATA[
+    SELECT
+    		row_id as rowId,
+       		to_people as toPeople, 
+            cc_people as ccPeople, 
+            title, 
+            content, 
+            html_content as htmlContent,
+            station, 
+            email,
+            sms
+		    FROM t_notice
+	WHERE create_time > date_sub(now(), interval 8 day) 
+]]>
+<dynamic>
+	<isGreaterThan prepend="and" compareValue="0" property="station">
+		<![CDATA[station >= 0 and station <= 3 ]]> 
+	</isGreaterThan>
+	<isGreaterThan prepend="and" compareValue="0" property="email">
+		<![CDATA[email >= 0 and email <= 3 ]]> 
+	</isGreaterThan>
+	<isGreaterThan prepend="and" compareValue="0" property="sms">
+		<![CDATA[sms >= 0 and sms <= 3 ]]> 
+	</isGreaterThan>
+</dynamic>
+ ORDER BY create_time 
+ limit 0,50
+</select>
+
+</sqlMap>

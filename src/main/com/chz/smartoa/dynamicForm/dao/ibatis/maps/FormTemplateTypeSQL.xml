@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- Always ensure to use the correct XML header as above! -->
+<sqlMap namespace="FormTemplateType">
+	<typeAlias alias="formTemplateType" type="com.chz.smartoa.dynamicForm.pojo.FormTemplateType"/> 
+	
+	<insert id="FormTemplateType_insert" parameterClass="formTemplateType">
+		<![CDATA[
+		    INSERT INTO T_FORM_TEMPLATE_TYPE(ID,SEQUENCE,TYPE,DESCRIPTION,STATUS,CREATE_USER,CREATE_DATE,UPDATE_USER,UPDATE_DATE)
+		    VALUES(#id#,#sequence#,#type#,#description#,#status#,#createUser#,SYSDATE(),#updateUser#,SYSDATE())
+		]]>
+	</insert>
+	
+	<delete id="FormTemplateType_delete" parameterClass="formTemplateType">
+		<![CDATA[
+		    DELETE FROM T_FORM_TEMPLATE_TYPE WHERE ID=#id#
+		]]>
+	</delete>
+	
+	<update id="FormTemplateType_update" parameterClass="formTemplateType">
+	    UPDATE T_FORM_TEMPLATE_TYPE SET ID=#id#
+		<isNotEmpty prepend="," property="sequence">
+   	   		SEQUENCE = #sequence#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="type">
+   	   		TYPE = #type#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="description">
+   	   		DESCRIPTION = #description#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="status">
+   	   		STATUS = #status#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="updateUser">
+   	   		UPDATE_USER = #updateUser#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="updateDate">
+   	   		UPDATE_DATE = #updateDate#
+		</isNotEmpty>
+	    WHERE ID=#id#
+	</update>
+
+	<select id="FormTemplateType_find" resultClass="formTemplateType" parameterClass="formTemplateType">
+		<![CDATA[
+		    SELECT 
+		    	FTT.ID AS id,
+		    	FTT.SEQUENCE AS sequence,
+		    	FTT.TYPE AS type,
+		    	FTT.DESCRIPTION AS description,
+		    	FTT.STATUS AS status,
+		    	FTT.CREATE_USER AS createUser,
+		    	date_format(FTT.CREATE_DATE,'%Y-%m-%d %H:%i:%S') AS createDate,
+		    	FTT.UPDATE_USER AS updateUser,
+		    	date_format(FTT.UPDATE_DATE,'%Y-%m-%d %H:%i:%S') AS updateDate
+		    FROM T_FORM_TEMPLATE_TYPE FTT
+		]]>
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="and" property = "id">
+				FTT.ID = #id#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "type">
+				FTT.TYPE = #type#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "status">
+				FTT.STATUS = #status#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<sql id="FormTemplateType_list_where">
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="and" property = "id">
+				FTT.ID = #id#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "type">
+				FTT.TYPE LIKE '%$type$%'
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "status">
+				FTT.STATUS = #status#
+			</isNotEmpty>
+		</dynamic>
+	</sql>
+	
+	<select id="FormTemplateType_list" resultClass="formTemplateType" parameterClass="formTemplateType">
+		<![CDATA[
+		    SELECT
+		    	FTT.ID AS id,
+		    	FTT.SEQUENCE AS sequence,
+		    	FTT.TYPE AS type,
+		    	FTT.DESCRIPTION AS description,
+		    	FTT.STATUS AS status,
+		    	FTT.CREATE_USER AS createUser,
+		    	date_format(FTT.CREATE_DATE,'%Y-%m-%d %H:%i:%S') AS createDate,
+		    	FTT.UPDATE_USER AS updateUser,
+		    	date_format(FTT.UPDATE_DATE,'%Y-%m-%d %H:%i:%S') AS updateDate
+		    FROM T_FORM_TEMPLATE_TYPE FTT
+		]]>
+		<include refid="FormTemplateType_list_where"/>
+		ORDER BY FTT.SEQUENCE ASC,FTT.UPDATE_DATE DESC
+	</select>
+	
+	<select id="FormTemplateType_listCount" resultClass="java.lang.Integer" parameterClass="formTemplateType">
+		<![CDATA[
+		    SELECT
+				COUNT(*)
+		    FROM T_FORM_TEMPLATE_TYPE FTT
+		]]>
+		<include refid="FormTemplateType_list_where"/>
+	</select>
+		
+</sqlMap>

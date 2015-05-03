@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- Always ensure to use the correct XML header as above! -->
+<sqlMap namespace="Resource">
+<typeAlias alias="resource" type="com.chz.smartoa.system.pojo.Resource"/> 
+<resultMap id="resource_result" class="resource">
+    <result property="resourceId" column="RESOURCE_ID"/>
+    <result property="parentId" column="PARENT_ID"/>
+    <result property="authType" column="AUTH_TYPE"/>
+    <result property="resourceName" column="RESOURCE_NAME"/>
+    <result property="resourceType" column="RESOURCE_TYPE"/>
+    <result property="resourceDesc" column="RESOURCE_DESC"/>
+    <result property="addressUrl" column="ADDRESS_URL"/>
+    <result property="iconName" column="ICON_NAME"/>
+</resultMap>
+
+<insert id="Resource_insertResource" parameterClass="resource" >
+<![CDATA[
+    INSERT INTO t_resource (
+            RESOURCE_ID, 
+            PARENT_ID, 
+            AUTH_TYPE, 
+            RESOURCE_NAME, 
+            RESOURCE_TYPE, 
+            RESOURCE_DESC, 
+            ADDRESS_URL,
+            ICON_NAME,
+			SORT_NUM
+        )
+    VALUES (
+       		#resourceId#,
+		       		#parentId#,
+		       		#authType#,
+		       		#resourceName#,
+		       		#resourceType#,
+		       		#resourceDesc#,
+		       		#addressUrl#,
+		       		#iconName#,
+		       		#sortNum#
+		    )
+]]>
+</insert>
+
+<delete id="Resource_deleteResource" parameterClass="java.lang.String">
+<![CDATA[
+    DELETE  FROM  t_resource WHERE RESOURCE_ID = #resourceId#
+]]>
+		
+</delete>    
+
+<update id="Resource_updateResource" parameterClass="resource">
+    UPDATE t_resource 
+    SET
+    	RESOURCE_ID = #resourceId#
+	<isNotEmpty prepend="," property="parentId">
+     	   		PARENT_ID = #parentId#
+				</isNotEmpty>
+	<isNotEmpty prepend="," property="authType">
+     	   		AUTH_TYPE = #authType#
+				</isNotEmpty>
+	<isNotEmpty prepend="," property="resourceName">
+     	   		RESOURCE_NAME = #resourceName#
+				</isNotEmpty>
+	<isNotEmpty prepend="," property="resourceType">
+     	   		RESOURCE_TYPE = #resourceType#
+				</isNotEmpty>
+	<isNotEmpty prepend="," property="resourceDesc">
+     	   		RESOURCE_DESC = #resourceDesc#
+				</isNotEmpty>
+    <isNotEmpty prepend="," property="iconName">
+     	   		ICON_NAME = #iconName#
+				</isNotEmpty>				
+	<isNotEmpty prepend="," property="addressUrl">
+     	   		ADDRESS_URL = #addressUrl#
+				</isNotEmpty>
+	<isNotEmpty prepend="," property="sortNum">
+     	   		SORT_NUM = #sortNum#
+				</isNotEmpty>
+    WHERE RESOURCE_ID = #resourceId#
+</update> 
+
+<select id="Resource_findResource" resultMap="resource_result" parameterClass="string">
+<![CDATA[
+    SELECT
+       		RESOURCE_ID,
+		       		PARENT_ID,
+		       		AUTH_TYPE,
+		       		RESOURCE_NAME,
+		       		RESOURCE_TYPE,
+		       		RESOURCE_DESC,
+		       		ADDRESS_URL,
+		       		ICON_NAME
+		    FROM t_resource WHERE RESOURCE_ID = #resourceId#
+]]>
+</select>
+
+<select id="Resource_listUrl" resultClass="string" parameterClass="string">
+<![CDATA[
+    SELECT	ADDRESS_URL FROM t_resource where auth_type = #authType#
+	UNION DISTINCT
+	SELECT ADDRESS_URL from t_resource_option WHERE resource_id IN
+	(SELECT resource_id FROM t_resource where auth_type = #authType# )
+]]>
+</select>
+
+<select id="Resource_listResource" resultMap="resource_result" parameterClass="resource">
+<![CDATA[
+    SELECT
+       		RESOURCE_ID,
+		       		PARENT_ID,
+		       		AUTH_TYPE,
+		       		RESOURCE_NAME,
+		       		RESOURCE_TYPE,
+		       		RESOURCE_DESC,
+		       		ADDRESS_URL,
+		       		ICON_NAME
+		    FROM t_resource
+]]>
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="and" property = "resourceId">
+				RESOURCE_ID = #resourceId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "parentId">
+				PARENT_ID = #parentId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "authType">
+				AUTH_TYPE = #authType#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "resourceName">
+				RESOURCE_NAME = #resourceName#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "resourceType">
+				RESOURCE_TYPE = #resourceType#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "resourceDesc">
+				RESOURCE_DESC = #resourceDesc#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "addressUrl">
+				ADDRESS_URL = #addressUrl#
+			</isNotEmpty>
+		</dynamic>
+		order by sort_num
+</select>
+
+
+<select id="Resource_listResourceCount" resultClass="java.lang.Integer" parameterClass="resource">
+<![CDATA[
+    SELECT
+		COUNT(*)
+    FROM t_resource
+]]>
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="and" property = "resourceId">
+				RESOURCE_ID = #resourceId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "parentId">
+				PARENT_ID = #parentId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "authType">
+				AUTH_TYPE = #authType#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "resourceName">
+				RESOURCE_NAME = #resourceName#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "resourceType">
+				RESOURCE_TYPE = #resourceType#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "resourceDesc">
+				RESOURCE_DESC = #resourceDesc#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "addressUrl">
+				ADDRESS_URL = #addressUrl#
+			</isNotEmpty>
+		</dynamic>
+</select>
+
+</sqlMap>

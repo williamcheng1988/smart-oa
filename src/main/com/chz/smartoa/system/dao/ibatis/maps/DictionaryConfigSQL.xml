@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- Always ensure to use the correct XML header as above! -->
+<sqlMap namespace="DictionarytCfg">
+	
+	<!-- 字典配置表实体类  -->
+	<typeAlias alias="dictionarytCfg" type="com.chz.smartoa.system.pojo.DictionaryConfig"/>
+	<typeAlias alias="nameValPair" type="com.chz.smartoa.dynamicForm.pojo.NameValPair"/>  
+	<resultMap id="dictionaryt_sql_result" class="dictionarytCfg">
+	    <result property="dictionaryKey" column="dictionary_key"/>
+	    <result property="dictionaryName" column="dictionary_name"/>
+    </resultMap>
+	
+	
+	<!-- 新增 -->
+	<insert id="dictionarytCfg_insertDictionarytCfg" parameterClass="dictionarytCfg">
+		<![CDATA[
+		    INSERT INTO T_DICTIONARY_CONFIG(DICTIONARY_NAME,DICTIONARY_KEY,ORDER_NO,PARENT_ID,DIC_TYPE,IS_VALID,COMPANY_NAME,FILE_TYPE_NO,CONFIG_TYPE,LEVEL,IS_PUBLIC)
+		    VALUES(#dictionaryName#,#dictionaryKey#,#orderNo#,#parentId#,#dicType#,#isValid#,#companyName#,#fileTypeNo#,#configType#,#level#,#isPublic#)
+		]]>
+	</insert>
+	
+	
+	<!-- 修改 -->
+	<update id="dictionarytCfg_updateDictionarytCfg" parameterClass="dictionarytCfg">
+	    UPDATE T_DICTIONARY_CONFIG 
+	    SET DICTIONARY_NAME = #dictionaryName#,
+	        DIC_TYPE = #dicType#,
+	        IS_VALID = #isValid#,
+	        PARENT_ID = #parentId#,
+	        COMPANY_NAME = #companyName#,
+	        FILE_TYPE_NO = #fileTypeNo#,
+	        IS_PUBLIC = #isPublic#
+	    WHERE FILETYPE_ID = #id# 
+	</update>
+	
+	<!--  查找 (根据主键唯一编号查询数据对象) -->
+	<select id="dictionarytCfg_findDictionarytCfgById" resultClass="dictionarytCfg" parameterClass="java.lang.Integer">
+		<![CDATA[
+		    SELECT 
+		    	FILETYPE_ID AS id,
+		    	DICTIONARY_NAME AS dictionaryName,
+		    	DICTIONARY_KEY AS dictionaryKey,
+		    	ORDER_NO AS orderNo,
+		    	PARENT_ID AS parentId,
+		    	DIC_TYPE AS dicType,
+		    	IS_VALID AS isValid,
+		    	COMPANY_NAME AS companyName,
+		    	FILE_TYPE_NO AS fileTypeNo,
+		    	CONFIG_TYPE AS configType,
+		    	SQL_VALUE AS sqlValue,
+		    	LEVEL AS level,
+		    	IS_PUBLIC AS isPublic
+		    FROM T_DICTIONARY_CONFIG WHERE FILETYPE_ID = #id#
+		]]>
+	</select>
+	
+	<!--  查找 (根据字典key查询数据对象) -->
+	<select id="dictionarytCfg_findDictionarytCfgByKey" resultClass="dictionarytCfg" parameterClass="java.lang.String">
+		<![CDATA[
+		    SELECT 
+		    	FILETYPE_ID AS id,
+		    	DICTIONARY_NAME AS dictionaryName,
+		    	DICTIONARY_KEY AS dictionaryKey,
+		    	ORDER_NO AS orderNo,
+		    	PARENT_ID AS parentId,
+		    	DIC_TYPE AS dicType,
+		    	IS_VALID AS isValid,
+		    	COMPANY_NAME AS companyName,
+		    	FILE_TYPE_NO AS fileTypeNo,
+		    	CONFIG_TYPE AS configType,
+		    	SQL_VALUE AS sqlValue,
+		    	LEVEL AS level,
+		    	IS_PUBLIC AS isPublic
+		    FROM T_DICTIONARY_CONFIG WHERE DICTIONARY_KEY = #dictionaryKey#
+		]]>
+	</select>
+	             
+	<select id="dictionarytCfg_findDictionarytCfgByParentId" resultClass="dictionarytCfg" parameterClass="java.lang.Integer">
+		<![CDATA[
+		    SELECT 
+		    	FILETYPE_ID AS id,
+		    	DICTIONARY_NAME AS dictionaryName,
+		    	DICTIONARY_KEY AS dictionaryKey,
+		    	ORDER_NO AS orderNo,
+		    	PARENT_ID AS parentId,
+		    	DIC_TYPE AS dicType,
+		    	IS_VALID AS isValid,
+		    	COMPANY_NAME AS companyName,
+		    	FILE_TYPE_NO AS fileTypeNo,
+		    	CONFIG_TYPE AS configType,
+		    	SQL_VALUE AS sqlValue,
+		    	LEVEL AS level,
+		    	IS_PUBLIC AS isPublic
+		    FROM T_DICTIONARY_CONFIG 
+		    WHERE CONFIG_TYPE IN (1,3)
+		      AND PARENT_ID = #parentId#
+		    ORDER BY ORDER_NO ASC
+		]]>
+	</select>
+	
+	
+	<select id="dictionarytCfg_findCfgByParentIdForValid" resultClass="dictionarytCfg" parameterClass="java.lang.Integer">
+		<![CDATA[
+		    SELECT 
+		    	FILETYPE_ID AS id,
+		    	DICTIONARY_NAME AS dictionaryName,
+		    	DICTIONARY_KEY AS dictionaryKey,
+		    	ORDER_NO AS orderNo,
+		    	PARENT_ID AS parentId,
+		    	DIC_TYPE AS dicType,
+		    	IS_VALID AS isValid,
+		    	COMPANY_NAME AS companyName,
+		    	FILE_TYPE_NO AS fileTypeNo,
+		    	CONFIG_TYPE AS configType,
+		    	SQL_VALUE AS sqlValue,
+		    	LEVEL AS level,
+		    	IS_PUBLIC AS isPublic
+		    FROM T_DICTIONARY_CONFIG 
+		    WHERE CONFIG_TYPE IN (1,3)
+		      AND PARENT_ID = #parentId#
+		      AND IS_VALID = 1
+		    ORDER BY ORDER_NO ASC
+		]]>
+	</select>
+	
+	
+	<select id="dictionarytCfg_findDictionarytCfgByDicType" resultClass="dictionarytCfg" parameterClass="dictionarytCfg">
+		<![CDATA[
+		    SELECT 
+		    	C.FILETYPE_ID AS id,
+		    	C.DICTIONARY_NAME AS dictionaryName,
+		    	C.DICTIONARY_KEY AS dictionaryKey,
+		    	C.ORDER_NO AS orderNo,
+		    	C.PARENT_ID AS parentId,
+		    	C.DIC_TYPE AS dicType,
+		    	C.IS_VALID AS isValid,
+		    	C.COMPANY_NAME AS companyName,
+		    	C.FILE_TYPE_NO AS fileTypeNo,
+		    	C.CONFIG_TYPE AS configType,
+		    	C.SQL_VALUE AS sqlValue,
+		    	LEVEL AS level,
+		    	IS_PUBLIC AS isPublic
+		    FROM T_DICTIONARY_CONFIG C
+		    WHERE C.CONFIG_TYPE = 1
+		      AND C.DIC_TYPE = #dicType#
+		]]>
+	</select>
+	
+	<select id="dictionarytCfg_listNameValue" resultClass="nameValPair">
+		<![CDATA[
+		    SELECT
+		    	C.DICTIONARY_NAME AS name,
+		    	C.DICTIONARY_KEY AS value
+		    FROM T_DICTIONARY_CONFIG C
+		    WHERE C.CONFIG_TYPE IN (2,3)
+		      AND C.PARENT_ID = -1
+		]]>
+	</select>
+	
+	<select id="dictionarytCfg_findDictionarytCfgBySql" resultMap="dictionaryt_sql_result" parameterClass="java.lang.String">
+		<![CDATA[
+		 $sql$
+		]]>
+    </select>
+    
+    <select id="dictionarytCfg_getDictionarytAllCount" resultClass="java.lang.Integer">
+		<![CDATA[
+		    SELECT COUNT(*) FROM T_DICTIONARY_CONFIG 
+		]]>
+	</select>
+	
+		
+</sqlMap>

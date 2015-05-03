@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- Always ensure to use the correct XML header as above! -->
+<sqlMap namespace="RuTask">
+<typeAlias alias="ruTask" type="com.chz.smartoa.task.pojo.RuTask"/> 
+<typeAlias alias="ruTaskVo" type="com.chz.smartoa.task.pojo.RuTaskVo"/> 
+
+<resultMap id="ruTask_result" class="ruTask">
+    <result property="taskId" column="TASK_ID_"/>
+    <result property="arriveTime" column="ARRIVE_TIME_"/>
+    <result property="consult" column="CONSULT_"/>
+    <result property="confId" column="CONF_ID_"/>
+    <result property="delegation" column="DELEGATION_"/>
+    <result property="assignee" column="ASSIGNEE_"/>
+    <result property="expiryDays" column="EXPIRY_DAYS_"/>
+    <result property="executionId" column="EXECUTION_ID_"/>
+</resultMap>
+<resultMap id="ruTaskVo_result" class="ruTaskVo">
+    <result property="taskId" column="TASK_ID_"/>
+    <result property="businessKey" column="BUSINESS_KEY_"/>
+    <result property="businessTitle" column="BUSINESS_TITLE_"/>
+    <result property="startTime" column="START_TIME_"/>
+    <result property="priority" column="PRIORITY_"/>
+    <result property="realName" column="REAL_NAME"/>
+    <result property="arriveTime" column="ARRIVE_TIME_"/>
+</resultMap>
+
+<insert id="RuTask_insertRuTask" parameterClass="ruTask" >
+<![CDATA[
+    INSERT INTO T_RU_TASK (
+            CONSULT_, 
+            CONF_ID_, 
+            DELEGATION_, 
+            ASSIGNEE_, 
+            EXPIRY_DAYS_, 
+            ARRIVE_TIME_,
+            EXECUTION_ID_
+        )
+    VALUES (
+		        	
+		       		#consult#,
+		       		#confId#,
+		       		#delegation#,
+		       		#assignee#,
+		       		#expiryDays#,
+		       		now(),
+		       		#executionId#
+		    )
+]]>
+</insert>
+
+<delete id="RuTask_deleteRuTask" parameterClass="java.util.Map">
+<![CDATA[
+    DELETE  FROM  T_RU_TASK 
+]]>
+<dynamic prepend="WHERE">
+    <isNotEmpty prepend="and" property="taskId">
+    	TASK_ID_ = #taskId#
+	</isNotEmpty>
+	<isNotEmpty prepend="and" property="executionId">
+     	EXECUTION_ID_ = #executionId#
+    </isNotEmpty>
+	<isNotEmpty prepend="and" property="confId">
+     	CONF_ID_ = #confId#
+    </isNotEmpty>
+</dynamic>
+</delete>    
+
+<delete id="RuTask_deleteRuTaskByTuskNum" parameterClass="string">
+	<![CDATA[
+		 DELETE FROM t_ru_task
+		 WHERE task_id_ IN(
+			SELECT * from (SELECT t.task_id_
+					          FROM t_ge_execution e
+					          JOIN t_ru_task t ON e.execution_id_ = t.execution_id_
+					          JOIN t_re_conf c ON t.conf_id_ = c.conf_id_
+					         WHERE e.task_num_ = c.sort_num_
+					           AND e.execution_id_ = #executionId#) temp)
+	]]>
+</delete>    
+
+<update id="RuTask_updateRuTask" parameterClass="ruTask">
+    UPDATE T_RU_TASK 
+    SET
+    	TASK_ID_ = #taskId#
+	<isNotEmpty prepend="," property="arriveTime">
+     	    	ARRIVE_TIME_ = now()
+				</isNotEmpty>
+	<isNotNull prepend="," property="consult">
+     	   		CONSULT_ = #consult#
+				</isNotNull>
+	<isNotEmpty prepend="," property="confId">
+     	   		CONF_ID_ = #confId#
+				</isNotEmpty>
+	<isNotEmpty prepend="," property="delegation">
+     	   		DELEGATION_ = #delegation#
+				</isNotEmpty>
+	<isNotEmpty prepend="," property="assignee">
+     	   		ASSIGNEE_ = #assignee#
+				</isNotEmpty>
+	<isNotEmpty prepend="," property="expiryDays">
+     	   		EXPIRY_DAYS_ = #expiryDays#
+				</isNotEmpty>
+	<isNotEmpty prepend="," property="executionId">
+     	   		EXECUTION_ID_ = #executionId#
+				</isNotEmpty>
+    WHERE TASK_ID_ = #taskId#
+</update> 
+
+<update id="RuTask_delegationTask" parameterClass="java.util.Map">
+    UPDATE T_RU_TASK 
+    SET
+    	ASSIGNEE_ = #toUser#,
+    	DELEGATION_ = #fromUser#
+    WHERE ASSIGNEE_ = #fromUser#
+</update> 
+
+<select id="RuTask_delegationTaskList" resultClass="string" parameterClass="string">
+	T_RU_TASK 
+    SET
+    	ASSIGNEE_ = #toUser#,
+    	DELEGATION_ = #fromUser#
+    WHERE ASSIGNEE_ = #fromUser#
+</select>
+
+<update id="RuTask_delegationCancel" parameterClass="string">
+    UPDATE T_RU_TASK 
+    SET
+    	ASSIGNEE_ = DELEGATION_,
+    	DELEGATION_ = ''
+    WHERE DELEGATION_ = (SELECT from_user FROM T_DELEGATION where DELEGATION_ID = #delegationId#)
+    AND arrive_time_ BETWEEN
+               str_to_date(date_format(select IFNULL((select end_date from T_DELEGATION ta where EXISTS(
+								select 1 from T_DELEGATION tb where ta.from_user = tb.from_user and tb.start_date > ta.end_date
+								and tb.DELEGATION_ID = #delegationId#)ORDER BY end_date DESC LIMIT 1),
+                              d.start_date),'%Y-%m-%d'),'%Y-%m-%d') and d.end_date
+</update> 
+
+<select id="RuTask_findRuTask" resultMap="ruTask_result" parameterClass="string">
+<![CDATA[
+    SELECT
+       		TASK_ID_,
+		        	date_format(ARRIVE_TIME_,'%Y-%m-%d %k:%i:%s') ARRIVE_TIME_,
+		       		CONSULT_,
+		       		CONF_ID_,
+		       		DELEGATION_,
+		       		ASSIGNEE_,
+		       		EXPIRY_DAYS_,
+		       		EXECUTION_ID_
+		    FROM T_RU_TASK WHERE TASK_ID_ = #taskId#
+]]>
+</select>
+
+<select id="RuTask_findRuTaskCount" resultClass="java.lang.Integer" parameterClass="java.util.HashMap">
+<![CDATA[
+    SELECT COUNT(1) FROM T_RU_TASK
+]]>
+<dynamic prepend="WHERE">
+	<isNotEmpty prepend="and" property="execution_id_">
+     	EXECUTION_ID_ = #execution_id_#
+    </isNotEmpty>
+	<isNotEmpty prepend="and" property="assignee_">
+     	ASSIGNEE_ = #assignee_#
+    </isNotEmpty>
+</dynamic>
+</select>
+
+<select id="RuTask_getTodoTask" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+<![CDATA[
+  SELECT 
+  	   ge_e.execution_id_,
+  	   ge_e.business_key_,
+       ge_e.business_title_,
+       ge_e.owner_,
+       ge_e.version_,
+       ge_e.template_id_,
+       ge_e.priority_,
+       ge_e.desc_,
+       ru_t.assignee_,
+       ru_t.consult_,
+      IFNULL(re_c.action_type_,0) action_type_,
+       re_c.is_turn_,
+       re_c.is_ask_
+  FROM T_RU_TASK RU_T
+  LEFT JOIN T_GE_EXECUTION GE_E ON RU_T.EXECUTION_ID_ = GE_E.EXECUTION_ID_
+  LEFT JOIN T_RE_CONF RE_C ON RU_T.CONF_ID_ = RE_C.CONF_ID_
+ WHERE RU_T.TASK_ID_ = #taskId# AND  ru_t.assignee_ = #user#
+]]>
+</select>
+
+<select id="RuTask_listTodoTask" resultMap="ruTaskVo_result" parameterClass="ruTaskVo">
+<![CDATA[
+   SELECT 	 
+   			 RU_T.TASK_ID_,
+   			 date_format(RU_T.ARRIVE_TIME_,'%Y-%m-%d %k:%i:%s') ARRIVE_TIME_,
+      		 GE_E.BUSINESS_KEY_,
+			 GE_E.BUSINESS_TITLE_,    
+			 date_format(GE_E.START_TIME_,'%Y-%m-%d %k:%i:%s') START_TIME_,
+			 GE_E.PRIORITY_,
+			 S.REAL_NAME
+	FROM T_RU_TASK RU_T LEFT JOIN T_GE_EXECUTION GE_E ON RU_T.EXECUTION_ID_ = GE_E.EXECUTION_ID_
+	LEFT JOIN T_STAFF S ON RU_T.ASSIGNEE_ = S.LOGIN_NAME
+]]>
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="and" property = "owner">
+				ru_t.assignee_ = #owner#
+			</isNotEmpty>
+		</dynamic>
+ORDER BY ge_e.start_time_ DESC		
+</select>
+
+<select id="RuTask_listTodoTaskByMap" resultMap="ruTaskVo_result" parameterClass="java.util.Map">
+<![CDATA[
+   SELECT 	 
+   			 RU_T.TASK_ID_,
+   			 date_format(RU_T.ARRIVE_TIME_,'%Y-%m-%d %k:%i:%s') ARRIVE_TIME_,
+      		 GE_E.BUSINESS_KEY_,
+			 GE_E.BUSINESS_TITLE_,    
+			 date_format(GE_E.START_TIME_,'%Y-%m-%d %k:%i:%s') START_TIME_,
+			 GE_E.PRIORITY_,
+			 S.REAL_NAME
+	FROM T_RU_TASK RU_T LEFT JOIN T_GE_EXECUTION GE_E ON RU_T.EXECUTION_ID_ = GE_E.EXECUTION_ID_
+	LEFT JOIN T_STAFF S ON RU_T.ASSIGNEE_ = S.LOGIN_NAME
+]]>
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="and" property = "owner">
+				ru_t.assignee_ = #owner#
+			</isNotEmpty>
+		</dynamic>
+ORDER BY $sort$ $order$	
+</select>
+
+<select id="RuTask_listTodoTaskCount" resultClass="java.lang.Integer" parameterClass="ruTaskVo">
+<![CDATA[
+	SELECT 	 
+   			 COUNT(1)
+	FROM T_RU_TASK RU_T LEFT JOIN T_GE_EXECUTION GE_E ON RU_T.EXECUTION_ID_ = GE_E.EXECUTION_ID_
+	LEFT JOIN T_STAFF S ON RU_T.ASSIGNEE_ = S.LOGIN_NAME
+]]>
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="and" property = "owner">
+				ru_t.assignee_ = #owner#
+			</isNotEmpty>
+		</dynamic>
+</select>
+
+<select id="RuTask_getTodoTaskCountForExecution" resultClass="java.lang.Integer" parameterClass="string">
+<![CDATA[
+select count(1)
+  from t_ru_task ru
+  LEFT JOIN t_re_conf re on ru.conf_id_ = re.conf_id_
+ where ru.execution_id_ = #executionId#
+   AND re.action_obj_type_ != 4
+]]>
+</select>
+
+</sqlMap>

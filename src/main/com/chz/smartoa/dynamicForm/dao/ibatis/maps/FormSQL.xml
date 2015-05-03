@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- Always ensure to use the correct XML header as above! -->
+<sqlMap namespace="Form">
+	<cacheModel id="form-cache" type="LRU" readOnly="false">
+        <flushInterval hours="24" />
+        <flushOnExecute statement="Form_insertFormRecord" />
+        <flushOnExecute statement="Form_insertFormProp" />
+        <flushOnExecute statement="Form_deleteFormRecord" />
+        <flushOnExecute statement="Form_deleteFormProp" />
+        <flushOnExecute statement="Form_updateFormRecord" />
+        <flushOnExecute statement="Form_updateFormProp" />
+        <property value="50" name="size" />
+    </cacheModel>
+    
+    
+	<typeAlias alias="formRecord" type="com.chz.smartoa.dynamicForm.pojo.FormRecord"/>
+	<typeAlias alias="formProp" type="com.chz.smartoa.dynamicForm.pojo.FormProp"/>
+	
+	<insert id="Form_insertFormRecord" parameterClass="formRecord">
+		<![CDATA[
+			INSERT INTO T_FORM_RECORD(ID,UUID,TITLE,ALIAS,STATUS,COUNT,CREATE_USER,CREATE_DATE,UPDATE_USER,UPDATE_DATE,FORM_TEMPLATE_ID) 
+			VALUES(#id#,#uuId#,#title#,#alias#,#status#,#count#,#createUser#,SYSDATE(),#updateUser#,SYSDATE(),#formTemplateId#)
+		]]>
+	</insert>
+	
+	<insert id="Form_insertFormProp" parameterClass="formProp">
+		<![CDATA[
+			INSERT INTO T_FORM_PROP(NAME,VALUE,FORM_RECORD_ID,INNER_NAME)
+			VALUES(#name#,#value#,#formRecordId#,#innerName#)
+		]]>
+	</insert>
+	
+	<!-- 根据外键删除记录 -->
+	<delete id="Form_deleteFormProp" parameterClass="formProp">
+		<![CDATA[
+		    DELETE FROM T_FORM_PROP WHERE FORM_RECORD_ID=#formRecordId#
+		]]>
+	</delete>
+	
+	<!-- 根据外键删除记录 -->
+	<delete id="Form_deleteFormPropById" parameterClass="java.util.List">
+		DELETE FROM T_FORM_PROP WHERE ID IN 
+		<iterate conjunction="," open="(" close=")"> 
+			#[]#
+		</iterate>
+	</delete>
+	
+	<delete id="Form_deleteFormRecord" parameterClass="formRecord">
+		<![CDATA[
+		    DELETE FROM T_FROM FORM_RECORD WHERE UUID=#uuId#
+		]]>
+	</delete>
+	
+	<update id="Form_updateFormRecord" parameterClass="formRecord">
+	    UPDATE T_FORM_RECORD SET ID=#id#
+		<isNotEmpty prepend="," property="title">
+   	   		TITLE = #title#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="alias">
+   	   		ALIAS = #alias#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="count">
+   	   		COUNT = #count#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="status">
+   	   		STATUS = #status#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="updateUser">
+   	   		UPDATE_USER = #updateUser#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="updateDate">
+   	   		UPDATE_DATE = SYSDATE()
+		</isNotEmpty>
+	    WHERE UUID=#uuId#
+	</update>
+	
+	<update id="Form_updateFormProp" parameterClass="formProp">
+	    UPDATE T_FORM_PROP SET
+		<isNotEmpty prepend="," property="value">
+   	   		VALUE = #value#
+		</isNotEmpty>
+	    WHERE NAME = #name# AND FORM_RECORD_ID=#formRecordId#
+	</update>
+	
+	<sql id="FormRecord_datas">
+		<![CDATA[
+		    SELECT
+		    	ID,UUID,TITLE,ALIAS,STATUS,COUNT,
+		    	CREATE_USER AS createUser,
+		    	CREATE_DATE AS createDate,
+		    	UPDATE_USER AS updateUser,
+		    	UPDATE_DATE AS updateDate,
+		    	FORM_TEMPLATE_ID AS formTemplateId
+		    FROM T_FORM_RECORD FR
+		]]>
+	</sql>
+
+	<select id="Form_findFormRecord" resultClass="formRecord" parameterClass="formRecord" cacheModel="form-cache">
+		<include refid="FormRecord_datas"/>
+		WHERE FR.ID = #id#
+	</select>
+	
+	<!-- 查询数据集条件 -->
+	<!-- Form_listFormRecord  与    Form_listFormRecordCount  查询条件保持一致-->
+	<sql id="Form_list_where">
+		<!-- 暂时不需要条件限制 list 查询 -->
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="and" property = "id">
+				FR.ID = #id#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "title">
+				FR.TITLE like %title%
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "alias">
+				FR.ALIAS like %alias%
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "formTemplateId">
+				FR.FORM_TEMPLATE_ID = #formTemplateId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "status">
+				FR.STATUS = #status#
+			</isNotEmpty>
+			
+			<isNotEmpty prepend="and" property = "createDateFrom">
+				<![CDATA[DATEDIFF(FR.CREATE_DATE,#createDateFrom#)>=0]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "createDateTo">
+				<![CDATA[DATEDIFF(FR.CREATE_DATE,#createDateTo#)<=0]]>
+			</isNotEmpty>
+		</dynamic>
+	</sql>
+	
+	<select id="Form_listFormRecord" resultClass="formRecord" parameterClass="formRecord" cacheModel="form-cache">
+		<!-- <include refid="FormRecord_datas"/> -->
+		SELECT * FROM(
+			SELECT
+		    	FR.ID,FR.UUID,FR.TITLE,FR.ALIAS,FR.COUNT,
+				CASE WHEN VPPI.STATUS=1 THEN 2 WHEN VPPI.STATUS=2 THEN 0 WHEN VPPI.STATUS=3 THEN 3 ELSE FR.STATUS END STATUS,
+		    	FR.CREATE_USER AS CREATEUSER,
+		    	FR.CREATE_DATE AS CREATEDATE,
+		    	FR.UPDATE_USER AS UPDATEUSER,
+		    	FR.UPDATE_DATE AS UPDATEDATE,
+		    	FORM_TEMPLATE_ID AS FORMTEMPLATEID
+		    FROM T_FORM_RECORD FR
+			LEFT JOIN VIEW_PROCESS_PUBLIC_INFO VPPI ON  FR.ID=VPPI.BUSINESSKEY
+		) AS FM
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="and" property = "id">
+				FM.ID = #id#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "title">
+				FM.TITLE like %title%
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "alias">
+				FM.ALIAS like %alias%
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "formTemplateId">
+				FM.FORMTEMPLATEID = #formTemplateId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "status">
+				FM.STATUS = #status#
+			</isNotEmpty>
+			
+			<isNotEmpty prepend="and" property = "createDateFrom">
+				<![CDATA[DATEDIFF(FM.CREATEDATE,#createDateFrom#)>=0]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "createDateTo">
+				<![CDATA[DATEDIFF(FM.CREATEDATE,#createDateTo#)<=0]]>
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<select id="Form_listFormRecordCount" resultClass="java.lang.Integer" parameterClass="formRecord" cacheModel="form-cache">
+		<![CDATA[
+		    SELECT
+				COUNT(1)
+		    FROM T_FORM_RECORD FR
+		]]>
+		<include refid="Form_list_where"/>
+	</select>
+	
+	<select id="Form_listFormProp" resultClass="formProp" parameterClass="formProp" cacheModel="form-cache">
+		<![CDATA[
+		    SELECT 
+				NAME AS name,
+				VALUE AS value,
+				FORM_RECORD_ID AS formRecordId,
+				INNER_NAME AS innerName
+			FROM T_FORM_PROP FP
+		]]>
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="and" property = "formRecordId">
+				FP.FORM_RECORD_ID = #formRecordId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "propCodes">
+				FP.NAME IN 
+				<iterate property="propCodes" conjunction="," open="(" close=")"> 
+					#propCodes[]# 
+				</iterate>
+			</isNotEmpty>
+		</dynamic>
+			ORDER BY FP.ID ASC
+	</select>
+	
+	<select id="Form_listProjects" resultClass="formRecord" cacheModel="form-cache">
+		SELECT * FROM(
+			SELECT
+		    	FR.ID,FR.UUID,FR.TITLE,FR.ALIAS,
+		    	(CASE WHEN VPPI.STATUS=1 THEN 2 WHEN VPPI.STATUS=2 THEN 0 WHEN VPPI.STATUS=3 THEN 3 ELSE FR.STATUS END) STATUS,
+		    	FR.CREATE_USER AS CREATEUSER,
+		    	FR.CREATE_DATE AS CREATEDATE,
+		    	FR.UPDATE_USER AS UPDATEUSER,
+		    	FR.UPDATE_DATE AS UPDATEDATE,
+		    	FORM_TEMPLATE_ID AS FORMTEMPLATEID,
+				FT.PROJECTFLAG AS PROJECTFLAG
+	    	FROM T_FORM_RECORD FR INNER JOIN T_FORM_TEMPLATE FT ON FR.FORM_TEMPLATE_ID=FT.ID
+			LEFT JOIN VIEW_PROCESS_PUBLIC_INFO VPPI ON FR.ID=VPPI.BUSINESSKEY
+		) AS FM
+		WHERE FM.STATUS=0 and FM.PROJECTFLAG='T'
+	</select>
+	
+	<!-- 根据"文件编号规则 (docNoRule)"，如 sino-{yyyy-MM-dd} 查询当天表单记录数-->
+	<select id="Form_listFormRecordCountByDocNoRule" resultClass="java.lang.Integer" parameterClass="map">
+		<![CDATA[
+		    SELECT COUNT(1) 
+		    FROM T_FORM_RECORD FR 
+		    WHERE FR.ID LIKE CONCAT(#rule_finalRule#,'%')
+		]]>
+	</select>
+</sqlMap>

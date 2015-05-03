@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- Always ensure to use the correct XML header as above! -->
+<sqlMap namespace="Role">
+<typeAlias alias="role" type="com.chz.smartoa.system.pojo.Role"/> 
+<resultMap id="role_result" class="role">
+    <result property="roleId" column="ROLE_ID"/>
+    <result property="roleDesc" column="ROLE_DESC"/>
+    <result property="roleType" column="ROLE_TYPE"/>
+    <result property="roleKey" column="ROLE_KEY"/>
+    <result property="level" column="LEVEL"/>
+    <result property="dataType" column="DATA_TYPE"/>
+    <result property="createUser" column="CREATE_USER"/>
+    <result property="createDate" column="CREATE_DATE"/>
+    <result property="roleName" column="ROLE_NAME"/>
+    <result property="superAdmin" column="SUPER_ADMIN"/>
+    <result property="lastUpdateDate" column="LAST_UPDATE_DATE"/>
+</resultMap>
+
+<select id="Role_getIdByName" resultClass="string" parameterClass="string">
+<![CDATA[
+    SELECT ROLE_ID FROM t_role WHERE ROLE_NAME = #roleName#
+]]>
+</select>
+
+<insert id="Role_insertRole" parameterClass="role" >
+<![CDATA[
+    INSERT INTO t_role (
+            ROLE_DESC, 
+            ROLE_TYPE, 
+            ROLE_KEY, 
+            LEVEL,
+            DATA_TYPE,
+            CREATE_USER, 
+            CREATE_DATE, 
+            ROLE_NAME, 
+            LAST_UPDATE_DATE
+        )
+    VALUES (
+		       		#roleDesc#,
+		       		#roleType#,
+		       		#roleKey#,
+		       		#level#,
+                    #dataType#,
+		       		#createUser#,
+		        	sysdate(),
+		       		#roleName#,
+		        	sysdate()
+		    )
+]]>
+</insert>
+
+<insert id="RoleResource_insertRoleResource" parameterClass="java.util.Map" >
+<![CDATA[
+    INSERT INTO t_role_resource (
+            RESOURCE_KEY, 
+            ROLE_ID
+        )
+    VALUES (
+       		#resourceKey#,
+		       		#roleId#
+		    )
+]]>
+</insert>
+
+<delete id="Role_deleteRole" parameterClass="java.lang.String">
+<![CDATA[
+    DELETE  FROM  t_role WHERE ROLE_ID = #roleId#
+]]>
+		
+</delete> 
+
+<delete id="Role_deleteRoleOperation" parameterClass="java.lang.String">
+<![CDATA[
+    DELETE  FROM  t_role_resource WHERE ROLE_ID = #roleId#
+]]>
+</delete> 
+
+<delete id="Role_deleteStaffRoleByRoleId" parameterClass="java.lang.String">
+<![CDATA[
+    DELETE  FROM  t_staff_role WHERE ROLE_ID = #roleId#
+]]>
+</delete> 
+
+<delete id="Role_deleteDepartmentRoleByRoleId" parameterClass="java.lang.String">
+<![CDATA[
+    DELETE  FROM  t_department_role WHERE ROLE_ID = #roleId#
+]]>
+</delete> 
+
+<update id="Role_updateRole" parameterClass="role">
+    UPDATE t_role 
+    SET
+    	ROLE_ID = #roleId#
+    <isNotEmpty prepend="," property="level">
+     	   		LEVEL = #level#
+				</isNotEmpty>
+	<isNotEmpty prepend="," property="dataType">
+     	   		DATA_TYPE = #dataType#
+				</isNotEmpty>
+	<isNotEmpty prepend="," property="roleDesc">
+     	   		ROLE_DESC = #roleDesc#
+				</isNotEmpty>
+	<isNotEmpty prepend="," property="roleType">
+     	   		ROLE_TYPE = #roleType#
+				</isNotEmpty>
+	<isNotEmpty prepend="," property="roleKey">
+     	   		ROLE_KEY = #roleKey#
+				</isNotEmpty>
+	<isNotEmpty prepend="," property="createUser">
+     	   		CREATE_USER = #createUser#
+				</isNotEmpty>
+	<isNotEmpty prepend="," property="roleName">
+     	   		ROLE_NAME = #roleName#
+				</isNotEmpty>
+     	    	,LAST_UPDATE_DATE = sysdate()
+    WHERE ROLE_ID = #roleId#
+</update> 
+
+<select id="Role_findRole" resultMap="role_result" parameterClass="string">
+<![CDATA[
+    SELECT
+       		ROLE_ID,
+		       		ROLE_DESC,
+		       		ROLE_TYPE,
+		       		ROLE_KEY,
+		       		LEVEL,
+		       		DATA_TYPE,
+		       		CREATE_USER,
+		        	date_format(CREATE_DATE,'%Y-%m-%d') CREATE_DATE,
+		       		ROLE_NAME,
+		       		SUPER_ADMIN,
+		        	date_format(LAST_UPDATE_DATE,'%Y-%m-%d') LAST_UPDATE_DATE
+		    FROM t_role WHERE ROLE_ID = #roleId#
+]]>
+</select>
+
+<select id="Role_findRoleByName" resultMap="role_result" parameterClass="string">
+<![CDATA[
+    SELECT
+       		ROLE_ID,
+		       		ROLE_DESC,
+		       		ROLE_TYPE,
+		       		ROLE_KEY,
+		       		LEVEL,
+		       		DATA_TYPE,
+		       		CREATE_USER,
+		        	date_format(CREATE_DATE,'%Y-%m-%d') CREATE_DATE,
+		       		ROLE_NAME,
+		       		SUPER_ADMIN,
+		        	date_format(LAST_UPDATE_DATE,'%Y-%m-%d %k:%i:%s') LAST_UPDATE_DATE
+		    FROM t_role WHERE ROLE_NAME = #roleName#
+]]>
+</select>
+
+<select id="Role_listStaffRole" resultMap="role_result" parameterClass="java.lang.String">
+<![CDATA[
+    SELECT
+       		ROLE_ID,
+		       		ROLE_DESC,
+		       		ROLE_TYPE,
+		       		ROLE_KEY,
+		       		LEVEL,
+		       		DATA_TYPE,
+		       		CREATE_USER,
+		        	date_format(CREATE_DATE,'%Y-%m-%d') CREATE_DATE,
+		       		ROLE_NAME,
+		       		SUPER_ADMIN,
+		        	date_format(LAST_UPDATE_DATE,'%Y-%m-%d') LAST_UPDATE_DATE
+		    FROM t_role r 
+			WHERE role_id IN(select role_id from t_staff_role where login_name =#loginName#)
+]]>
+</select>
+
+<select id="Role_listRoleResource" resultClass="java.lang.String" parameterClass="java.lang.String">
+<![CDATA[
+    select resource_key from t_role_resource where role_id = #roleId#
+]]>
+</select>
+
+<select id="Role_listRole" resultMap="role_result" parameterClass="role">
+<![CDATA[
+    SELECT
+       		ROLE_ID,
+		       		ROLE_DESC,
+		       		ROLE_TYPE,
+		       		ROLE_KEY,
+		       		LEVEL,
+		       		DATA_TYPE,
+		       		CREATE_USER,
+		        	date_format(CREATE_DATE,'%Y-%m-%d') CREATE_DATE,
+		       		ROLE_NAME,
+		       		SUPER_ADMIN,
+		        	date_format(LAST_UPDATE_DATE,'%Y-%m-%d') LAST_UPDATE_DATE
+		    FROM t_role
+]]>
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="and" property = "roleId">
+				ROLE_ID = #roleId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "roleDesc">
+				ROLE_DESC = #roleDesc#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "roleType">
+				ROLE_TYPE = #roleType#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "roleKey">
+				ROLE_KEY = #roleKey#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "createUser">
+				CREATE_USER = #createUser#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "createDate">
+				CREATE_DATE = #createDate#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "roleName">
+				ROLE_NAME like '%$roleName$%'
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "lastUpdateDate">
+				LAST_UPDATE_DATE = #lastUpdateDate#
+			</isNotEmpty>
+		</dynamic>
+		order by CREATE_DATE desc,ROLE_ID
+</select>
+
+<select id="Role_listRoleCount" resultClass="java.lang.Integer" parameterClass="role">
+<![CDATA[
+    SELECT
+		COUNT(1)
+    FROM t_role
+]]>
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="and" property = "roleId">
+				ROLE_ID = #roleId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "roleDesc">
+				ROLE_DESC = #roleDesc#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "roleType">
+				ROLE_TYPE = #roleType#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "roleKey">
+				ROLE_KEY = #roleKey#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "createUser">
+				CREATE_USER = #createUser#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "createDate">
+				CREATE_DATE = #createDate#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "roleName">
+				ROLE_NAME like '%$roleName$%'
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "lastUpdateDate">
+				LAST_UPDATE_DATE = #lastUpdateDate#
+			</isNotEmpty>
+		</dynamic>
+</select>
+
+</sqlMap>

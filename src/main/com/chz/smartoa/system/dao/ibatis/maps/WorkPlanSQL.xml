@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- Always ensure to use the correct XML header as above! -->
+<sqlMap namespace="WpManager">
+	
+	<!-- 工作日程管理表实体类  -->
+	<typeAlias alias="wplan" type="com.chz.smartoa.system.pojo.WorkPlan"/>  
+	
+	
+	<!-- 新增 -->
+	<insert id="wplan_insertWplan" parameterClass="wplan">
+		INSERT INTO T_WORK_PLAN(WORK_DATE,WORK_TIME,WORK_DESC,NOTICE_TYPE,CREATE_USER,CREATE_DT,UPDATE_USER,UPDATE_DT,NOTICE_ID)
+		VALUES(#workDate#,#workTime#,#workDesc#,#noticeType#,#createUser#,SYSDATE(),#updateUser#,SYSDATE(),#noticeId#)
+	</insert>
+	
+	<!-- 删除  -->
+	<delete id="wplan_deleteWplan" parameterClass="java.lang.Long">
+		DELETE FROM T_WORK_PLAN WHERE W_ID = #id#
+	</delete>
+	
+	
+	<!-- 修改  -->
+	<update id="wplan_updateWplan" parameterClass="wplan">
+		UPDATE T_WORK_PLAN FM 
+		SET FM.WORK_TIME = #workTime#,
+		    FM.WORK_DESC = #workDesc#,
+		    FM.NOTICE_TYPE = #noticeType#,
+		    FM.UPDATE_USER = #updateUser#,
+		    FM.UPDATE_DT = SYSDATE(),
+		    FM.NOTICE_ID = #noticeId#
+		WHERE FM.W_ID = #id#
+	</update>
+	
+	
+	<!--  查找 (根据主键唯一编号查询数据对象) -->
+	<select id="wplan_findWplanById" resultClass="wplan" parameterClass="java.lang.Long">
+		<![CDATA[
+		    SELECT 
+		    	W_ID AS id,
+		    	WORK_DATE AS workDate,
+		    	WORK_TIME AS workTime,
+		    	WORK_DESC AS workDesc,
+		    	NOTICE_TYPE AS noticeType,
+		    	CREATE_USER AS createUser,
+		    	CREATE_DT AS createDt,
+		    	UPDATE_USER AS updateUser,
+		    	UPDATE_DT AS updateDt,
+		    	NOTICE_ID AS noticeId
+		    FROM T_WORK_PLAN WHERE W_ID = #id#
+		]]>
+	</select>
+	
+	
+	<!--  根据页面条件查找数据列表 -->
+	<select id="wplan_findWplanByDate" resultClass="wplan" parameterClass="wplan">
+		<![CDATA[
+		    SELECT 
+		    	W_ID AS id,
+		    	WORK_DATE AS workDate,
+		    	WORK_TIME AS workTime,
+		    	WORK_DESC AS workDesc,
+		    	NOTICE_TYPE AS noticeType,
+		    	CREATE_USER AS createUser,
+		    	CREATE_DT AS createDt,
+		    	UPDATE_USER AS updateUser,
+		    	UPDATE_DT AS updateDt,
+		    	NOTICE_ID AS noticeId
+		    FROM T_WORK_PLAN WHERE DATEDIFF(WORK_DATE,#selectDate#)=0
+		     AND CREATE_USER = #createUser#
+		]]>
+		ORDER BY WORK_TIME ASC
+	</select>
+	
+	
+	<!--  获取当前月的前一个月和后一个月已经设置的数据 -->
+	<select id="wplan_workDateByBetweenDate" resultClass="wplan" parameterClass="wplan">
+		<![CDATA[
+		    SELECT 
+		    	WORK_DATE AS workDate
+		    FROM T_WORK_PLAN WHERE CREATE_USER = #createUser#
+		]]>
+		<isNotEmpty prepend="and" property = "startDt">
+			<![CDATA[DATEDIFF(WORK_DATE,#startDt#)>=0]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property = "endDt">
+			<![CDATA[DATEDIFF(WORK_DATE,#endDt#)<0]]>
+		</isNotEmpty>
+		GROUP BY WORK_DATE
+	</select>
+		
+</sqlMap>

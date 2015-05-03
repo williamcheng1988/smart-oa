@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Schedule">
+	<!-- 别名 -->
+	<typeAlias alias="schedule" type="com.chz.smartoa.common.schedule.pojo.ScheduleTask"/>
+			
+	<!-- 检索结果映射) -->
+	<resultMap id="scheduleResult" class="schedule">
+		<result property="id" column="ID"/>
+		<result property="task_name" column="TASK_NAME"/>
+		<result property="task_desc" column="TASK_DESC"/>
+		<result property="group_id" column="GROUP_ID"/>
+		<result property="group_name" column="GROUP_NAME"/>
+		<result property="express" column="EXPRESS"/>
+		<result property="handler_class" column="HANDLER_CLASS"/>
+		<result property="parameters" column="PARAMETERS"/>
+		<result property="status" column="STATUS"/>
+	</resultMap>
+	
+	<!-- 插入 -->
+	<insert id="schedule_insert" parameterClass="schedule">
+		insert into t_schedule_task(
+			ID, 
+			TASK_NAME, 
+			TASK_DESC,
+			GROUP_ID,
+			GROUP_NAME,
+			EXPRESS,
+			HANDLER_CLASS,
+			PARAMETERS
+		) values (
+			#id#,
+			#task_name#,
+			#task_desc#,
+			#group_id#,
+			#group_name#,
+			#express#,
+			#handler_class#,
+			#parameters#)
+	</insert>
+
+	<!-- 更新 -->
+	<update id="schedule_update" parameterClass="schedule">
+		update t_schedule_task set 
+			TASK_NAME = #task_name#, 
+			TASK_DESC = #task_desc#,
+			GROUP_ID = #group_id#,
+			GROUP_NAME = #group_name#,
+			EXPRESS = #express#,
+			HANDLER_CLASS = #handler_class#,
+			PARAMETERS=#parameters#
+		where ID = #id#
+	</update>
+
+	<update id="schedule_updateTime" parameterClass="java.util.Map">
+		update t_schedule_task set 
+			EXPRESS = #express#
+		where ID = #id#
+	</update>
+	
+	<update id="schedule_updateStatus" parameterClass="java.util.Map">
+		update t_schedule_task set 
+			STATUS = #status#
+		where ID = #id#
+	</update>
+	
+	<!-- 删除 -->
+	<delete id="schedule_delete" parameterClass="String">
+		delete from t_schedule_task 
+		where ID = #uid#
+	</delete>
+	
+	<!-- 检索群组(条件：用户ID) -->
+	<select id="schedule_search" parameterClass="java.util.Map" resultMap="scheduleResult">
+		select * from t_schedule_task
+		<isNotEmpty prepend=" AND" property="title">
+			TITLE LIKE '%$title$%'
+		</isNotEmpty>
+	</select>
+		
+	<!-- 检索群组(条件：用户ID) -->
+	<select id="schedule_selectByID" parameterClass="java.lang.String" resultMap="scheduleResult">
+		select * from t_schedule_task where ID=#id#
+	</select>		
+
+	<!-- 检索所有群组(条件：登录ID) -->
+	<select id="schedule_selectAll" resultMap="scheduleResult">
+		select * from t_schedule_task ORDER BY GROUP_NAME
+	</select>	
+</sqlMap>

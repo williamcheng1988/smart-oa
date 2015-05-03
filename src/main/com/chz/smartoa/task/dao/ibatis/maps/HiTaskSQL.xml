@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- Always ensure to use the correct XML header as above! -->
+<sqlMap namespace="HiTask">
+<typeAlias alias="hiTask" type="com.chz.smartoa.task.pojo.HiTask"/> 
+<typeAlias alias="hiTaskVo" type="com.chz.smartoa.task.pojo.HiTaskVo"/> 
+<typeAlias alias="geExecution" type="com.chz.smartoa.task.pojo.GeExecution"/> 
+<typeAlias alias="approveResult" type="com.chz.smartoa.task.pojo.ApproveResult"/> 
+
+<resultMap id="approve_resuls" class="approveResult">
+    <result property="approveType" column="APPROVE_TYPE_"/>
+    <result property="approveDesc" column="APPROVE_DESC_"/>
+    <result property="realName" column="REAL_NAME"/>
+    <result property="endTime" column="END_TIME_"/>
+</resultMap>
+
+<resultMap id="hiTask_result" class="hiTask">
+    <result property="version" column="VERSION_"/>
+    <result property="confId" column="CONF_ID_"/>
+    <result property="approveType" column="APPROVE_TYPE_"/>
+    <result property="taskId" column="TASK_ID_"/>
+    <result property="assignee" column="ASSIGNEE_"/>
+    <result property="delegation" column="DELEGATION_"/>
+    <result property="approveDesc" column="APPROVE_DESC_"/>
+    <result property="taskNum" column="TASK_NUM_"/>
+    <result property="endTime" column="END_TIME_"/>
+    <result property="executionId" column="EXECUTION_ID_"/>
+    <result property="operateResult" column="OPERATE_RESULT_"/>
+    <result property="startTime" column="START_TIME_"/>
+    <result property="recordType" column="RECORD_TYPE_"/>
+    <result property="expiryDays" column="EXPIRY_DAYS_"/>
+</resultMap>
+
+<resultMap id="hiTaskVo_result" class="hiTaskVo">
+	<result property="executionId" column="EXECUTION_ID_"/>
+    <result property="businessKey" column="BUSINESS_KEY_"/>
+    <result property="businessTitle" column="BUSINESS_TITLE_"/>
+    <result property="startTime" column="START_TIME_"/>
+    <result property="realName" column="REAL_NAME"/>
+    <result property="templateId" column="TEMPLATE_ID_"/>
+    <result property="dealSteps" column="DEAL_STEPS_"/>
+    <result property="dealMans" column="DEAL_MANS_"/>
+</resultMap>
+
+<resultMap id="hiTaskVo_result_index" class="hiTaskVo">
+	<result property="executionId" column="EXECUTION_ID_"/>
+    <result property="businessTitle" column="BUSINESS_TITLE_"/>
+</resultMap>
+
+<insert id="HiTask_insertHiTask" parameterClass="hiTask" >
+<![CDATA[
+    INSERT INTO T_HI_TASK (
+            VERSION_, 
+            CONF_ID_, 
+            APPROVE_TYPE_,
+            TASK_ID_,
+            ASSIGNEE_, 
+            DELEGATION_, 
+            APPROVE_DESC_, 
+            TASK_NUM_, 
+            END_TIME_, 
+            EXECUTION_ID_, 
+            OPERATE_RESULT_, 
+            START_TIME_, 
+            RECORD_TYPE_, 
+            EXPIRY_DAYS_
+        )
+    VALUES (
+       		#version#,
+		    #confId#,
+		    #approveType#,
+		    #taskId#,
+		    #assignee#,
+		    #delegation#,
+		    #approveDesc#,	
+		    #taskNum#,
+		    now(),
+		    #executionId#,
+		    #operateResult#,
+		    str_to_date(#startTime:DATE#,'%Y-%m-%d %k:%i:%s'),
+		    #recordType#,
+		    #expiryDays#
+	)
+]]>
+</insert>
+
+
+<select id="HiTask_findHiTask" resultMap="hiTask_result" parameterClass="string">
+<![CDATA[
+    SELECT
+       		VERSION_,
+		       		CONF_ID_,
+		       		ASSIGNEE_,
+		       		DELEGATION_,
+		       		APPROVE_DESC_,
+		       		TASK_NUM_,
+		        	date_format(END_TIME_,'%Y-%m-%d') END_TIME_,
+		       		EXECUTION_ID_,
+		       		OPERATE_RESULT_,
+		        	date_format(START_TIME_,'%Y-%m-%d') START_TIME_,
+		       		RECORD_TYPE_,
+		       		EXPIRY_DAYS_
+		    FROM T_HI_TASK WHERE VERSION_ = #version#
+]]>
+</select>
+
+<select id="HiTask_listApproveResult" resultMap="approve_resuls" parameterClass="java.util.Map">
+<![CDATA[
+     SELECT 
+	     HI_T.APPROVE_TYPE_, 
+	     HI_T.APPROVE_DESC_, 
+	     date_format(HI_T.END_TIME_,'%Y-%m-%d %k:%i:%s') END_TIME_,
+	     S.REAL_NAME
+   FROM T_HI_TASK HI_T
+   LEFT JOIN T_STAFF S ON HI_T.ASSIGNEE_ = S.LOGIN_NAME
+]]>
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="and" property = "execution_id_">
+				EXECUTION_ID_ = #execution_id_#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "task_id_">
+				TASK_ID_ = #task_id_#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "exclude_task_id">
+				TASK_ID_ != #exclude_task_id#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "record_type_">
+				RECORD_TYPE_ = #record_type_#
+			</isNotEmpty>
+		</dynamic>
+   ORDER BY END_TIME_		
+</select>
+
+<select id="HiTask_getApproveResultCnt" resultClass="java.lang.Integer" parameterClass="java.util.Map">
+	<![CDATA[
+		select COUNT(1)
+		  from t_ge_execution ge_e
+		  LEFT JOIN t_hi_task hi_t on ge_e.execution_id_ = hi_t.execution_id_
+		 where ge_e.execution_id_ = #execution_id_#
+		   AND hi_t.assignee_ = #assignee_#
+		   AND ge_e.version_ = hi_t.version_
+	]]>
+</select>
+
+
+<select id="RuTask_listHiTaskForIndex" resultMap="hiTaskVo_result_index" parameterClass="hiTask">
+	<![CDATA[
+	 SELECT DISTINCT 
+		GE_E.EXECUTION_ID_,
+		GE_E.BUSINESS_TITLE_
+		FROM T_HI_TASK HI_T LEFT JOIN T_GE_EXECUTION GE_E
+		ON HI_T.EXECUTION_ID_ = GE_E.EXECUTION_ID_
+	]]>
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="and" property = "assignee">
+				HI_T.assignee_ = #assignee#
+			</isNotEmpty>
+		</dynamic>
+ORDER BY GE_E.START_TIME_ DESC	
+</select>
+
+<select id="HiTask_listHiTask" resultMap="hiTaskVo_result" parameterClass="geExecution">
+<![CDATA[
+     SELECT    
+       A.EXECUTION_ID_,
+       A.BUSINESS_KEY_,
+       A.BUSINESS_TITLE_,
+       A.TEMPLATE_ID_,
+       date_format(A.start_time_,'%Y-%m-%d %k:%i:%s') start_time_,
+       S.REAL_NAME,
+       CASE A.task_status_
+          WHEN 0 THEN '申请提交'
+          WHEN 1 THEN (select GROUP_CONCAT(task_desc_)
+                        from t_re_conf
+                       where conf_id_ in (select DISTINCT conf_id_ from t_ru_task where execution_id_= A.EXECUTION_ID_)
+                         AND action_obj_type_ != 4)
+          WHEN 2 THEN '流程完结[通过]'
+          WHEN 3 THEN '流程完结[不通过]'
+          WHEN 4 THEN '废弃'
+          END DEAL_STEPS_,
+       CASE A.task_status_ 
+          WHEN 0 THEN (select real_name from t_staff where login_name = A.owner_)
+          WHEN 1 THEN (select GROUP_CONCAT(DISTINCT s.real_name)
+                                from t_ru_task t
+                                LEFT JOIN t_re_conf c on t.conf_id_ = c.conf_id_
+                                LEFT JOIN t_staff s on t.assignee_ = s.login_name
+                               where c.action_obj_type_ != 4
+                                 and t.execution_id_ = A.EXECUTION_ID_)
+          ELSE ''
+          END DEAL_MANS_      
+	  FROM (SELECT DISTINCT
+	             GE_E.EXECUTION_ID_,
+	             GE_E.BUSINESS_KEY_,
+	             GE_E.BUSINESS_TITLE_,
+	             GE_E.TEMPLATE_ID_,
+	             GE_E.start_time_,
+	             GE_E.task_status_,
+	             GE_E.owner_
+    FROM T_HI_TASK HI_T LEFT JOIN T_GE_EXECUTION GE_E ON HI_T.EXECUTION_ID_ = GE_E.EXECUTION_ID_
+]]>
+  <dynamic prepend="WHERE">
+			<isNotEmpty prepend="and" property = "owner">
+				(HI_T.assignee_ = #owner# or GE_E.procdef_id_ in(select procdef_id_ from  t_re_procdef where find_in_set(#owner#,manager_))) 
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "businessKey">
+				GE_E.BUSINESS_KEY_ LIKE '%$businessKey$%'
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "businessTitle">
+				GE_E.BUSINESS_TITLE_ LIKE '%$businessTitle$%'
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "projectId">
+   			    GE_E.project_id_ = #projectId#
+     		</isNotEmpty>
+			<isNotEmpty prepend="and" property = "procdefIdS">
+      		    GE_E.TEMPLATE_ID_ IN
+      		    <iterate property="procdefIds" conjunction="," open="(" close=")"> 
+					#procdefIds[]# 
+				</iterate>
+     		</isNotEmpty>
+			<isNotEmpty prepend="and" property = "startTime">
+	    		GE_E.START_TIME_ >= str_to_date(#startTime#,'%Y-%m-%d') 
+	        </isNotEmpty>
+	        <isNotEmpty prepend="and" property = "endTime">
+	    		GE_E.START_TIME_ <![CDATA[ < ]]> date_add(str_to_date(#endTime#,'%Y-%m-%d'),interval 1 day)
+	        </isNotEmpty>
+  </dynamic>
+<![CDATA[
+    ) A
+    LEFT JOIN T_STAFF S ON A.owner_ = S.LOGIN_NAME
+	ORDER BY A.START_TIME_ DESC
+]]>
+</select>
+
+<select id="HiTask_listHiTaskCount" resultClass="java.lang.Integer" parameterClass="geExecution">
+<![CDATA[
+ SELECT COUNT(1) FROM(
+    SELECT DISTINCT
+	       GE_E.EXECUTION_ID_
+	FROM T_HI_TASK HI_T LEFT JOIN T_GE_EXECUTION GE_E ON HI_T.EXECUTION_ID_ = GE_E.EXECUTION_ID_
+  LEFT JOIN T_STAFF S ON HI_T.ASSIGNEE_ = S.LOGIN_NAME
+]]>
+  <dynamic prepend="WHERE">
+			<isNotEmpty prepend="and" property = "owner">
+				(HI_T.assignee_ = #owner# or GE_E.procdef_id_ in(select procdef_id_ from  t_re_procdef where find_in_set(#owner#,manager_)))
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "businessKey">
+				GE_E.BUSINESS_KEY_ LIKE '%$businessKey$%'
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "businessTitle">
+				GE_E.BUSINESS_TITLE_ LIKE '%$businessTitle$%'
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "projectId">
+   			    GE_E.project_id_ = #projectId#
+     		</isNotEmpty>
+			<isNotEmpty prepend="and" property = "procdefIdS">
+      		    GE_E.TEMPLATE_ID_ IN
+      		    <iterate property="procdefIds" conjunction="," open="(" close=")"> 
+					#procdefIds[]# 
+				</iterate>
+     		</isNotEmpty>
+			<isNotEmpty prepend="and" property = "startTime">
+	    		GE_E.START_TIME_ >= str_to_date(#startTime#,'%Y-%m-%d') 
+	        </isNotEmpty>
+	        <isNotEmpty prepend="and" property = "endTime">
+	    		GE_E.START_TIME_ <![CDATA[ < ]]> date_add(str_to_date(#endTime#,'%Y-%m-%d'),interval 1 day)
+	        </isNotEmpty>
+  </dynamic>
+  ) temp
+</select>
+
+</sqlMap>

@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ReProcdef_">
+<typeAlias alias="reProcdef" type="com.chz.smartoa.task.pojo.ReProcdef"/> 
+<resultMap id="reProcdef_result" class="reProcdef">
+    <result property="procdef_id_" column="procdef_id_"/>
+    <result property="name_" column="name_"/>
+    <result property="complete_remind_" column="complete_remind_"/>
+    <result property="uplink_" column="uplink_"/>
+    <result property="version_" column="version_"/>
+    <result property="manager_" column="manager_"/>
+    <result property="important_grade_" column="important_grade_"/>
+    <result property="procdef_status_" column="procdef_status_"/>
+    <result property="create_time_" column="create_time_"/>
+</resultMap>
+
+<insert id="ReProcdef_insertReProcdef_" parameterClass="reProcdef" >
+<![CDATA[
+    INSERT INTO t_re_procdef (
+            procdef_id_, 
+            name_, 
+            version_, 
+            manager_,
+            complete_remind_, 
+            uplink_, 
+            procdef_status_, 
+            important_grade_,
+            create_time_
+        )
+    VALUES (
+    		#procdef_id_#, 
+            #name_#, 
+            #version_#, 
+            #manager_#,
+            #complete_remind_#, 
+            #uplink_#, 
+            #procdef_status_#, 
+            #important_grade_#,
+        	sysdate()
+	)
+]]>
+</insert>
+
+<update id="ReProcdef_updateReProcdefStatus_" parameterClass="java.util.Map">
+<![CDATA[
+    update t_re_procdef set procdef_status_ = #procdef_status_# WHERE procdef_id_ = #procdef_id_#
+]]>
+		
+</update> 
+
+<update id="ReProcdef_updateReProcdef_" parameterClass="reProcdef">
+    UPDATE t_re_procdef 
+    SET
+    	procdef_id_ = #procdef_id_#,manager_ = #manager_#
+	<isNotEmpty prepend="," property="name_">
+     	   		name_ = #name_#
+				</isNotEmpty>
+	<isNotEmpty prepend="," property="complete_remind_">
+     	   		complete_remind_ = #complete_remind_#
+				</isNotEmpty>
+	<isNotEmpty prepend="," property="uplink_">
+     	   		uplink_ = #uplink_#
+				</isNotEmpty>
+	<isNotEmpty prepend="," property="important_grade_">
+     	   		important_grade_ = #important_grade_#
+				</isNotEmpty>
+	WHERE procdef_id_ = #procdef_id_#
+</update>
+
+<select id="ReProcdef_findReProcdef_" resultMap="reProcdef_result" parameterClass="string">
+<![CDATA[
+    SELECT
+    		procdef_id_, 
+            name_, 
+            version_, 
+            complete_remind_, 
+            manager_,
+            uplink_, 
+            procdef_status_, 
+            important_grade_,
+            date_format(create_time_,'%Y-%m-%d') create_time_
+		    FROM t_re_procdef WHERE procdef_id_ = #procdef_id_#
+]]>
+</select>
+
+<select id="ReProcdef_findReProcdefConf_" resultClass="java.util.HashMap" parameterClass="string">
+<![CDATA[
+   SELECT sort_num_,task_desc_,action_type_,action_obj_type_,
+	  CASE action_obj_type_ 
+	          WHEN 1 THEN (select real_name from t_staff where login_name = action_obj_)
+	          WHEN 2 THEN (select role_name from t_role where role_id = action_obj_)
+	          END action_obj_name_      
+	FROM T_RE_CONF 
+	WHERE procdef_id_ = #procdef_id_#
+	order by conf_id_
+]]>
+</select>
+
+<select id="ReProcdef_findReProcdefByName_" resultMap="reProcdef_result" parameterClass="string">
+<![CDATA[
+    SELECT
+    		procdef_id_, 
+            name_, 
+            version_, 
+            complete_remind_, 
+            manager_,
+            uplink_, 
+            procdef_status_, 
+            important_grade_,
+            date_format(create_time_,'%Y-%m-%d') create_time_
+		    FROM t_re_procdef WHERE name_ = #procdefName# and procdef_status_ = 1 ORDER BY version_ DESC limit 1
+]]>
+</select>
+
+<select id="ReProcdef_findReProcdefByExecutionId" resultMap="reProcdef_result" parameterClass="string">
+<![CDATA[
+    SELECT
+    		procdef_id_, 
+            name_, 
+            version_, 
+            complete_remind_, 
+            manager_,
+            uplink_, 
+            procdef_status_, 
+            important_grade_,
+            date_format(create_time_,'%Y-%m-%d') create_time_
+		    FROM t_re_procdef 
+		    WHERE procdef_id_ = (select procdef_id_ from t_ge_execution where execution_id_ = #executionId#)
+]]>
+</select>
+
+<select id="ReProcdef_findReProcdefCount_" resultClass="java.lang.Integer" parameterClass="string">
+<![CDATA[
+    SELECT MAX(version_)
+	FROM t_re_procdef WHERE name_ = #name_#
+]]>
+</select>
+
+<select id="ReProcdef_getCompleteRemind_" resultClass="java.lang.Integer" parameterClass="string">
+<![CDATA[
+    SELECT complete_remind_ FROM t_re_procdef WHERE procdef_id_ = #procdef_id_#
+]]>
+</select>
+
+<select id="ReProcdef_getUplink_" resultClass="java.lang.Integer" parameterClass="string">
+<![CDATA[
+    SELECT uplink_ FROM t_re_procdef where procdef_id_= #procdef_id_#
+]]>
+</select>
+
+<select id="ReProcdef_getIsManager" resultClass="java.lang.Integer" parameterClass="java.util.Map">
+<![CDATA[
+    SELECT count(1) FROM t_re_procdef where procdef_id_= #procdef_id_# and find_in_set(#manager_#,manager_)
+]]>
+</select>
+
+<select id="ReProcdef_listReProcdef_" resultMap="reProcdef_result" parameterClass="reProcdef">
+<![CDATA[
+    SELECT
+       		procdef_id_, 
+            name_, 
+            version_, 
+            manager_,
+            complete_remind_, 
+            uplink_, 
+            procdef_status_, 
+            important_grade_,
+            date_format(create_time_,'%Y-%m-%d') create_time_
+		    FROM t_re_procdef t
+]]>
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="and" property = "name_">
+				name_ like '%$name_$%'
+			</isNotEmpty>
+		</dynamic>
+		order by t.create_time_ desc
+</select>
+
+<select id="ReProcdef_listReProcdefCount_" resultClass="java.lang.Integer" parameterClass="reProcdef">
+<![CDATA[
+    SELECT
+		COUNT(*)
+    FROM t_re_procdef
+]]>
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="and" property = "name_">
+				name_ like '%$name_$%'
+			</isNotEmpty>
+		</dynamic>
+</select>
+
+</sqlMap>

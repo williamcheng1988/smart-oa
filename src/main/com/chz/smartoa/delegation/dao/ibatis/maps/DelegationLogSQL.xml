@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- Always ensure to use the correct XML header as above! -->
+<sqlMap namespace="DelegationLog">
+<typeAlias alias="delegationLog" type="com.chz.smartoa.delegation.pojo.DelegationLog"/> 
+<typeAlias alias="delegationLogVo" type="com.chz.smartoa.delegation.pojo.DelegationLogVo"/> 
+
+
+<resultMap id="delegationLog_result" class="delegationLog">
+    <result property="delegationId" column="DELEGATION_ID"/>
+    <result property="executionId" column="EXECUTION_ID"/>
+    <result property="createDate" column="CREATE_DATE"/>
+    <result property="dealDate" column="DEAL_DATE"/>
+</resultMap>
+
+<insert id="DelegationLog_insertDelegationLog" parameterClass="delegationLog" >
+<![CDATA[
+    INSERT INTO t_delegation_log (
+            DELEGATION_ID, 
+            EXECUTION_ID,
+            CREATE_DATE
+            
+        )
+    VALUES (
+		   #delegationId#,
+		   #executionId#,
+		   now()
+		       		
+		)
+]]>
+</insert>
+
+<insert id="DelegationLog_updteDelegationDealDate" parameterClass="delegationLog" >
+update t_delegation_log set deal_date = now() 
+	where log_id = 
+		(select log_id from 
+			t_delegation_log l 
+			LEFT JOIN t_delegation d on l.delegation_id = d.delegation_id 
+			where 
+			l.EXECUTION_ID = #executionId#
+			and d.from_user = #fromUser#
+			order by l.CREATE_DATE
+			limit 1)
+</insert>
+
+<select id="DelegationLog_dealListDelegationLog" resultClass="delegationLogVo" parameterClass="string">
+<![CDATA[
+	SELECT 
+	   E.EXECUTION_ID_ executionId,
+       E.BUSINESS_KEY_ businessKey,
+       E.BUSINESS_TITLE_ businessTitle,
+       S.LOGIN_NAME loginName,
+       date_format(h.end_time_, '%Y-%m-%d %k:%i:%s') dealTime
+  FROM T_GE_EXECUTION e
+  JOIN t_hi_task h on e.execution_id_ = h.execution_id_
+  LEFT JOIN T_STAFF S ON E.OWNER_ = S.LOGIN_NAME
+ WHERE EXISTS (select 1
+          FROM T_DELEGATION d
+         WHERE d.DELEGATION_ID = #delegationid#
+           AND d.from_user = h.delegation_
+           AND h.start_time_ BETWEEN
+               str_to_date(date_format((select IFNULL((select end_date from T_DELEGATION ta where EXISTS(
+								select 1 from T_DELEGATION tb where ta.from_user = tb.from_user and tb.start_date > ta.end_date
+								and tb.DELEGATION_ID = #delegationid#)ORDER BY end_date DESC LIMIT 1),
+                              d.start_date)),'%Y-%m-%d'),'%Y-%m-%d') and d.end_date)
+   AND h.delegation_ IS NOT NULL
+]]>
+</select>
+
+<select id="DelegationLog_dealListDelegationLogCount" resultClass="java.lang.Integer" parameterClass="string">
+<![CDATA[
+  SELECT 
+	  COUNT(*)
+  FROM T_GE_EXECUTION e
+  JOIN t_hi_task h on e.execution_id_ = h.execution_id_
+  LEFT JOIN T_STAFF S ON E.OWNER_ = S.LOGIN_NAME
+ WHERE EXISTS (select 1
+          FROM T_DELEGATION d
+         WHERE d.DELEGATION_ID = #delegationid#
+           AND d.from_user = h.delegation_
+           AND h.start_time_ BETWEEN
+               str_to_date(date_format((select IFNULL((select end_date from T_DELEGATION ta where EXISTS(
+								select 1 from T_DELEGATION tb where ta.from_user = tb.from_user and tb.start_date > ta.end_date
+								and tb.DELEGATION_ID = #delegationid#)ORDER BY end_date DESC LIMIT 1),
+                              d.start_date)),'%Y-%m-%d'),'%Y-%m-%d') and d.end_date)
+   AND h.delegation_ IS NOT NULL
+]]>
+</select>
+  
+
+<select id="DelegationLog_undoListDelegationLog" resultClass="delegationLogVo" parameterClass="string">
+<![CDATA[
+	SELECT 
+	   E.EXECUTION_ID_ executionId,
+       E.BUSINESS_KEY_ businessKey,
+       E.BUSINESS_TITLE_ businessTitle,
+       S.LOGIN_NAME loginName,
+	    date_format(IF(d.start_date > r.arrive_time_,d.start_date,r.arrive_time_), '%Y-%m-%d %k:%i:%s') delegationTime
+  FROM T_GE_EXECUTION e
+  JOIN t_ru_task r on e.execution_id_ = r.execution_id_
+  LEFT JOIN T_STAFF S ON E.OWNER_ = S.LOGIN_NAME
+  LEFT JOIN T_DELEGATION d on d.from_user = r.delegation_
+  WHERE r.arrive_time_ BETWEEN
+               str_to_date(date_format((select IFNULL((select end_date from T_DELEGATION ta where EXISTS(
+								select 1 from T_DELEGATION tb where ta.from_user = tb.from_user and tb.start_date > ta.end_date
+								and tb.DELEGATION_ID = #delegationid#)ORDER BY end_date DESC LIMIT 1),
+                              d.start_date)),'%Y-%m-%d'),'%Y-%m-%d') and d.end_date
+  AND r.delegation_ IS NOT NULL
+  AND d.DELEGATION_ID = #delegationid#
+]]>
+</select>
+
+<select id="DelegationLog_undoListDelegationLogCount" resultClass="java.lang.Integer" parameterClass="string">
+<![CDATA[
+  SELECT 
+	  COUNT(*)
+  FROM T_GE_EXECUTION e
+  JOIN t_ru_task r on e.execution_id_ = r.execution_id_
+  LEFT JOIN T_STAFF S ON E.OWNER_ = S.LOGIN_NAME
+  LEFT JOIN T_DELEGATION d on d.from_user = r.delegation_
+  WHERE r.arrive_time_ BETWEEN
+               str_to_date(date_format((select IFNULL((select end_date from T_DELEGATION ta where EXISTS(
+								select 1 from T_DELEGATION tb where ta.from_user = tb.from_user and tb.start_date > ta.end_date
+								and tb.DELEGATION_ID = #delegationid#)ORDER BY end_date DESC LIMIT 1),
+                              d.start_date)),'%Y-%m-%d'),'%Y-%m-%d') and d.end_date
+  AND r.delegation_ IS NOT NULL
+  AND d.DELEGATION_ID = #delegationid#
+]]>
+</select>  
+</sqlMap>

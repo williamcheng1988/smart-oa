@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- Always ensure to use the correct XML header as above! -->
+<sqlMap namespace="Delegation">
+<typeAlias alias="delegation" type="com.chz.smartoa.delegation.pojo.Delegation"/> 
+<resultMap id="delegation_result" class="delegation">
+    <result property="createor" column="CREATEOR"/>
+    <result property="startDate" column="START_DATE"/>
+    <result property="toUser" column="TO_USER"/>
+    <result property="fromUserName" column="FROM_USERNAME"/>
+    <result property="endDate" column="END_DATE"/>
+    <result property="delegationId" column="DELEGATION_ID"/>
+    <result property="fromUser" column="FROM_USER"/>
+    <result property="createDate" column="CREATE_DATE"/>
+    <result property="toUserName" column="TO_USERNAME"/>
+    <result property="status" column="STATUS"/>
+</resultMap>
+
+<insert id="Delegation_insertDelegation" parameterClass="delegation" >
+<![CDATA[
+    INSERT INTO t_delegation (
+            CREATEOR, 
+            TO_USER, 
+            TO_USERNAME, 
+            FROM_USER, 
+            FROM_USERNAME, 
+            START_DATE, 
+            END_DATE, 
+            DELEGATION_ID, 
+            CREATE_DATE, 
+            STATUS
+        )
+    VALUES (
+       		#createor#,
+		    #toUser#,
+		    (select real_name from t_staff where login_name = #toUser#),
+		    #fromUser#,
+		    (select real_name from t_staff where login_name = #fromUser#),
+		    str_to_date(#startDate:DATE#,'%Y-%m-%d'),
+		    str_to_date(#endDate:DATE#,'%Y-%m-%d %k:%i:%s'),
+		    #delegationId#,
+        	now(),
+		    )
+			#status#
+]]>
+</insert>
+
+<update id="Delegation_updateDelegation" parameterClass="delegation">
+    UPDATE t_delegation 
+    SET
+    	DELEGATION_ID = #delegationId#
+	<isNotEmpty prepend="," property="endDate">
+     	    	END_DATE = now()
+				</isNotEmpty>
+	<isNotEmpty prepend="," property="status">
+     	   		STATUS = #status#
+				</isNotEmpty>
+    WHERE DELEGATION_ID = #delegationId#
+</update> 
+
+<delete id="Delegation_deleteDelegation" parameterClass="java.lang.String">
+<![CDATA[
+    DELETE  FROM  t_delegation WHERE DELEGATION_ID = #delegationId#
+]]>
+</delete> 
+
+<select id="Delegation_findDelegation" resultMap="delegation_result" parameterClass="string">
+<![CDATA[
+    SELECT
+       		CREATEOR,
+		        	date_format(START_DATE,'%Y-%m-%d') START_DATE,
+		       		TO_USER,
+		       		FROM_USERNAME,
+		        	date_format(END_DATE,'%Y-%m-%d') END_DATE,
+		       		 DELEGATION_ID,
+		       		FROM_USER,
+		        	date_format(CREATE_DATE,'%Y-%m-%d') CREATE_DATE,
+		       		TO_USERNAME,
+		       		STATUS
+		    FROM t_delegation WHERE DELEGATION_ID = #delegationId#
+]]>
+</select>
+
+<select id="Delegation_findDelegationByFromUser" resultMap="delegation_result" parameterClass="string">
+<![CDATA[
+    SELECT
+       		CREATEOR,
+		        	date_format(START_DATE,'%Y-%m-%d') START_DATE,
+		       		TO_USER,
+		       		FROM_USERNAME,
+		        	date_format(END_DATE,'%Y-%m-%d') END_DATE,
+		       		 DELEGATION_ID,
+		       		FROM_USER,
+		        	date_format(CREATE_DATE,'%Y-%m-%d') CREATE_DATE,
+		       		TO_USERNAME,
+		       		STATUS
+		    FROM t_delegation 
+			where from_user =#fromUser# 
+			and now() between start_date and end_date
+  			and status = 1
+]]>
+</select>
+
+<select id="Delegation_findDelegationTouser" resultClass="string" parameterClass="string">
+<![CDATA[
+   select to_user from t_delegation 
+   where from_user =#fromUser# and now() between start_date and end_date
+   and status = 1
+]]>
+</select>
+
+<select id="Delegation_listDelegation" resultMap="delegation_result" parameterClass="delegation">
+<![CDATA[
+    SELECT
+       		CREATEOR,
+		        	date_format(START_DATE,'%Y-%m-%d') START_DATE,
+		       		TO_USER,
+		       		FROM_USERNAME,
+		        	date_format(END_DATE,'%Y-%m-%d %k:%i:%s') END_DATE,
+		       		DELEGATION_ID,
+		       		FROM_USER,
+		        	date_format(CREATE_DATE,'%Y-%m-%d %k:%i:%s') CREATE_DATE,
+		       		TO_USERNAME,
+		       		STATUS
+		    FROM t_delegation
+]]>
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="," property="toUser">
+	     	   		TO_USER = #toUser#
+					</isNotEmpty>
+			<isNotEmpty prepend="," property="fromUser">
+	     	   		FROM_USER = #fromUser#
+					</isNotEmpty>
+			<isNotEmpty prepend="and" property = "fromUserName">
+				FROM_USERNAME LIKE '%$fromUserName$%'
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "toUserName">
+				TO_USERNAME LIKE '%$toUserName$%'
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "status">
+				STATUS = #status#
+			</isNotEmpty>
+			<isNotEmpty property = "startDate">
+				<isNotEmpty prepend="and" property = "endDate">
+					(<![CDATA[START_DATE >= str_to_date(#startDate:DATE#,'%Y-%m-%d') and START_DATE <= str_to_date(#endDate:DATE#,'%Y-%m-%d %k:%i:%s')]]>)
+					 or 
+					(<![CDATA[END_DATE >= str_to_date(#startDate:DATE#,'%Y-%m-%d') and END_DATE <= str_to_date(#endDate:DATE#,'%Y-%m-%d %k:%i:%s')]]>)
+				</isNotEmpty>
+			</isNotEmpty>
+		</dynamic>
+		order by CREATE_DATE desc
+</select>
+
+
+<select id="Delegation_listDelegationCount" resultClass="java.lang.Integer" parameterClass="delegation">
+<![CDATA[
+    SELECT
+		COUNT(*)
+    FROM t_delegation
+]]>
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="," property="toUser">
+     	   		TO_USER = #toUser#
+				</isNotEmpty>
+			<isNotEmpty prepend="," property="fromUser">
+     	   		FROM_USER = #fromUser#
+				</isNotEmpty>
+			<isNotEmpty prepend="and" property = "fromUserName">
+				FROM_USERNAME LIKE '%$fromUserName$%'
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "toUserName">
+				TO_USERNAME LIKE '%$toUserName$%'
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "status">
+				STATUS = #status#
+			</isNotEmpty>
+			<isNotEmpty property = "startDate">
+				<isNotEmpty prepend="and" property = "endDate">
+					(<![CDATA[START_DATE >= str_to_date(#startDate:DATE#,'%Y-%m-%d') and START_DATE <= str_to_date(#endDate:DATE#,'%Y-%m-%d')]]>)
+					 or 
+					(<![CDATA[END_DATE >= str_to_date(#startDate:DATE#,'%Y-%m-%d') and END_DATE <= str_to_date(#endDate:DATE#,'%Y-%m-%d')]]>)
+				</isNotEmpty>
+			</isNotEmpty>
+		</dynamic>
+</select>
+
+</sqlMap>

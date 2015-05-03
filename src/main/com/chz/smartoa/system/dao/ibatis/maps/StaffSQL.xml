@@ -1,0 +1,494 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- Always ensure to use the correct XML header as above! -->
+<sqlMap namespace="Staff">
+<typeAlias alias="staff" type="com.chz.smartoa.system.pojo.Staff"/> 
+<typeAlias alias="staffRole" type="com.chz.smartoa.system.pojo.StaffRole"/> 
+
+<resultMap id="staff_result" class="staff">
+    <result property="departmentId" column="DEPARTMENT_ID"/>
+    <result property="realName" column="REAL_NAME"/>
+    <result property="payAttendance" column="PAY_ATTENDANCE"/>
+    <result property="payHour" column="PAY_HOUR"/>
+    <result property="status" column="STATUS"/>
+    <result property="zip" column="ZIP"/>
+    <result property="pwdErrCount" column="PWD_ERR_COUNT"/>
+    <result property="createUser" column="CREATE_USER"/>
+    <result property="sex" column="SEX"/>
+    <result property="email" column="EMAIL"/>
+    <result property="password" column="PASSWORD"/>
+    <result property="expireDate" column="EXPIRE_DATE"/>
+    <result property="lastDegree" column="LAST_DEGREE"/>
+    <result property="payBase" column="PAY_BASE"/>
+    <result property="payHrcost" column="PAY_HRCOST"/>
+    <result property="address" column="ADDRESS"/>
+    <result property="loginName" column="LOGIN_NAME"/>
+    <result property="lastUpdateDate" column="LAST_UPDATE_DATE"/>
+    <result property="telephone" column="TELEPHONE"/>
+    <result property="lockDate" column="LOCK_DATE"/>
+    <result property="passwordExpireDate" column="PASSWORD_EXPIRE_DATE"/>
+    <result property="mobile" column="MOBILE"/>
+    <result property="speciality" column="SPECIALITY"/>
+    <result property="createDate" column="CREATE_DATE"/>
+</resultMap>
+
+<insert id="Staff_insertStaff" parameterClass="staff" >
+<![CDATA[
+    INSERT INTO t_staff (
+            DEPARTMENT_ID, 
+            REAL_NAME, 
+            PAY_ATTENDANCE, 
+            PAY_HOUR, 
+            STATUS, 
+            ZIP, 
+            PWD_ERR_COUNT, 
+            CREATE_USER, 
+            SEX, 
+            EMAIL, 
+            PASSWORD,
+            LAST_DEGREE, 
+            PAY_BASE, 
+            PAY_HRCOST, 
+            ADDRESS, 
+            LOGIN_NAME, 
+            LAST_UPDATE_DATE, 
+            TELEPHONE,
+            MOBILE, 
+            SPECIALITY, 
+            CREATE_DATE
+        )
+    VALUES (
+		       		#departmentId#,
+		       		#realName#,
+		       		#payAttendance#,
+		       		#payHour#,
+		       		#status#,
+		       		#zip#,
+		       		#pwdErrCount#,
+		       		#createUser#,
+		       		#sex#,
+		       		#email#,
+		       		#password#,
+		       		#lastDegree#,
+		       		#payBase#,
+		       		#payHrcost#,
+		       		#address#,
+		       		#loginName#,
+		       		now(),
+		       		#telephone#,
+		       		#mobile#,
+		       		#speciality#,
+		        	now()
+		    )
+]]>
+</insert>
+
+<insert id="Staff_insertStaffRole" parameterClass="staffRole" >
+<![CDATA[
+    INSERT INTO t_staff_role (
+            LOGIN_NAME, 
+            ROLE_ID,
+            PROJECT_ID
+        )
+    VALUES (
+       		#staffId#,
+		    #roleId#,
+		    #projectId#
+		)
+]]>
+</insert>
+
+<delete id="Staff_deleteStaff" parameterClass="java.lang.String">
+<![CDATA[
+    UPDATE t_staff SET STATUS = 3 WHERE LOGIN_NAME = #loginName#
+]]>
+</delete>    
+
+<delete id="Staff_deleteStaffRole" parameterClass="java.lang.String">
+<![CDATA[
+    DELETE FROM T_STAFF_ROLE WHERE LOGIN_NAME = #loginName#
+]]>
+</delete>   
+
+<delete id="Staff_deleteStaffRoleByProjectId" parameterClass="java.lang.String">
+<![CDATA[
+    DELETE FROM T_STAFF_ROLE WHERE PROJECT_ID = #projectId#
+]]>
+</delete>   
+
+<update id="Staff_updateStaff" parameterClass="staff">
+    UPDATE t_staff 
+    SET
+    	LOGIN_NAME = #loginName#
+	<isNotEmpty prepend="," property="departmentId">
+     	   		DEPARTMENT_ID = #departmentId#
+				</isNotEmpty>
+	<isNotEmpty prepend="," property="realName">
+     	   		REAL_NAME = #realName#
+				</isNotEmpty>
+	<isNotEmpty prepend="," property="payAttendance">
+     	   		PAY_ATTENDANCE = #payAttendance#
+				</isNotEmpty>
+	<isNotEmpty prepend="," property="payHour">
+     	   		PAY_HOUR = #payHour#
+				</isNotEmpty>
+	<isNotEmpty prepend="," property="status">
+     	   		STATUS = #status#
+				</isNotEmpty>
+	<isNotEmpty prepend="," property="zip">
+     	   		ZIP = #zip#
+				</isNotEmpty>
+	<isNotEmpty prepend="," property="pwdErrCount">
+     	   		PWD_ERR_COUNT = #pwdErrCount#
+				</isNotEmpty>
+	<isNotEmpty prepend="," property="createUser">
+     	   		CREATE_USER = #createUser#
+				</isNotEmpty>
+	<isNotEmpty prepend="," property="sex">
+     	   		SEX = #sex#
+				</isNotEmpty>
+	<isNotEmpty prepend="," property="email">
+     	   		EMAIL = #email#
+				</isNotEmpty>
+	<isNotEmpty prepend="," property="password">
+     	   		PASSWORD = #password#
+				</isNotEmpty>
+	<isNotEmpty prepend="," property="expireDate">
+     	    	EXPIRE_DATE = str_to_date(#expireDate:DATE#,'%Y-%m-%d')
+				</isNotEmpty>
+	<isNotEmpty prepend="," property="lastDegree">
+     	   		LAST_DEGREE = #lastDegree#
+				</isNotEmpty>
+	<isNotEmpty prepend="," property="payBase">
+     	   		PAY_BASE = #payBase#
+				</isNotEmpty>
+	<isNotEmpty prepend="," property="payHrcost">
+     	   		PAY_HRCOST = #payHrcost#
+				</isNotEmpty>
+	<isNotEmpty prepend="," property="address">
+     	   		ADDRESS = #address#
+				</isNotEmpty>
+	<isNotEmpty prepend="," property="loginName">
+     	   		LOGIN_NAME = #loginName#
+				</isNotEmpty>
+	<isNotEmpty prepend="," property="lastUpdateDate">
+     	    	LAST_UPDATE_DATE = str_to_date(#lastUpdateDate:DATE#,'%Y-%m-%d')
+				</isNotEmpty>
+	<isNotEmpty prepend="," property="telephone">
+     	   		TELEPHONE = #telephone#
+				</isNotEmpty>
+	<isNotEmpty prepend="," property="lockDate">
+     	    	LOCK_DATE = now()
+				</isNotEmpty>
+	<isNotEmpty prepend="," property="passwordExpireDate">
+     	    	PASSWORD_EXPIRE_DATE = str_to_date(#passwordExpireDate:DATE#,'%Y-%m-%d')
+				</isNotEmpty>
+	<isNotEmpty prepend="," property="mobile">
+     	   		MOBILE = #mobile#
+				</isNotEmpty>
+	<isNotEmpty prepend="," property="speciality">
+     	   		SPECIALITY = #speciality#
+				</isNotEmpty>
+    WHERE LOGIN_NAME = #loginName#
+</update> 
+
+<select id="Staff_findStaffByLoginName" resultMap="staff_result" parameterClass="string">
+<![CDATA[
+    SELECT
+		       		DEPARTMENT_ID,
+		       		REAL_NAME,
+		       		PAY_ATTENDANCE,
+		       		PAY_HOUR,
+		       		STATUS,
+		       		ZIP,
+		       		PWD_ERR_COUNT,
+		       		CREATE_USER,
+		       		SEX,
+		       		EMAIL,
+		       		PASSWORD,
+					date_format(EXPIRE_DATE,'%Y-%m-%d') EXPIRE_DATE,
+		       		LAST_DEGREE,
+		       		PAY_BASE,
+		       		PAY_HRCOST,
+		       		ADDRESS,
+		       		LOGIN_NAME,
+					date_format(LAST_UPDATE_DATE,'%Y-%m-%d') LAST_UPDATE_DATE,
+		       		TELEPHONE,
+					date_format(LOCK_DATE,'%Y-%m-%d') LOCK_DATE,
+					date_format(PASSWORD_EXPIRE_DATE,'%Y-%m-%d') PASSWORD_EXPIRE_DATE,
+		       		MOBILE,
+		       		SPECIALITY,
+					date_format(CREATE_DATE,'%Y-%m-%d') CREATE_DATE
+		    FROM t_staff WHERE LOGIN_NAME = #loginName#
+]]>
+</select>
+
+<select id="Staff_contacts" resultClass="staff"  parameterClass="string">
+    SELECT
+		   real_name as realName,
+		   login_name as loginName,
+		   email,
+		   mobile
+	FROM t_staff
+	where status != 3
+	<dynamic>
+		<isNotEmpty prepend="and">
+			real_name like '%$loginName$%' or login_name like '%$loginName$%'
+		</isNotEmpty>
+	</dynamic>
+</select>
+
+<select id="Staff_listStaff" resultMap="staff_result" parameterClass="staff">
+<![CDATA[
+    SELECT
+		       		DEPARTMENT_ID,
+		       		REAL_NAME,
+		       		PAY_ATTENDANCE,
+		       		PAY_HOUR,
+		       		STATUS,
+		       		ZIP,
+		       		PWD_ERR_COUNT,
+		       		CREATE_USER,
+		       		SEX,
+		       		EMAIL,
+		       		PASSWORD,
+					date_format(EXPIRE_DATE,'%Y-%m-%d') EXPIRE_DATE,
+		       		LAST_DEGREE,
+		       		PAY_BASE,
+		       		PAY_HRCOST,
+		       		ADDRESS,
+		       		LOGIN_NAME,
+					date_format(LAST_UPDATE_DATE,'%Y-%m-%d') LAST_UPDATE_DATE,
+		       		TELEPHONE,
+					date_format(LOCK_DATE,'%Y-%m-%d') LOCK_DATE,
+					date_format(PASSWORD_EXPIRE_DATE,'%Y-%m-%d') PASSWORD_EXPIRE_DATE,
+		       		MOBILE,
+		       		SPECIALITY,
+					date_format(CREATE_DATE,'%Y-%m-%d') CREATE_DATE
+		    FROM t_staff
+]]>
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="and" property = "departmentId">
+				DEPARTMENT_ID = #departmentId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "realName">
+				REAL_NAME = #realName#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "payAttendance">
+				PAY_ATTENDANCE = #payAttendance#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "payHour">
+				PAY_HOUR = #payHour#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "status">
+				STATUS = #status#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "zip">
+				ZIP = #zip#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "pwdErrCount">
+				PWD_ERR_COUNT = #pwdErrCount#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "createUser">
+				CREATE_USER = #createUser#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "sex">
+				SEX = #sex#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "email">
+				EMAIL = #email#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "password">
+				PASSWORD = #password#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "expireDate">
+				EXPIRE_DATE = #expireDate#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "lastDegree">
+				LAST_DEGREE = #lastDegree#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "payBase">
+				PAY_BASE = #payBase#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "payHrcost">
+				PAY_HRCOST = #payHrcost#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "address">
+				ADDRESS = #address#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "loginName">
+				LOGIN_NAME = #loginName#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "lastUpdateDate">
+				LAST_UPDATE_DATE = #lastUpdateDate#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "telephone">
+				TELEPHONE = #telephone#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "lockDate">
+				LOCK_DATE = #lockDate#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "passwordExpireDate">
+				PASSWORD_EXPIRE_DATE = #passwordExpireDate#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "mobile">
+				MOBILE = #mobile#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "speciality">
+				SPECIALITY = #speciality#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "createDate">
+				CREATE_DATE = #createDate#
+			</isNotEmpty>
+		</dynamic>
+</select>
+
+<select id="Staff_listStaffPage" resultMap="staff_result" parameterClass="java.lang.String">
+<![CDATA[
+ $sql$
+]]>
+</select>
+
+
+<select id="Staff_listStaffCount" resultClass="java.lang.Integer" parameterClass="staff">
+<![CDATA[
+    SELECT
+		COUNT(*)
+    FROM t_staff
+]]>
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="and" property = "departmentId">
+				DEPARTMENT_ID = #departmentId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "realName">
+				REAL_NAME = #realName#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "payAttendance">
+				PAY_ATTENDANCE = #payAttendance#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "payHour">
+				PAY_HOUR = #payHour#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "status">
+				STATUS = #status#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "zip">
+				ZIP = #zip#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "pwdErrCount">
+				PWD_ERR_COUNT = #pwdErrCount#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "createUser">
+				CREATE_USER = #createUser#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "sex">
+				SEX = #sex#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "email">
+				EMAIL = #email#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "password">
+				PASSWORD = #password#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "expireDate">
+				EXPIRE_DATE = #expireDate#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "lastDegree">
+				LAST_DEGREE = #lastDegree#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "payBase">
+				PAY_BASE = #payBase#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "payHrcost">
+				PAY_HRCOST = #payHrcost#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "address">
+				ADDRESS = #address#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "loginName">
+				LOGIN_NAME = #loginName#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "lastUpdateDate">
+				LAST_UPDATE_DATE = #lastUpdateDate#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "telephone">
+				TELEPHONE = #telephone#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "lockDate">
+				LOCK_DATE = #lockDate#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "passwordExpireDate">
+				PASSWORD_EXPIRE_DATE = #passwordExpireDate#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "mobile">
+				MOBILE = #mobile#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "speciality">
+				SPECIALITY = #speciality#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "createDate">
+				CREATE_DATE = #createDate#
+			</isNotEmpty>
+		</dynamic>
+</select>
+
+<select id="Staff_listOperationUris" resultClass="java.lang.String" parameterClass="java.lang.String">
+	SELECT DISTINCT address_url from 
+		t_staff_role sr LEFT JOIN t_role r ON sr.role_id = r.role_id  
+		LEFT JOIN t_role_resource rr  ON r.role_id = rr.role_id
+		LEFT JOIN t_resource re  ON re.resource_id = rr.resource_key
+		where sr.login_name = #loginName#
+	UNION DISTINCT
+	SELECT ADDRESS_URL from t_resource_option WHERE resource_id IN(
+	SELECT DISTINCT resource_id from 
+			t_staff_role sr LEFT JOIN t_role r ON sr.role_id = r.role_id  
+			LEFT JOIN t_role_resource rr  ON r.role_id = rr.role_id
+			LEFT JOIN t_resource re  ON re.resource_id = rr.resource_key
+			where sr.login_name = #loginName#)
+</select>
+
+<select id="Staff_listResourceIds" resultClass="java.lang.String" parameterClass="java.lang.String">
+	select DISTINCT resource_id from 
+		t_staff_role sr LEFT JOIN t_role r ON sr.role_id = r.role_id  
+		LEFT JOIN t_role_resource rr  ON r.role_id = rr.role_id
+		LEFT JOIN t_resource re  ON re.resource_id = rr.resource_key
+		where re.resource_type =1  and sr.login_name = #loginName#
+</select>
+
+<select id="Staff_isAllDataPermission" resultClass="java.lang.Integer" parameterClass="java.lang.String">
+	SELECT COUNT(*)
+    FROM t_staff_role sr 
+		LEFT JOIN t_role r ON sr.role_id = r.role_id
+    WHERE r.data_type = 3 and sr.login_name = #loginName#
+</select>
+
+<select id="Staff_onwerProjectId" resultClass="java.lang.String" parameterClass="java.lang.String">
+	SELECT DISTINCT sr.project_id 
+    FROM t_staff_role sr LEFT JOIN t_role r ON sr.role_id = r.role_id
+    WHERE sr.project_id IS NOT NULL AND sr.login_name = #loginName#
+</select>
+
+<select id="Staff_listStaffByStaffRole" resultClass="java.lang.String" parameterClass="staffRole">
+	select login_name from t_staff_role where role_id = #roleId#
+	<dynamic>
+			<isNotEmpty prepend="and" property = "projectId">
+				project_id = #projectId#
+			</isNotEmpty>
+	</dynamic>
+</select>	
+
+
+<select id="Staff_email" resultClass="java.lang.String">
+	select email from t_staff
+	<dynamic prepend="WHERE">
+			<isNotEmpty prepend="and">
+				login_name IN 
+				<iterate conjunction="," open="(" close=")"> 
+					#[]# 
+				</iterate>
+			</isNotEmpty>
+	</dynamic>
+</select>	
+	
+</sqlMap>
