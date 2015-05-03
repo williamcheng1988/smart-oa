@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+	<!-- ================= Dao ======begin========================-->
+	<bean id="dynamicFormDao" class="com.chz.smartoa.dynamicForm.dao.ibatis.DynamicFormDaoImpl">
+		<property name="sqlMapClient" ref="sqlMapClient"/>
+	</bean>
+	<!-- ================= Dao ======end========================-->
+	
+	
+	<!-- ================= service ======begin========================-->
+	<bean id="dynamicFormBiz" class="com.chz.smartoa.dynamicForm.service.impl.DynamicFormBizImpl">
+		<property name="dynamicFormDao" ref="dynamicFormDao"/>
+		<property name="resourceDao" ref="resourceDao"/>
+	</bean>	
+	
+	<bean id="dynamicFormAdapter" class="com.chz.smartoa.form.service.impl.DynamicFormAdapter">
+		<property name="dynamicFormBiz" ref="dynamicFormBiz"/>
+		<property name="staffBiz" ref="staffBiz"/>
+	</bean>
+	<bean id="fixedFormAdapter" class="com.chz.smartoa.form.service.impl.FixedFormAdapter"/>
+	
+	<bean id="formBiz" class="com.chz.smartoa.form.service.impl.FormBizImpl">
+		<!-- <property name="dynamicFormAdapter" ref="dynamicFormAdapter"/>
+		<property name="fixedFormAdapter" ref="fixedFormAdapter"/> -->
+		<property name="dynamicFormBiz" ref="dynamicFormBiz"/>
+		<property name="dictionaryConfigBiz" ref="dictionaryConfigBiz"/>
+	</bean>
+	<!-- ================= service ======end========================-->
+	
+	
+	<!-- ================= action ======begin========================-->
+	<bean id="formTemplateTypeAction" class="com.chz.smartoa.dynamicForm.action.FormTemplateTypeAction" scope="prototype">
+		<property name="dynamicFormBiz" ref="dynamicFormBiz"/>
+		<property name="resourceBiz" ref="resourceBiz"/>
+	</bean>
+	
+	<bean id="formTemplateAction" class="com.chz.smartoa.dynamicForm.action.FormTemplateAction" scope="prototype">
+		<property name="dynamicFormBiz" ref="dynamicFormBiz"/>
+		<property name="dictionaryConfigBiz" ref="dictionaryConfigBiz"/>
+		<property name="resourceBiz" ref="resourceBiz"/>
+	</bean>
+	
+	<bean id="formAction" class="com.chz.smartoa.dynamicForm.action.FormAction" scope="prototype">
+		<property name="dynamicFormBiz" ref="dynamicFormBiz"/>
+		<property name="dictionaryConfigBiz" ref="dictionaryConfigBiz"/>
+	</bean>
+	<bean id="formStatisticsAction" class="com.chz.smartoa.dynamicForm.action.FormStatisticsAction" scope="prototype">
+		<property name="dynamicFormBiz" ref="dynamicFormBiz"/>
+	</bean>
+	<!-- ================= action ======end========================-->
+	
+	
+	<!-- ================= Rule Generator ======begin========================-->
+	<bean id="ruleDateGenerator" class="com.chz.smartoa.dynamicForm.util.ruleGenerator.RuleDateGenerator" />
+	<bean id="ruleSequenceGenerator" class="com.chz.smartoa.dynamicForm.util.ruleGenerator.RuleSequenceGenerator">
+		<property name="dynamicFormBiz" ref="dynamicFormBiz"/>
+	</bean>
+	<!-- ================= Rule Generator ======end========================-->
+	
+	
+	<!-- ================= Exportor ======begin========================-->
+	<bean id="csvExportor" class="com.chz.smartoa.dynamicForm.export.CsvExportor">
+		<property name="dynamicFormBiz" ref="dynamicFormBiz"/>
+	</bean>
+	<bean id="excelExportor" class="com.chz.smartoa.dynamicForm.export.ExcelExportor">
+		<property name="dynamicFormBiz" ref="dynamicFormBiz"/>
+	</bean>
+	<!-- ================= Exportor ======end========================-->
+</beans>

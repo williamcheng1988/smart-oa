@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>拒绝访问</title>
+	<script type="text/javascript" src="../jquery.min.js"></script>
+	<link id="easyuiTheme" rel="stylesheet" type="text/css" href="../themes/default/easyui.css">
+	<script type="text/javascript" charset="UTF-8" src="../themes/themes.js"></script>
+	<link rel="stylesheet" type="text/css" href="../themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../css/smart.css">
+	<script type="text/javascript" src="../jquery.easyui.min.js"></script>
+</head>
+
+<body style="ali">
+<div class="right" style="margin-top: 10%;">
+<table width="50%" border="0" align="center"  border="0" cellpadding="1">
+  <tr style="font-family: 宋体; font-size: 12px;" >
+    <td width="30%" align="left">
+    	<label style="font-family: 宋体; font-size: 15px;font-weight: bold;">拒绝访问</label>
+    	<hr size="1" noshade="">
+    	对不起，您没有权限访问该页！请与 <a href="mailto:merrylynch@sina.com" style="color: red;">系统管理员</a> 联系以获取权限。 
+	</td>
+  </tr>
+  <tr>
+    <td width="30%" align="center">
+    <br/>
+    	<input type="button" name="btn_back" value="返回" onClick='javascript:goBack();' />
+	</td>
+  </tr>
+</table>
+</form>
+</div>
+<script type="text/javascript">
+function request(paras){ 
+		var url = location.href; 
+		var paraString = url.substring(url.indexOf("?")+1,url.length).split("&"); 
+		var paraObj = {} 
+		for (i=0; j=paraString[i]; i++){ 
+			paraObj[j.substring(0,j.indexOf("=")).toLowerCase()] = j.substring(j.indexOf("=")+1,j.length); 
+		} 
+		var returnValue = paraObj[paras.toLowerCase()]; 
+		if(typeof(returnValue)=="undefined"){ 
+			return ""; 
+		}else{ 
+			return returnValue; 
+		} 
+	}
+function goBack(){
+	var pNo = request("back");
+	if(!pNo){
+		closeTab();
+	}
+	history.go(pNo);
+}
+
+function closeTab() {
+	var tt = top.$("#tt");
+	var tab = tt.tabs('getSelected');
+	if (tab){
+		var index = tt.tabs('getTabIndex', tab);
+		tt.tabs('close', index);
+	}
+	tt.tabs('select', '主页');
+}
+</script>
+</body>
+</html>

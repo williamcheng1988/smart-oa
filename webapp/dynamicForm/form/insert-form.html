@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>
+#set ( $formTemplate = ${formMap.get("formTemplate")} )
+#if($formTemplate.name)
+	$!{formTemplate.name}
+#else
+	表单录入
+#end
+</title>
+
+	<script type="text/javascript" src="jquery.min.js"></script>
+	<link id="easyuiTheme" rel="stylesheet" type="text/css" href="/smartoa/themes/default/easyui.css">
+	<script type="text/javascript" charset="UTF-8" src="/smartoa/themes/themes.js"></script>
+	<link rel="stylesheet" type="text/css" href="/smartoa/themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="/smartoa/css/smart.css">
+	<script type="text/javascript" src="/smartoa/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="/smartoa/locale/easyui-lang-zh_CN.js"></script>  
+	
+    <script type="text/javascript" src="/smartoa/widgets/xform/view-xform-all.js"></script>
+    
+	<script type="text/javascript">
+		document.onmousedown = function(e) {};
+		document.onmousemove = function(e) {};
+		document.onmouseup = function(e) {};
+		document.ondblclick = function(e) {};
+		
+		var xform;
+		
+		$(function() {
+			xform = new xf.Xform('xf-form-table');
+			xform.render();
+		
+			if ($('#__gef_content__').val() != '') {
+				xform.doImport($('#__gef_content__').val(),'');
+			}
+		
+			if ('$!{formMap.get("json")}' != '') {
+				xform.setValue($!{formMap.json});
+			}
+			
+			setTimeout(function() {
+				$('.datepicker').datepicker({
+					language: 'zh_CN',
+					format: 'yyyy-mm-dd'
+				})
+			}, 500);
+			
+			$(document).delegate('#button0', 'click', function(e) {
+				$('#saveType').val('Draft');
+				$('#xf-form').attr('action', '$!{formMap.saveUrl}');
+				$('#xf-form').submit();
+			});
+		
+			$(document).delegate('#button1', 'click', function(e) {
+				$('#saveType').val('Submit');
+				$('#xf-form').attr('action', '$!{formMap.saveUrl}');
+				$('#xf-form').submit();
+			});
+		})
+		
+		function submitForm(){
+			$('#xf-form').form('submit',{
+				onSubmit:function(){
+					var validate = $(this).form('enableValidation').form('validate');
+					if(validate){
+						$('#ui_mask').css('display','block');
+						$('#ui_mask_msg').css('display','block');
+					}
+					return validate;
+				},
+				success: function(result){
+					var json = eval('(' + result + ')');
+					if(json.code != 1){
+						$('#ui_mask').css('display','none');
+						$('#ui_mask_msg').css('display','none');
+						alert(json.msg);
+					}else{
+						location.href="dynamicForm/formTemplateType/list-form-template-type.html";
+					}
+				},
+				error:function(){
+				    alert("系统异常，请稍后再试...");
+				}
+			});
+		}
+    </script>
+</head>
+
+<body>
+
+	<div class="row-fluid">
+
+		<form id="xf-form" method="post" action="${scopePrefix}/form/form-startProcessInstance.do" class="xf-form">
+			<input id="__gef_id__" name="formTemplate.id" type="hidden" value="$!{formTemplate.id}">
+			<input id="formRecord.formTemplateId" name="formRecord.formTemplateId" type="hidden" value="$!{formTemplate.id}">
+			<input id="saveType" name="saveType" type="hidden" value="">
+			<input name="isdo" type="hidden" value="1"/>
+			<div id="xf-form-table"></div>
+			<br>
+			<div style="text-align:center;">
+			  ##if (${formMap.get("saveUrl")})
+			  <button id="button0" type="button">保存草稿</button>
+			  <button id="button1" type="button">提交</button>
+			  ##end
+			</div>
+	  	</form>
+	  	
+		<!-- end of main -->
+
+		<form id="f" action="form-template-save.do" method="post"
+			style="display: none;">
+			<textarea id="__gef_content__" name="content">$!{formTemplate.content}</textarea>
+		</form>
+	</div>
+	<div id="ui_mask" style="display:none" class="datagrid-mask"></div>
+	<div id="ui_mask_msg" style="display:none; left: 50%; height: 16px; margin-left: -85.5px; line-height: 16px;" class="datagrid-mask-msg">正在处理，请稍待。。。</div>
+	
+		#include("widgets/userpicker/userpicker.vm")
+		#include("widgets/userselection/userselection.vm")
+		
+</body>
+</html>

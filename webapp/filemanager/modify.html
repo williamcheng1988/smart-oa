@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<script type="text/javascript" src="jquery.min.js"></script>
+	<link id="easyuiTheme" rel="stylesheet" type="text/css" href="themes/default/easyui.css">
+	<script type="text/javascript" charset="UTF-8" src="themes/themes.js"></script>
+	<link rel="stylesheet" type="text/css" href="themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="css/smart.css">
+	<script type="text/javascript" src="jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="locale/easyui-lang-zh_CN.js"></script> 
+	<script type="text/javascript" src="ajaxfileupload.js"></script>
+</head>
+<script language="javascript">
+	
+	 $(document).ready(function(){   
+		    $('#fileTypeId').combobox({   
+		        onChange:function(parentId,oldValue){ 
+		        	if(parentId == oldValue){
+		        		return;
+		        	}else{
+		        		jQuery.ajax({
+		 				   type: "POST",
+		 				   url: "filemanager!getSonList.do",
+		 				   data: "dictionaryId="+parentId,
+		 				   dataType:"json",
+		 				   success: function(json){
+		 				      var optionStr;
+		 				      var data1;
+		 				      data1 = [];
+		 				      $('#uSpan').html('<select id="fileTypeSubId" name="fm.fileTypeSubId" ></select>');
+		 				      for(var i =0;i<json.length;i++){
+		 						   var jsonobj = json[i];
+		 						   optionStr = "<option value=" + jsonobj.id + ">" + jsonobj.dictionaryName + "</option>";
+		 						   $("#fileTypeSubId").append(optionStr);
+		 					   }
+		 				     $("#fileTypeSubId").combobox({});
+		 				   }
+		 				});
+		        	}
+		        }   
+		    });   
+		}); 
+	 
+	
+	// 保存更新
+	function updateAjaxUpload(){
+		var fileTypeId = $('#fileTypeId').combobox('getValue'); 
+		var fileTypeSubId = $('#fileTypeSubId').combobox('getValue');
+		if(fileTypeId == null || fileTypeId == '' || fileTypeSubId == null || '' == fileTypeSubId){
+			alert("请选择附件类型！");
+			return;
+		}
+		var updateId = $("#updateId").val();
+		var dicType = $("#dicType").val();
+		jQuery.ajaxFileUpload({     
+				       url : 'upload!saveUpdateFile.do',// 用于文件上传的服务器端请求地址
+				      type : "post",  
+				      data : { fileTypeId: fileTypeId, fileTypeSubId: fileTypeSubId, updateId: updateId }, 
+			      dataType : "json",     
+			       timeout : 1000,     
+			     secureuri : false,    // 一般设置为false     
+			 fileElementId : 'file', // 文件上传空间的id属性     
+				   success : function(json) 
+				   {    
+					   if(json == "type"){
+						   alert("该附件类型不在允许上传的范围内!");
+					   }else if(json == "size"){
+						   alert("附件大小超过10M不允许上传!");
+					   }else if(json == 'true'){
+						  alert("附件修改成功！"); 
+						  if(dicType == '1'){
+							  location.href="filemanager/list_public.html";
+						  }else if(dicType == '2'){
+							  location.href="filemanager/list_technology.html";
+						  }
+						  
+					   }else{
+						   alert("附件修改失败，请稍后重试！");
+					   }
+				   }   
+			}); 
+	}
+	
+</script>
+<body>
+<div>
+	<div align="center" class="datagrid-toolbar page_title">
+		修改文件
+	</div>
+	<div class="easyui-panel" style="width:100%" data-options="border:false" align="center" >
+	    <form id="fileEditForm" class="easyui-form" action="upload!saveUpdateFile.do" enctype="multipart/form-data">
+			<input id=updateId name="updateId" type="hidden" value="$!fm.id" />
+			<input id=dicType name="dicType" type="hidden" value="$!dicType" />
+			<table cellpadding="10px" class="table_form" style="width: 70%;">
+				<tr>
+					<td>
+						附件类型：
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					</td>
+				</tr>
+				<tr>
+					<td>
+					    &nbsp;&nbsp;
+					    #if ($dictionaryList)
+						<select id="fileTypeId" name="fm.fileTypeId" class="easyui-combobox" >
+							#if ($dictionaryList)
+							#foreach( $dictionary in $dictionaryList)
+							<option value="$!dictionary.id" #if($!dictionary.id == $!fm.fileTypeId) selected="selected" #end >$!dictionary.dictionaryName</option>
+							#end
+							#end
+						</select>
+						#end
+						&nbsp;&nbsp;
+						<span id="uSpan">
+						<select id="fileTypeSubId" name="fm.fileTypeSubId" class="easyui-combobox" >
+							#if ($dictionarySublist)
+							#foreach( $sub in $dictionarySublist)
+							<option value="$!sub.id" #if($!sub.id == $!fm.fileTypeSubId) selected="selected" #end >$!sub.dictionaryName</option>
+							#end
+							#end
+						</select>
+						</span>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						附件：<font color="red">（附件大小应小于10MB）</font>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					</td>
+				</tr>
+				<tr>
+					<td>
+						&nbsp;&nbsp;
+					    <input type="file" id="file" name="file" size="55px;"/>
+					    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<a id="addButton" class="easyui-linkbutton" onclick="updateAjaxUpload();">保存修改</a>
+						&nbsp;&nbsp;
+						<a id="cancleButton" class="easyui-linkbutton" onclick="javascript:history.go(-1);">取消</a>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</div>
+<script type="text/javascript">
+	$(function(){
+		$('#fileTypeId').combobox('setValue',$!fm.fileTypeId);
+	})
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	
+	<script type="text/javascript" src="../../jquery.min.js"></script>
+	<link id="easyuiTheme" rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+	<script type="text/javascript" charset="UTF-8" src="../../themes/themes.js"></script>
+	<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../../css/smart.css">
+	<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
+	
+	<script type="text/javascript" src="../../widgets/xform/view-xform-all.js"></script>
+	
+	<script type="text/javascript">
+		function reloadTree(){
+			$('#tt').tree('reload');
+		}
+		function init(){
+			//清除表单查询条件
+			$('#queryParams').form('clear');
+			//初始化日期
+			var date = new Date();
+			var y = date.getFullYear();
+			var mFrom = date.getMonth();
+			var mTo = date.getMonth()+1;
+			var d = date.getDate();
+			$('#dateFrom').datebox('setValue', y+'-'+mFrom+'-'+d);
+			$('#dateTo').datebox('setValue', y+'-'+mTo+'-'+d);
+			//隐藏按钮
+			//$("#queryButton").linkbutton({disabled:true});
+			$("#exportExcelBtn").linkbutton({disabled:true});
+		}
+		//查询按钮触发
+		function queryRecordData(){
+			var tmpId = $('#formTemplateId').val();
+			if(tmpId ==''){
+				$.messager.alert('提示','请选择模板!');
+			}
+			
+			var dg = $('#dg');
+			var pager = dg.datagrid('getPager');
+			pager.pagination({
+				pageNumber:1,
+				pageSize:10
+			});
+			dg.datagrid('load', {total:10,rows:[]});
+			
+			
+			var paramsArray = $("#queryParams").serializeArray();
+			var queryParam ='{';
+			$.each(paramsArray, function(i, field){
+				val = $.trim(field.value);
+				if(val){
+					queryParam += '"'+field.name + '":"' + val + '",';
+				}
+			});
+			var tmpId = $('#formTemplateId').val();
+			queryParam += '"formRecord.formTemplateId":"'+tmpId+'"';
+			queryParam += '}';
+			
+			//获取服务器数据
+			var json_dataGrid = getData(queryParam);
+			
+			$('#dg').datagrid({loadFilter:pagerFilter,onDblClickRow:showRecordDetail})
+				.datagrid({columns:json_dataGrid.columns})
+					.datagrid('loadData', json_dataGrid);
+			
+			if(!json_dataGrid || !json_dataGrid.columns || json_dataGrid.columns.length==0
+					|| json_dataGrid.rows==0){
+				$("#exportExcelBtn").linkbutton({disabled:true});
+			}else{
+				$("#exportExcelBtn").linkbutton({disabled:false});
+			}
+		}
+		//上一页/下一页 触发
+		function nextPage(){
+			var templateId = $('#formTemplateId').val();
+			if(!templateId){
+				alert('请选择模板!');
+				return false;
+			}
+			var paramsArray = $("#queryParams").serializeArray();
+			var queryParam ='{';
+			$.each(paramsArray, function(i, field){
+				val = $.trim(field.value);
+				if(val){
+					queryParam += '"'+field.name + '":"' + val + '",';
+				}
+			});
+			var opts = $('#dg').datagrid('options');
+			queryParam+='"page":' + opts.pageNumber + ',"perPage":' + opts.pageSize;
+			queryParam += '}';
+			
+			//获取服务器数据
+			var json_dataGrid = getData(queryParam);
+			
+			$('#dg').datagrid({loadFilter:pagerFilter});
+			$('#dg').datagrid({columns:json_dataGrid.columns});
+			$('#dg').datagrid('loadData', json_dataGrid);
+			//$('#dg').datagrid('loadData', json_dataGrid);
+			
+			if(!json_dataGrid || !json_dataGrid.columns || json_dataGrid.columns.length==0
+					|| json_dataGrid.rows.length==0){
+				$("#exportExcelBtn").linkbutton({disabled:true});
+			}else{
+				$("#exportExcelBtn").linkbutton({disabled:false});
+			}
+		}
+		//导出Excel报表
+		function exportExcel(){
+			var paramsArray = $("#queryParams").serializeArray();
+			var queryParam ='';
+			$.each(paramsArray, function(i, field){
+				val = $.trim(field.value);
+				if(val){
+					queryParam += field.name + '=' + val + '&';
+				}
+			});
+			var tmpId = $('#formTemplateId').val();
+			queryParam += 'formRecord.formTemplateId='+tmpId;
+			//queryParam = queryParam.substr(0,queryParam.length-1);
+			
+			if(tmpId && tmpId !=''){
+				window.location.href='../../formStatistics!exportExcel.do?'+queryParam;
+			}else{
+				alert('请选择需要导出的模板！');
+			}
+		}
+		//异步获取服务器数据
+		function getData(queryParam){
+			var json_dataGrid;
+			jQuery.ajax({
+	            type: "POST",
+	            dataType: "json",
+	            async:false,
+	            url: "../../formStatistics!displayExpDatas.do",
+	            data: eval('(' + queryParam + ')'),
+	            success: function(json) {
+	    			json_dataGrid=eval('('+json+')');
+	            },
+	            error: function(json) {
+	            }
+	        });
+			
+			return json_dataGrid;
+		}
+		//处理分页，重新加载服务器数据
+		function pagerFilter(data){
+			var dg = $('#dg');
+			var opts = dg.datagrid('options');
+			var pager = dg.datagrid('getPager');
+			pager.pagination({
+				onSelectPage:function(pageNum, pageSize){
+					opts.pageNumber = pageNum;
+					opts.pageSize = pageSize;
+					pager.pagination('refresh',{
+						pageNumber:pageNum,
+						pageSize:pageSize
+					});
+					
+					dg.datagrid('loadData',nextPage());
+				}
+			});
+			return data;
+		}
+		
+		$(function(){
+			init();
+			
+			$('#win').window('close');  // close the window
+			
+			var xform;
+			xf_f_flow_view = true;
+		});
+		function clearForm(){
+			$('#queryParams').form('clear');
+		}
+		function showRecordDetail(rowIndex, rowData){
+			var templateId = $('#formTemplateId').val();
+			var recordId = rowData.formRecordId;
+			
+			var content,description;
+			jQuery.ajax({
+				type: "POST",
+				dataType: "json",
+				async:false,
+				url: '../../form!showXFTab.do?tId='+templateId+'&rId='+recordId,
+				success: function(data) {
+					content=data.content;
+					description=data.description;
+				},
+				error: function(data) {
+				}
+			});
+			
+			showXFTable(content,description);
+			
+			$('#win').window('open');
+		}
+		//展示动态表格
+		function showXFTable(content,value){
+			xform = new xf.Xform('xf-form-table');
+			xform.render();
+		
+			if (content && content!='') {
+				xform.doImport(content,'flow','');
+			}
+		
+			if (value && value!='') {
+				xform.setValue(eval('('+value+')'));
+			}
+			
+			jQuery.parser.parse('#win');
+		}
+	</script>
+</head>
+<body>
+	<div id="cc" style="width:100%;height:1350px;">
+		<div data-options="region:'west',split:true" style="width:220px;">
+			<div class="panel-header">
+				<div class="panel-title">模板</div>
+				<!-- <div class="panel-tool panel-with-icon" title="刷新模板列表" style="margin-right: 25px;">
+					<a href="javascript:reloadTree();" class="panel-tool-collapse icon-reload"></a>
+				</div> -->
+				<div title="双击左侧节点树形节点可实现查询!" class="panel-tool panel-with-icon icon-tip">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>				
+			</div>
+			<div class="easyui-panel" style="padding:5px" data-options="border:false">
+				<ul id="tt" class="easyui-tree" 
+					data-options="url:'../../formStatistics!treeDataFormTempate.do',method:'get',state:closed,animate:true,checkbox:false,dnd:true,lines:true,
+						formatter:function(node){
+							var s = node.text;
+							if (node.children){s += '&nbsp;&lt;span style=\'color:blue\'&gt;(' + node.children.length + ')&lt;/span&gt;';}
+							return s;
+						},
+						onClick: function(node){
+							if($('#tt').tree('isLeaf', node.target)){
+								$('#formTemplateId').val(node.id);
+								$('#queryButton').linkbutton({disabled:false});
+							}else{$('#queryButton').linkbutton({disabled:true});}
+						},
+						onDblClick:function(node){
+							if($('#tt').tree('isLeaf', node.target)){
+								init();
+								$('#formTemplateId').val(node.id);
+								queryRecordData();
+								return false;
+							}
+						}
+						">
+				</ul>
+			</div>
+		</div>
+		<div data-options="region:'center'" style="min-height: 700px;width:100%">
+			<div id="tb" style="padding:15px;height:auto">
+				<input name="formRecord.formTemplateId" id="formTemplateId" type="hidden">
+				<form id="queryParams">
+					填报编号:
+					<input name="formRecord.id" class="easyui-textbox" style="width:160px">
+					&nbsp;&nbsp;&nbsp;
+					填报日期:
+					<div style="margin:10px 0;display: none;"></div>
+					<input class="easyui-datebox" id="dateFrom" name="formRecord.createDateFrom" style="width:90px;"></input>
+					至
+					<input class="easyui-datebox" id="dateTo" name="formRecord.createDateTo" style="width:90px;"></input>
+					<script>
+						$.extend($.fn.validatebox.defaults.rules, {
+							md: {
+								validator: function(value, param){
+									var d1 = new Date();//$.fn.datebox.defaults.parser(param[0]);
+									var d2 = $.fn.datebox.defaults.parser(value);
+									return d2<=d1;
+								},
+								message: '结束日期不能大于当天！'
+							}
+						})
+					</script>
+					&nbsp;&nbsp;&nbsp;
+					<a href="#" onclick="queryRecordData()" id="queryButton" class="easyui-linkbutton" iconCls="icon-search">&nbsp;查&nbsp;询&nbsp;</a>
+					<a href="javascript:clearForm()" class="easyui-linkbutton" iconCls="icon-clear">&nbsp;重&nbsp;置&nbsp;</a>&nbsp;&nbsp;
+					<br/>
+					
+					填报名称:
+					<input type="text" name="formRecord.title" class="easyui-textbox" style="width:160px"></input>
+					&nbsp;&nbsp;&nbsp;
+					填报状态:
+					<select	name="formRecord.status"  class="easyui-combobox" panelHeight="auto" style="width:160px">
+						<option value="">请选择</option>
+						<option value="0">正常</option>
+						<option value="1">过期</option>
+						<option value="2">初始化</option>
+						<option value="3">失效</option>
+					</select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<a href="#" onclick="exportExcel()" id="exportExcelBtn" class="easyui-linkbutton" iconCls="icon-print">&nbsp;导&nbsp;出Excel&nbsp;</a>
+					
+					<!-- <a href="javascript:void(0)" class="easyui-linkbutton" onclick="$('#win').window('open')">Open</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="$('#win').window('close')">Close</a> -->
+				</form>
+			</div>
+			<div class="panel-header">
+				<div class="panel-title">填报数据</div>
+			</div>
+			<table id="dg" class="easyui-datagrid" style="width:100%;height:auto;"
+					data-options="rownumbers:true,singleSelect:true,border:false,method:'get',toolbar:'#tb',autoRowHeight:false,fitColumns:true,pagination:true,pageSize:10">
+			</table>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$(function(){
+			$('#cc').layout();
+			setHeight();
+		});
+		function setHeight(){
+			var c = $('#cc');
+			var p = c.layout('panel','center');	// get the center panel
+			var oldHeight = p.panel('panel').outerHeight();
+			p.panel('resize', {height:'auto'});
+			var newHeight = p.panel('panel').outerHeight();
+			c.layout('resize',{
+				height: (c.height() + newHeight - oldHeight)
+			});
+		}
+	</script>
+	<div id="win" class="easyui-window" title="填报详细信息" data-options="iconCls:'icon-save',modal:true,shadow:true" style="width:100%;height:400px;padding:10px;">
+		<div id="xf-form-table"></div>
+		
+		<!-- <table cellpadding="5" width="100%" class="table_form">
+			<tbody>
+				<tr>
+					<td style="text-align: left; padding: 0px" id="xf-form-table">
+					</td>
+				</tr>
+			</tbody>
+		</table> -->
+	</div>
+</body>
+</html>

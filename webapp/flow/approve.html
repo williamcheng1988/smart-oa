@@ -1,0 +1,320 @@
+<!doctype html>
+<HTML>
+<HEAD>
+	<title>任务处理</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+	<script type="text/javascript" src="jquery.min.js"></script>
+	<link id="easyuiTheme" rel="stylesheet" type="text/css" href="themes/default/easyui.css">
+	<script type="text/javascript" charset="UTF-8" src="themes/themes.js"></script>
+	<link rel="stylesheet" type="text/css" href="themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="css/smart.css">
+	<script type="text/javascript" src="jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="locale/easyui-lang-zh_CN.js"></script>  
+	<script type="text/javascript" src="filemanager.js"></script>
+	<script type="text/javascript">
+		#if(($task.consult_ && "" != $task.consult_)||$task.action_type_ != 0)
+			$(function(){
+				xf_f_flow_view = true;
+			})
+		#end
+	</script>
+<style type="text/css">
+	.panel-header, .panel-body {
+    	border-color: #E2E2E2;
+	}
+	.panel-header {
+   		background: none;
+	}
+</style>	 
+</HEAD>
+<body>
+	<table height="100%" cellSpacing="0" cellPadding="0" width="1000px" 
+		align="center" border="0">
+		<tr vAlign="top">
+			<td colspan="2" align="center">
+					<table width="100%" border="0" class="datagrid-toolbar page_title">
+						<tbody>
+							<tr>
+								<td align="center"><font class="titleht1">$!formMap.formTemplateTypeName
+										签报</font><br> <span class="titleht2" id="DetailItem_TaskTypeName">$!formMap.formTemplateName</span>
+								</td>
+							</tr>
+							<tr>
+								<td align="right"><span class="titleht2"
+									id="DetailItem_TaskTypeName">编号：$!task.business_key_</span></td>
+							</tr>
+						</tbody>
+					</table>
+				<form id="Form1" class="easyui-form" data-options="novalidate:true" action="flow!deal.do" method="post" name="Form1">
+					<input type="hidden" name="taskId" value="$!taskId" />
+					<input type="hidden" name="approve_type_"/>
+					<table cellpadding="5" width="100%" class="table_form" style="margin-bottom: 2px;">
+						<tbody>
+							<tr>
+								<td align="center" class="tasktd1">请示事项要点</td>
+								<td colspan="2" class="tasktd2">
+								#set($readonly=false)
+								#if(($task.consult_ && "" != $task.consult_)||$task.action_type_ != 0)
+									#set($readonly=true)   
+								#end
+								#if($readonly)
+									$!task.business_title_
+								#else
+									<input class="easyui-textbox" id="title_" name="title_" data-options="required:true,validType:['length[0,80]']" style="width: 50%;" value="$!task.business_title_">&nbsp;
+								#end
+								</td>
+								<td align="center" class="tasktd1" width="25%">
+								#if($readonly)
+									#if($!task.priority_ == 1)<label style="display: inline;color:#FF7F27;font-weight: normal;">紧急！ </label>#end
+									#if($!task.priority_ == 2)<label style="display: inline;color:red;font-weight: normal;">加急！ </label>#end
+								#else
+								是否紧急：
+									<label style="display: inline;font-weight: normal;"><input type="radio" name="priority_" value="0" checked>普通</label>
+									<label style="display: inline;color:#FF7F27;font-weight: normal;"><input type="radio" name="priority_" value="1" #if($!task.priority_ == 1) checked #end >紧急</label>
+									<label style="display: inline;color: red;font-weight: normal;"><input type="radio" name="priority_" value="2" #if($!task.priority_ == 2) checked #end>加急</label>
+								#end
+								</td>
+							</tr>
+							<tr>
+								<td width="15%" nowrap="" align="center" class="tasktd1">报送人</td>
+								<td width="45%" class="tasktd2"><span id="realName">$!task.owner_name_</span></td>
+								<td width="15%" nowrap="" align="center" class="tasktd1">联系电话</td>
+								<td width="25%" class="tasktd2">$!task.owner_mobile_</td>
+							</tr>
+							<tr>
+								<td colspan="4" style="text-align: left; padding: 0px; border-style: hidden;" id="xf-form-table">#parse($!formMap.viewUrl)</td>
+							</tr>
+							<tr>
+								<td colspan="4"><span class="tasktd1">请示事项具体内容：</span><br>
+								#if($readonly)
+									$!task.desc_
+								#else
+									<input class="easyui-textbox" id="desc_" name="desc_" value="$!task.desc_" data-options="multiline:true" style="width: 98%; height: 100px">
+								#end
+								</td>
+							</tr>
+							#if($task.action_type_ == 1 || $task.action_type_ == 2) 
+							<tr valign="top">
+								<td colspan="4" ><span class="tasktd1">审批意见：</span><br> 
+									&nbsp;&nbsp;
+									<label style="display: inline;"><input type="radio" name="radioresult" onclick="javascript:approveRadioClick('同意');">同意</label>
+									<label style="display: inline;"><input type="radio" name="radioresult" onclick="javascript:approveRadioClick('基本同意');">基本同意</label>
+									<label style="display: inline;"><input type="radio" name="radioresult" onclick="javascript:approveRadioClick('收阅执行');">收阅执行</label>
+									<label style="display: inline;"><input type="radio" name="radioresult" onclick="javascript:approveRadioClick('不同意');">不同意</label>
+									<br>
+									<input class="easyui-textbox" id="approve_result_" name="desc_" data-options="multiline:true,required:true,validType:['length[0,300]']" style="width: 85%; height: 100px">
+									#if($task.taskApproveResults && $task.taskApproveResults.size() > 0)
+										<div style="">
+											#foreach($entry in $task.taskApproveResults)
+											<div style="width: 100%;">
+												&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$!entry.approveDesc
+											</div>
+											<div style="width: 100%;" align="right">
+												$!{entry.realName}/$!{entry.endTime}&nbsp;&nbsp;&nbsp;&nbsp;
+											</div>
+											#end
+										</div>
+									#end
+								</td>
+							</tr>
+							#end
+						</tbody>
+					</table>
+					#if($task.approveResults && $task.approveResults.size() > 0)	
+							<div id="p" class="easyui-panel" title="审批历史" style="width:100%;height:auto;padding:10px;"
+											data-options="collapsed:false,collapsible:true">									
+											<div style="">
+												#foreach($entry in $task.approveResults)
+												<div style="width: 100%;">
+													&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$!entry.approveDesc
+												</div>
+												<div style="width: 100%;" align="right">
+													$!{entry.realName}/$!{entry.endTime}&nbsp;&nbsp;&nbsp;&nbsp;
+												</div>
+												#end
+											</div>
+							</div>
+					#end
+					<table cellpadding="5" width="100%" border="0">
+						<tbody>
+							<tr>
+								<td>
+									#parse("filemanager/group_list.html")
+									<div id="fileAddDiv">
+										<div align="right">
+											<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-upload',plain:true" onclick="javascript:$(this).prop('val',!$(this).prop('val'));if($(this).prop('val'))$('#fileUpload_DIV').panel('expand',true);else $('#fileUpload_DIV').panel('collapse',true);">添加附件</a>
+										</div>
+										<div id="fileUpload_DIV" class="easyui-panel" title="附件上传" style="width:100%;height:auto;padding:0px;" data-options="noheader:true,collapsed:true">
+											#parse("filemanager/add_audit.html")
+										</div>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<br>
+					<div align="center">
+					#if($task.consult_ && "" != $task.consult_)
+					    <a href="javascript:deal('DONECONSULT');" class="easyui-linkbutton">&nbsp;提&nbsp;交&nbsp;</a>&nbsp;&nbsp;
+					    <a href="javascript:deal('TURN');" class="easyui-linkbutton">&nbsp;转&nbsp;办&nbsp;</a>&nbsp;&nbsp;
+					#else
+						#if($task.action_type_ == 0)
+							 <a href="javascript:deal('SUBMIT');" class="easyui-linkbutton">&nbsp;提交申请&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;
+							 <a href="javascript:clearForm();" class="easyui-linkbutton">&nbsp;重新填写&nbsp;</a>&nbsp;&nbsp; &nbsp;&nbsp;
+						#elseif($task.action_type_ == 3) 
+							<a href="javascript:deal('READ');" class="easyui-linkbutton">&nbsp;已&nbsp;阅&nbsp;</a>&nbsp;&nbsp;
+						#elseif($task.action_type_ == 4) 
+						    <a href="#" class="easyui-linkbutton" data-options="disabled:true">&nbsp;已&nbsp;阅&nbsp;</a>&nbsp;&nbsp;
+						#elseif($task.action_type_ == 1 || $task.action_type_ == 2) 
+						    <a href="javascript:deal('AGREE');" class="easyui-linkbutton">&nbsp;同&nbsp;意&nbsp;</a>&nbsp;&nbsp;
+						    <a href="javascript:deal('BACK');" class="easyui-linkbutton">&nbsp;退回修改&nbsp;</a>&nbsp;&nbsp;
+						    <a href="javascript:deal('DISAGREE');" class="easyui-linkbutton">&nbsp;不同意&nbsp;</a>&nbsp;&nbsp;
+						#end 
+						#if($task.is_turn_ == 1) 
+							<a href="javascript:deal('TURN');" class="easyui-linkbutton">&nbsp;转&nbsp;办&nbsp;</a>&nbsp;&nbsp;
+						#end
+						#if($task.is_ask_ == 1) 
+						    <a href="javascript:deal('CONSULT');" class="easyui-linkbutton">&nbsp;征&nbsp;询&nbsp;</a>&nbsp;&nbsp;
+						#end
+					#end
+					    <a href="javascript: back();" class="easyui-linkbutton">&nbsp;返&nbsp;回&nbsp;</a>&nbsp;&nbsp;
+					</div>
+			</td>
+		</tr>
+		</tbody>
+	</table>
+	</form>
+	</td>
+	</tr>
+</table>
+<div id="ui_mask" style="display:none;min-height:100%;" class="datagrid-mask"></div>
+<div id="ui_mask_msg" style="display:none; left: 50%; height: 16px; margin-left: -85.5px; line-height: 16px;" class="datagrid-mask-msg">正在处理，请稍待。。。</div>
+<!-- 弹出框  -->
+<div id="dlg" class="easyui-dialog" title="" style="width:40%;height:250px;max-width:800px;padding:10px"
+		data-options="
+			closable: false,
+			buttons: [{
+				text:'确认',
+				iconCls:'icon-ok',
+				handler:function(){
+					formSubmit();
+				}
+			},{
+				text:'关闭',
+				iconCls:'icon-cancel',
+				handler:function(){
+					$('#dlg').dialog('close');
+					$('#ui_mask').css('display','none');
+					$('#ui_mask_msg').css('display','none');
+				}
+			}]
+		">
+<form id="ff" class="easyui-form" method="post" data-options="novalidate:true" action="flow!deal.do">
+   <input type="hidden" name="taskId" value="$!taskId" />
+   <input type="hidden" name="approve_type_"/>
+		<table style="border: 0; width: 100%">
+			<tr style="width: 30%">
+				<td align="right"><label id="box_action_obj"></label></td>
+				<td>&nbsp;&nbsp; 
+				<select name="user_id_" class="easyui-combobox" data-options="required:true" style="width: 50%;">
+						#optionTag("NORMAL_USERS")
+				</select>
+				</td>
+			</tr>
+			<tr>
+				<td align="right"><label>说明</label></td>
+				<td>&nbsp;&nbsp; <textarea id="desc_" name="desc_" rows="4" style="width: 70%;"></textarea>&nbsp;</td>
+			</tr>
+		</table>
+	</form>
+  </div>
+</body>
+</HTML>
+<script type="text/javascript">
+	$(function(){
+		 $('#dlg').dialog('close');
+		$('#ui_mask').css('height',document.body.scrollHeight);
+	}); 
+	function approveRadioClick(txt) {
+		$("#approve_result_").textbox('setValue', txt);
+		//$("#approve_result_").val(txt);
+	};
+	function deal(dealType) {
+		$("input[name=approve_type_]").val(dealType);
+		if ("TURN" == dealType) {
+			$('#ui_mask').css('display','block');
+			$('#dlg').dialog({
+				title:'任务转办'
+			});
+			$('#box_action_obj').text("指定用户");
+			$('#desc_').val($('#approve_result_').val());
+			$('#dlg').dialog('open');
+		} else if ("CONSULT" == dealType) {
+			$('#ui_mask').css('display','block');
+			$('#dlg').dialog({
+				title:'征询意见'
+			});
+			$('#box_action_obj').text("被征询用户");
+			$('#desc_').val($('#approve_result_').val());
+			$('#dlg').dialog('open');
+		} else {
+			$('#Form1').form('submit', {    
+				onSubmit:function(){
+					var validate = $(this).form('enableValidation').form('validate');
+					return validate;
+				},
+			    success: function(result){   
+			    	var json = eval('(' + result + ')');
+			        if(json.code != 1){
+			        	$('#ui_mask_msg').css('display','none');
+			        	$('#ui_mask').css('display','none');
+						alert(json.msg);
+					}else{
+						 back();
+					}
+			    }    
+			});  
+		}
+	};
+	
+	function formSubmit(){
+		$('#ff').form('submit', {    
+		    success: function(result){    
+		    	var json = eval('(' + result + ')');
+		        if(json.code != 1){
+		        	$('#ui_mask_msg').css('display','block');
+					$('#dlg').dialog('close');
+					alert(json.msg);
+				}else{
+					 back();
+				}
+		    }    
+		});  
+	};
+	
+	function back(){
+		var lastUrl = document.referrer;
+		var idx = lastUrl.indexOf('flow');
+		var idx2 =  lastUrl.indexOf('delegation');
+		if(idx > 0 || idx2 > 0){
+			history.go(-1);
+		}else{
+			closeTab();
+		}
+	}
+	
+	function closeTab() {
+		var tt = top.$("#tt");
+		var tab = tt.tabs('getSelected');
+		if (tab){
+			var index = tt.tabs('getTabIndex', tab);
+			tt.tabs('close', index);
+		}
+		tt.tabs('select', '主页');
+	}
+	
+	function clearForm(){
+		$('#Form1').form('clear');
+	}
+</script>
+

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+	<!-- ================= Dao ======begin========================-->
+	<bean id="baseDao" class="com.chz.smartoa.common.dao.impl.BaseDaoImpl">
+		<property name="sqlMapClient" ref="sqlMapClient"/>
+	</bean>
+	<bean id="fileManagerDao" class="com.chz.smartoa.fileUpload.dao.impl.FileManagerDaoImpl">
+		<property name="sqlMapClient" ref="sqlMapClient"/>
+	</bean>
+	
+	<bean id="fileGroupDao" class="com.chz.smartoa.fileUpload.dao.impl.FileGroupDaoImpl">
+		<property name="sqlMapClient" ref="sqlMapClient"/>
+	</bean>
+	
+	<bean id="afficheInfoDao" class="com.chz.smartoa.system.dao.impl.AfficheInfoDaoImpl">
+		<property name="sqlMapClient" ref="sqlMapClient"/>
+	</bean>
+	
+	<bean id="calendarDao" class="com.chz.smartoa.system.dao.impl.CalendarDaoImpl">
+		<property name="sqlMapClient" ref="sqlMapClient"/>
+	</bean>
+	
+	<bean id="workPlanDao" class="com.chz.smartoa.system.dao.impl.WorkPlanDaoImpl">
+		<property name="sqlMapClient" ref="sqlMapClient"/>
+	</bean>
+	
+	<bean id="roleFiletypeDao" class="com.chz.smartoa.fileUpload.dao.impl.RoleFiletypeDaoImpl">
+		<property name="sqlMapClient" ref="sqlMapClient"/>
+	</bean>
+	<!-- ================= Dao ======end========================-->
+	
+	
+	
+	<!-- ================= service ======begin========================-->
+	<bean id="fileManagerBiz" class="com.chz.smartoa.fileUpload.service.impl.FileManagerBizImpl">
+		<property name="fileManagerDao" ref="fileManagerDao"/>
+		<property name="roleDao" ref="roleDao"/>
+		<property name="roleFiletypeDao" ref="roleFiletypeDao"/>
+	</bean>	
+	
+	<bean id="fileGroupBiz" class="com.chz.smartoa.fileUpload.service.impl.FileGroupBizImpl">
+		<property name="fileGroupDao" ref="fileGroupDao"/>
+		<property name="fileManagerDao" ref="fileManagerDao"/>
+		<property name="dictionaryConfigDao" ref="dictionaryConfigDao"/>
+	</bean>	
+	
+	<bean id="afficheInfoBiz" class="com.chz.smartoa.system.service.impl.AfficheInfoBizImpl">
+		<property name="afficheInfoDao" ref="afficheInfoDao"/>
+	</bean>	
+	<bean id="calendarbiz" class="com.chz.smartoa.system.service.impl.CalendarBizImpl">
+		<property name="calendarDao" ref="calendarDao"/>
+	</bean>
+	<bean id="noticeBiz" class="com.chz.smartoa.system.service.impl.NoticeBizImpl">
+		<property name="baseDao" ref="baseDao"/>
+	</bean>	
+	<bean id="workPlanBiz" class="com.chz.smartoa.system.service.impl.WorkPlanBizImpl">
+		<property name="workPlanDao" ref="workPlanDao"/>
+		<property name="noticeBiz" ref="noticeBiz"/>
+	</bean>
+	<bean id="roleFiletypeBiz" class="com.chz.smartoa.fileUpload.service.impl.RoleFiletypeBizImpl">
+		<property name="roleFiletypeDao" ref="roleFiletypeDao"/>
+		<property name="roleDao" ref="roleDao"/>
+	</bean>
+	
+	<!-- ================= service ======end========================-->
+	
+	
+	
+	<!-- ================= action ======begin========================-->
+	
+	<bean id="fileManagerAction" class="com.chz.smartoa.fileUpload.action.FileManagerAction" scope="prototype">
+		<property name="fileManagerBiz" ref="fileManagerBiz"/>
+		<property name="dictionaryConfigBiz" ref="dictionaryConfigBiz"/>
+		<property name="fileGroupBiz" ref="fileGroupBiz"/>
+		<property name="roleFiletypeBiz" ref="roleFiletypeBiz"/>
+	</bean>
+	<bean id="fileLoadAction" class="com.chz.smartoa.fileUpload.action.FileLoadAction" scope="prototype">
+		<property name="fileManagerBiz" ref="fileManagerBiz"/>
+		<property name="dictionaryConfigBiz" ref="dictionaryConfigBiz"/>
+		<property name="fileGroupBiz" ref="fileGroupBiz"/>
+	</bean>
+	<bean id="afficheInfoAction" class="com.chz.smartoa.system.action.AfficheInfoAction" scope="prototype">
+		<property name="afficheInfoBiz" ref="afficheInfoBiz"/>
+	</bean>
+	<!--  
+	<bean id="ckeditorUploadAction" class="com.chz.smartoa.system.action.CkeditorUploadAction" scope="prototype">
+	</bean>
+	-->
+	<bean id="calendarAction" class="com.chz.smartoa.system.action.CalendarAction" scope="prototype">
+		<property name="calendarBiz" ref="calendarbiz"/>
+	</bean>
+	<bean id="workPlanAction" class="com.chz.smartoa.system.action.WorkPlanAction" scope="prototype">
+		<property name="workPlanBiz" ref="workPlanBiz"/>
+	</bean>
+	<!-- ================= action ======end========================-->
+	
+</beans>

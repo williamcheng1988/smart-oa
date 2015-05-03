@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>项 目 收 入 发 票</title>
+	<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../demo.css">
+	<script type="text/javascript" src="../../jquery.min.js"></script>
+	<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+</head>
+<body>
+<table class="xf-table" cellspacing="0" cellpadding="0" width="100%" align="center" style="border-collapse: collapse;font-size: 12px;">
+	<tbody>
+		<tr>
+			<td width="12%" nowrap="" align="center" class="tasktd1">费用承担项目</td>
+			<td class="tasktd2" width="20%" colspan="3">
+				<select class="easyui-combobox" id="DetailItem_xmid"
+				name="DetailItem:xmid">
+					<option value="">-- 请选择项目 --</option>
+					<option value="78">0-其他业务-其他角色</option>
+					<option value="61">艾特航模-财务顾问-财务顾问</option>
+					<option value="39">爱视眼科-财务顾问-财务顾问</option>
+					<option value="149">办事处大连-其他业务-其他角色</option>
+					<option value="169">办事处广州-自有投资-其他角色</option>
+					<option value="165">宝航建设1-自有投资-其他角色</option>
+					<option value="119">暴风网际-其他业务-其他角色</option>
+					<option value="143">北京华卓-资本管理-其他角色</option>
+					<option value="166">北京精典-资本管理-其他角色</option>
+					<option value="174">北京鲸鲨5-其他业务-财务顾问</option>
+					<option value="27">博创机械-自有投资-其他角色</option>
+			</select></td>
+			<td width="12%" nowrap="" align="center" class="tasktd1">项目经理</td>
+			<td width="25%" colspan="3"><input class="easyui-textbox" id="DetailItem_xmjl" readonly="" name="DetailItem_xmjl"/></td>
+		</tr>
+		<tr>
+			<td nowrap="" align="center" class="tasktd1">收入性质</td>
+			<td class="tasktd2"><input class="easyui-textbox" id="DetailItem_srxz" name="DetailItem:srxz">&nbsp;</td>
+			<td nowrap="" align="center" class="tasktd1">发票金额</td>
+			<td class="tasktd2"><input class="easyui-numberbox" data-options="min:0,precision:2" id="DetailItem_fpje" name="DetailItem:fpje">&nbsp;</td>
+			<td nowrap="" align="center" class="tasktd1">发票金额(大写)</td>
+			<td class="tasktd2"><input class="easyui-textbox" id="DetailItem_fpjedx" name="DetailItem:fpjedx">&nbsp;</td>
+		</tr>
+		
+		<tr>
+			<td nowrap="" align="center" class="tasktd1">收款单位</td>
+			<td class="tasktd2"><input class="easyui-textbox" id="DetailItem_skdw" name="DetailItem:skdw">&nbsp;</td>
+			<td nowrap="" align="center" class="tasktd1">收款银行</td>
+			<td class="tasktd2"><input class="easyui-textbox" id="DetailItem_skyh" name="DetailItem:skyh">&nbsp;</td>
+			<td nowrap="" align="center" class="tasktd1">收款帐号</td>
+			<td class="tasktd2"><input class="easyui-numberbox" id="DetailItem_skzh" name="DetailItem:skzh">&nbsp;</td>
+		</tr>
+		
+		<tr>
+			<td nowrap="" align="center" class="tasktd1">附件张数</td>
+			<td class="tasktd2" colspan="7"><input class="easyui-numberbox" data-options="min:0"
+				 id="DetailItem_fjzs" name="DetailItem:fjzs">&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+
+
+</body>
+</html>

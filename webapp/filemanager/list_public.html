@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<script type="text/javascript" src="../jquery.min.js"></script>
+	<link id="easyuiTheme" rel="stylesheet" type="text/css" href="../themes/default/easyui.css">
+	<script type="text/javascript" charset="UTF-8" src="../themes/themes.js"></script>
+	<link rel="stylesheet" type="text/css" href="../themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../css/smart.css">
+	<script type="text/javascript" src="../jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="../locale/easyui-lang-zh_CN.js"></script>   
+</head>
+
+<body>
+		<div class="easyui-layout" data-options="fit:true">
+			<div data-options="region:'west',split:true" style="width:20%;padding:10px">
+				<br/>
+				<br/>
+				<ul id="tt" class="easyui-tree" data-options="url:'../dictionary!treeForPublic.do',method:'get',animate:true,dnd:true"></ul>
+			</div>
+			<div data-options="region:'center'" style="padding:2px">
+				<div id="tb" style="padding:15px;height:auto">
+					<form id="queryParams">
+						 状态：<select id="fileStatus" name="fquery.fileStatus" class="easyui-combobox" panelHeight="auto" style="width:100px">
+						 		<option value="">--请选择--</option>
+						 		<option value="0">暂存</option>
+						 		<option value="1">审批中</option>
+						 		<option value="2">审批通过</option>
+						 		<option value="3">审批不通过</option>
+						 		<option value="4">任务作废</option>
+						    </select> 
+						 &nbsp;&nbsp;&nbsp;&nbsp; 
+						    关键字：<input id="queryName" name="fquery.queryName" value="" type="text" class="easyui-textbox" />
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						起始时间：<input id="startDt" name="fquery.startDt" type="text" class="easyui-datebox" />
+						            至<input id="endDt" name="fquery.endDt" type="text" class="easyui-datebox" />
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						<a href="#" id="queryButton" class="easyui-linkbutton" iconCls="icon-search">&nbsp;查&nbsp;询&nbsp;</a>
+						<input id="dictionaryId" name="dictionaryId" type="hidden" >
+						<input id="menuType" name="fquery.menuType" type="hidden" >
+						<input id="fileTypeId" name="fquery.fileTypeId" type="hidden" >
+					</form>
+				</div>
+				<div id="title" align="center" class="datagrid-toolbar page_title"></div>
+				<table id="dg" class="easyui-datagrid" style="width:100%;height:auto;"
+						data-options="rownumbers:true,url:'../filemanager!listForPublic.do',singleSelect:false,border:false,method:'get',toolbar:'#tb',autoRowHeight:true,pagination:true,pageSize:10">
+					<thead>
+						<tr>
+							<th data-options="field:'id',checkbox:true"></th>
+							<th data-options="field:'fileDisplayname',width:'45%'">文件名称</th>
+							<th data-options="field:'fileStatus',width:'12%',formatter:formatIsStatus">状态</th>
+							<th data-options="field:'isPublic',width:'12%',formatter:formatIsPublic">是否公开</th>
+							<th data-options="field:'realName',width:'12%'">创建人</th>
+							<th data-options="field:'createDt',width:'12%',formatter:formatCreateDate">创建日期</th>
+						</tr>
+					</thead>
+				</table>
+				<div style="width:99%;padding: 5px;" align="center">
+					<a href="javascript:modify()" class="easyui-linkbutton" iconCls="icon-edit">&nbsp;修&nbsp;改&nbsp;</a>&nbsp;&nbsp;&nbsp;
+					<a href="javascript:remove()" class="easyui-linkbutton" iconCls="icon-cancel">&nbsp;删&nbsp;除&nbsp;</a>&nbsp;&nbsp;&nbsp;
+					<a href="javascript:savePublic()" class="easyui-linkbutton" iconCls="icon-lock">&nbsp;公&nbsp;开&nbsp;</a>&nbsp;&nbsp;&nbsp;
+					<a href="javascript:saveUnPublic()" class="easyui-linkbutton" iconCls="icon-lock">&nbsp;不&nbsp;公&nbsp;开</a>&nbsp;&nbsp;&nbsp;
+					<a href="javascript:downLoad()" class="easyui-linkbutton" iconCls="icon-download">&nbsp;下&nbsp;载&nbsp;</a>&nbsp;&nbsp;&nbsp;
+				</div>
+				<div id="ui_mask" style="display:none" class="datagrid-mask"></div>
+				<div id="ui_mask_msg" style="display:none; left: 50%; height: 16px; margin-left: -85.5px; line-height: 16px;" class="datagrid-mask-msg">正在处理，请稍待。。。</div>
+			</div>
+		</div>
+</body>
+</html>
+  
+ <script language="javascript">
+ 
+    $('#tt').tree({
+		onClick: function(node){
+			var id = node.id;
+			$('#title').text(node.text);
+			$("#dictionaryId").val(node.id);
+			$("#fileTypeId").val(node.id);
+			if($('#tt').tree('isLeaf', node.target)){
+				$("#menuType").val(2);
+			}else{
+				$("#menuType").val(1);
+			}
+		}
+	});
+    
+    
+    //格式化显示状态
+	function formatIsPublic(val,row){
+		if(val){
+	    	if (val == 1){
+				return '<font color="red">公开</font>';
+			}else if (val == 2){
+				return '<font color="green">不公开</font>';
+			}
+		}
+		return val;
+	}
+    
+    
+	//格式化显示状态
+	function formatIsStatus(val,row){
+		if(val){
+			if (val == '0'){
+				return '<font color="red">暂存</font>';
+			}else if (val == '1'){
+				return '<font color="green">审批中</font>';
+			}else if (val == '2'){
+				return '<font color="green">审批通过</font>';
+			}else if (val == '3'){
+				return '<font color="green">审批不通过</font>';
+			}else if (val == '4'){
+				return '<font color="green">任务作废</font>';
+			}
+		}
+		return val;
+	}
+	
+    
+    
+    function formatCreateDate(val,row){
+    	if(val){
+    		return val.substr(0,10);
+    	}
+    	return val;
+    }
+    
+    // 公开
+    function savePublic(){
+    	var ids="";
+		var names= [];
+		var rows = $('#dg').datagrid('getSelections');
+		for(var i=0; i<rows.length; i++){
+			 if (!ids) {
+			   	ids =  rows[i].id;
+			 } else {
+				ids += "," + rows[i].id;
+			 }   
+			 names.push(rows[i].fileDisplayname);
+		}
+		if (!ids || ids.length == 0) {
+			alert("请选择要修改为公开的文件");
+			return;
+		}
+		var answer = confirm("你确定要公开以下文件吗?\n"+names.join('\n'));
+		if (answer) {
+			var queryName = $("#queryName").val();
+			var startDt = $("#startDt").val();
+			var endDt = $("#endDt").val();
+			var fileTypeId = $("#fileTypeId").val();
+			var menuType = $("#menuType").val();
+            jQuery.ajax({
+				   type: "POST",
+				   url: "../filemanager!toPublic.do",
+				   data: "mainIds="+ids,
+				   dataType:"json",
+				   success: function(json){
+					   if(json == 'true'){
+						  $('#dg').datagrid('load',{
+							  queryName: queryName,
+							  startDt: startDt,
+							  endDt: endDt,
+							  fileTypeId: fileTypeId,
+							  menuType: menuType
+							});
+						  
+					   }else{
+						   alert("文件公开失败，请稍后重试！");
+					   }
+				   }
+				});
+            
+		}
+    }
+    
+    
+    // 不公开
+	function saveUnPublic(){
+		var ids="";
+		var names= [];
+		var rows = $('#dg').datagrid('getSelections');
+		for(var i=0; i<rows.length; i++){
+			 if (!ids) {
+			   	ids =  rows[i].id;
+			 } else {
+				ids += "," + rows[i].id;
+			 }   
+			 names.push(rows[i].fileDisplayname);
+		}
+		if (!ids || ids.length == 0) {
+			alert("请选择要修改为不公开的文件");
+			return;
+		}
+		var answer = confirm("你确定不公开以下文件吗?\n"+names.join('\n'));
+		if (answer) {
+			var queryName = $("#queryName").val();
+			var startDt = $("#startDt").val();
+			var endDt = $("#endDt").val();
+			var fileTypeId = $("#fileTypeId").val();
+			var menuType = $("#menuType").val();
+            jQuery.ajax({
+				   type: "POST",
+				   url: "../filemanager!unPublic.do",
+				   data: "mainIds="+ids,
+				   dataType:"json",
+				   success: function(json){
+					   if(json == 'true'){
+						   $('#dg').datagrid('load',{
+								  queryName: queryName,
+								  startDt: startDt,
+								  endDt: endDt,
+								  fileTypeId: fileTypeId,
+								  menuType: menuType
+								});
+					   }else{
+						   alert("文件修改为不公开失败，请稍后重试！");
+					   }
+				   }
+				});
+            
+		}
+    }
+    
+    
+    
+ 	function queryData(){
+		var paramsArray = $("#queryParams").serializeArray();
+		var results ='{';
+		$.each(paramsArray, function(i, field){
+			val = $.trim(field.value);
+			if(val){
+		  	 	results += '"'+field.name + '":"' + val + '",';
+			}
+		});
+		results += '}';
+		$('#dg').datagrid('load',eval('(' + results + ')')); 
+	}
+	$(function(){
+		 $('#queryButton').bind('click',queryData);
+	}); 
+ 
+	
+    function modify(){
+    	var ids="";
+		var names= [];
+		var rows = $('#dg').datagrid('getSelections');
+		for(var i=0; i<rows.length; i++){
+			 if (!ids) {
+			   	ids =  rows[i].id;
+			 } else {
+				alert("修改文件时不能多选");
+				return;	
+			 }   
+		}
+		if (!ids) {
+			alert("请选择要修改的文件");
+			return;
+		}
+		window.location.href="../filemanager!toEditpage.do?dicType=1&fm.id=" + ids;
+    }
+    
+    
+    function remove(){
+    	var ids="";
+		var names= [];
+		var rows = $('#dg').datagrid('getSelections');
+		for(var i=0; i<rows.length; i++){
+			 if (!ids) {
+			   	ids =  rows[i].id;
+			 } else {
+				ids += "," + rows[i].id;
+			 }   
+			 names.push(rows[i].fileDisplayname);
+		}
+		if (!ids || ids.length == 0) {
+			alert("请选择要删除的文件");
+			return;
+		}
+		var answer = confirm("你确定要删除以下文件吗?\n"+names.join('\n'));
+		if (answer) {
+			var queryName = $("#queryName").val();
+			var startDt = $("#startDt").val();
+			var endDt = $("#endDt").val();
+			var fileTypeId = $("#fileTypeId").val();
+			var menuType = $("#menuType").val();
+            jQuery.ajax({
+				   type: "POST",
+				   url: "../filemanager!delete.do",
+				   data: "mainIds="+ids,
+				   dataType:"json",
+				   success: function(json){
+					   if(json == 'true'){
+						   $('#dg').datagrid('load',{
+								  queryName: queryName,
+								  startDt: startDt,
+								  endDt: endDt,
+								  fileTypeId: fileTypeId,
+								  menuType: menuType
+								});
+					   }else{
+						   alert("文件删除失败，请稍后重试！");
+					   }
+				   }
+				});
+            
+		}
+    }
+    
+    function downLoad(){
+    	var ids="";
+		var names= [];
+		var rows = $('#dg').datagrid('getSelections');
+		for(var i=0; i<rows.length; i++){
+			 if (!ids) {
+			   	ids =  rows[i].id;
+			 } else {
+				alert("下载文件时不能多选");
+				return;	
+			 }   
+		}
+		if (!ids) {
+			alert("请选择要下载的文件");
+			return;
+		}
+		window.location.href="../download!filedownLoad.do?fm.id=" + ids;
+    }
+ 	
+ </script>
+
+

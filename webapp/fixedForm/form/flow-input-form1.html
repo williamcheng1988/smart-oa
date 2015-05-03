@@ -1,0 +1,393 @@
+<script type="text/javascript" src="widgets/loader/jgxLoader-min.js"></script>
+<script type="text/javascript">
+var xf_f_flow_view;   //流程查看
+var UserSelection_new_inner_html='';
+</script>
+#if ($!formMap.xf_f_formRecord_count)
+	#set ( $xf_f_formRecord_count = $!{formMap.xf_f_formRecord_count} )
+#else 
+	#set ( $xf_f_formRecord_count = 0 )
+#end
+
+#if ($!formMap.xf_f_fixed_fee)
+	#set ( $xf_f_fixed_fee = $!{formMap.xf_f_fixed_fee} )
+#else 
+	#set ( $xf_f_fixed_fee = "15.00" )
+#end
+<input type="hidden" name="xf_f_formRecordId" value="$!{formMap.xf_f_formRecordId}" />
+<input type="hidden" name="xf_f_formRecord_count" id="xf_f_formRecord_count" value="$!xf_f_formRecord_count"/>
+<input type="hidden" name="xf_f_fixed_fee" id="xf_f_fixed_fee" value="$!xf_f_fixed_fee"/>
+<table class="xf-table" cellspacing="0" cellpadding="0" width="100%" align="center" style="border-collapse: collapse;font-size: 12px;">
+	<tbody>
+		<tr>
+			<td width="12%" nowrap="" align="center" class="tasktd1">费用承担项目</td>
+			<td class="tasktd2" width="20%" colspan="3">
+				<div class="xf-handler">
+				<select class="easyui-combobox xf-proselection" id="xf_f_fycdxm" style="width:180px;"
+				data-options="method:'get',valueField:'name',textField:'name',panelHeight:'auto',editable:false"
+				name="xf_f_fycdxm">
+					<option value="">-- 请选择项目 --</option>
+			</select></div></td>
+			<td width="12%" nowrap="" align="center" class="tasktd1">项目经理</td>
+			<td width="25%"><div class="xf-handler"><input class="easyui-textbox" id="xf_f_fixedName_xmjl" readonly="" name="xf_f_fixedName_xmjl"/></div></td>
+		</tr>
+		<tr>
+			<td nowrap="" align="center" class="tasktd1">收款人</td>
+			<td class="tasktd2">
+				<div class="xf-handler"><input class="easyui-textbox" id="xf_f_skr" name="xf_f_skr"></div></td>
+			<td nowrap="" align="center" class="tasktd1">收款帐号</td>
+			<td class="tasktd2"><div class="xf-handler"><input class="easyui-textbox aaaaaaaaaa" type="text" id="xf_f_skzh"
+				name="xf_f_skzh"></div></td>
+			<td nowrap="" align="center" class="tasktd1">职级</td>
+			<td class="tasktd2"><div class="xf-handler"><select id="xf_f_zj" class="easyui-combobox" style="width:135px"
+				data-options="method:'get',valueField:'name',textField:'name',panelHeight:'auto',editable:false"
+				name="xf_f_zj">
+					<option value="">请选择</option>
+			</select></div></td>
+		</tr>
+		<tr>
+			<td colspan="6" style="padding: 0px;text-align: left; padding: 0px; border-style: hidden;">
+				<table width="100%" border="1" cellspacing="0" cellpadding="0" class="xf-fee-table">
+						<tr bgcolor="#dddddd" align="center" line_num="copy-number-0">
+							<td width="7%" style="font-size: 12px">前往日期</td>
+							<td width="7%" style="font-size: 12px">返回日期</td>
+							<td width="7%" style="font-size: 12px">出发地</td>
+							<td width="7%" style="font-size: 12px">到达地</td>
+							<td width="4%" style="font-size: 12px">天数</td>
+							<td width="7%" style="font-size: 12px">机车船费</td>
+							<td width="8%" style="font-size: 12px">机场/码头/火车站往返费</td>
+							<td width="7%" style="font-size: 12px">市内交通</td>
+							<td width="7%" style="font-size: 12px">住宿费</td>
+							<td width="7%" style="font-size: 12px">伙食补助</td>
+							<td width="7%" style="font-size: 12px">交通补助</td>
+							<td width="7%" style="font-size: 12px">住宿补助</td>
+							<td width="7%" style="font-size: 12px">其他</td>
+							<td width="7%" style="font-size: 12px">合计</td>
+							<td width="7%" style="font-size: 12px">操作</td>
+						</tr>
+						<tr id="handleLine">
+							<td colspan="15" align="right">
+								<div class="xf-handler" style="text-align:right">
+								<a href="javascript:void(0);" class="easyui-linkbutton copyWidget-add" iconCls="icon-add"></a>
+								<a href="javascript:void(0);" class="easyui-linkbutton copyWidget-remove" iconCls="icon-remove"></a>
+								</div>
+							</td>
+						</tr>
+						
+						<tr align="center">
+							<td width="32%" colspan="5" style="text-align: center">合计</td>
+							<td width="7%"><div class="xf-handler"><input class="easyui-numberbox total_row calculator" readonly="" style="WIDTH: 60px"
+								data-options="min:0,precision:2" resources=".fee_col0." name="xf_f_Fee0Total" id="xf_f_Fee0Total"></div></td>
+							<td width="8%"><div class="xf-handler"><input class="easyui-numberbox total_row calculator" readonly="" style="WIDTH: 60px"
+								data-options="min:0,precision:2" resources=".fee_col1." name="xf_f_Fee1Total" id="xf_f_Fee1Total"></div></td>
+							<td width="7%"><div class="xf-handler"><input class="easyui-numberbox total_row calculator" readonly="" style="WIDTH: 60px"
+								data-options="min:0,precision:2" resources=".fee_col2." name="xf_f_Fee2Total" id="xf_f_Fee2Total"></div></td>
+							<td width="7%"><div class="xf-handler"><input class="easyui-numberbox total_row calculator" readonly="" style="WIDTH: 60px"
+								data-options="min:0,precision:2" resources=".fee_col3." name="xf_f_Fee3Total" id="xf_f_Fee3Total"></div></td>
+							<td width="7%"><div class="xf-handler"><input class="easyui-numberbox total_row calculator" readonly="" style="WIDTH: 60px"
+								data-options="min:0,precision:2" resources=".fee_col4." name="xf_f_Fee4Total" id="xf_f_Fee4Total"></div></td>
+							<td width="7%"><div class="xf-handler"><input class="easyui-numberbox total_row calculator" readonly="" style="WIDTH: 60px"
+								data-options="min:0,precision:2" resources=".fee_col5." name="xf_f_Fee5Total" id="xf_f_Fee5Total"></div></td>
+							<td width="7%"><div class="xf-handler"><input class="easyui-numberbox total_row calculator" readonly="" style="WIDTH: 60px"
+								data-options="min:0,precision:2" resources=".fee_col6." name="xf_f_Fee6Total" id="xf_f_Fee6Total"></div></td>
+							<td width="7%"><div class="xf-handler"><input class="easyui-numberbox total_row calculator" readonly="" style="WIDTH: 60px"
+								data-options="min:0,precision:2" resources=".fee_col7." name="xf_f_Fee7Total" id="xf_f_Fee7Total"></div></td>
+							<td width="7%"><div class="xf-handler"><input class="easyui-numberbox total_All calculator" 
+								data-options="min:0,precision:2" resources=".total_row."
+								readonly="" style="WIDTH: 60px"
+								name="xf_f_FeeAllTotal" id="xf_f_FeeAllTotal"></div></td>
+							<td width="4%"></td>
+						</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td nowrap="" align="center" class="tasktd1">总计金额(大写)</td>
+			<td colspan="5" class="tasktd2"><div class="xf-handler"><input type="text" class="easyui-textbox upperDigit" resources="#FeeAllTotal#"
+				readonly="" style="WIDTH: 80%;" id="xf_f_zjje" name="xf_f_zjje"></div></td>
+		</tr>
+		<tr>
+			<td nowrap="" align="center" class="tasktd1">附件张数</td>
+			<td class="tasktd2" colspan="5"><div class="xf-handler"><input type="text" class="easyui-numberbox" data-options="min:0"
+				style="WIDTH: 100px;" id="xf_f_fjzs" name="xf_f_fjzs"></div></td>
+		</tr>
+	</tbody>
+</table>
+<div id="ui_mask" style="display:none" class="datagrid-mask"></div>
+<div id="ui_mask_msg" style="display:none; left: 50%; height: 16px; margin-left: -85.5px; line-height: 16px;" class="datagrid-mask-msg">正在处理，请稍待。。。</div>
+<script type="text/javascript">
+
+$(function(){
+	initCloneArea();
+	
+	if(!xf_f_flow_view){
+		$('#xf_f_fycdxm').combobox({
+			url:'formTemplate!listProjects.do'
+		});
+		$('#xf_f_zj').combobox({
+			url:'formTemplate!listDictionarys.do?dicKey=cfg_zhuanshujibie'
+		});
+		
+		//设置默认值
+		var value = $('#xf_f_fixed_fee').val();
+		$('.fixed_fee').each(function (){
+			$(this).textbox('setValue',value);
+		});
+		
+		$('.copyWidget-add').click(function(){
+			var copyNum = $('#xf_f_formRecord_count').val();
+			var newCopyNum = ++copyNum;
+			
+			addRow(newCopyNum);
+			
+			$('#xf_f_formRecord_count').val(newCopyNum);
+		});
+		$('.copyWidget-remove').click(function(){
+			var copyNum = $('#xf_f_formRecord_count').val();
+			if(copyNum==0){
+				return false;
+			}
+			var targetTr = $('[line_num^="copy-number-"]:last');
+			if(!targetTr){return false;}
+			targetTr.remove();
+			
+			$('#xf_f_formRecord_count').val(--copyNum);
+		});
+		
+		// 大写控件 处理函数
+		$('.upperDigit').each(function (){
+			var upperDigit = $(this);
+			var resources = $(this).attr('resources');
+			if(!resources){return false;}
+			var unique = resources.substring(1,resources.length-1);
+			
+			$('#xf_f_'+unique).textbox({
+				onChange:function(){
+					var upperValue = upDigit($(this).val());
+					
+					upperDigit.textbox('setValue',upperValue);
+				}
+			});
+		})
+
+		bindCalculateFun();
+		
+		bindCalFeeByDay();
+		
+		bindHandleForProselection();
+	}else{
+		$('#handleLine').remove();
+	}
+})
+
+//初始化  可复制区域
+function initCloneArea(){
+	var copyNum = $('#xf_f_formRecord_count').val();
+	var count = parseInt(copyNum)+1;
+	for(var i=0;i<count;i++){
+		addRow(i);
+	}
+}
+
+function formatDate(date){
+	var y=''+date.getFullYear();
+	var m=''+(date.getMonth()+1);
+	var d=''+date.getDate();
+	return y+''+(m.length==2?m:('0'+m))+''+(d.length==2?d:('0'+d));
+}
+
+function parseDate(s){
+	if (!s) return new Date();
+	var y = parseInt(s.substring(0,4));
+	var m = parseInt(s.substring(4,6));
+	var d = parseInt(s.substring(6,8));
+	if (!isNaN(y) && !isNaN(m) && !isNaN(d)){
+		return new Date(y,m-1,d);
+	} else {
+		return new Date();
+	}
+}
+
+//添加行
+function addRow(newCopyNum){
+
+	var html = '<tr align="center" id="xf-g-'+newCopyNum+'" line_num="copy-number-'+newCopyNum+'">'+
+					'<td><div class="xf-handler"><input class="easyui-datebox" data-options="formatter:formatDate,parser:parseDate" style="width: 100px" name="xf_f_BeginDate~dy_clone'+newCopyNum+'"/></div></div></td>'+
+					'<td><div class="xf-handler"><input class="easyui-datebox" data-options="formatter:formatDate,parser:parseDate" style="width: 100px" name="xf_f_EndDate~dy_clone'+newCopyNum+'"/></div></td>'+
+					'<td><div class="xf-handler"><input class="easyui-textbox" style="width: 60px" name="xf_f_LeavePlace~dy_clone'+newCopyNum+'"></div></td>'+
+					'<td><div class="xf-handler"><input class="easyui-textbox" style="width: 60px" name="xf_f_ArrivePlace~dy_clone'+newCopyNum+'"></div></td>'+
+					'<td><div class="xf-handler"><input class="easyui-numberbox day_row" data-options="min:0" style="width: 40px" name="xf_f_Days~dy_clone'+newCopyNum+'"></div></td>'+
+					'<td><div class="xf-handler"><input class="easyui-numberbox fee_row fee_col0" data-options="min:0,precision:2" style="width: 60px" name="xf_f_Fee1~dy_clone'+newCopyNum+'"></div></td>'+
+					'<td><div class="xf-handler"><input class="easyui-numberbox fee_row fee_col1" data-options="min:0,precision:2" style="width: 60px" name="xf_f_Fee2~dy_clone'+newCopyNum+'"></div></td>'+
+					'<td><div class="xf-handler"><input class="easyui-numberbox fee_row fee_col2" data-options="min:0,precision:2" style="width: 60px" name="xf_f_Fee3~dy_clone'+newCopyNum+'"></div></td>'+
+					'<td><div class="xf-handler"><input class="easyui-numberbox fee_row fee_col3" data-options="min:0,precision:2" style="width: 60px" name="xf_f_Fee4~dy_clone'+newCopyNum+'"></div></td>'+
+					'<td><div class="xf-handler"><input class="easyui-numberbox fee_row fee_col4 fixed_fee" data-options="min:0,precision:2" value="$!xf_f_fixed_fee" readonly="" style="width: 60px" name="xf_f_Fee5~dy_clone'+newCopyNum+'"></div></td>'+
+					'<td><div class="xf-handler"><input class="easyui-numberbox fee_row fee_col5 fixed_fee" data-options="min:0,precision:2" value="$!xf_f_fixed_fee" readonly="" style="width: 60px" name="xf_f_Fee6~dy_clone'+newCopyNum+'"></div></td>'+
+					'<td><div class="xf-handler"><input class="easyui-numberbox fee_row fee_col6 fixed_fee" data-options="min:0,precision:2" value="$!xf_f_fixed_fee" readonly="" style="width: 60px" name="xf_f_Fee7~dy_clone'+newCopyNum+'"></div></td>'+
+					'<td><div class="xf-handler"><input class="easyui-numberbox fee_row fee_col7" data-options="min:0,precision:2" style="width: 60px" name="xf_f_Fee8~dy_clone'+newCopyNum+'"></div></td>'+
+					'<td><div class="xf-handler"><input class="easyui-numberbox total_single_row" data-options="min:0,precision:2" readonly="" style="width: 60px" resources=".fee_row0." name="xf_f_Total~dy_clone'+newCopyNum+'"></div></td>'+
+					'<td></td>'+
+				'</tr>';
+
+	var targetTr = $('[line_num^="copy-number-"]:last');
+	$(targetTr).after(html);
+	
+	jQuery.parser.parse($('[line_num="copy-number-'+newCopyNum+'"]'));
+	if(!xf_f_flow_view){
+		bindCalculateFun();
+		bindCalFeeByDay();
+	}
+}
+//每行计算方法
+function rowCalculate(){
+
+	$('.total_single_row').each(function (){
+		//#number1#+#number2#
+		var id = this.id;
+		var totalRowObj = $(this);
+		var newResource = "0";
+		
+		$(this).closest('tr[id^="xf-g-"]').find('.fee_row').each(function(){
+			var val = $(this).val();
+			var newVal = (val!=null && val!=undefined && val!="")?val:"0";
+			newResource=newResource+"+"+newVal;
+		});
+		
+		var mode = eval(newResource);
+		
+		totalRowObj.textbox('setValue',mode);
+	});
+}
+
+//改变天数，改变报销费用
+function bindCalFeeByDay(){
+	$('.day_row').each(function (){
+		$(this).textbox({
+			onChange:function(){
+				var val = $(this).val();
+				$(this).closest('tr[id^="xf-g-"]').find('.fixed_fee').each(function(){
+					var value = $('#xf_f_fixed_fee').val();
+					
+					var finalVal = parseFloat(value*val).toFixed(2);
+					
+					$(this).textbox('setValue',finalVal);
+				});
+			}
+		});
+	});
+}
+
+//绑定计算 函数
+function bindCalculateFun(){
+	//合计控件 处理函数
+	$('.calculator').each(function (){
+		//#number1#+#number2#
+		var id = this.id;
+		var totalObj = $(this);
+		var resources = $(this).attr('resources');
+		if(!resources){return false;}
+		
+		//初始化
+		//totalObj.textbox('setValue',replacePattern(totalObj,resources));
+		
+		var regObj = new RegExp('.\\w+.','g');
+		
+		//#number1#+#number2#
+		var res_array = resources.match(regObj);
+		
+		for(var key in res_array){
+			var res = res_array[key];
+			var regTmp = new RegExp(res);
+			var className = res.substring(1,res.length-1);
+			$('.'+className).textbox({
+				onChange:function(){
+					totalObj.textbox('setValue',replacePattern(totalObj,resources));
+					rowCalculate();
+				}
+			});
+		}
+	})
+}
+//正则替换元素
+function replacePattern(target,resources,keyAndvalue){
+	if(!resources){return false;}
+	var regObj = new RegExp('.\\w+.','g');
+	var res_array = resources.match(regObj);
+	//keyAndvalue 有值，证明为动态更新值，而不是初始化数据
+	
+	var newResource = "0";
+	for(var key in res_array){
+		var res = res_array[key];
+		var regTmp = new RegExp(res);
+		var className = res.substring(1,res.length-1);
+		
+		$('.'+className).each(function(){
+			var val = $(this).val();
+			var newVal = (val!=null && val!=undefined && val!="")?val:"0";
+			//console.log(target.attr('textboxname')+',newVal:'+newVal+'\n'+'newResource:'+newResource);
+			newResource=newResource+"+"+newVal;
+			//console.log(target.attr('textboxname')+',newResource:'+newResource);
+		});
+	}
+	var mode;
+	if(target.hasClass('easyui-numberbox')){
+		mode = eval(newResource);
+	}
+	
+	return mode;
+}
+//转换金额为大写
+function upDigit(n){ 
+	var fraction = ['角', '分']; 
+	var digit = ['零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖']; 
+	var unit = [ ['元', '万', '亿'], ['', '拾', '佰', '仟']  ]; 
+	var head = n < 0? '欠': ''; 
+	n = Math.abs(n); 
+   
+	var s = ''; 
+   
+	for (var i = 0; i < fraction.length; i++)  
+	{ 
+		s += (digit[Math.floor(n * 10 * Math.pow(10, i)) % 10] + fraction[i]).replace(/零./, ''); 
+	} 
+	s = s || '整'; 
+	n = Math.floor(n); 
+   
+	for (var i = 0; i < unit[0].length && n > 0; i++)  
+	{ 
+		var p = ''; 
+		for (var j = 0; j < unit[1].length && n > 0; j++)  
+		{ 
+			p = digit[n % 10] + unit[1][j] + p; 
+			n = Math.floor(n / 10); 
+		} 
+		s = p.replace(/(零.)*零$/, '').replace(/^$/, '零')  + unit[0][i] + s; 
+	} 
+	return head + s.replace(/(零.)*零元/, '元').replace(/(零.)+/g, '零').replace(/^整$/, '零元整'); 
+}
+$(function (){
+	//展示数据
+	if ('$!{formMap.get("json")}' != '') {
+		if(xf_f_flow_view){
+			var data = eval('($!{formMap.json})');
+			$('.xf-handler').each(function(){
+				var field1 = $(this).find('input[class^="easyui-"][textboxname^="xf_f_"]');
+				var field2 = $(this).find('select[class^="easyui-"][comboname^="xf_f_"]');
+				var name = field1.attr('textboxname')?field1.attr('textboxname'):field2.attr('comboname'); 
+				if(name){
+					if(data[name]){
+						$(this).html(data[name]);
+					}else{
+						$(this).html('');
+					}
+				}
+			});
+		}else{
+			$('#Form1').form('load',eval('($!{formMap.json})'));
+		}
+	}
+});
+</script>
+<!-- These JS Files should load at the end of the file -->
+<script type="text/javascript" src="widgets/userselection/userselection-min.js"></script>
+<script type="text/javascript" src="widgets/proselection/proselection-min.js"></script>

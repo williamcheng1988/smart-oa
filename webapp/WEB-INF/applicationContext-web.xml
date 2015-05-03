@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+	<!-- ================= Dao ======begin========================-->
+	<bean id="baseDao" class="com.chz.smartoa.common.dao.impl.BaseDaoImpl">
+		<property name="sqlMapClient" ref="sqlMapClient"/>
+	</bean>
+	
+	<bean id="taskDao" class="com.chz.smartoa.common.schedule.dao.impl.TaskDaoImpl">
+		<property name="sqlMapClient" ref="sqlMapClient"/>
+	</bean>	
+	
+	<bean id="staffDao" class="com.chz.smartoa.system.dao.impl.StaffDaoImpl">
+		<property name="sqlMapClient" ref="sqlMapClient"/>
+	</bean>	
+	<bean id="operateLogDao" class="com.chz.smartoa.system.dao.impl.OperateLogDaoImpl">
+		<property name="sqlMapClient" ref="sqlMapClient"/>
+	</bean>	
+	<bean id="resourceDao" class="com.chz.smartoa.system.dao.impl.ResourceDaoImpl">
+		<property name="sqlMapClient" ref="sqlMapClient"/>
+	</bean>
+	<bean id="roleDao" class="com.chz.smartoa.system.dao.impl.RoleDaoImpl">
+		<property name="sqlMapClient" ref="sqlMapClient"/>
+	</bean>
+	<bean id="departmentDao" class="com.chz.smartoa.system.dao.impl.DepartmentDaoImpl">
+		<property name="sqlMapClient" ref="sqlMapClient"/>
+	</bean>
+	
+	<bean id="reConfDao_" class="com.chz.smartoa.task.dao.impl.ReConfDaoImpl">
+		<property name="sqlMapClient" ref="sqlMapClient"/>
+	</bean>
+	<bean id="reProcdefDao_" class="com.chz.smartoa.task.dao.impl.ReProcdefDaoImpl">
+		<property name="sqlMapClient" ref="sqlMapClient"/>
+	</bean>
+	
+	<bean id="delegationDao" class="com.chz.smartoa.delegation.dao.impl.DelegationDaoImpl">
+		<property name="sqlMapClient" ref="sqlMapClient"/>
+	</bean>
+	<bean id="delegationLogDao" class="com.chz.smartoa.delegation.dao.impl.DelegationLogDaoImpl">
+		<property name="sqlMapClient" ref="sqlMapClient"/>
+	</bean>
+	
+	<bean id="geExecutionDao" class="com.chz.smartoa.task.dao.impl.GeExecutionDaoImpl">
+		<property name="sqlMapClient" ref="sqlMapClient"/>
+	</bean>
+	<bean id="ruTaskDao" class="com.chz.smartoa.task.dao.impl.RuTaskDaoImpl">
+		<property name="sqlMapClient" ref="sqlMapClient"/>
+	</bean>
+	<bean id="hiTaskDao" class="com.chz.smartoa.task.dao.impl.HiTaskDaoImpl">
+		<property name="sqlMapClient" ref="sqlMapClient"/>
+	</bean>
+	<!--  字典配置 -->
+	<bean id="dictionaryConfigDao" class="com.chz.smartoa.system.dao.impl.DictionaryConfigDaoImpl">
+		<property name="sqlMapClient" ref="sqlMapClient"/>
+	</bean>
+	<!-- ================= Dao ======end========================-->
+	
+	<!-- ================= service ======begin========================-->
+	<bean id="baseService" class="com.chz.smartoa.common.service.impl.BaseServiceImpl">
+		<property name="baseDao" ref="baseDao"/>
+	</bean>
+	<bean id="operateLogContext" class="com.chz.smartoa.system.service.impl.OperateLogContext"/>
+	
+	<bean id="operateLogBiz" class="com.chz.smartoa.system.service.impl.OperateLogBizImpl">
+		<property name="operateLogDao" ref="operateLogDao"/>
+		<property name="operateLogContext" ref="operateLogContext"/>
+	</bean>	
+	<bean id="staffBiz" class="com.chz.smartoa.system.service.impl.StaffBizImpl">
+		<property name="staffDao" ref="staffDao"/>
+		<property name="operateLogBiz" ref="operateLogBiz"/>	
+		<property name="roleDao" ref="roleDao"/>
+		<property name="departmentDao" ref="departmentDao"/>
+	</bean>	
+	<bean id="roleBiz" class="com.chz.smartoa.system.service.impl.RoleBizImpl">
+		<property name="staffDao" ref="staffDao"/>
+		<property name="roleDao" ref="roleDao"/>
+		<property name="departmentDao" ref="departmentDao"/>
+		<property name="operateLogBiz" ref="operateLogBiz"/>	
+	</bean>	
+	
+	<bean id="userHandler" class="com.chz.smartoa.system.service.impl.UserHandlerImpl">
+		<property name="staffDao" ref="staffDao"/>
+		<property name="roleDao" ref="roleDao"/>
+	</bean>	
+	
+	<bean id="noticeBiz" class="com.chz.smartoa.system.service.impl.NoticeBizImpl">
+		<property name="baseDao" ref="baseDao"/>
+	</bean>	
+	
+	<bean id="noticeHandler" class="com.chz.smartoa.task.Handler.NoticeHandler">
+		<property name="repositoryService" ref="repositoryService"/>
+		<property name="taskService" ref="taskService"/>
+		<property name="noticeBiz" ref="noticeBiz"/>
+	</bean>	
+
+	<bean id="resourceBiz" class="com.chz.smartoa.system.service.impl.ResourceBizImpl">
+		<property name="resourceDao" ref="resourceDao"/>	
+	</bean>	
+	
+	<bean id="delegationBiz" class="com.chz.smartoa.delegation.service.impl.DelegationBizImpl">
+		<property name="delegationDao" ref="delegationDao"/>	
+		<property name="delegationLogDao" ref="delegationLogDao"/>	
+		
+		<property name="runtimeService" ref="runtimeService"/>	
+	</bean>	
+	
+	<bean id="repositoryService" class="com.chz.smartoa.task.service.impl.RepositoryServiceImpl">
+		<property name="reProcdefDao_" ref="reProcdefDao_"/>	
+		<property name="reConfDao_" ref="reConfDao_"/>	
+	</bean>	
+	<bean id="runtimeService" class="com.chz.smartoa.task.service.impl.RuntimeServiceImpl">
+		<property name="geExecutionDao" ref="geExecutionDao"/>	
+		<property name="ruTaskDao" ref="ruTaskDao"/>	
+		<property name="delegationDao" ref="delegationDao"/>
+		<property name="delegationLogDao" ref="delegationLogDao"/>		
+		<property name="userHandler" ref="userHandler"/>
+		<property name="noticeHandler" ref="noticeHandler"/>	
+		<property name="historyService" ref="historyService"/>	
+	</bean>	
+	<bean id="historyService" class="com.chz.smartoa.task.service.impl.HistoryServiceImpl">
+		<property name="hiTaskDao" ref="hiTaskDao"/>	
+	</bean>	
+	<bean id="taskService" class="com.chz.smartoa.task.service.impl.TaskServiceImpl">
+		<property name="ruTaskDao" ref="ruTaskDao"/>	
+		<property name="geExecutionDao" ref="geExecutionDao"/>	
+	</bean>	
+	<bean id="flowService" class="com.chz.smartoa.task.service.impl.FlowServiceImpl">
+		<property name="repositoryService" ref="repositoryService"/>	
+		<property name="runtimeService" ref="runtimeService"/>	
+		<property name="historyService" ref="historyService"/>	
+		<property name="taskService" ref="taskService"/>	
+		<property name="operateLogBiz" ref="operateLogBiz"/>	
+		<property name="noticeHandler" ref="noticeHandler"/>	
+		<property name="formBiz" ref="formBiz"/>
+		<property name="fileGroupBiz" ref="fileGroupBiz"/>	
+	</bean>	
+	
+	<!--  字典配置 -->
+	<bean id="dictionaryConfigBiz" class="com.chz.smartoa.system.service.impl.DictionaryConfigBizImpl">
+		<property name="dictionaryConfigDao" ref="dictionaryConfigDao"/>	
+	</bean>	
+	
+	<!-- ================= biz ======end========================-->
+	
+	<!-- ================= action ======begin========================-->
+	<bean id="staffAction" class="com.chz.smartoa.system.action.StaffAction" scope="prototype">
+		<property name="staffBiz" ref="staffBiz"/>
+		<property name="operateLogBiz" ref="operateLogBiz"/>
+	</bean>
+	
+	<bean id="roleAction" class="com.chz.smartoa.system.action.RoleAction" scope="prototype">
+		<property name="roleBiz" ref="roleBiz"/>
+		<property name="resourceBiz" ref="resourceBiz"/>
+		<property name="operateLogBiz" ref="operateLogBiz"/>
+		<property name="dictionaryConfigBiz" ref="dictionaryConfigBiz"/>
+		<property name="roleFiletypeBiz" ref="roleFiletypeBiz"/>
+	</bean>
+	
+	
+	<bean id="logAction" class="com.chz.smartoa.system.action.LogAction" scope="prototype">
+		<property name="operateLogBiz" ref="operateLogBiz"/>
+	</bean>
+	
+	<bean id="delegationAction" class="com.chz.smartoa.delegation.action.DelegationAction" scope="prototype">
+		<property name="delegationBiz" ref="delegationBiz"/>
+	</bean>
+	
+	<bean id="processAction" class="com.chz.smartoa.task.action.ProcessAction" scope="prototype">
+		<property name="repositoryService" ref="repositoryService"/>
+		<property name="operateLogBiz" ref="operateLogBiz"/>
+	</bean>
+	
+	<bean id="flowAction" class="com.chz.smartoa.task.action.FlowAction" scope="prototype">
+		<property name="flowService" ref="flowService"/>
+		<property name="taskService" ref="taskService"/>
+		<property name="historyService" ref="historyService"/>
+		<property name="repositoryService" ref="repositoryService"/>	
+		
+		<property name="staffBiz" ref="staffBiz"/>
+	</bean>
+	
+	<bean id="dictionary" class="com.chz.smartoa.dictionary.action.DictionaryAction" scope="prototype">
+	</bean>
+	
+	<!-- 字典配置 -->
+	<bean id="dictionaryAction" class="com.chz.smartoa.system.action.DictionaryConfigAction" scope="prototype">
+		<property name="dictionaryConfigBiz" ref="dictionaryConfigBiz"/>
+	</bean>
+	<!-- ================= action ======end========================-->
+</beans>

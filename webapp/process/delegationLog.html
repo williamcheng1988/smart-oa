@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<script type="text/javascript" src="jquery.min.js"></script>
+	<link id="easyuiTheme" rel="stylesheet" type="text/css" href="themes/default/easyui.css">
+	<script type="text/javascript" charset="UTF-8" src="themes/themes.js"></script>
+	<link rel="stylesheet" type="text/css" href="themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="css/smart.css">
+	<script type="text/javascript" src="jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="locale/easyui-lang-zh_CN.js"></script>   
+</head>
+<body>
+	<div align="center" class="datagrid-toolbar page_title">
+		授权已办任务
+	</div>
+	<table id="dg" class="easyui-datagrid" style="width:100%;height:auto;"
+			data-options="rownumbers:true,singleSelect:false,border:false,url:'delegation!log.do?delegationId=$!{delegationId}',method:'get',toolbar:'#tb',autoRowHeight:false,pagination:true,pageSize:10">
+		<thead>
+			<tr>
+				<th data-options="field:'businessKey',width:'14%'">编号</th>
+				<th data-options="field:'businessTitle',width:'19%',formatter:formatOpert">任务名称</th>
+				<th data-options="field:'loginName',align:'center',width:'22%'">申请人</th>
+				<th data-options="field:'dealTime',align:'center',width:'21%'">处理时间</th>
+			</tr>
+		</thead>
+	</table>
+			<div style="text-align:center;padding:8px">
+		    	<a href="javascript:history.back()" class="easyui-linkbutton">&nbsp;返&nbsp;回&nbsp;</a>&nbsp;&nbsp;
+	   		</div>
+	</body>
+</html>
+<script type="text/javascript">
+	//格式化数据
+	function formatOpert(val,row){
+		return '<a class="easyui-linkbutton" data-options="plain:true" href="flow!view.do?executionId='+row.executionId+'">'+val+'</a>';
+	}
+</script>

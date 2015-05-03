@@ -1,0 +1,172 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<HTML>
+<HEAD>
+<title>任务申请</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<script type="text/javascript" src="jquery.min.js"></script>
+	<link id="easyuiTheme" rel="stylesheet" type="text/css" href="themes/default/easyui.css">
+	<script type="text/javascript" charset="UTF-8" src="themes/themes.js"></script>
+	<link rel="stylesheet" type="text/css" href="themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="css/smart.css">
+	<script type="text/javascript" src="jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="locale/easyui-lang-zh_CN.js"></script> 
+	<script type="text/javascript" src="filemanager.js"></script> 
+</HEAD>
+<body>
+<input type="hidden" id="templateId" value="$!formTemplateId" />
+	<form id="Form1" action="flow!save.do" method="post" class="easyui-form" data-options="novalidate:true">
+		<input type="hidden" id="formTemplateId" name="formTemplateId" value="$!formTemplateId" />
+		<input type="hidden" id="executionId" name="executionId" value="$!executionId" />
+		<input type="hidden" id="status_" name="status_" value="1" />
+		<table height="100%" cellSpacing="0" cellPadding="0" width="1000"
+			align="center" border="0">
+			<tr vAlign="top">
+				<td colspan="2">
+					<table width="100%" border="0" class="datagrid-toolbar page_title">
+						<tbody>
+							<tr>
+								<td align="center"><font class="titleht1">$!formMap.formTemplateTypeName
+										签报</font><br> <span class="titleht2"
+									id="DetailItem_TaskTypeName">$!formMap.formTemplateName</span></td>
+							</tr>
+						</tbody>
+					</table>
+					<table cellpadding="5" width="100%" class="table_form">
+						<tbody>
+							<tr>
+								<td align="center" class="tasktd1">请示事项要点</td>
+								<td colspan="2" class="tasktd2">
+									<input class="easyui-textbox" id="title_" name="title_" style="width: 50%;" data-options="required:true,validType:['length[0,80]']" value="$!title_">&nbsp;
+								</td>
+								<td align="center" class="tasktd1" width="25%">
+								#if($!importantGrade_ > 0)
+								是否紧急：
+									<label style="display: inline;font-weight: normal;"><input type="radio" name="priority_" value="0" checked>普通</label>
+									<label style="display: inline;color:#FF7F27;font-weight: normal;"><input type="radio" name="priority_" value="1" #if($importantGrade_ == 1) checked #end>紧急</label>
+									<label style="display: inline;color: red;font-weight: normal;"><input type="radio" name="priority_" value="2" #if($importantGrade_ == 2) checked #end>加急</label>
+								#end
+								</td>
+							</tr>
+							<tr>
+								<td width="15%" nowrap="" align="center" class="tasktd1">报送人</td>
+								<td width="45%" class="tasktd2"><span id="realName">$!staff.realName</span></td>
+								<td width="15%" nowrap="" align="center" class="tasktd1">联系电话</td>
+								<td width="25%" class="tasktd2">$!staff.mobile</td>
+							</tr>
+							<tr>
+								<td colspan="4" style="text-align: left; padding: 0px; border-style: hidden;" id="xf-form-table">
+									#parse($!formMap.viewUrl)
+								</td>
+							</tr>
+							<tr>
+								<td colspan="4"><span class="tasktd1">请示事项具体内容：</span><br>
+									<input class="easyui-textbox" id="desc_" name="desc_" data-options="multiline:true,required:true,validType:['length[0,300]']" style="width: 85%; height: 100px" value="$!desc_"></input>
+									&nbsp;</td>
+							</tr>
+						</tbody>
+					</table>
+					<!-- 显示添加的附件列表 -->
+					#parse("filemanager/group_list_launch.html")
+			  		<table id="fileListTab" width="100%" border="0" align="center" cellpadding="0" cellspacing="1">
+		  			</table>
+					<table cellpadding="5" width="100%" border="0">
+						<tbody>
+							<tr>
+								<td>
+									<div align="right">
+										<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-upload',plain:true" onclick="javascript:$(this).prop('val',!$(this).prop('val'));if($(this).prop('val'))$('#p').panel('expand',true); else $('#p').panel('collapse',true);">添加附件</a>
+									</div>
+									<div id="p" class="easyui-panel" title="附件上传" style="width:100%;height:auto;padding:0px;" data-options="noheader:true,collapsed:true">
+										#include("filemanager/add.html")
+									</div>
+								</td>
+							</tr>
+						</tbody
+					</table> <br>
+					<div align="center">
+						<a href="javascript:saveForm()" class="easyui-linkbutton">&nbsp;暂&nbsp;存&nbsp;</a>&nbsp;&nbsp;
+						<a href="javascript:submitForm()" class="easyui-linkbutton">&nbsp;提&nbsp;交&nbsp;</a>&nbsp;&nbsp;
+				        <a href="javascript:clearForm()" class="easyui-linkbutton">&nbsp;重&nbsp;置&nbsp;</a>&nbsp;&nbsp;
+				    	<a href="javascript:closeTab()" class="easyui-linkbutton">&nbsp;关&nbsp;闭&nbsp;</a>&nbsp;&nbsp;
+					</div>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+		</td>
+		</tr>
+		</table>
+	</form>
+<div id="ui_mask" style="display:none;min-height:100%;" class="datagrid-mask"></div>
+<div id="ui_mask_msg" style="display:none; left: 50%; height: 16px; margin-left: -85.5px; line-height: 16px;" class="datagrid-mask-msg">正在处理，请稍待。。。</div>
+</body>
+</HTML>
+<script type="text/javascript">
+	//暂存
+	function saveForm(){
+		$('#status_').val(0);
+		formSubmit();
+	}
+	//提交
+	function submitForm(){
+		$('#status_').val(1);
+		formSubmit();
+	}
+	//提交
+	function formSubmit() {
+		var status = $('#status_').val();
+		$('#Form1').form(
+				'submit',
+				{
+					onSubmit : function() {
+						var validate = true;
+						if(status == 1){//提交，输入验证
+							validate = $(this).form('enableValidation').form('validate');
+						}
+						if(validate){
+							$("#formTemplateId").val($("#templateId").val());
+							$('#ui_mask').css('height',document.body.scrollHeight);
+							$('#ui_mask').css('display', 'block');
+							$('#ui_mask_msg').css('display', 'block');
+						}
+						return validate;
+					},
+					success : function(result) {
+						var json = eval('(' + result + ')');
+						$('#ui_mask').css('display', 'none');
+						$('#ui_mask_msg').css('display', 'none');
+						if(json.code == 1){
+							alert(json.msg);
+							closeTab();
+						}else if(json.code == 2){
+							debugger;
+							if(json.msg){
+								var data = json.msg.split(',');
+								$('#executionId').val(data[0]);
+								$('#xf_f_formRecordId').val(data[1]);
+							}
+							alert("已暂存！");
+						}else{
+							alert(json.msg);
+						}
+					},
+					error : function() {
+						alert("系统异常，请稍后再试...");
+					}
+				});
+	}
+	
+	function closeTab() {
+		var tt = top.$("#tt");
+		var tab = tt.tabs('getSelected');
+		if (tab){
+			var index = tt.tabs('getTabIndex', tab);
+			tt.tabs('close', index);
+		}
+		tt.tabs('select', '主页');
+	}
+	
+	function clearForm(){
+		$('#Form1').form('clear');
+	}
+</script>

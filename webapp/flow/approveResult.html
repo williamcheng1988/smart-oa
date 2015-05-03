@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<HTML>
+<HEAD>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+	<script type="text/javascript" src="jquery.min.js"></script>
+	<link id="easyuiTheme" rel="stylesheet" type="text/css" href="themes/default/easyui.css">
+	<script type="text/javascript" charset="UTF-8" src="themes/themes.js"></script>
+	<link rel="stylesheet" type="text/css" href="themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="css/smart.css">
+	<script type="text/javascript" src="jquery.easyui.min.js"></script>
+	<script type="text/javascript">
+		#if(($task.consult_ && "" != $task.consult_)||$task.action_type_ != 0)
+			$(function(){
+				xf_f_flow_view = true;
+			})
+		#end
+	</script>
+<style type="text/css">
+	.list td{font-family: 宋体;font-size: 12px;}
+</style>
+</HEAD>
+<body>
+	<table cellSpacing="0" cellPadding="0" height="100%" align="center" border="0" style="width: 1000px">
+		<tr valign="top">
+			<td align="center">
+				<table width="100%" border="0" class="datagrid-toolbar page_title">
+						<tbody>
+							<tr>
+								<td align="center"><font class="titleht1">$!formMap.formTemplateTypeName
+										签报</font><br> <span class="titleht2" id="DetailItem_TaskTypeName">$!formMap.formTemplateName</span>
+								</td>
+							</tr>
+							<tr>
+								<td align="right"><span class="titleht2"
+									id="DetailItem_TaskTypeName">编号：$!task.business_key_</span></td>
+							</tr>
+						</tbody>
+				</table>
+				<table cellpadding="5" width="100%" class="table_form list">
+					<tbody>
+						<tr>
+							<td align="center" class="tasktd1">请示事项要点</td>
+							<td colspan="3" class="tasktd2">$!task.business_title_</td>
+						</tr>
+						<tr>
+							<td width="15%" align="center" class="tasktd1">报送人</td>
+							<td width="45%" class="tasktd2"><span id="realName">$!task.real_name</span></td>
+							<td width="15%" nowrap="" align="center" class="tasktd1">联系电话</td>
+							<td width="25%" class="tasktd2">$!task.mobile</td>
+						</tr>
+						<tr>
+							<td colspan="4" style="text-align: left; padding: 0px; border-style: hidden;" id="xf-form-table">#parse($!formMap.viewUrl)</td>
+						</tr>
+						<tr>
+							<td colspan="4">
+							<div id="p" class="easyui-panel" style="width:100%;height:auto;padding:0px;" data-options="noheader:true,collapsed:false,border:false">
+								<span class="tasktd1">请示事项具体内容：</span><br>
+								$!task.desc_
+							</div>
+							<div align="right">
+								<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-upload',plain:true" onclick="javascript:$(this).prop('val',!$(this).prop('val'));if($(this).prop('val'))$('#p').panel('collapse',true); else $('#p').panel('expand',true);">隐藏</a>
+							</div>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="4"><span class="tasktd1">审批意见：</span><br>
+								#if($task.approveResults) #foreach($entry in
+								$task.approveResults)
+								<div class="tasktd2">
+									&nbsp;&nbsp;&nbsp;&nbsp;$!entry.approveDesc<br>
+									<div style="width: 95%" align="right">$!{entry.realName}/$!{entry.endTime}</div>
+								</div> #end #end</td>
+						</tr>
+					</tbody>
+				</table>
+				<table cellPadding="5" width="98%" border="0">
+					<tr>
+						<td><b>原始附件：</b><br></td>
+					</tr>
+				</table> <br>
+				<div align="center" class="noprint">
+					<a href="javascript: window.print();" class="easyui-linkbutton">&nbsp;打&nbsp;印&nbsp;</a>&nbsp;&nbsp;
+					<a href="javascript: history.back();" class="easyui-linkbutton">&nbsp;返&nbsp;回&nbsp;</a>
+				</div>
+			</td>
+		</tr>
+	</table>
+</body>
+</HTML>

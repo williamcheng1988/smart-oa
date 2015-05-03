@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<script type="text/javascript" src="../jquery.min.js"></script>
+	<link id="easyuiTheme" rel="stylesheet" type="text/css" href="../themes/default/easyui.css">
+	<script type="text/javascript" charset="UTF-8" src="../themes/themes.js"></script>
+	<link rel="stylesheet" type="text/css" href="../themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../css/smart.css">
+	<script type="text/javascript" src="../jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="../locale/easyui-lang-zh_CN.js"></script>   
+</head>
+<body>
+	<table id="dg" class="easyui-datagrid" style="width:100%;height:auto;"
+			data-options="rownumbers:true,singleSelect:false,border:false,url:'../log!opt.do',method:'get',toolbar:'#tb',autoRowHeight:false,pagination:true,pageSize:10">
+		<thead>
+			<tr>
+				<th data-options="field:'entityName',width:'20%'">操作对象</th>
+				<th data-options="field:'operateResult',width:'10%'">结果</th>
+				<th data-options="field:'operatorName',width:'10%'">处理人</th>
+				<th data-options="field:'clientIp',width:'15%'">IP</th>
+				<th data-options="field:'operateDate',width:'23%'">操作时间</th>
+				<th data-options="field:'description',width:'20%'">描述</th>
+			</tr>
+		</thead>
+	</table>
+	<div id="tb" style="padding:15px;height:auto">
+		<form id="queryParams">
+			处理对象: 
+			<input name="log.entityName" class="easyui-textbox" style="width:160px">&nbsp;&nbsp;&nbsp;
+			处理人:
+			<input name="log.operatorName" class="easyui-textbox" style="width:160px">&nbsp;&nbsp;&nbsp;
+			<a href="#" id="queryButton" class="easyui-linkbutton" iconCls="icon-search">&nbsp;查&nbsp;询&nbsp;</a>
+		</form>
+	</div>
+	<div id="ui_mask" style="display:none" class="datagrid-mask"></div>
+	<div id="ui_mask_msg" style="display:none; left: 50%; height: 16px; margin-left: -85.5px; line-height: 16px;" class="datagrid-mask-msg">正在处理，请稍待。。。</div>
+</body>
+</html>
+<script type="text/javascript">
+	function queryData(){
+		var paramsArray = $("#queryParams").serializeArray();
+		var results ='{';
+		$.each(paramsArray, function(i, field){
+			val = $.trim(field.value);
+			if(val){
+		  	 	results += '"'+field.name + '":"' + val + '",';
+			}
+		});
+		results += '}';
+		$('#dg').datagrid('load',eval('(' + results + ')')); 
+	}
+	$(function(){
+		 $('#queryButton').bind('click',queryData);
+		 $('#dg').datagrid('getPager').pagination({
+				onSelectPage:function(pageNum, pageSize){
+					$('#dg').datagrid({pageNumber:pageNum,pageSize:pageSize});
+					queryData;  
+			}
+		});
+	}); 
+</script>

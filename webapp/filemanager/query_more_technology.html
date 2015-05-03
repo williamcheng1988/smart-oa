@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<script type="text/javascript" src="../jquery.min.js"></script>
+	<link id="easyuiTheme" rel="stylesheet" type="text/css" href="../themes/default/easyui.css">
+	<script type="text/javascript" charset="UTF-8" src="../themes/themes.js"></script>
+	<link rel="stylesheet" type="text/css" href="../themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../css/smart.css">
+	<script type="text/javascript" src="../jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="../locale/easyui-lang-zh_CN.js"></script>   
+</head>
+
+<body>
+		<div class="easyui-layout" data-options="fit:true">
+			<div data-options="region:'center'" style="padding:2px">
+				<div id="tb" style="padding:15px;height:auto">
+					<form id="queryParams">
+						    关键字：<input id="queryName" name="fquery.queryName" value="" type="text" class="easyui-textbox" />
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						起始时间：<input id="startDt" name="fquery.startDt" type="text" class="easyui-datebox" />
+						            至<input id="endDt" name="fquery.endDt" type="text" class="easyui-datebox" />
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						<a href="#" id="queryButton" class="easyui-linkbutton" iconCls="icon-search">&nbsp;查&nbsp;询&nbsp;</a>
+					</form>
+				</div>
+				<div align="center" class="datagrid-toolbar page_title">
+					技术信息
+				</div>
+				<table id="dg" class="easyui-datagrid" style="width:100%;height:auto;"
+						data-options="rownumbers:true,url:'../filemanager!findFileList.do?fquery.selectType=2',singleSelect:false,border:false,method:'get',toolbar:'#tb',autoRowHeight:true,pagination:true,pageSize:10">
+					<thead>
+						<tr>
+							<th data-options="field:'fileDisplayname',width:'45%'">文件名称</th>
+							<th data-options="field:'realName',width:'16%'">创建人</th>
+							<th data-options="field:'createDt',width:'12%',formatter:formatCreateDate">创建日期</th>
+							<th data-options="field:'id',width:'8%',formatter:formatOption" align="center"></th>
+						</tr>
+					</thead>
+				</table>
+				<div id="ui_mask" style="display:none" class="datagrid-mask"></div>
+				<div id="ui_mask_msg" style="display:none; left: 50%; height: 16px; margin-left: -85.5px; line-height: 16px;" class="datagrid-mask-msg">正在处理，请稍待。。。</div>
+			</div>
+		</div>
+</body>
+</html>
+  
+ <script language="javascript">
+ 
+    function formatCreateDate(val,row){
+    	if(val){
+    		return val.substr(0,10);
+    	}
+    	return val;
+    }
+    
+    
+    function formatOption(val,row){
+		var str = "&nbsp;<a href='../download!filedownLoad.do?fm.id=" + val + "'>下载</a>&nbsp;";
+		return str;
+	}
+    
+    
+ 	function queryData(){
+		var paramsArray = $("#queryParams").serializeArray();
+		var results ='{';
+		$.each(paramsArray, function(i, field){
+			val = $.trim(field.value);
+			if(val){
+		  	 	results += '"'+field.name + '":"' + val + '",';
+			}
+		});
+		results += '}';
+		$('#dg').datagrid('load',eval('(' + results + ')')); 
+	}
+	$(function(){
+		 $('#queryButton').bind('click',queryData);
+	}); 
+ 
+	
+    function downLoad(){
+    	var ids="";
+		var names= [];
+		var rows = $('#dg').datagrid('getSelections');
+		for(var i=0; i<rows.length; i++){
+			 if (!ids) {
+			   	ids =  rows[i].id;
+			 } else {
+				alert("下载文件时不能多选");
+				return;	
+			 }   
+		}
+		if (!ids) {
+			alert("请选择要下载的文件");
+			return;
+		}
+		window.location.href="../download!filedownLoad.do?fm.id=" + ids;
+    }
+ 	
+ </script>
+
+

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<script type="text/javascript" src="jquery.min.js"></script>
+	<link id="easyuiTheme" rel="stylesheet" type="text/css" href="themes/default/easyui.css">
+	<script type="text/javascript" charset="UTF-8" src="themes/themes.js"></script>
+	<link rel="stylesheet" type="text/css" href="themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="css/smart.css">
+	<script type="text/javascript" src="jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="locale/easyui-lang-zh_CN.js"></script>   
+</head>
+<body>
+	<div align="center" class="datagrid-toolbar page_title">
+		个人信息
+	</div>
+	<div class="easyui-panel" style="width:100%" data-options="border:false" align="center" >
+	    <form id="ff" class="easyui-form" method="post" data-options="novalidate:true" action="staff!update.do?isdo=1">
+	    <input name="staff.loginName" value="$!staff.loginName" type="hidden"/>
+					<table cellpadding="10px" class="table_form"  width="80%">
+						<tbody>
+							<tr>
+								<th align="center" width="15%">姓 名</th>
+								<td width="35%">$!staff.realName</td>
+								<th align="center" width="15%">登录名</th>
+								<td width="35%">$!staff.loginName</td>
+							</tr>
+							<tr>
+								<th align="center" width="15%">Email</th>
+								<td width="35%">$!staff.email</td>
+								<th align="center" width="15%">性 别</th>
+								<td width="35%">#if($!staff.sex == 1) 男
+												#elseif($!staff.sex == 2) 女
+												#else 保密
+												#end
+								</td>
+							</tr>
+							<tr>
+								<th align="center">最高学历</th>
+								<td>
+									#if($!staff.lastDegree == 1) 大专及以下
+									#elseif($!staff.lastDegree == 2) 大专
+									#elseif($!staff.lastDegree == 3) 本科
+									#elseif($!staff.lastDegree == 4) 硕士
+									#elseif($!staff.lastDegree == 5) 博士
+									#else 其它
+									#end
+								</td>
+								<th align="center">专 业</th>
+								<td>$!staff.speciality</td>
+							</tr>
+							<tr>
+								<th align="center">电 话</th>
+								<td>$!staff.telephone</td>
+								<th align="center">邮 编</th>
+								<td>$!staff.zip</td>
+							</tr>
+							<tr>
+								<th align="center">通讯地址</th>
+								<td colspan="3">$!staff.address</td>
+							</tr>
+							<tr>
+								<th align="center">所属角色</th>
+								<td colspan="3">
+								#if ($roles)
+									<table id="RoleList" class="noborder" border="0" width="100%">
+										<tbody>
+											<tr>
+											#foreach($role in $roles)
+												<td width="33%" style="border:0; padding: 1px;" >$!role.roleName</td>
+												#if($velocityCount % 3 == 0) 
+													</tr>
+													<tr>
+												#end
+											#end
+											</tr>
+										</tbody>
+									</table>
+								#end
+								</td>
+							</tr>
+							<tr>
+								<td colspan="4" align="right" style="padding-right: 5">
+								<a href="javascript:location.href='staff/resetPwd.html'" class="easyui-linkbutton" data-options="plain:true"><span style="color: red;">密码重置>></span></a>
+								</td>
+							</tr>
+						</tbody>
+					</table> 
+		</form>
+	    </div>
+	</div>
+	<div id="ui_mask" style="display:none" class="datagrid-mask"></div>
+	<div id="ui_mask_msg" style="display:none; left: 50%; height: 16px; margin-left: -85.5px; line-height: 16px;" class="datagrid-mask-msg">正在处理，请稍待。。。</div>
+</body>
+</html>

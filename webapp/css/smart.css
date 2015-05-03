@@ -1,0 +1,58 @@
+*{
+	font-size:12px;
+}
+body {
+    font-family:verdana,helvetica,arial,sans-serif;
+    padding:2px;
+    font-size:12px;
+    margin:0;
+}
+h2 {
+    font-size:18px;
+    font-weight:bold;
+    margin:0;
+    margin-bottom:15px;
+}
+.demo-info{
+	padding:0 0 12px 0;
+}
+.demo-tip{
+	display:none;
+}
+
+.page_title{
+	color: #000000;
+    font-family: 幼圆;
+    font-size: 15px;
+    font-weight: bold;
+    padding: 5px;
+    margin-bottom: 2px;
+}
+.table_form{
+	border: 1px solid #E2E2E2;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+.table_form th{
+    border: 1px solid #E2E2E2;
+    color: #000000;
+    font-weight: normal;
+    padding: 5px 12px;
+}
+.table_form td{
+	text-align:left;
+	border: 1px solid #E2E2E2;
+    padding: 6px 12px;
+}
+.xf-table td{
+	border: 1px solid #E2E2E2;
+    padding: 6px 12px;
+}
+.xf-fee-table td{
+	border: 1px solid #E2E2E2;
+    padding: 0px 0px;
+}
+.tasktd1{
+	font-weight: bold;
+}
+

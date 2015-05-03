@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">  
+	<script type="text/javascript" src="/smartoa/jquery.min.js"></script>
+	<link id="easyuiTheme" rel="stylesheet" type="text/css" href="/smartoa/themes/default/easyui.css">
+	<script type="text/javascript" charset="UTF-8" src="/smartoa/themes/themes.js"></script>
+	<link rel="stylesheet" type="text/css" href="/smartoa/themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="/smartoa/css/smart.css">
+	<script type="text/javascript" src="/smartoa/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="/smartoa/locale/easyui-lang-zh_CN.js"></script>   
+	
+    <script type="text/javascript" src="/smartoa/widgets/xform/view-xform-all.js"></script>
+	
+    <script type="text/javascript">
+		var xform;
+		
+		$(function() {
+			xform = new xf.Xform('xf-form-table');
+			xform.render();
+			
+			if ($('#__gef_content__').val() != '') {
+				xform.doImport($('#__gef_content__').val(),'');
+			}
+		
+			if ('$!{json}' != '') {
+				xform.setValue($!{json});
+			}
+			
+			
+		})
+    </script>
+    
+</head>
+<body>
+    
+	<div class="row-fluid">
+		<!-- start of main -->
+		<form id="xf-form" method="post" action="${scopePrefix}/form/form-startProcessInstance.do" class="xf-form">
+			<input id="__gef_id__" name="formTemplate.id" type="hidden" value="$!{formTemplate.id}">
+			<input id="saveType" name="saveType" type="hidden" value="">
+			<input name="isdo" type="hidden" value="1"/>
+			<div id="xf-form-table"></div>
+	  	</form>
+
+		<form id="f" action="form-template-save.do" method="post" style="display: none;">
+			<textarea id="__gef_content__" name="content">$!{formTemplate.content}</textarea>
+		</form>
+	</div>
+	
+</body>

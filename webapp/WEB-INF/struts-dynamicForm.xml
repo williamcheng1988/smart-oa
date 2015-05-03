@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+         "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+         "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+    <package name="dynamicForm" extends="struts-smartoa">
+        <global-results>
+            <result name="commonFailure"  type="velocity">/common/error.html</result>
+            <result name="commonSuccess"  type="velocity">/common/success.html</result>
+        </global-results>
+        
+        <action name="formTemplateType" class="formTemplateTypeAction">
+            <result name="insert-form-template-type" type="velocity">
+            	/dynamicForm/formTemplateType/insert-form-template-type.html
+            </result>
+            <result name="update-form-template-type" type="velocity">
+            	/dynamicForm/formTemplateType/update-form-template-type.html
+            </result>
+            <result name="list-form-template-type" type="velocity">
+            	/dynamicForm/formTemplateType/list-form-template-type.html
+            </result>
+        </action>
+    	
+        <action name="formTemplate" class="formTemplateAction">
+            <result name="input-form-template" type="velocity">/dynamicForm/formTemplate/input-form-template.html</result>
+            <result name="list-form-template" type="velocity">/dynamicForm/formTemplate/list-form-template.html</result>
+        </action>
+        
+        <action name="form" class="formAction">
+            <result name="insert-form" type="velocity">/dynamicForm/form/insert-form.html</result>
+            <result name="view-form" type="velocity">/dynamicForm/form/view-form.html</result>
+            <result name="list-form-template" type="velocity">/dynamicForm/formTemplate/list-form-template.html</result>
+        </action>
+        
+        <action name="formStatistics" class="formStatisticsAction">
+            <result name="formStatistics" type="velocity">/dynamicForm/statistics/formStatistics.html</result>
+        </action>
+    </package>
+</struts>

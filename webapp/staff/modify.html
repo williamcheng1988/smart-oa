@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<script type="text/javascript" src="jquery.min.js"></script>
+	<link id="easyuiTheme" rel="stylesheet" type="text/css" href="themes/default/easyui.css">
+	<script type="text/javascript" charset="UTF-8" src="themes/themes.js"></script>
+	<link rel="stylesheet" type="text/css" href="themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="css/smart.css">
+	<script type="text/javascript" src="jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="locale/easyui-lang-zh_CN.js"></script>   
+</head>
+<body>
+	<div align="center" class="datagrid-toolbar page_title">
+		修改用户
+	</div>
+	<div class="easyui-panel" style="width:100%" data-options="border:false" align="center" >
+	    <form id="ff" class="easyui-form" method="post" data-options="novalidate:true" action="staff!update.do?isdo=1">
+	    <input name="staff.loginName" value="$!staff.loginName" type="hidden"/>
+					<table cellpadding="10px" class="table_form"  width="80%">
+						<tbody>
+							<tr>
+								<th align="center" width="15%">姓 名</th>
+								<td width="35%"><input name="staff.realName" value="$!staff.realName"  class="easyui-textbox" data-options="required:true,validType:'length[0,30]'" type="text">&nbsp;</td>
+								<th align="center" width="15%">登录名</th>
+								<td width="35%"><input name="staff.loginName" value="$!staff.loginName"  class="easyui-textbox" data-options="required:true,validType:'length[5,30]'" maxlength="20" disabled="disabled"type="text">&nbsp;</td>
+							</tr>
+							<tr>
+								<th align="center" width="15%">Email</th>
+								<td width="35%"><input name="staff.email" value="$!staff.email" class="easyui-textbox" data-options="required:true,validType:'email'" type="text">&nbsp;&nbsp;</td>
+								<th align="center" width="15%">性 别</th>
+								<td width="35%"><select name="staff.sex" class="easyui-combobox" data-options="required:true">
+										<option value="0">保密</option>
+										<option value="1" #if($!staff.sex == 1) selected="selected"  #end>男</option>
+										<option value="2" #if($!staff.sex == 2) selected="selected" #end>女</option>
+								</select></td>
+							</tr>
+							<tr>
+								<th align="center">最高学历</th>
+								<td><select name="staff.lastDegree" class="easyui-combobox">
+										<option value="">保密</option>
+										<option value="1" #if($!staff.lastDegree == 1) selected="selected"  #end>大专及以下</option>
+										<option value="2" #if($!staff.lastDegree == 2) selected="selected"  #end>大专</option>
+										<option value="3" #if($!staff.lastDegree == 3) selected="selected"  #end>本科</option>
+										<option value="4" #if($!staff.lastDegree == 4) selected="selected"  #end>硕士</option>
+										<option value="5" #if($!staff.lastDegree == 5) selected="selected"  #end>博士</option>
+								</select></td>
+								<th align="center">专 业</th>
+								<td><input name="staff.speciality" value="$!staff.speciality" maxlength="50" class="easyui-textbox" type="text"></td>
+							</tr>
+							<tr>
+								<th align="center">电 话</th>
+								<td><input name="staff.telephone" value="$!staff.telephone" class="easyui-textbox" type="text"></td>
+								<th align="center">邮 编</th>
+								<td><input name="staff.zip" value="$!staff.zip" maxlength="6" class="easyui-textbox" type="text"></td>
+							</tr>
+							<tr>
+								<th align="center">通讯地址</th>
+								<td colspan="3"><input name="staff.address" value="$!staff.address" maxlength="100" class="easyui-textbox" style="width:50%;" maxlength="100" type="text"></td>
+							</tr>
+							<tr>
+								<th align="center">所属角色</th>
+								<td colspan="3">
+								#if ($roles)
+									<table id="RoleList" class="noborder" border="0" width="100%">
+										<tbody>
+											<tr>
+											#foreach($role in $roles)
+												<td width="33%" style="border:0; padding: 1px;" ><input value="$!role.roleId" name="roleIds" #if($!role.checked) checked="checked" #end type="checkbox"><label>$!role.roleName</label></td>
+												#if($velocityCount % 3 == 0) 
+													</tr>
+													<tr>
+												#end
+											#end
+											</tr>
+										</tbody>
+									</table>
+								#end
+								</td>
+							</tr>
+							<tr>
+								<th align="center">薪酬数据</th>
+								<td colspan="3">
+								<font color="red">注：</font>
+								1、基本工资、考勤补贴根据薪酬级别设定设置有关数据，人力成本为总人力成本数据（即含外勤费用）；<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2、人力成本应根据职员转正或调整决定日起，在当月内完成调整。<br>
+											当前工时标准（元/小时）：<input name="staff.payHour" value="$!staff.payHour" class="easyui-numberbox" type="text"> <br>
+											基本工资：<input name="staff.payBase" value="$!staff.payBase" class="easyui-numberbox" type="text">
+											考勤补贴：<input name="staff.payAttendance" value="$!staff.payAttendance" class="easyui-numberbox" type="text"> 
+											人力成本：<input name="staff.PayHrcost" value="$!staff.PayHrcost" class="easyui-numberbox" id="PayHrcost" type="text"></td>
+							</tr>
+							<tr>
+								<th align="center">状 态</th>
+								<td colspan="3"><select name="staff.status" id="status">
+										<option value="0" #if($!staff.status == 0) selected="selected"  #end>未审核</option>
+										<option value="1" #if($!staff.status == 1) selected="selected"  #end>正常</option>
+										<option value="2" #if($!staff.status == 2) selected="selected"  #end>锁定</option>
+										<option value="3" #if($!staff.status == 3) selected="selected"  #end>已注销</option>
+								</select></td>
+							</tr>
+						</tbody>
+					</table> 
+		</form>
+	    	<div style="text-align:center;padding:8px">
+		    	<a href="javascript:submitForm()" class="easyui-linkbutton">&nbsp;保&nbsp;存&nbsp;</a>&nbsp;&nbsp;
+		    	<a href="javascript:clearForm()" class="easyui-linkbutton">&nbsp;重&nbsp;置&nbsp;</a>&nbsp;&nbsp;
+		    	<a href="javascript:history.back()" class="easyui-linkbutton">&nbsp;返&nbsp;回&nbsp;</a>&nbsp;&nbsp;
+	   		</div>
+	    </div>
+	</div>
+	<div id="ui_mask" style="display:none;min-height:100%;" class="datagrid-mask"></div>
+	<div id="ui_mask_msg" style="display:none; left: 50%; height: 16px; margin-left: -85.5px; line-height: 16px;" class="datagrid-mask-msg">正在处理，请稍待。。。</div>
+<script>
+	function submitForm(){
+		$('#ff').form('submit',{
+			onSubmit:function(){
+				var validate = $(this).form('enableValidation').form('validate');
+				if(validate){
+					$('#ui_mask').css('display','block');
+					$('#ui_mask_msg').css('display','block');
+				}
+				return validate;
+			},
+			success: function(result){
+				var json = eval('(' + result + ')');
+				if(json.code != 1){
+					$('#ui_mask').css('display','none');
+					$('#ui_mask_msg').css('display','none');
+					alert(json.msg);
+				}else{
+					location.href="staff/list.html";
+				}
+			},
+			error:function(){
+			    alert("系统异常，请稍后再试...");
+			}
+		});
+	}
+	function clearForm(){
+		$('#ff').form('clear');
+	}
+	$(function(){
+		$('#ui_mask').css('height',document.body.scrollHeight);
+	});
+</script>
+</body>
+</html>

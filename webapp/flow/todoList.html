@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<script type="text/javascript" src="../jquery.min.js"></script>
+	<link id="easyuiTheme" rel="stylesheet" type="text/css" href="../themes/default/easyui.css">
+	<script type="text/javascript" charset="UTF-8" src="../themes/themes.js"></script>
+	<link rel="stylesheet" type="text/css" href="../themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../css/smart.css">
+	<script type="text/javascript" src="../jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="../locale/easyui-lang-zh_CN.js"></script>   
+</head>
+<body>
+	<div align="center" class="datagrid-toolbar page_title">
+	<table style="width: 100%;">
+		<tr>
+		<td style="width:95%;" align="center">我的待办任务</td>
+		<td><a href="#"  onclick="javascript:$('#dg').datagrid('load');" class="easyui-linkbutton easyui-tooltip" title="刷新当前页" data-options="iconCls:'icon-reload',plain:true,position:'left'"></a></td>
+		</tr>
+	</table>
+		
+	</div>
+	<table id="dg" class="easyui-datagrid" style="width:100%;height:auto;"
+			data-options="rownumbers:true,singleSelect:false,border:false,url:'../flow!todoList.do',method:'get',autoRowHeight:false">
+		<thead>
+			<tr>
+				<th data-options="sortable:true,field:'businessKey',width:'15%'">编号</th>
+				<th data-options="field:'businessTitle',width:'20%',formatter:formatOpert">任务名称</th>
+				<th data-options="sortable:true,field:'realName',align:'center',width:'20%'">申请人</th>
+				<th data-options="sortable:true,field:'startTime',align:'center',width:'15%'">申请时间</th>
+				<th data-options="sortable:true,field:'arriveTime',align:'center',width:'20%'">任务到达时间</th>
+			</tr>
+		</thead>
+	</table>
+</body>
+</html>
+<script type="text/javascript">
+$(function(){
+	$('#dg').datagrid('load');
+});
+//格式化数据
+function formatOpert(val,row){
+	return '<a class="easyui-linkbutton" data-options="plain:true" href="../flow!approve.do?taskId='+row.taskId+'">'+val+'</a>';
+}
+</script>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+     "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+     "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<constant name="struts.velocity.toolboxlocation" value="WEB-INF/toolbox.xml" />
+	<constant name="struts.velocity.configfile" value="WEB-INF/velocity.properties" /> 
+	<constant name="struts.enable.DynamicMethodInvocation" value="true" />
+	<constant name="struts.enable.SlashesInActionNames" value="true" />
+	<constant name="struts.devMode" value="false" />
+	<constant name="struts.configuration.xml.reload" value="false" />
+	<constant name="struts.i18n.encoding" value="UTF-8" />
+	<constant name="struts.multipart.saveDir" value="/tmp" />
+	<constant name="struts.multipart.maxSize" value="1524000800" />
+	<constant name="struts.action.extension" value="do" />
+	
+	<package name="struts-smartoa" extends="struts-default">
+		<result-types>
+		    <result-type name="json" class="org.apache.struts2.json.JSONResult" />
+		</result-types>
+		
+        <global-results>
+            <result name="commonFailure"  type="velocity">/common/error.html</result>
+            <result name="commonSuccess"  type="velocity">/common/success.html</result>
+            <result name="index"  type="redirect">staff!index.do</result>
+            <result name="entry" type="json">
+           		<param name="noCache">true</param>
+            	<param name="contentType">text/html</param> 
+           		<param name="ignoreHierarchy">false</param>
+           		<param name="root">entry</param>
+           	</result>
+           	<result name="datalist" type="json">
+          		<param name="noCache">true</param>
+           		<param name="contentType">text/html</param> 
+           		<param name="ignoreHierarchy">false</param>
+           		<param name="root">dataList</param>
+           	</result>
+           	<result name="operresult" type="json">
+           		<param name="noCache">true</param>
+           		<param name="contentType">text/html</param> 
+           		<param name="ignoreHierarchy">false</param>
+           		<param name="root">operateResult</param>
+           	</result>
+            <result name="datagrid" type="json">
+            	<param name="noCache">true</param>
+            	<param name="contentType">text/html</param> 
+		    	<param name="ignoreHierarchy">false</param>
+		    	<param name="root">dataGrid</param>
+		    	<!-- <param name="includeProperties">total,rows.*</param> -->
+            </result>
+            <result name="treedata" type="json">
+            	<param name="noCache">true</param>
+            	<param name="contentType">text/html</param> 
+            	<!-- ignoreHierarchy值默认为true，设置为false后会将父类和子类的属性一起返回 -->
+		    	<param name="ignoreHierarchy">false</param>
+		    	<param name="root">treeData</param>
+		    	<!-- <param name="includeProperties">total,rows.*</param> -->
+            </result>
+        </global-results>
+        
+        <!-- 
+        <global-exception-mappings>
+			<exception-mapping 
+				result="commonFailure" exception="java.lang.Exception">
+			</exception-mapping>
+		</global-exception-mappings>
+    	 -->
+    </package> 
+	
+	<include file="../struts-sys.xml" />
+	<include file="../struts-dynamicForm.xml" />
+	<include file="../struts-process.xml" />
+
+	<include file="../struts-portal.xml" />
+	<include file="../struts-zhao.xml" />
+
+</struts>

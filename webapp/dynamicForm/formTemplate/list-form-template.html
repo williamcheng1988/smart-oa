@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	
+	<script type="text/javascript" src="jquery.min.js"></script>
+	<link id="easyuiTheme" rel="stylesheet" type="text/css" href="themes/default/easyui.css">
+	<script type="text/javascript" charset="UTF-8" src="themes/themes.js"></script>
+	<link rel="stylesheet" type="text/css" href="themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="css/smart.css">
+	<script type="text/javascript" src="jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="locale/easyui-lang-zh_CN.js"></script>
+</head>
+<body>
+	<table id="dg" class="easyui-datagrid" style="width:100%;height:auto;"
+			data-options="url:'formTemplate!listData.do',remoteSort:false,multiSort:true,rownumbers:true,singleSelect:true,border:false,method:'get',toolbar:'#tb',autoRowHeight:false,pagination:true,pageSize:10">
+		<thead>
+			<tr>
+				<th data-options="field:'id',checkbox:true"></th>
+				<th data-options="field:'sequence',width:'4%',sortable:true">排序</th>
+				<th data-options="field:'name',width:'12%',sortable:true">名称</th>
+				<th data-options="field:'type',width:'12%',sortable:true,formatter:formatType">所属类型</th>
+				<th data-options="field:'processName',width:'15%',sortable:true">所属流程</th>
+				<th data-options="field:'status',width:'4%',sortable:true,formatter:formatStatus">状态</th>
+				<th data-options="field:'createUser',width:'9%',sortable:true">创建人</th>
+				<th data-options="field:'createDate',width:'15%',sortable:true">创建时间 </th>
+				<th data-options="field:'updateUser',width:'9%',sortable:true">修改人</th>
+				<th data-options="field:'updateDate',width:'15%',sortable:true">最后修改时间 </th>
+			</tr>
+		</thead>
+	</table>
+	<div style="width:99%;padding: 5px;" align="center">
+		<a href="javascript:modify()" class="easyui-linkbutton" iconCls="icon-edit">&nbsp;修&nbsp;改&nbsp;</a>&nbsp;&nbsp;&nbsp;
+		<a href="javascript:remove()" class="easyui-linkbutton" iconCls="icon-cancel">&nbsp;删&nbsp;除&nbsp;</a>&nbsp;&nbsp;&nbsp;
+		<a href="javascript:add()" class="easyui-linkbutton" iconCls="icon-add">&nbsp;新&nbsp;增&nbsp;</a>&nbsp;&nbsp;&nbsp;
+	</div>
+	<div id="tb" style="padding:15px;height:auto">
+		<form id="queryParams">
+			<!-- 模板编号: 
+			<input name="formTemplate.id" class="easyui-numberbox" style="width:160px" data-options="min:1">
+			&nbsp;&nbsp;&nbsp;
+			模板类型:
+			<select id="formTemplateType" name="formTemplate.typeId"  class="easyui-combobox" panelHeight="auto" style="width:160px">
+			  <option value="">请选择&nbsp;&nbsp;</option>
+			  #if ($templateTypes)
+			  #foreach ( $type in $templateTypes)
+			  <option value="$!{type.id}" #if($type.id == $formTemplate.typeId) selected #end>$!{type.type}</option>
+			  #end
+			  #end
+		    </select>&nbsp;&nbsp;&nbsp;
+			<a href="#" id="queryButton" class="easyui-linkbutton" iconCls="icon-search">&nbsp;查&nbsp;询&nbsp;</a>
+			<br/> -->
+			模板名称:
+			<input type="text" name="formTemplate.name" class="easyui-textbox" style="width:160px">
+			&nbsp;&nbsp;&nbsp;
+			模板状态: 
+			<select	name="formTemplate.status"  class="easyui-combobox" panelHeight="auto" style="width:160px">
+				<option value="">请选择</option>
+				<option value="0">正常</option>
+				<option value="1">过期</option>
+				<option value="2">草稿</option>
+				<option value="3">禁用</option>
+			</select>&nbsp;&nbsp;&nbsp;
+			<a href="#" id="queryButton" class="easyui-linkbutton" iconCls="icon-search">&nbsp;查&nbsp;询&nbsp;</a>&nbsp;&nbsp;
+			<a href="javascript:clearForm()" class="easyui-linkbutton" iconCls="icon-clear">&nbsp;重&nbsp;置&nbsp;</a>&nbsp;&nbsp;
+		</form>
+	</div>
+	
+	<div id="ui_mask" style="display:none" class="datagrid-mask"></div>
+	<div id="ui_mask_msg" style="display:none; left: 50%; height: 16px; margin-left: -85.5px; line-height: 16px;" class="datagrid-mask-msg">正在处理，请稍待。。。</div>
+</body>
+</html>
+<script type="text/javascript">
+	function queryData(){
+		var paramsArray = $("#queryParams").serializeArray();
+		var results ='{';
+		jQuery.each(paramsArray, function(i, field){
+			val = jQuery.trim(field.value);
+			if(val){
+		  	 	results += '"'+field.name + '":"' + val + '",';
+			}
+		});
+		results += '}';
+		$('#dg').datagrid('load',eval('(' + results + ')')); 
+	}
+	$(function(){
+		 $('#queryButton').bind('click',queryData);
+		 $('#dg').datagrid('getPager').pagination({
+				onSelectPage:function(pageNum, pageSize){
+					$('#dg').datagrid({pageNumber:pageNum,pageSize:pageSize});
+					queryData;  
+			}
+		});
+		//var typeId = $('#formTemplateType').combobox('getValue');
+		var typeId = '$formTemplate.typeId';
+		if(typeId && typeId!=undefined){
+			$('#dg').datagrid('load',{'formTemplate.typeId':typeId});
+		}
+	});
+	
+	function formatStatus(val,row){
+		if (val==0){
+			return '<font color="green">正常</font>';
+		} else if(val==1) {
+			return '<font color="grey">过期</font>';
+		} else if(val==2) {
+			return '<font color="orange">草稿</font>';
+		} else if(val==3) {
+			return '<font color="red">禁用</font>';
+		}
+	}
+	function formatType(val,row){
+		if(row && row.ftType){return row.ftType.type;}
+		//return row.ftType.type;
+	}
+	
+	function add(){
+		window.location.href="formTemplate!insert.do?formTemplate.ftType.id=$formTemplate.typeId";
+	}
+	//删除
+	function remove(){
+		var ids="";
+		var names= [];
+		var rows = $('#dg').datagrid('getSelections');
+		for(var i=0; i<rows.length; i++){
+			 if (!ids) {
+			   	ids =  rows[i].id;
+			 } else {
+				ids += "," + rows[i].id;
+			 }
+			 names.push(rows[i].type);
+		}
+		if (!ids || ids.length == 0) {
+			alert("请选择要删除的数据!");
+			return;
+		}
+		var answer = confirm("你确定要删除以下数据吗?\n"+names.join('\n'));
+		if (answer) {
+			$('#ui_mask').css('display','block');
+			$('#ui_mask_msg').css('display','block');
+			var url = 'formTemplate!delete.do';
+            var params = {
+            		entityKeys: ids
+            };
+            jQuery.getJSON(url, params, function(data){
+            	$('#ui_mask').css('display','none');
+    			$('#ui_mask_msg').css('display','none');
+            	if(data.code=="-1"){
+            		$('#ui_mask').css('display','none');
+        			$('#ui_mask_msg').css('display','none');
+            		alert(data.msg);
+            	}else{
+            		//window.location.reload();
+            		$('#dg').datagrid('reload');
+            	}
+            });
+		}
+	}
+	//修改
+	function modify(){
+		var ids="";
+		var names= [];
+		var rows = $('#dg').datagrid('getSelections');
+		for(var i=0; i<rows.length; i++){
+			 if (!ids) {
+			   	ids =  rows[i].id;
+			 } else {
+				alert("修改数据时不能多选！");
+				return;	
+			 }
+		}
+		if (!ids) {
+			alert("请选择要修改的数据！");
+			return;
+		}
+		window.location.href="formTemplate!update.do?entityKey="+ids;
+	}
+	function clearForm(){
+		$('#queryParams').form('clear');
+	}
+</script>

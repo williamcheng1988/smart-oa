@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans   
+                http://www.springframework.org/schema/beans/spring-beans-2.5.xsd   
+                http://www.springframework.org/schema/context    
+                http://www.springframework.org/schema/context/spring-context-2.5.xsd   
+                http://www.springframework.org/schema/tx    
+                http://www.springframework.org/schema/tx/spring-tx-2.5.xsd   
+                http://www.springframework.org/schema/aop   
+                http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+
+	<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+		<property name="jndiName">
+			<value>java:comp/env/jdbc/smartoaDS</value>
+		</property>
+	</bean>
+	
+	<bean id="sqlExecutor" class="com.chz.smartoa.common.ibatis.LimitSqlExecutor">
+		<property name="dialect">
+			<bean class=" com.chz.smartoa.common.ibatis.MysqlDialect" />
+		</property>
+	</bean>
+
+	<bean id="lobHandler"
+		class="org.springframework.jdbc.support.lob.DefaultLobHandler" />
+
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<bean id="sqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="configLocation" value="WEB-INF/sql-map-config.xml" />
+		<property name="dataSource" ref="dataSource" />
+		<property name="lobHandler" ref="lobHandler" />
+	</bean>
+
+	<tx:advice id="baseAdvice"
+		transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="find*" read-only="true" />
+			<tx:method name="list*" read-only="true" />
+			<tx:method name="get*" read-only="true" />
+			<tx:method name="set*" read-only="true" />
+			<tx:method name="*" propagation="REQUIRED" rollback-for="Throwable"/>
+		</tx:attributes>
+	</tx:advice>
+	
+	<aop:config proxy-target-class="true">
+		<aop:advisor
+			pointcut="execution(* com.chz.smartoa.*.service.impl.*.*(..))"
+			advice-ref="baseAdvice" />
+	</aop:config>
+</beans>

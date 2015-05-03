@@ -1,0 +1,6 @@
+PatchID=SMARTOA_V1.0.1.txt
+PatchName=SMARTOA_V1.0.1.txt
+UpdateTime=2014/12/13
+Description=
+Amended=[none]
+Added=

@@ -1,0 +1,87 @@
+<script type="text/javascript" src="ajaxfileupload.js"></script>
+<div>
+	<div class="easyui-panel" style="width:100%" data-options="border:false" align="center" >
+	    <form id="addfileForm" class="easyui-form" action="" enctype="multipart/form-data">
+	    	<input id="params" name="params" type="hidden">
+  			<!--  添加文件窗口  -->
+			<div id="addDIV" title="添加文件" style="width:650px;height:95px;padding2px;">
+				<div class="easyui-layout" data-options="fit:true">
+					<div data-options="region:'center',border:false" style="padding2px;">
+						<table width="100%" border="0" align="center" cellpadding="0" cellspacing="1">
+							<tr height="40px;">
+								<td align="right">
+									&nbsp;&nbsp;附件类型：
+								</td>
+								<td>
+									&nbsp;&nbsp;
+									<input class="easyui-combobox"   
+									   id="fileTypeId"  
+									   name="fileTypeId" 
+									   value="--请选择--" 
+									   url="filemanager!addWindow.do"   
+									   valueField="id"   
+									   textField="dictionaryName"   
+									   panelHeight="auto" 
+									   editable="false" 
+									   />
+									   
+									&nbsp;&nbsp;  
+									<input class="easyui-combobox"   
+										   id="fileTypeSubId"  
+										   name="fileTypeSubId"  
+										   valueField="id"   
+										   textField="dictionaryName"   
+										   panelHeight="auto"
+										   editable="false"  
+									   />
+								</td>
+							</tr>
+							<tr height="40px;">
+								<td align="right">
+								    <input type="hidden" id="executionIdAudit" name="executionIdAudit" value="$!executionId" />
+									&nbsp;&nbsp;附件：
+								</td>
+								<td>
+									&nbsp;&nbsp;
+									<span id='fileSpan'> 
+										<input id="file" name="file" type="file" onfocus="beforValidataForAudit();" onchange="saveAddFileForAudit()"> 
+										<font color="red">（附件大小应小于10MB）</font>
+									</span> 
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script language="javascript">
+
+	$(function(){
+		$(document).delegate('.a_removeCurrentFile', 'click', function(e) {
+			var currentTd = this.parentNode;
+			var parentTr = currentTd.parentNode;
+			var parentTb = parentTr.parentNode;
+			parentTb.removeChild(parentTr);
+		});
+	});
+	
+	
+	$(document).ready(function(){   
+	    $('#fileTypeId').combobox({  
+	        onChange:function(parentId,oldValue){   
+	        	if(parentId == oldValue){
+	        		return;
+	        	}else{
+	        		$('#fileTypeSubId').combobox('setValue','');
+	        		var url = "filemanager!getSonList.do?dictionaryId="+parentId;
+	        		$('#fileTypeSubId').combobox('reload',url);  
+	        	}
+	        }   
+	    });   
+	});  
+
+</script>
+

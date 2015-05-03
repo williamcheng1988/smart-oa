@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<script type="text/javascript" src="jquery.min.js"></script>
+	<link id="easyuiTheme" rel="stylesheet" type="text/css" href="themes/default/easyui.css">
+	<script type="text/javascript" charset="UTF-8" src="themes/themes.js"></script>
+	<link rel="stylesheet" type="text/css" href="themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="css/smart.css">
+	<script type="text/javascript" src="jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="locale/easyui-lang-zh_CN.js"></script>   
+</head>
+<body>
+	<div align="center" class="datagrid-toolbar page_title">
+		字典项修改
+	</div>
+	<div class="easyui-panel" style="width:100%" data-options="border:false" align="center" >
+	    <form id="ff" class="easyui-form" method="post" data-options="novalidate:true" action="dictionary!saveUpdate.do">
+	    	<input id="dictionaryId" name="dictionaryId" value="$!config.parentId" type="hidden" />
+			<input id="fileId" name="fileId" value="$!config.id" type="hidden" />
+			<input id="level" name="level" value="$!level" type="hidden" />
+			
+	    	<table cellpadding="10px" class="table_form" style="width: 95%;">
+	    		#if($!config.parentId == -1)
+	    		<tr>
+	    			<th	width="40%" align="right" >字典名称：</th>
+	    			<td align="left"><input class="easyui-textbox" id="dictionaryName" name="config.dictionaryName" value="$!config.dictionaryName" type="text" data-options="required:true,validType:'length[0,30]'" />
+	    		</tr>
+	    		#end
+	    		
+	    		#if($!config.parentId != -1)
+				  <tr>
+				    <th width="40%" align="right">字典名称：</td>
+				    <td align="left">
+				        #if ($dictionaryList)
+				    	<select id="parentId" name="config.parentId" class="easyui-combobox">
+				    		#foreach( $dictionary in $dictionaryList)
+				    		<option value="$!dictionary.id" #if($!dictionary.id == $!config.parentId) selected="selected" #end>$!dictionary.dictionaryName</option>
+				    		#end
+				    	</select>
+				    	#end
+				    	-<input id="dictionaryName" name="config.dictionaryName" value="$!config.dictionaryName" type="text" maxlength="50" />
+				    </td>
+				  </tr>
+				  
+				  <!--  
+				  #if($!level == 3)
+				  <tr>
+				  	<th>公司简称：</td>
+				    <td>
+				    	<input class="easyui-textbox" id="companyName" name="config.companyName" type="text" value="$!config.companyName" />
+				    </td>
+				  </tr>
+				  #end
+				  -->
+				  
+				  #if($!level == 3 && $!configType == 1)
+				  <tr>
+				    <th align="right">文件类别序号：</td>
+				    <td align="left">
+				    	<input class="easyui-textbox" id="fileTypeNo" name="config.fileTypeNo" type="text" value="$!config.fileTypeNo" />
+				    </td>
+				  </tr>
+				  <tr>
+				  	<th align="right">是否公开：</td>
+				    <td align="left">
+				    	<select id="isPublic" name="config.isPublic" style="width: 100px;" class="easyui-combobox">
+				    		<option value="1" #if($!config.isPublic == 1) selected="selected" #end >公开</option>
+				    		<option value="2" #if($!config.isPublic == 2) selected="selected" #end >不公开</option>
+				    	</select>
+				    </td>
+				  </tr>
+				  #end
+				  
+				  #if($!level == 2 && $!configType == 1)
+				  <tr>
+				  	<th align="right">显示方式：</td>
+				    <td align="left">
+				    	<select id="dicType" name="config.dicType" style="width: 100px;" class="easyui-combobox">
+				    		<option value="1" #if($!config.dicType == 1) selected="selected" #end >公共信息</option>
+				    		<option value="2" #if($!config.dicType == 2) selected="selected" #end >技术支持</option>
+				    	</select>
+				    </td>
+				  </tr>
+				  #end
+			   #end
+				  <tr>
+				  	<th align="right">是否有效：</td>
+				    <td align="left">
+				    	<select id="isValid" name="config.isValid" style="width: 100px;" class="easyui-combobox">
+				    		<option value="1" #if($!config.isValid == 1) selected="selected" #end >有效</option>
+				    		<option value="2" #if($!config.isValid == 2) selected="selected" #end >无效</option>
+				    	</select>
+				    </td>
+				  </tr>
+	    	</table>
+	    </form>
+    	<div style="text-align:center;padding:8px">
+	    	<a href="javascript:submitForm()" class="easyui-linkbutton">&nbsp;保&nbsp;存&nbsp;</a>&nbsp;&nbsp;
+	    	<a href="javascript:history.back()" class="easyui-linkbutton">&nbsp;返&nbsp;回&nbsp;</a>&nbsp;&nbsp;
+   		</div>
+	</div>
+	<div id="ui_mask" style="display:none" class="datagrid-mask"></div>
+	<div id="ui_mask_msg" style="display:none; left: 50%; height: 16px; margin-left: -85.5px; line-height: 16px;" class="datagrid-mask-msg">正在处理，请稍待。。。</div>
+<script>
+	function submitForm(){
+		$('#ff').form('submit',{
+			onSubmit:function(){
+				var validate = $(this).form('enableValidation').form('validate');
+				if(validate){
+					$('#ui_mask').css('display','block');
+					$('#ui_mask_msg').css('display','block');
+					
+					var nodes = $('#tt').tree('getChecked');
+					var s = '';
+					for(var i=0; i<nodes.length; i++){
+						if (s != '') s += ',';
+						s += nodes[i].id;
+					}
+					$('#resourceIds').val(s);
+				}
+				return validate;
+			},
+			success: function(result){
+				var json = eval('(' + result + ')');
+				if(json.code != 1){
+					$('#ui_mask').css('display','none');
+					$('#ui_mask_msg').css('display','none');
+					alert(json.msg);
+				}else{
+					$('#ui_mask').css('display','none');
+					$('#ui_mask_msg').css('display','none');
+					location.href="dictionary/list.html";
+				}
+			},
+			error:function(){
+			    alert("系统异常，请稍后再试...");
+			}
+		});
+	}
+</script>
+</body>
+</html>

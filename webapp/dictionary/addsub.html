@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<script type="text/javascript" src="jquery.min.js"></script>
+	<link id="easyuiTheme" rel="stylesheet" type="text/css" href="themes/default/easyui.css">
+	<script type="text/javascript" charset="UTF-8" src="themes/themes.js"></script>
+	<link rel="stylesheet" type="text/css" href="themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="css/smart.css">
+	<script type="text/javascript" src="jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="locale/easyui-lang-zh_CN.js"></script>    
+</head>
+<body>
+	<div align="center" class="datagrid-toolbar page_title">
+		新增字典项
+	</div>
+	<div class="easyui-panel" style="width:100%" data-options="border:false" align="center" >
+	    <form id="ff" class="easyui-form" method="post" data-options="novalidate:true" action="dictionary!saveSubInsert.do">
+	    	<input id="level" name="level" type="hidden" value="$!level" />
+	    	<input id="configType" name="configType" type="hidden" value="$!configType" />
+	    	<input id="dictionaryId" name="dictionaryId" value="$!dictionaryId" type="hidden" />
+	    	<table cellpadding="10px" class="table_form" style="width: 70%;">
+			  <tr>
+			    <th>字典名称：</td>
+			    <td>
+			    	<input class="easyui-textbox" value="$!config.dictionaryName" type="text" readonly="readonly"></input>
+			       -<input class="easyui-textbox" id="dictionaryName" name="config.dictionaryName" value="" type="text" />
+			    </td>
+			  </tr>
+			  #if($!level == 3 && $!configType == 1)
+			  <!--  
+			  <tr>
+			  	<th>公司简称：</td>
+			    <td>
+			    	<input class="easyui-textbox" id="companyName" name="config.companyName" type="text" />
+			    </td>
+			  </tr>
+			  -->
+			  <tr>
+			  	<th>文件类别序号：</td>
+			    <td>
+			    	<input class="easyui-textbox" id="fileTypeNo" name="config.fileTypeNo" type="text" />
+			    </td>
+			  </tr>
+			  <tr>
+			    <th>是否公开：</td>
+			    <td>
+			    	<select id="isPublic" name="config.isPublic" class="easyui-combobox">
+			    		<option value="1">公开</option>
+			    		<option value="2" selected="selected">不公开</option>
+			    	</select>
+			    </td>
+			  </tr>
+			  #end
+			  
+			  #if($!level == 2 && $!configType == 1)
+			  <tr>
+			    <th>显示方式：</td>
+			    <td>
+			    	<select id="dicType" name="config.dicType" class="easyui-combobox">
+			    		<option value="1">公共信息</option>
+			    		<option value="2">技术支持</option>
+			    	</select>
+			    </td>
+			  </tr>
+			  #end
+			  
+			  <tfoot>
+			      <tr>
+			        <th colspan="2" align="center">
+			        	<a href="javascript:submitForm()" class="easyui-linkbutton">&nbsp;保&nbsp;存&nbsp;</a>&nbsp;&nbsp;
+			        	<a href="javascript:history.back()" class="easyui-linkbutton">&nbsp;返&nbsp;回&nbsp;</a>&nbsp;&nbsp; 
+			        	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			        </td>
+			      </tr>
+			  </tfoot>
+			</table>
+	    </form>
+	</div>
+	<div id="ui_mask" style="display:none;height: 100%" class="datagrid-mask"></div>
+	<div id="ui_mask_msg" style="display:none; left: 50%; height: 16px; margin-left: -85.5px; line-height: 16px;" class="datagrid-mask-msg">正在处理，请稍待。。。</div>
+<script>
+
+	function submitForm(){
+		$('#ff').form('submit',{
+			onSubmit:function(){
+				var dictionaryName = $("#dictionaryName").val();
+				if(dictionaryName == null || dictionaryName == ''){
+					alert("字典项名称不能为空！");
+					return false;
+				}
+				var level = $("#level").val();
+				var configType = $("#configType").val();
+				if(level == 3 && configType == 1){
+					/**
+					var companyName = $("#companyName").val();
+					if(companyName == null || companyName == ''){
+						alert("公司简称不能为空！");
+						return false;
+					}
+					*/
+					var fileTypeNo = $("#fileTypeNo").val();
+					if(fileTypeNo == null || fileTypeNo == ''){
+						alert("文件附件编号不能为空！");
+						return false;
+					}
+				}
+				var validate = $(this).form('enableValidation').form('validate');
+				if(validate){
+					$('#ui_mask').css('display','block');
+					$('#ui_mask_msg').css('display','block');
+				}
+				return validate;
+			},
+			success: function(result){
+				$('#ui_mask').css('display','none');
+				$('#ui_mask_msg').css('display','none');
+				var json = eval('(' + result + ')');
+				if(json.msg == 'true'){
+				  location.href="dictionary/list.html";
+			    }else{
+				   alert("字典项保存失败，请稍后重试！");
+			    }
+			},
+			error:function(){
+			    alert("系统异常，请稍后再试...");
+			}
+		});
+	}
+	
+</script>
+</body>
+</html>
+	

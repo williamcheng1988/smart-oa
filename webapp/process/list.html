@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<script type="text/javascript" src="jquery.min.js"></script>
+	<link id="easyuiTheme" rel="stylesheet" type="text/css" href="themes/default/easyui.css">
+	<script type="text/javascript" charset="UTF-8" src="themes/themes.js"></script>
+	<link rel="stylesheet" type="text/css" href="themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="css/smart.css">
+	<script type="text/javascript" src="jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="locale/easyui-lang-zh_CN.js"></script>   
+</head>
+<body>
+	<table id="dg" class="easyui-datagrid" style="width:100%;height:auto;"
+			data-options="rownumbers:true,border:false,url:'process!list.do',method:'get',toolbar:'#tb',autoRowHeight:true,pagination:true,pageSize:10">
+		<thead>
+			<tr>
+				<th data-options="field:'procdef_id_',checkbox:true"></th>
+				<th data-options="field:'name_',width:'18%',align:'center'">流程名称</th>
+				<th data-options="field:'version_',width:'5%',align:'center'">版本</th>
+				<th data-options="field:'manager_',width:'16%',align:'center'">负责人</th>
+				<th data-options="field:'complete_remind_',width:'8%',align:'center',formatter:formatIsChecked">完成提醒</th>
+				<th data-options="field:'uplink_',width:'8%',align:'center',formatter:formatIsChecked">级联审批</th>
+				<th data-options="field:'important_grade_',width:'8%',align:'center',formatter:formatIsChecked">区分紧急程度</th>
+				<th data-options="field:'procdef_status_',width:'8%',align:'center',formatter:formatStatus">状态</th>
+				<th data-options="field:'create_time_',width:'10%',align:'center'">创建时间</th>
+				<th data-options="field:'opert_status_',width:'15%',align:'center',formatter:formatOpert">操作</th>
+			</tr>
+		</thead>
+	</table>
+	<div style="width:99%;padding: 5px;" align="center">
+		<a href="javascript:modify()" class="easyui-linkbutton" iconCls="icon-edit">&nbsp;修&nbsp;改&nbsp;</a>&nbsp;&nbsp;&nbsp;
+		<a href="#" onclick="javascript:$('#ui_mask').css('display','block');$('#name_').textbox({'disabled':false});$('#ff').form('clear');$('#dlg').dialog('open');" class="easyui-linkbutton" iconCls="icon-add">&nbsp;新&nbsp;增&nbsp;</a>&nbsp;&nbsp;&nbsp;
+	</div>
+	<div id="tb" style="padding:15px;height:auto">
+		<form id="queryParams">
+			流程名称: 
+			<input name="reProcdef.name_" class="easyui-textbox" style="width:160px">&nbsp;&nbsp;&nbsp;
+			<a href="#" id="queryButton" class="easyui-linkbutton" iconCls="icon-search">&nbsp;查&nbsp;询&nbsp;</a>
+		</form>
+	</div>
+	<div id="ui_mask" style="display:none" class="datagrid-mask"></div>
+	<div id="ui_mask_msg" style="display:none; left: 50%; height: 16px; margin-left: -85.5px; line-height: 16px;" class="datagrid-mask-msg">正在处理，请稍待。。。</div>
+	<div id="dlg" class="easyui-dialog" title="&nbsp;流程基本信息编辑" style="width:40%;height:250px;max-width:800px;padding:10px"
+		data-options="
+			closable: false,
+			buttons: [{
+				text:'保存',
+				iconCls:'icon-ok',
+				handler:function(){
+					submitForm();
+				}
+			},{
+				text:'取消',
+				iconCls:'icon-cancel',
+				handler:function(){
+					$('#dlg').dialog('close');
+					$('#ui_mask').css('display','none');
+				}
+			}]
+		">
+	<form id="ff" class="easyui-form" method="post" data-options="novalidate:true" action="process!insert.do">
+	    	<table cellpadding="10px" class="table_form" style="width: 100%;border:none;">
+	    		<input type="hidden" name="reProcdef.procdef_id_"></input>    
+	    		<tr>
+	    			<th	width="40%" align="right" style="border:none;">流程名称:</th>
+	    			<td style="border:none;"><input class="easyui-textbox" id="name_" type="text" name="reProcdef.name_" data-options="required:true,validType:'length[0,10]'"></input></td>
+	    		</tr>
+	    		<tr>
+	    			<th align="right" style="border:none;">负责人:</th>
+	    			<td style="border:none;">	
+	    				<select name="reProcdef.manager_" class="easyui-combobox" data-options="multiple:true" style="width: 132px;">
+	    					<option value="">&nbsp;</option>
+							#optionTag("NORMAL_USERS")
+						</select>    			
+   					</td>
+	    		</tr>
+	    		<tr>
+	    			<th style="border:none;"></th>
+	    			<td style="border:none;"><label><input type="checkbox" value="1" name="reProcdef.complete_remind_">&nbsp;完成提醒</label></td>
+	    		</tr>
+	    		<tr>
+	    			<th style="border:none;"></th>
+	    			<td style="border:none;">
+						<label><input type="checkbox" value="1" name="reProcdef.uplink_">&nbsp;级联审批</label>
+	    			</td>
+	    		</tr>
+	    		<tr>
+	    			<th style="border:none;"></th>
+	    			<td style="border:none;">
+						<label><input type="checkbox" value="1" name="reProcdef.important_grade_">&nbsp;区分任务紧急程度</label>
+	    			</td>
+	    		</tr>
+	    	</table>
+	</form>
+</div>
+</body>
+</html>
+<script type="text/javascript">
+	function queryData(){
+		var paramsArray = $("#queryParams").serializeArray();
+		var results ='{';
+		jQuery.each(paramsArray, function(i, field){
+			val = jQuery.trim(field.value);
+			if(val){
+		  	 	results += '"'+field.name + '":"' + val + '",';
+			}
+		});
+		results += '}';
+		$('#dg').datagrid('load',eval('(' + results + ')')); 
+	}
+	$(function(){
+		 $('#dlg').dialog('close');
+		 $('#queryButton').bind('click',queryData);
+		 $('#dg').datagrid('getPager').pagination({
+				onSelectPage:function(pageNum, pageSize){
+					$('#dg').datagrid({pageNumber:pageNum,pageSize:pageSize});
+					queryData;  
+			}
+		});
+	}); 
+	//格式化数据
+	function formatIsChecked(val,row){
+		if (val==1){
+			return '√';
+		} 
+		return "";
+	}
+	//格式化数据
+	function formatStatus(val,row){
+		if (val==0){
+			return '<font color="red">初始化</font>';
+		} else if (val==1){
+			return '<font color="green">启用</font>';
+		} else if (val==2){
+			return '<font color="red">挂起</font>';
+		}
+		return "";
+	}
+	//格式化数据
+	function formatOpert(val,row){
+		var ctx ='<input type="button" onclick="location=\'process!insertReconf.do?reProcdef.procdef_id_='+ row.procdef_id_ + '\'" value="配置">';
+		if (val != 1) {
+			return ctx + '&nbsp;&nbsp;<input type="button" onclick="setAble(1,\''
+					+ row.procdef_id_ + '\')" value="启用" />';
+		} else {
+			return ctx + '&nbsp;&nbsp;<input type="button" onclick="setAble(2,\''
+					+ row.procdef_id_ + '\')" value="挂起" />';
+		}
+		return '';
+	}
+	function setAble(status,id) {
+		if(status == 1){
+			operation = '启用';
+		}else{
+			operation = '挂起';
+		}
+		if(confirm("确定要"+operation+"吗？")){
+			var url = 'process!updateStatus.do';
+            var params = {
+            		procdefId:id,
+            		status:status
+            };
+            $('#ui_mask').css('display','block');
+			$('#ui_mask_msg').css('display','block');
+			jQuery.post(url, params, function(data){
+	         	window.location.reload();
+	        });
+		}
+	}
+	function submitForm(){
+		$('#ff').form('submit',{
+			onSubmit:function(){
+				var validate = $(this).form('enableValidation').form('validate');
+				return validate;
+			},
+			success: function(result){
+				var json = eval('(' + result + ')');
+				if(json.code != 1){
+					alert(json.msg);
+				}else{
+					window.location.reload();
+				}
+			},
+			error:function(){
+			    alert("系统繁忙，请稍后再试...");
+			}
+		});
+	}
+	//修改
+	function modify() {
+		var ids = "";
+		var rows = $('#dg').datagrid('getSelections');
+		for (var i = 0; i < rows.length; i++) {
+			if (!ids) {
+				ids = rows[i].procdef_id_;
+			} else {
+				alert("修改流程时不能多选");
+				return;
+			}
+		}
+		if (!ids) {
+			alert("请选择要修改的流程信息");
+			return;
+		}else{
+			$('#ui_mask').css('display','block');
+			$("#name_").textbox({"disabled":true});
+			if(rows[0].manager_){
+				$('#ff').form('load',{
+					'reProcdef.procdef_id_':rows[0].procdef_id_,
+					'reProcdef.name_':rows[0].name_,
+					'reProcdef.manager_':rows[0].manager_,
+					'reProcdef.complete_remind_':rows[0].complete_remind_,
+					'reProcdef.uplink_':rows[0].uplink_
+				});
+			}else{
+				$('#ff').form('load',{
+					'reProcdef.procdef_id_':rows[0].procdef_id_,
+					'reProcdef.name_':rows[0].name_,
+					'reProcdef.complete_remind_':rows[0].complete_remind_,
+					'reProcdef.uplink_':rows[0].uplink_
+				});
+			}
+			$('#dlg').dialog('open');
+		}
+	}
+</script>

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<script type="text/javascript" src="../jquery.min.js"></script>
+	<link id="easyuiTheme" rel="stylesheet" type="text/css" href="../themes/default/easyui.css">
+	<script type="text/javascript" charset="UTF-8" src="../themes/themes.js"></script>
+	<link rel="stylesheet" type="text/css" href="../themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../css/smart.css">
+	<script type="text/javascript" src="../jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="../locale/easyui-lang-zh_CN.js"></script>   
+</head>
+<body>
+	<div align="center" class="datagrid-toolbar page_title">
+		日程管理
+	</div>
+		<div class="easyui-panel" style="width:100%" data-options="border:false" >
+	    <form id="ff" class="easyui-form" method="post" data-options="novalidate:true" action="../workPlanInfo!save.do">
+		    	<table cellpadding="10px" class="table_form" style="width: 100%;">
+		    		<tr>
+		    			<td style="width: 260px;" align="center">
+		    				<div id="datepicker" class="easyui-calendar" style="width:250px;height:250px;"></div>
+		    			</td>
+		    			<td style="width: 850px;" align="left">
+		    				<input id="isUpdate" name="isUpdate" type="hidden" />
+		    				<input id="id" name="calendar.id" type="hidden" />
+		    				<table cellpadding="10px" class="table_form" style="width: 90%;">
+					    		<tr>
+					    			<td align="left">
+					    				日期：<input id="workDate" name="workPlan.workDate" value="" readonly="readonly" class="easyui-textbox" />
+					    				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					    				时间：
+					    				<select id="workHour" name="workHour" class="easyui-combobox" style="width:100px">
+					    					<option value="">--请选择--</option>
+					    					<option value="00">00</option>
+					    					<option value="01">01</option>
+					    					<option value="02">02</option>
+					    					<option value="03">03</option>
+					    					<option value="04">04</option>
+					    					<option value="05">05</option>
+					    					<option value="06">06</option>
+					    					<option value="07">07</option>
+					    					<option value="08">08</option>
+					    					<option value="09" selected="selected">09</option>
+					    					<option value="10">10</option>
+					    					<option value="11">11</option>
+					    					<option value="12">12</option>
+					    					<option value="13">13</option>
+					    					<option value="14">14</option>
+					    					<option value="15">15</option>
+					    					<option value="16">16</option>
+					    					<option value="17">17</option>
+					    					<option value="18">18</option>
+					    					<option value="19">19</option>
+					    					<option value="20">20</option>
+					    					<option value="21">21</option>
+					    					<option value="22">22</option>
+					    					<option value="23">23</option>
+					    				</select>
+					    				时
+					    				<select id="workMin" name="workMin" panelHeight="170px" class="easyui-combobox" style="width:100px">
+					    					<option value="">--请选择--</option>
+					    					<option value="00" selected="selected">00</option>
+					    					<option value="10">10</option>
+					    					<option value="20">20</option>
+					    					<option value="30">30</option>
+					    					<option value="40">40</option>
+					    					<option value="50">50</option>
+					    				</select>
+					    				分
+					    				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					    				通知类型：
+					    				  &nbsp;&nbsp;消息<input type="checkbox" id="messageNotice" name="noticeType" value="1" />
+					    				  &nbsp;&nbsp;邮件<input type="checkbox" id="emailNotice" name="noticeType" value="2" />
+					    			</td>
+					    		</tr>
+					    		<tr>
+					    			<td valign="middle">
+					    				日程描述：<textarea id="workDesc" name="workPlan.workDesc" rows="7" style="width:780px;" class="easyui-textarea"></textarea>
+					    			</td>
+					    		</tr>
+					    		<tr>
+					    			<td>
+					    				<a href="javascript:save()" class="easyui-linkbutton">&nbsp;保&nbsp;&nbsp;&nbsp;存&nbsp;</a>&nbsp;&nbsp;
+					    			</td>
+					    		</tr>
+					    	</table>
+		    			</td>
+		    		</tr>
+		    	</table>
+		    	<table id="dg" class="easyui-datagrid" style="width:100%;height:auto;"
+					   data-options="rownumbers:true,url:'../workPlanInfo!queryWorkPlan.do',singleSelect:false,border:false,method:'get',autoRowHeight:true">
+					<thead>
+						<tr>
+							<th data-options="field:'id',width:'8%',formatter:formatOption" align="center">操作</th>
+							<th data-options="field:'workDate',width:'10%',formatter:formatDate" align="center">日期</th>
+							<th data-options="field:'workTime',width:'7%'" align="center">时间</th>
+							<th data-options="field:'workDesc',width:'60%'" align="center">日程描述</th>
+							<th data-options="field:'noticeType',width:'12%',formatter:formatNoticeType" align="center">通知类型</th>
+						</tr>
+					</thead>
+				</table>
+	    </form>
+	</div>
+	<div id="ui_mask" style="display:none;height: 100%" class="datagrid-mask"></div>
+	<div id="ui_mask_msg" style="display:none; left: 50%; height: 16px; margin-left: -85.5px; line-height: 16px;" class="datagrid-mask-msg">正在处理，请稍待。。。</div>
+</body>
+</html>
+
+<script language="javascript">
+
+	//初始化
+	$(function(){
+		var workDate = $('#workDate').val();
+		if(!workDate){
+			var myDate = new Date();
+	        var year = myDate.getFullYear();    
+	        var month = myDate.getMonth() + 1;     
+	        var day = myDate.getDate();        
+	        workDate = year + "-" + month + "-"+ day;     // 获取当前日期
+			$('#workDate').textbox('setValue', workDate);
+		}
+	})
+
+	//点击日历控件日期查询数据
+	$('#datepicker').calendar({
+		onSelect: function(date){
+			var date = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
+			$('#workDate').textbox('setValue', date);
+			$('#workHour').combobox('setValue', '09');
+			$('#workMin').combobox('setValue', '00');
+			$("#workDesc").val('');
+			$('#isUpdate').val('');
+			$('#id').val('');
+			$('#dg').datagrid('load',{workDate: date});
+			$('#workDIV').window('open');
+		}
+	});
+
+	function formatOption(val,row){
+		var str = '&nbsp;<a href="javascript:toEdit('+ val +')">修改</a>&nbsp;&nbsp;';
+		str = str + '<a href="javascript:todelete('+ val +')">删除</a>';
+		return str;
+	}
+	
+	
+	// 列表日期格式化
+	function formatDate(val,row){
+		if(val){
+    		return val.substr(0,10);
+    	}
+    	return val;
+	}
+	
+	
+	function formatNoticeType(val,row){
+		if(val != null){
+			var noticeType = val.split(',');
+			var noticeTypeStr = '';
+			for(var i=0;i<noticeType.length;i++){
+				if(noticeTypeStr == ''){
+					if(noticeType[i] == 1){
+						noticeTypeStr = "消息框";
+					}else if(noticeType[i] == 2){
+						noticeTypeStr = "邮件";
+					}
+				}else{
+					if(noticeType[i] == 1){
+						noticeTypeStr = noticeTypeStr + ",消息框";
+					}else if(noticeType[i] == 2){
+						noticeTypeStr = noticeTypeStr + ",邮件";
+					}
+				}
+			}
+			return noticeTypeStr;
+		}else{
+			return val;
+		}
+		
+	}
+	
+	function toEdit(id){
+		$('#isUpdate').val("yes");
+		$('#id').val(id);
+		document.getElementById('messageNotice').checked = false;
+		document.getElementById('emailNotice').checked = false;
+		jQuery.ajax({
+			   type: "POST",
+			   url: "../workPlanInfo!toEidt.do",
+			   data: "workPlan.id="+id,
+			   dataType:"json",
+			   success: function(json){
+				   if(json[4] == 'true'){
+					   $('#workHour').combobox('setValue', json[0]);
+					   $('#workMin').combobox('setValue', json[1]);
+					   $("#workDesc").val(json[2]);
+					   var noticeType = json[3].split(',');
+					   for(var i=0;i<noticeType.length;i++){
+						   if(noticeType[i] == 1){
+							   document.getElementById('messageNotice').checked = true;
+						   }else if(noticeType[i] == 2){
+							   document.getElementById('emailNotice').checked = true;
+						   }
+					   }
+				   }else{
+					   alert("进入修改操作失败，请稍候重试");
+				   }
+			   }
+			});
+	}
+	
+	function todelete(id){
+		var answer = confirm("你确定要删除该条数据吗?");
+		if (answer) {
+			var workDate = $('#workDate').val();
+			jQuery.ajax({
+				   type: "POST",
+				   url: "../workPlanInfo!delete.do",
+				   data: "workPlan.id="+id,
+				   dataType:"json",
+				   success: function(json){
+					   if(json == 'true'){
+						   $('#isUpdate').val('');
+						   $('#id').val('');
+						   $('#workHour').combobox('setValue', '');
+						   $('#workMin').combobox('setValue', '');
+						   $("#workDesc").val('');
+						   $('#dg').datagrid('load',{
+							   workDate: workDate
+							});
+					   }else{
+						   alert("删除操作失败，请稍候重试");
+					   }
+				   }
+				});
+		}
+	}
+	
+	
+	function save(){
+		var workHour = $("#workHour").combobox('getValue');
+		var workMin = $("#workMin").combobox('getValue');
+		if(workHour == null || workHour == ''){
+			alert("请选择时间！");
+			return;
+		}
+		if(workMin == null || workMin == ''){
+			alert("请选择时间！");
+			return;
+		}
+		
+		var noticeType = document.getElementsByName('noticeType');
+		var noticeTypeParm = '';
+		for(var i=0;i<noticeType.length;i++){ 
+			if(noticeTypeParm == ''){
+				if(noticeType[i].checked==true){
+					noticeTypeParm = noticeType[i].value; 
+				}
+			}else{
+				if(noticeType[i].checked==true){            
+					noticeTypeParm = noticeTypeParm + ',' + noticeType[i].value;    
+				}
+			}
+		}
+		
+		var workDesc = $("#workDesc").val();
+		if(workDesc == null || workDesc == ''){
+			alert("日程描述不能为空！");
+			return;
+		}
+		
+		var workDate = $('#workDate').val();
+		var isUpdate = $("#isUpdate").val();
+		var id = $("#id").val();
+		jQuery.ajax({
+			   type: "POST",
+			   url: "../workPlanInfo!save.do",
+			   data: "workPlan.workDate="+workDate + "&selectHour=" + workHour + "&selectMin=" + workMin + "&noticeType=" + noticeTypeParm + "&workPlan.workDesc=" + workDesc + "&isUpdate=" + isUpdate + "&id=" + id,
+			   dataType:"json",
+			   success: function(json){
+				   if(json == 'true'){
+					   $('#isUpdate').val('');
+					   $('#id').val('');
+					   $('#workHour').combobox('setValue', '');
+					   $('#workMin').combobox('setValue', '');
+					   $("#workDesc").val('');
+					   document.getElementById('messageNotice').checked = false;
+					   document.getElementById('emailNotice').checked = false;
+					   $('#dg').datagrid('load',{
+						   workDate: workDate
+						});
+				   }else{
+					   alert("保存失败，请稍候重试");
+				   }
+			   }
+			});
+	}
+	
+</script>
+	

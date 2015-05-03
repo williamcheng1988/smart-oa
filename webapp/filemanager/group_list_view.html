@@ -1,0 +1,45 @@
+<script type="text/javascript" src="ajaxfileupload.js"></script>
+<div>
+	<div class="easyui-panel" style="width:100%" data-options="border:false" align="center" >
+	    <form id="groupFilesForm" class="easyui-form" action="" enctype="multipart/form-data">
+  			<!-- 显示添加的附件列表 -->
+	  		<table id="fileListTab" width="100%" border="0" align="center" cellpadding="0" cellspacing="1">
+  			</table>
+		</form>
+	</div>
+</div>
+
+<script language="javascript">
+
+$(function(){
+	onloadFilelist();
+});
+
+
+function onloadFilelist(){
+	var executionId = "$!executionId";
+	if(executionId){
+		jQuery.ajax({
+			   type: "POST",
+			   url: "filemanager!getGroupFilelist.do?groupId=$!executionId",
+			   dataType:"json",
+			   success: function(json){
+				   if(json){
+					   for(var i =0;i<json.length;i++){
+						   var jsonobj = json[i];
+						   var fileNumber = '';
+						   if(jsonobj.fileNumber){
+							   fileNumber = jsonobj.fileNumber;
+						   }
+						   var str = "<tr><td>&nbsp;<img src='images/point1.gif'>&nbsp;&nbsp;<a href='download!filedownLoad.do?fm.id=" + jsonobj.id + "'><font color='red'>" + fileNumber + jsonobj.fileDisplayname + "&nbsp;&nbsp;(" + jsonobj.createUser + "&nbsp;&nbsp;" + jsonobj.createDtStr +  ")</font></a></td></tr>";
+						   $("#fileListTab").html($("#fileListTab").html()+str);
+					   }
+				   }
+			   }
+			});
+	}
+}
+
+
+
+</script>

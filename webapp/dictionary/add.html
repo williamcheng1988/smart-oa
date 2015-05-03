@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<script type="text/javascript" src="../jquery.min.js"></script>
+	<link id="easyuiTheme" rel="stylesheet" type="text/css" href="../themes/default/easyui.css">
+	<script type="text/javascript" charset="UTF-8" src="../themes/themes.js"></script>
+	<link rel="stylesheet" type="text/css" href="../themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../css/smart.css">
+	<script type="text/javascript" src="../jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="../locale/easyui-lang-zh_CN.js"></script>   
+</head>
+<body>
+	<div align="center" class="datagrid-toolbar page_title">
+		新增字典
+	</div>
+	<div class="easyui-panel" style="width:100%" data-options="border:false" align="center" >
+	    <form id="ff" class="easyui-form" method="post" data-options="novalidate:true" action="../dictionary!saveInsert.do">
+	    	<table cellpadding="10px" class="table_form" style="width: 40%;">
+			  <tr>
+			    <th width="50%" align="right">字典名称：</td>
+			    <td width="50%" align="left">
+			    	<input class="easyui-textbox" type="text" id="dictionaryName" name="config.dictionaryName" data-options="required:true,validType:'length[0,50]'"></input>
+			    </td>
+			  </tr>
+		      <tr>
+	        	<th width="100%" colspan="2" align="center">
+	        		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	        		<a href="javascript:submitForm()" class="easyui-linkbutton">&nbsp;保&nbsp;存&nbsp;</a>&nbsp;&nbsp;
+	        		<a href="javascript:history.back()" class="easyui-linkbutton">&nbsp;返&nbsp;回&nbsp;</a>&nbsp;&nbsp;
+	        	</td>
+		      </tr>
+			</table>
+	    </form>
+	</div>
+	<div id="ui_mask" style="display:none;height: 100%" class="datagrid-mask"></div>
+	<div id="ui_mask_msg" style="display:none; left: 50%; height: 16px; margin-left: -85.5px; line-height: 16px;" class="datagrid-mask-msg">正在处理，请稍待。。。</div>
+<script>
+	function submitForm(){
+		$('#ff').form('submit',{
+			onSubmit:function(){
+				var dictionaryName = $("#dictionaryName").val();
+				if(dictionaryName == null || dictionaryName == ''){
+					alert("字典名称不能为空！");
+					return false;
+				}
+				var validate = $(this).form('enableValidation').form('validate');
+				if(validate){
+					$('#ui_mask').css('display','block');
+					$('#ui_mask_msg').css('display','block');
+				}
+				return validate;
+			},
+			success: function(result){
+				$('#ui_mask').css('display','none');
+				$('#ui_mask_msg').css('display','none');
+				var json = eval('(' + result + ')');
+				if(json.msg == 'true'){
+				  location.href="../dictionary/list.html";
+			    }else{
+				   alert("字典保存失败，请稍后重试！");
+			    }
+			},
+			error:function(){
+			    alert("系统异常，请稍后再试...");
+			}
+		});
+	}
+	
+</script>
+</body>
+</html>
+	

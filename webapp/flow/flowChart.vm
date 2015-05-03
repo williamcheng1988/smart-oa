@@ -1,0 +1,52 @@
+	<div id="p" class="easyui-panel" title="审批流程" style="width:100%;height:auto;padding:10px;"
+				data-options="iconCls:'icon-process',collapsed:false,collapsible:true">
+			<div id="wrap" class="row-fluid" style="vertical-align: middle;">
+       		<div id="subwrap" style="width: 30px;">   
+	        	<div id="content">
+	        		<img style="width:30px;" src="images/flow/start.png">
+		    #set($tag = 0)
+		    #foreach($entry in $task.confs)
+		    	#if($tag != $entry.sort_num_)
+		    		</div>
+				</div>
+		    	<div id="subwrap" style="width: 30px;">   
+		        	<div>
+		        		#if($entry.sort_num_ > $task.task_num_)
+		        			<img style="width:30px;" src="images/flow/arrow_gray.png">
+		        		#else
+		        			<img style="width:30px;" src="images/flow/arrow_green.png">
+		        		#end
+			        </div>
+		    	</div>
+			    <div id="subwrap">   
+			        <div>
+				         <div class="well#if($entry.sort_num_ > $task.task_num_) gray#elseif($entry.sort_num_ == $task.task_num_ && $task.task_status_ != 2) red#else green#end">
+				          <h5>$!{entry.task_desc_}&nbsp;</h5>
+				          <div style="width: 100%;text-align: left;color: white;">$!{entry.action_obj_name_}</div>
+				       	 </div>
+				#else
+				        <div class="well #if($entry.sort_num_ > $task.task_num_) gray#elseif($entry.sort_num_ == $task.task_num_ && $task.task_status_ != 2) red#else green#end">
+				          <h5>$!{entry.task_desc_}&nbsp;</h5>
+				          <div style="width: 100%;text-align: left;color: white;">$!{entry.action_obj_name_}</div>
+				        </div>
+			    #end 
+		    	#set($tag = $entry.sort_num_)
+		    #end
+		    </div>
+				</div>
+			<div id="subwrap" style="width: 30px;">   
+		        	<div>
+		        		#if($task.task_status_ == 2)
+		        			<img style="width:30px;" src="images/flow/arrow_green.png">
+		        		#else
+		        			<img style="width:30px;" src="images/flow/arrow_gray.png">
+		        		#end
+			        </div>
+		    </div>
+		 	<div id="subwrap" style="width: 30px;">   
+	        	<div>
+	        		<img style="width:30px;" src="images/flow/end.png">
+		        </div>
+		    </div>  	
+	  </div>
+	</div>

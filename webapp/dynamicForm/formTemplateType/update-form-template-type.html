@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	
+	<script type="text/javascript" src="jquery.min.js"></script>
+	<link id="easyuiTheme" rel="stylesheet" type="text/css" href="themes/default/easyui.css">
+	<script type="text/javascript" charset="UTF-8" src="themes/themes.js"></script>
+	<link rel="stylesheet" type="text/css" href="themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="css/smart.css">
+	<script type="text/javascript" src="jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="locale/easyui-lang-zh_CN.js"></script>
+</head>
+<body>
+	<div align="center" class="page_title">
+		修改模板类型
+	</div>
+	<div class="easyui-panel" style="width:100%" data-options="border:false" align="center" >
+	    <form id="ff" class="easyui-form" method="post" data-options="novalidate:true" action="formTemplateType!update.do">
+	    	<input type="hidden" name="isdo" value="1">
+	    	<input type="hidden" name="formTemplateType.id" value="$!formTemplateType.id">
+	    	<input type="hidden" name="formTemplateType.uuid" value="$!formTemplateType.uuid">
+	    	<table cellpadding="10px" class="table_form" style="width: 40%;">
+	    		<tr>
+	    			<th	width="40%">名称:</th>
+	    			<td>
+	    				<input class="easyui-textbox" type="text" name="formTemplateType.type" value="$!formTemplateType.type" 
+	    					data-options="required:true,validType:'length[0,40]'"></input>
+	    			</td>
+	    		</tr>
+	    		<tr>
+	    			<th>描述:</th>
+	    			<td>
+	    				<!-- <input class="easyui-textbox" type="text" name="formTemplateType.description" value="$!formTemplateType.description"
+	    					data-options="required:true,validType:'length[0,40]'"></input> -->
+	    				<input class="easyui-textbox" name="formTemplateType.description" data-options="multiline:true,validType:'length[0,100]'" 
+	    					value="$!formTemplateType.description" style="height:60px"></input>
+	    			</td>
+	    		</tr>
+	    		<tr>
+	    			<th>状态:</th>
+	    			<td>
+		    			<select	name="formTemplateType.status" id="status"  class="easyui-combobox" panelHeight="auto" style="width:135px"
+		    				data-options="required:true" validType="selectValueRequired['#status']">
+							<option value="0" #if($!formTemplateType.status == 0) selected #end>正常</option>
+							<option value="1" #if($!formTemplateType.status == 1) selected #end>过期</option>
+							<option value="2" #if($!formTemplateType.status == 2) selected #end>草稿</option>
+							<option value="3" #if($!formTemplateType.status == 3) selected #end>禁用</option>
+						</select>
+	    			</td>
+	    		</tr>
+	    		<tr>
+	    			<th	width="40%">排序:</th>
+	    			<td>
+	    				<input class="easyui-numberbox" type="text" name="formTemplateType.sequence" value="$!formTemplateType.sequence" 
+	    					data-options="required:true,min:1,max:99"></input>
+	    			</td>
+	    		</tr>
+	    	</table>
+	    </form>
+	    	<div style="text-align:center;padding:8px">
+		    	<a href="javascript:submitForm()" class="easyui-linkbutton">&nbsp;保&nbsp;存&nbsp;</a>&nbsp;&nbsp;
+		    	<a href="javascript:clearForm()" class="easyui-linkbutton">&nbsp;重&nbsp;置&nbsp;</a>&nbsp;&nbsp;
+		    	<a href="javascript:history.back()" class="easyui-linkbutton">&nbsp;返&nbsp;回&nbsp;</a>&nbsp;&nbsp;
+	   		</div>
+	    </div>
+	</div>
+	<div id="ui_mask" style="display:none" class="datagrid-mask"></div>
+	<div id="ui_mask_msg" style="display:none; left: 50%; height: 16px; margin-left: -85.5px; line-height: 16px;" class="datagrid-mask-msg">正在处理，请稍待。。。</div>
+<script>
+	function submitForm(){
+		$('#ff').form('submit',{
+			onSubmit:function(){
+				var validate = $(this).form('enableValidation').form('validate');
+				if(validate){
+					$('#ui_mask').css('display','block');
+					$('#ui_mask_msg').css('display','block');
+					
+					var nodes = $('#tt').tree('getChecked');
+					var s = '';
+					for(var i=0; i<nodes.length; i++){
+						if (s != '') s += ',';
+						s += nodes[i].id;
+					}
+					$('#resourceIds').val(s);
+				}
+				return validate;
+			},
+			success: function(result){
+				var json = eval('(' + result + ')');
+				if(json.code != 1){
+					$('#ui_mask').css('display','none');
+					$('#ui_mask_msg').css('display','none');
+					alert(json.msg);
+				}else{
+					location.href="dynamicForm/formTemplateType/list-form-template-type.html";
+				}
+			},
+			error:function(){
+			    alert("系统异常，请稍后再试...");
+			}
+		});
+	}
+	function clearForm(){
+		$('#ff').form('clear');
+	}
+	jQuery.extend(jQuery.fn.validatebox.defaults.rules, {
+		selectValueRequired: {
+			validator: function(value,param){
+				console.info($(param[0]).find("option:contains('"+value+"')").val());
+				return $(param[0]).find("option:contains('"+value+"')").val() != '';
+			},
+			message: 'select value required.'
+		}
+	});
+</script>
+</body>
+</html>

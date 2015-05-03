@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+         "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+         "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+    <package name="sys" extends="struts-smartoa">
+    	<action name="index" class="staffAction" method="main">
+            <result name="index" type="velocity">index.html</result>
+        </action>
+        
+        <action name="home" class="staffAction" method="main">
+            <result name="index" type="velocity">basic.html</result>
+            <result name="basic_home" type="velocity">basic_home.html</result>
+        </action>
+        
+        <action name="staff" class="staffAction">
+            <result name="beforeInsert" type="velocity">/staff/add.html</result> 
+            <result name="beforeUpdate" type="velocity">/staff/modify.html</result>
+            <result name="beforeChangePassword" type="velocity">/staff/changePassword.html</result>               
+            <result name="logout" type="redirect">/login.html</result>
+            <result name="view" type="velocity">/staff/view.html</result>
+        </action>
+        
+        <action name="role" class="roleAction">
+            <result name="beforeUpdate" type="velocity">/role/modify.html</result>            
+            <result name="beforeAssign" type="velocity">/role/assignRole.html</result>
+        </action>
+        
+        <action name="process" class="processAction">
+            <result name="beforeInsertReconf" type="velocity">/process/processDetail.html</result>
+            <result name="list" type="velocity">/process/list.html</result>
+        </action>
+        
+        <action name="log" class="logAction"></action>
+        
+        <action name="flow" class="flowAction">
+            <result name="launch" type="velocity">/flow/launch.html</result>     
+            <result name="approve" type="velocity">/flow/approve.html</result>  
+            <result name="view" type="velocity">/flow/view.html</result>  
+            <result name="historyPage" type="velocity">/flow/historyList.html</result>  
+            <result name="approveResult" type="velocity">/flow/approveResult.html</result>  
+        </action>  
+        
+        
+        <action name="delegation" class="delegationAction">
+         	<result name="manageList" type="velocity">/process/delegationList.html</result>     
+         	<result name="delegationSelf" type="velocity">/process/delegationSelfList.html</result>     
+            <result name="logPage" type="velocity">/process/delegationLog.html</result>  
+            <result name="undoLog" type="velocity">/process/delegationUndoLog.html</result>  
+        </action>  
+        
+        <action name="dictionary" class="dictionaryAction">
+            <result name="toInsertSub" type="velocity">/dictionary/addsub.html</result>    
+            <result name="toEdit" type="velocity">/dictionary/modify.html</result>  
+        </action>
+        
+        <action name="velocity" class="com.chz.smartoa.velocity.template.VelocityTestAction">
+        	<result name="vtest" type="velocity">/common/vtest.html</result>
+        </action>
+    </package> 
+</struts>

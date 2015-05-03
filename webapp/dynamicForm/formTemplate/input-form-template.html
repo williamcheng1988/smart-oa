@@ -1,0 +1,392 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>模板录入</title>
+
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link href="widgets/xform/styles/xform.css" rel="stylesheet"> 
+	<script type="text/javascript" src="jquery.min.js"></script>
+	<link id="easyuiTheme" rel="stylesheet" type="text/css" href="themes/default/easyui.css">
+	<script type="text/javascript" charset="UTF-8" src="themes/themes.js"></script>
+	<link rel="stylesheet" type="text/css" href="themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="css/smart.css">
+	<script type="text/javascript" src="jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="locale/easyui-lang-zh_CN.js"></script> 
+
+    <script type="text/javascript" src="widgets/xform/xform-all-min.js"></script>
+    <script type="text/javascript" src="widgets/xform/adaptor-min.js"></script>	
+	
+	
+	<script  type="text/javascript">
+		//设置数据字典列表项
+		xf_f_select_dicData = eval($!{json_allDicsWithNameVal});
+		//
+		var usersjsonStr_tmp;
+		var pathName;
+		
+		$(function() {
+			//配置action
+			$('#f').attr('action',location.pathname);
+		});
+	
+		function doSave() {
+			$('#f').form('submit',{
+				onSubmit:function(){
+					var validate = $(this).form('enableValidation').form('validate');
+					if(validate){
+						//获取模板信息
+						$('#__gef_name__').val(xform.sections[0].text);
+						$('#__gef_content__').val(xform.doExport());
+						
+						$('#ui_mask').css('display','block');
+						$('#ui_mask_msg').css('display','block');
+					}else{
+						$('#tt').tabs('select', '模板配置');
+					}
+					return validate;
+				},
+				success: function(result){
+					var json = eval('(' + result + ')');
+					if(json.code != 1){
+						$('#ui_mask').css('display','none');
+						$('#ui_mask_msg').css('display','none');
+						alert(json.msg);
+					}else{
+						location.href="formTemplate!list.do?formTemplate.typeId="+$('#__templateType').combobox('getValue');
+					}
+				},
+				error:function(){
+				    alert("系统异常，请稍后再试...");
+				}
+			});
+		}
+		
+		function projectChecked(checked){
+			$('#fmprojectFlag').val(checked?'T':'F');
+			checked?$('#proNameRuleDIV').show():$('#proNameRuleDIV').hide();
+		}
+		
+		function goBackToList(){
+			window.location='formTemplate!list.do?formTemplate.typeId='+$('#__templateType').combobox('getValue');
+		}
+	</script>
+</head>
+	
+
+<body class="easyui-layout" align="center" style="width:100%;margin: 0 auto;">
+
+	<div id="p" data-options="region:'west'" style="width:250px;padding:5px">
+		
+		<div id="tt" class="easyui-tabs" data-options="tabWidth:68" style="width:230px;height:535px">
+			<div title="模板配置">
+				<form id="f" action="" class="easyui-form" method="post" data-options="novalidate:true">
+				#if ($formTemplate)
+					<input id="__gef_id__" type="hidden" name="formTemplate.id" value="$!{formTemplate.id}">
+				#end
+				<input id="__gef_name__" type="hidden" name="formTemplate.name" value="$!{formTemplate.name}">
+				<div style="display: none"><textarea id="__gef_content__" name="formTemplate.content">$!{formTemplate.content}</textarea></div>
+				<input name="isdo" type="hidden" value="1" />
+				<div class="popover-content" id="div_templateInfo">
+					<label for="__templateType">模板类型:</label>
+					<!-- <input id="__templateType" type="text" alt="模板类型" value="$!{formTemplate.type}"> -->
+					<select id="__templateType" name="formTemplate.typeId" data-options="editable:false,required:true,prompt:'请选择'" alt="模板类型" class="easyui-combobox">
+						  <option value=""></option>
+						  #if ($templateTypes)
+						  #foreach ( $type in $templateTypes)
+						  <option value="$!{type.id}" #if($type.id == $formTemplate.ftType.id) selected #end>$!{type.type}</option>
+						  #end
+						  #end
+				    </select>
+					<label for="__processName">所属流程:</label>
+					<select id="__processName" data-options="editable:false,required:true,prompt:'请选择'" alt="所属流程" name="formTemplate.processName" class="easyui-combobox">
+						  <option value=""></option>
+						  #if ($dicsProcdef)
+						  #foreach ( $process in $dicsProcdef)
+						  <option value="$!{process.value}" #if($process.value == $formTemplate.processName) selected #end>$!{process.name}</option>
+						  #end
+						  #end
+				    </select>
+					<label for="formTemplateStatus">模板状态:</label>
+					<select id="__status" name="formTemplate.status" data-options="editable:false,required:true" class="easyui-combobox" alt="模板状态" >
+						  <!-- <option value="">请选择&nbsp;&nbsp;</option> -->
+						  <option value="0" #if($!formTemplate.status == 0) selected #end>正常</option>
+						  <option value="1" #if($!formTemplate.status == 1) selected #end>过期</option>
+						  <option value="2" #if($!formTemplate.status == 2) selected #end>草稿</option>
+						  <option value="3" #if($!formTemplate.status == 3) selected #end>禁用</option>
+				    </select>
+					<label for="__description">模板描述:</label>
+					<input id="__description" type="text" data-options="required:true" alt="模板描述" name="formTemplate.description" value="$!{formTemplate.description}" class="easyui-textbox">
+					<label for="__docNoRule">签报编号规则:</label>
+					#if ($!formTemplate.docNoRule)
+						#set ( $docNoRule = $!{formTemplate.docNoRule} )
+					#else 
+						#set ( $docNoRule = "sino-{yyyy-MM-dd}" )
+					#end
+					<input id="__docNoRule" type="text" alt="文件编号规则" data-options="required:true" name="formTemplate.docNoRule" value="${docNoRule}" class="easyui-textbox">
+					<label for="__repNoRule">报表编号规则:</label>
+					#if ($!formTemplate.repNoRule)
+						#set ( $repNoRule = $!{formTemplate.repNoRule} )
+					#else 
+						#set ( $repNoRule = "sino-{yyyy-MM-dd}" )
+					#end
+					<input id="__repNoRule" type="text" alt="报表编号规则" data-options="required:true" name="formTemplate.repNoRule" value="${repNoRule}" class="easyui-textbox">
+					
+					<label for="_exportFlag">导出全部:</label>
+					<input type="checkbox" onclick="$('#fmexportFlag').val(this.checked?'T':'F')" id="_exportFlag" #if ($!formTemplate.exportFlag=="T") checked #end />
+					<input id="fmexportFlag" name="formTemplate.exportFlag" type="hidden" value="$!formTemplate.exportFlag" />
+					
+					<label for="_projectFlag">是否为立项类别:</label>
+					<input type="checkbox" onclick="projectChecked(this.checked)" id="_projectFlag" #if ($!formTemplate.projectFlag=="T") checked #end />
+					<input id="fmprojectFlag" name="formTemplate.projectFlag" type="hidden" value="$!formTemplate.projectFlag" />
+					<div id="proNameRuleDIV" #if ($!formTemplate.projectFlag!="T") style="display:none" #end>
+						<label for="__proNameRule">项目名称规则:</label>
+						#if ($!formTemplate.proNameRule)
+							#set ( $proNameRule = $!{formTemplate.proNameRule} )
+						#else 
+							#set ( $proNameRule = "" )
+						#end
+						<input id="__proNameRule" type="text" alt="项目名称规则" name="formTemplate.proNameRule" value="${proNameRule}" req="false" class="easyui-textbox">
+					</div>
+					<label for="__sequence">排序:</label>
+					<input id="__sequence" alt="报表排序" data-options="required:true,min:1,max:99" name="formTemplate.sequence" 
+						value="$!formTemplate.sequence" class="easyui-numberbox">
+				</div>
+				</form>
+			</div>
+			<div title="操作">
+				<div>
+					<div class="xf-pallete" title="label">
+					  <img src="widgets/xform/images/xform/new_label.png">
+					  标签
+					</div>
+					<div class="xf-pallete" title="textfield">
+					  <img src="widgets/xform/images/xform/new_numberbox.png">
+					  文本框
+					</div>
+					<div class="xf-pallete" title="numberbox">
+					  <img src="widgets/xform/images/xform/new_input.png">
+					  数值框
+					</div>
+					<div class="xf-pallete" title="calculator">
+					  <img src="widgets/xform/images/xform/new_group.png">
+					  合计框
+					</div>
+					<div class="xf-pallete" title="upperdigit">
+					  <img src="widgets/xform/images/xform/new_calculator.png">
+					  金额大写框
+					</div>
+					<!-- <div class="xf-pallete" title="password">
+					  <img src="widgets/xform/images/xform/new_secret.png">
+					  密码框
+					</div> -->
+					<div class="xf-pallete" title="textarea">
+					  <img src="widgets/xform/images/xform/new_textarea.png">
+					  文本域
+					</div>
+					<div class="xf-pallete" title="select">
+					  <img src="widgets/xform/images/xform/new_select.png">
+					  下拉框
+					</div>
+					<div class="xf-pallete" title="radio">
+					  <img src="widgets/xform/images/xform/new_item.png">
+					  单选框
+					</div>
+					<div class="xf-pallete" title="checkbox">
+					  <img src="widgets/xform/images/xform/new_itemset.png">
+					  复选框
+					</div>
+					<!-- <div class="xf-pallete" title="fileupload">
+					  <img src="widgets/xform/images/xform/new_upload.png">
+					  上传控件
+					</div> -->
+					<div class="xf-pallete" title="datepicker">
+					  <img src="widgets/xform/images/xform/new_range.png">
+					  日期选择器
+					</div>
+					<div class="xf-pallete" title="userpicker">
+					  <img src="widgets/xform/images/xform/userpicker.png">
+					  用户选择框
+					</div>
+					<div class="xf-pallete" title="userselection">
+					  <img src="widgets/xform/images/xform/userpicker.png">
+					  项目人员选择器
+					</div>
+					<div class="xf-pallete" title="proselection">
+					  <img src="widgets/xform/images/xform/project.png">
+					  项目选择器
+					</div>
+				</div>
+			</div>
+			<div title="表单" style="padding: 5px;">
+				<div class="popover-content">
+				  <div id="xf-form-attribute" class="controls"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div data-options="region:'center'">
+		<div class="__gef_center__" style="text-align:right;">
+			<div id="__gef_toolbar__">
+			  <div style="width:50px;float:left;">&nbsp;</div>
+			  <div class="btn-group" style="text-align:right;margin:5px 15px 0px 0px">
+	<!--
+				<button class="btn" onclick="alert(xform.doExport())">export</button>
+				<button class="btn" onclick="doImport()">import</button>
+	-->
+				<button class="btn" onclick="doSave()">保存</button>
+				<button class="btn" onclick="xform.addRow()">添加行</button>
+				<button class="btn" onclick="xform.addColumn()">添加列</button>
+				<button class="btn" onclick="doChangeMode(this)">编辑表格</button>
+				<button class="btn" onclick="doMerge()" id="_btMerge" style="display:none;">合并</button>
+				<button class="btn" onclick="doSplit()" id="_btSplit" style="display:none;">拆分</button>
+				<button class="btn" onclick="showTemplatesTab()" id="_btCiteTemplate">引用</button>
+				<button class="btn" onclick="goBackToList()" id="_btSplit">返回</button>
+			  </div>
+			</div>
+	
+			<div id="__gef_canvas__" style="overflow:auto;">
+			  <div id="xf-center" class="xf-center" unselectable="on">
+				<div id="xf-layer-form" class="xf-layer-form">
+				  <form id="xf-form" action="#" method="post" class="controls">
+				  </form>
+				</div>
+				<div id="xf-layer-mask" class="xf-layer-mask">
+				</div>
+			  </div>
+			</div>
+		</div>
+	</div>
+
+<div id="ui_mask" style="display:none" class="datagrid-mask"></div>
+		<div id="ui_mask_msg" style="display:none; left: 50%; height: 16px; margin-left: -85.5px; line-height: 16px;" class="datagrid-mask-msg">正在处理，请稍待。。。</div>
+	<!-- 模板(选择)列表 -->
+	<div id="win_template" class="easyui-window" title="模板列表信息" data-options="iconCls:'icon-save',modal:true,shadow:true" style="width:700px;height:500px;padding:10px;">
+		<table id="dg_templates" class="easyui-datagrid" style="width:100%;height:auto;"
+				data-options="rownumbers:true,singleSelect:true,border:false,url:'formTemplate!listData.do',method:'get',toolbar:'#tb',autoRowHeight:false,pagination:true,pageSize:10">
+			<thead>
+				<tr>
+					<th data-options="field:'id',checkbox:true"></th>
+					<th data-options="field:'name',width:'25%'">名称</th>
+					<th data-options="field:'type',width:'25%',formatter:formatType">所属类型</th>
+					<th data-options="field:'status',width:'20%',formatter:formatStatus">状态</th>
+					<th data-options="field:'content',width:'20%',hidden:true">内容</th>
+					<!-- <th data-options="field:'createUser',width:'12%'">创建人</th>
+					<th data-options="field:'createDate',width:'15%'">创建时间 </th>
+					<th data-options="field:'updateUser',width:'12%'">修改人</th>
+					<th data-options="field:'updateDate',width:'15%'">最后修改时间 </th> -->
+				</tr>
+			</thead>
+		</table>
+		
+		<div style="width:99%;padding: 5px;" align="center">
+			<a href="javascript:void()" id="_btnConfirm" class="easyui-linkbutton" iconCls="icon-ok">&nbsp;选&nbsp;择&nbsp;</a>&nbsp;&nbsp;&nbsp;
+			<a href="javascript:void()" id="_btnClose" class="easyui-linkbutton" iconCls="icon-clear">&nbsp;关&nbsp;闭&nbsp;</a>&nbsp;&nbsp;&nbsp;
+		</div>
+		
+		<div id="tb" style="padding:15px;height:auto">
+			<form id="queryParams">
+				模板类型:
+				<select id="formTemplateType" name="formTemplate.typeId"  class="easyui-combobox" panelHeight="auto" style="width:160px">
+				  <option value="">请选择&nbsp;&nbsp;</option>
+				  #if ($templateTypes)
+				  #foreach ( $type in $templateTypes)
+				  <option value="$!{type.id}" #if($type.id == $formTemplate.typeId) selected #end>$!{type.type}</option>
+				  #end
+				  #end
+			    </select><br/>
+			           模板状态: 
+				<select	name="formTemplate.status"  class="easyui-combobox" panelHeight="auto" style="width:160px">
+					<option value="">请选择</option>
+					<option value="0">正常</option>
+					<option value="1">过期</option>
+					<option value="2">草稿</option>
+					<option value="3">禁用</option>
+				</select>&nbsp;&nbsp;&nbsp;
+				<a href="#" id="queryButton" class="easyui-linkbutton" iconCls="icon-search">&nbsp;查&nbsp;询&nbsp;</a>
+			</form>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$(function(){
+			$('#win_template').window('close');  // close the window
+			
+			$('#dg_templates').datagrid({
+				onDblClickRow: function(index, data){
+					chooseFunc(data);
+				}
+			});
+
+			$('#_btnConfirm').bind('click',function(){
+				chooseFunc();
+			});
+			
+			$('#_btnClose').bind('click',function(){
+				$('#win_template').window('close');  // close the window
+			});
+		})
+		
+		function showTemplatesTab(){
+			$('#dg_templates').datagrid('reload');
+			$('#win_template').window('open');
+		}
+		
+		function chooseFunc(data){
+			var templateName='';
+			var contentValue=''
+			
+			var rowData;
+			if(data){
+				rowData=data;
+			}else{
+				var rows = $('#dg_templates').datagrid('getSelections');
+				rowData = rows.length>0?rows[0]:null;
+			}
+			templateName=rowData?rowData.name:'';
+			contentValue=rowData?rowData.content:'';
+			
+			if(templateName!=''&&confirm('引用后将覆盖原有模板内容,是否确认引用"'+templateName+'"?')){
+				xform.doImport(contentValue,'','input-form-template');
+				$('#win_template').window('close');  // close the window
+			}
+		}
+		
+		function queryData(){
+			var paramsArray = $("#queryParams").serializeArray();
+			var results ='{';
+			jQuery.each(paramsArray, function(i, field){
+				val = jQuery.trim(field.value);
+				if(val){
+			  	 	results += '"'+field.name + '":"' + val + '",';
+				}
+			});
+			results += '}';
+			$('#dg_templates').datagrid('load',eval('(' + results + ')')); 
+		}
+		$(function(){
+			 $('#queryButton').bind('click',queryData);
+			 $('#dg_templates').datagrid('getPager').pagination({
+					onSelectPage:function(pageNum, pageSize){
+						$('#dg_templates').datagrid({pageNumber:pageNum,pageSize:pageSize});
+						queryData;  
+				}
+			});
+		}); 
+		
+		function formatStatus(val,row){
+			if (val==0){
+				return '<font color="green">正常</font>';
+			} else if(val==1) {
+				return '<font color="grey">过期</font>';
+			} else if(val==2) {
+				return '<font color="orange">草稿</font>';
+			} else if(val==3) {
+				return '<font color="red">禁用</font>';
+			}
+		}
+		function formatType(val,row){
+			if(row && row.ftType){return row.ftType.type;}
+			//return row.ftType.type;
+		}
+	</script>
+</body>
+</html>

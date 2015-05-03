@@ -1,0 +1,219 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<HTML>
+<HEAD>
+<title>任务浏览</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+	<script type="text/javascript" src="jquery.min.js"></script>
+	<link id="easyuiTheme" rel="stylesheet" type="text/css" href="themes/default/easyui.css">
+	<script type="text/javascript" charset="UTF-8" src="themes/themes.js"></script>
+	<link rel="stylesheet" type="text/css" href="themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="css/smart.css">
+	<script type="text/javascript" src="jquery.easyui.min.js"></script>
+	<script type="text/javascript">
+		$(function(){
+			xf_f_flow_view = true;
+		})
+	</script>
+<style type="text/css">
+	h5{
+	    font-family: 幼圆;
+	    font-weight: bold;
+	    line-height: 20px;
+	    margin: 5px 0;
+	    text-rendering: optimizelegibility;
+	}
+	p {
+  	  margin: 0 0 5px;
+	}
+	.row-fluid .span2 {
+	    width: 100%;
+	}
+	.well {
+	    border: 1px solid #e3e3e3;
+	    border-radius: 4px;
+	    border-color:#FFFFFF;
+	    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05) inset;
+	    margin-bottom: 1px;
+	    min-height: 15px;
+	    padding: 3px;
+	    text-align: center;
+	}
+	.green{
+		background-image:url("images/flow/green.jpg");
+	    background-repeat:no-repeat;
+	    background-size:100% 100%;
+	    color: green;
+	}
+	.red{
+		background-image:url("images/flow/red.jpg");
+	    background-repeat:no-repeat;
+	    background-size:100% 100%;
+	    color: red;
+	}
+	.gray{
+		background-image:url("images/flow/gray.jpg");
+	    background-repeat:no-repeat;
+	    background-size:100% 100%;
+	    color: gray;
+	}
+	div#wrap {display:table;_position:relative;overflow:hidden;}   
+    div#subwrap {vertical-align:middle;display:table-cell;width:130px;_position:absolute;_top:50%;}   
+    div#content {_position:relative;_top:-50%;}   
+    
+    .panel-header, .panel-body {
+    	border-color: #E2E2E2;
+	}
+	.panel-header {
+   		background: none;
+	}
+</style>
+    
+</HEAD>
+<body>
+	<table height="100%" cellSpacing="0" cellPadding="0" width="1000"
+		align="center" border="0">
+		<tr vAlign="top">
+			<td colspan="2">
+				<table width="100%" border="0" class="datagrid-toolbar page_title">
+						<tbody>
+							<tr>
+								<td align="center"><font class="titleht1">$!formMap.formTemplateTypeName
+										签报</font><br> <span class="titleht2" id="DetailItem_TaskTypeName">$!formMap.formTemplateName</span>
+								</td>
+							</tr>
+							<tr>
+								<td align="right"><span class="titleht2"
+									id="DetailItem_TaskTypeName">编号：$!task.business_key_</span></td>
+							</tr>
+						</tbody>
+				</table>
+				#parse("flow/flowChart.vm")
+				<table cellpadding="5" width="100%" border="1" class="table_form" style="margin-top: 2px;">
+					<tbody>
+						<tr>
+							<td align="center" class="tasktd1">请示事项要点</td>
+							<td colspan="3" class="tasktd2">$!task.business_title_</td>
+						</tr>
+						<tr>
+							<td width="15%" align="center" class="tasktd1">报送人</td>
+							<td width="45%" class="tasktd2"><span id="realName">$!task.real_name</span></td>
+							<td width="15%" nowrap="" align="center" class="tasktd1">联系电话</td>
+							<td width="25%" class="tasktd2">$!task.mobile</td>
+						</tr>
+						<tr>
+							<td colspan="4" style="text-align: left; padding: 0px; border-style: hidden;" id="xf-form-table">
+								#parse($!formMap.viewUrl)
+							</td>
+						</tr>
+						<tr>
+							<td colspan="4"><span class="tasktd1">请示事项具体内容：</span><br>
+								$!task.desc_</td>
+						</tr>
+						<tr>
+						<td colspan="4"><span class="tasktd1">审批意见：</span><br>
+								#if($task.approveResults) #foreach($entry in
+								$task.approveResults)
+								<div class="tasktd2">
+									&nbsp;&nbsp;&nbsp;&nbsp;$!entry.approveDesc<br>
+									<div style="width: 95%" align="right">$!{entry.realName}/$!{entry.endTime}</div>
+								</div> #end #end</td>
+						</tr>
+					</tbody>
+				</table>
+				#parse("filemanager/group_list_view.html")
+				<br>
+				<div align="center">
+					<a href="flow!approveResult.do?executionId=$!{task.execution_id_}" class="easyui-linkbutton">&nbsp;打印预览&nbsp;</a>&nbsp;&nbsp;
+					#if($task.isManager > 0)
+					  	<a href="javascript:deal('SKIP');" class="easyui-linkbutton" #if($task.task_status_ != 1) data-options="disabled:true" #end>&nbsp;跳过当前步骤&nbsp;</a>&nbsp;&nbsp;
+					  	<a href="javascript:deal('INVALID');" class="easyui-linkbutton" #if($task.task_status_ != 1) data-options="disabled:true" #end>&nbsp;流程作废&nbsp;</a>&nbsp;&nbsp;
+					#end
+					 <a href="javascript: back();" class="easyui-linkbutton">&nbsp;返&nbsp;回&nbsp;</a>&nbsp;&nbsp;
+				</div>
+			</td>
+		</tr>
+		</tbody>
+	</table>
+	</td>
+	</tr>
+	</table>
+<div id="ui_mask" style="display:none;min-height:100%;" class="datagrid-mask"></div>
+<div id="ui_mask_msg" style="display:none; left: 50%; height: 16px; margin-left: -85.5px; line-height: 16px;" class="datagrid-mask-msg">正在处理，请稍待。。。</div>
+</body>
+</HTML>
+<script type="text/javascript">
+	function deal(dealType) {
+		var dealDesc = "";
+		if("SKIP"== dealType){
+			dealDesc = "跳过当前步骤";
+		}else if("INVALID" == dealType){
+			dealType = "将该流程作废";
+		}
+		if(!confirm("请确认是否"+dealDesc+"?此操作不可恢复！")){
+			return;
+		}
+		
+		$('#ui_mask').css('display','block');
+		$('#ui_mask_msg').css('display','block');
+		jQuery.ajax({
+			url: "flow!manage.do",
+			dataType:"json",
+			data: "executionId=$!{task.execution_id_}&approve_type_="+dealType,
+			type: "POST",
+			async: false,
+			success:function(result)
+			{
+				if(result.code != 1){
+					$('#ui_mask').css('display','none');
+					$('#ui_mask_msg').css('display','none');
+					alert(result.msg);
+				}else{
+					refrush();
+				}
+			},
+			error:function(){
+			     alert("系统异常，请稍后再试...");
+			}
+		});
+	}
+	
+	// 更新选择的面板的新标题和内容
+	function refrush(){
+		var tt = top.$("#tt");
+		var tab = tt.tabs('getSelected');
+		if (tab){
+			tt.tabs('update', {
+				tab: tab,
+				options: {
+					href: 'flow!view.do?executionId=$!{task.execution_id_}'  // 新内容的URL
+				}
+			});
+
+		}
+	}
+	
+	function back(){
+		var lastUrl = document.referrer;
+		var idx = lastUrl.indexOf('flow');
+		var idx2 =  lastUrl.indexOf('delegation');
+		if(idx > 0 || idx2 > 0){
+			history.go(-1);
+		}else{
+			closeTab();
+		}
+	}
+	
+	function closeTab() {
+		var tt = top.$("#tt");
+		var tab = tt.tabs('getSelected');
+		if (tab){
+			var index = tt.tabs('getTabIndex', tab);
+			tt.tabs('close', index);
+		}
+		tt.tabs('select', '主页');
+	}
+	
+	$(function(){
+		$('#ui_mask').css('height',document.body.scrollHeight);
+	});
+</script>

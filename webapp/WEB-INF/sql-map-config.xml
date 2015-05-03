@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN"
+    "http://www.ibatis.com/dtd/sql-map-config-2.dtd">
+<sqlMapConfig>
+	<settings cacheModelsEnabled="true" enhancementEnabled="true"
+		lazyLoadingEnabled="true" maxRequests="512" maxSessions="128"
+		maxTransactions="32" useStatementNamespaces="false" />
+
+ <sqlMap resource="com/chz/smartoa/common/schedule/dao/maps/ScheduleTaskSQL.xml" />
+ 
+ <!-- System config -->
+ <sqlMap resource="com/chz/smartoa/system/dao/ibatis/maps/RoleSQL.xml" />
+ <sqlMap resource="com/chz/smartoa/system/dao/ibatis/maps/OperateLogSQL.xml" />
+ <sqlMap resource="com/chz/smartoa/system/dao/ibatis/maps/ResourceSQL.xml" />
+ <sqlMap resource="com/chz/smartoa/system/dao/ibatis/maps/DepartmentSQL.xml" />
+ <sqlMap resource="com/chz/smartoa/system/dao/ibatis/maps/StaffSQL.xml" />
+ <sqlMap resource="com/chz/smartoa/system/dao/ibatis/maps/DictionaryConfigSQL.xml" />
+	 
+ <!-- Dynamic Form config -->
+ <sqlMap resource="com/chz/smartoa/dynamicForm/dao/ibatis/maps/FormTemplateTypeSQL.xml" />
+ <sqlMap resource="com/chz/smartoa/dynamicForm/dao/ibatis/maps/FormTemplateSQL.xml" />
+ <sqlMap resource="com/chz/smartoa/dynamicForm/dao/ibatis/maps/FormSQL.xml" />
+ 
+ <sqlMap resource="com/chz/smartoa/dynamicForm/dao/ibatis/maps/StaffBenefitsSQL.xml" />
+	 
+ <!-- Task config -->
+ <sqlMap resource="com/chz/smartoa/task/dao/ibatis/maps/ReProcdefSQL.xml" />
+ <sqlMap resource="com/chz/smartoa/task/dao/ibatis/maps/ReConfSQL.xml" />
+ <sqlMap resource="com/chz/smartoa/task/dao/ibatis/maps/GeExecutionSQL.xml" />
+ <sqlMap resource="com/chz/smartoa/task/dao/ibatis/maps/RuTaskSQL.xml" />
+ <sqlMap resource="com/chz/smartoa/task/dao/ibatis/maps/HiTaskSQL.xml" />
+ 
+ <sqlMap resource="com/chz/smartoa/system/dao/ibatis/maps/NoticeSQL.xml" />
+ 
+ <!-- Delegation config -->
+ <sqlMap resource="com/chz/smartoa/delegation/dao/ibatis/maps/DelegationSQL.xml" />
+ <sqlMap resource="com/chz/smartoa/delegation/dao/ibatis/maps/DelegationLogSQL.xml" />
+ 
+ <!-- FileManager config -->
+ <sqlMap resource="com/chz/smartoa/fileUpload/dao/ibatis/maps/FileManagerSQL.xml" />
+ 
+ <!-- AfficheManager config -->
+ <sqlMap resource="com/chz/smartoa/system/dao/ibatis/maps/AfficheSQL.xml" />
+ 
+ <!-- CalendarManager config -->
+ <sqlMap resource="com/chz/smartoa/system/dao/ibatis/maps/CalendarSQL.xml" />
+ 
+  <!-- WorkPlanManager config -->
+ <sqlMap resource="com/chz/smartoa/system/dao/ibatis/maps/WorkPlanSQL.xml" />
+	 
+</sqlMapConfig>

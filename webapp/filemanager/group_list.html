@@ -1,0 +1,109 @@
+<script type="text/javascript" src="ajaxfileupload.js"></script>
+<div>
+	<div class="easyui-panel" style="width:100%" data-options="border:false" align="left" >
+	    <form id="groupFilesForm" class="easyui-form" action="" enctype="multipart/form-data">
+  			<!-- 显示添加的附件列表 -->
+	  		<table id="fileListTab" width="100%" border="0" align="left" cellpadding="0" cellspacing="1">
+  			</table>
+  			<br/>
+  			<!--  当前修改附件页面  -->
+  			<div id="fileUploadContentDiv" class="easyui-panel" style="width:100%;height:140px;padding:0px;display: none;">
+				<div class="easyui-layout" data-options="fit:true">
+					<div data-options="region:'center'" style="padding:10px;">
+						<table width="100%" border="0" align="center" cellpadding="0" cellspacing="1">
+							<tr height="40px;">
+								<td align="right" width="40%">
+									&nbsp;&nbsp;附件类型：
+								</td>
+								<td width="60%">
+									&nbsp;&nbsp; 
+									<input class="easyui-combobox" id="uFileTypeId" name="uFileTypeId" editable='false'
+									       data-options="valueField:'id', textField:'dictionaryName', panelHeight:'auto'" >
+									&nbsp;&nbsp;      
+									<input class="easyui-combobox" id="uFileTypeSubId" name="uFileTypeSubId" editable='false' 
+									       data-options="valueField:'id', textField:'dictionaryName', panelHeight:'auto'" >
+								</td>
+							</tr>
+							<tr height="40px;">
+								<td align="right">
+									&nbsp;&nbsp;附件：
+								</td>
+								<td>
+									&nbsp;&nbsp;
+									<span id='auditFileSpan'> 
+								    	<input type="file" id="ufile" name="ufile" />
+								    	<font color="red">（附件大小应小于10MB）</font>
+								    </span> 
+								</td>
+							</tr>
+							<tr>
+								<td align="center" colspan="2">
+									<a id="updateButton" class="easyui-linkbutton" onclick="saveUpdateFile();">保存修改</a>
+									&nbsp;&nbsp;
+									<a id="cancleButton" class="easyui-linkbutton" onclick="cancelForUpdate();">取消</a>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script language="javascript">
+
+$(function(){
+	onloadFilelist();
+	
+	$(document).delegate('.a_removeCurrentFile', 'click', function(e) {
+		var currentTd = this.parentNode;
+		var parentTr = currentTd.parentNode;
+		var parentTb = parentTr.parentNode;
+		parentTb.removeChild(parentTr);
+	});
+});
+
+
+
+function onloadFilelist(){
+	jQuery.ajax({
+		   type: "POST",
+		   url: "filemanager!getGroupFilelist.do?groupId=$!executionId",
+		   dataType:"json",
+		   success: function(json){
+			   if(json){
+				   for(var i =0;i<json.length;i++){
+					   var jsonobj = json[i];
+					   var str = "<tr><td>&nbsp;<img src='images/point1.gif'>&nbsp;&nbsp;<a href='download!filedownLoad.do?fm.id=" + jsonobj.id + "'><font color='red'>" 
+							     + jsonobj.fileNumber + jsonobj.fileDisplayname + "&nbsp;&nbsp;(" + jsonobj.createUser + "&nbsp;&nbsp;" + jsonobj.createDtStr
+						         + ")</font></a>&nbsp;&nbsp;<a href='javascript:updateWindow(\"" + jsonobj.id + "\")'>修改</a></td></tr>"; 
+					   
+					   $("#fileListTab").html($("#fileListTab").html()+str);
+				   } 
+			   }
+		   }
+		});
+}
+
+
+
+
+
+$(document).ready(function(){   
+    $('#uFileTypeId').combobox({   
+        onChange:function(parentId,oldValue){  
+        	if(parentId == oldValue){
+        		return;
+        	}else{
+        		$('#uFileTypeSubId').combobox('setValue','');
+        		var url = "filemanager!getSonList.do?dictionaryId="+parentId;
+        		$('#uFileTypeSubId').combobox('reload',url);  
+        	}
+        }   
+    });   
+}); 
+
+
+
+</script>

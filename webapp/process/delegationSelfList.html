@@ -1,0 +1,179 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="UTF-8">
+	<script type="text/javascript" src="jquery.min.js"></script>
+	<link id="easyuiTheme" rel="stylesheet" type="text/css" href="themes/default/easyui.css">
+	<script type="text/javascript" charset="UTF-8" src="themes/themes.js"></script>
+	<link rel="stylesheet" type="text/css" href="themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="css/smart.css">
+	<script type="text/javascript" src="jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="locale/easyui-lang-zh_CN.js"></script> 
+</head>
+<body>
+	<div align="center" class="datagrid-toolbar page_title">
+		我的授权
+	</table>
+	</div>
+	<table id="dg" class="easyui-datagrid" style="width:100%;height:auto;"
+			data-options="rownumbers:true,singleSelect:false,border:false,url:'delegation!list.do',method:'get',toolbar:'#tb',autoRowHeight:true,pagination:true,pageSize:10">
+		<thead>
+			<tr>
+				<th data-options="field:'delegationId',checkbox:true"></th>
+				<th data-options="field:'toUserName',width:'10%',align:'center',formatter:formatToUser">被授权人</th>
+				<th data-options="field:'startDate',width:'15%',align:'center'">授权起始时间</th>
+				<th data-options="field:'endDate',width:'15%',align:'center'">授权结束时间</th>
+				<th data-options="field:'createor',width:'10%',align:'center'">创建人</th>
+				<th data-options="field:'createDate',width:'15%',align:'center'">创建时间</th>
+				<th data-options="field:'statusStr',width:'10%',align:'center'">状态</th>
+				<th data-options="field:'updateDate',width:'10%',align:'center',formatter:formatTask">授权任务</th>
+			</tr>
+		</thead>
+	</table>
+	<div style="width:99%;padding: 5px;" align="center">
+		<a href="#" onclick="javascript:$('#ui_mask').css('display','block');$('#ff').form('clear');$('#dlg').dialog('open');" class="easyui-linkbutton" iconCls="icon-add">&nbsp;新&nbsp;增&nbsp;</a>&nbsp;&nbsp;&nbsp;
+		<a href="javascript:delegationCancle()" class="easyui-linkbutton" iconCls="icon-cancel">&nbsp;撤&nbsp;销&nbsp;</a>&nbsp;&nbsp;&nbsp;
+	</div>
+	<div id="ui_mask" style="display:none" class="datagrid-mask"></div>
+	<div id="ui_mask_msg" style="display:none; left: 50%; height: 16px; margin-left: -85.5px; line-height: 16px;" class="datagrid-mask-msg">正在处理，请稍待。。。</div>
+<div id="dlg" class="easyui-dialog" title="&nbsp;新增授权" style="width:40%;height:250px;max-width:800px;padding:10px"
+		data-options="
+			closable: false,
+			buttons: [{
+				text:'保存',
+				iconCls:'icon-ok',
+				handler:function(){
+					submitForm();
+				}
+			},{
+				text:'取消',
+				iconCls:'icon-cancel',
+				handler:function(){
+					$('#dlg').dialog('close');
+					$('#ui_mask').css('display','none');
+				}
+			}]
+		">
+	<form id="ff" class="easyui-form" method="post" data-options="novalidate:true" action="delegation!insert.do">
+	    	<table cellpadding="10px" class="table_form" style="width: 100%;border:none;">
+	    		<tr>
+	    			<th	width="40%" align="right" style="border:none;">授权人:</th>
+	    			<td style="border:none;">
+	    				$!{loginName}
+					</td>
+	    		</tr>
+	    		<tr>
+	    			<th align="right" style="border:none;">被授权人:</th>
+	    			<td style="border:none;">	
+	    				<select id="select_touser" class="easyui-combobox" style="width: 132px;" data-options="required:true,validType:'length[0,30]'" name="delegation.toUser">
+  			 				#optionTag("NORMAL_USERS")
+						</select>   			
+   					</td>
+	    		</tr>
+	    		<tr>
+	    			<th align="right" style="border:none;">起始时间:</th>
+	    			<td style="border:none;">
+	    				<input id="startDate" name="delegation.startDate" style="width: 132px;" data-options="novalidate:true,required:true">
+	    			</td>
+	    		</tr>
+	    		<tr>
+	    			<th  align="right"  style="border:none;">结束时间:</th>
+	    			<td style="border:none;">
+						<input id="endDate" name="delegation.endDate" style="width: 132px;" data-options="novalidate:true,required:true">
+	    			</td>
+	    		</tr>
+	    	</table>
+	</form>
+</div>
+</body>
+</html>
+<script type="text/javascript">
+	function formatToUser(val,row){
+		return row.toUserName+'('+row.toUser+')';
+	}
+	function formatTask(val,row){
+		return '<a href="delegation!undoLog.do?delegationId='+row.delegationId+'" class="easyui-linkbutton" iconCls="icon-edit">待办任务</a>&nbsp;<a href="delegation!logPage.do?delegationId='+row.delegationId+'" class="easyui-linkbutton" iconCls="icon-edit">已办任务</a>';
+	}
+	
+	jQuery(function(){
+		jQuery('#dlg').dialog('close');
+		jQuery('#startDate').datebox().datebox('calendar').calendar({
+			validator: function(date){
+				var now = new Date();
+				var d1 = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+				return d1<=date && date;
+			}
+		});
+		jQuery('#endDate').datebox().datebox('calendar').calendar({
+			validator: function(date){
+				var now = new Date();
+				var d1 = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+				return d1<=date;
+			}
+		});
+	})
+	function submitForm(){
+		$('#ff').form('submit',{
+			onSubmit:function(){
+				var validate = $(this).form('enableValidation').form('validate');
+				if(validate){
+					var fromUser = "$!{loginName}";
+					var toUser = $("#select_touser").combobox("getValue");
+					if(fromUser == toUser){
+						alert("被授权人不能是自己！");
+						return false;
+					}
+					$('#ui_mask').css('display','block');
+					$('#ui_mask_msg').css('display','block');
+				}
+				return validate;
+			},
+			success: function(result){
+				var json = eval('(' + result + ')');
+				$('#ui_mask').css('display','none');
+				$('#ui_mask_msg').css('display','none');
+				if(json.code != 1){
+					alert(json.msg);
+				}else{
+					window.location.reload();
+					$('#delegationForm')[0].reset();
+				}
+			},
+			error:function(){
+			    alert("系统异常，请稍后再试...");
+			}
+		});
+	}
+	
+    //撤销授权
+	function delegationCancle(){
+		var ids="";
+		var rows = $('#dg').datagrid('getSelections');
+		for(var i=0; i<rows.length; i++){
+			if(rows[i].status == 1){
+				 if (!ids) {
+				   	ids =  rows[i].delegationId;
+				 } else {
+					ids += "," + rows[i].delegationId;
+				 }
+			}
+		}
+		if (!ids || ids.length == 0) {
+			alert("请选择尚未撤销的授权记录！");
+			return;
+		}
+		var answer = confirm("你确定要撤销选中的授权设置吗?");
+		if (answer) {
+			$('#ui_mask').css('display','block');
+			$('#ui_mask_msg').css('display','block');
+			var url = 'delegation!cancel.do';
+            var params = {
+                 delegationId: ids
+            };
+            jQuery.post(url, params, function(data){
+            		window.location.reload();
+            });
+		}
+	}
+	
+</script>

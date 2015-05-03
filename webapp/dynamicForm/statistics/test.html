@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<script type="text/javascript" src="../../jquery.min.js"></script>
+	<link id="easyuiTheme" rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+	<script type="text/javascript" charset="UTF-8" src="../../themes/themes.js"></script>
+	<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../../css/smart.css">
+	<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
+</head>
+<body>
+	<input class="easyui-textbox" name="message" data-options="multiline:true" style="height:60px"></input>
+	
+	<input class="easyui-textbox" type="text" name="name"></input>
+	
+	<div style="margin:20px 0;">
+		<a href="javascript:void(0)" class="easyui-linkbutton" onclick="$('#win').window('open')">Open</a>
+		<a href="javascript:void(0)" class="easyui-linkbutton" onclick="$('#win').window('close')">Close</a>
+	</div>
+	<div id="win" class="easyui-window" title="Basic Window" data-options="iconCls:'icon-save'" style="width:500px;height:200px;padding:10px;">
+		The window content.
+	</div>
+
+	<script type="text/javascript">
+	
+		$(function (){
+			var html;
+			jQuery.ajax({
+	            type: "GET",
+	            async:false,
+	            url: '../../form!get.do?tId=06952b9b-2a86-4853-928c-f0acb1d006ba&rId=a0001',
+	            success: function(data) {
+	    			html=data;
+	            },
+	            error: function(data) {
+	            }
+	        });
+			
+			//alert(html);
+			
+			$('#win').html(html);
+			$.parser.parse('#win');
+		});
+	
+		function open(){
+			$('#win').window('open');  // open a window
+		}
+		function close(){
+			$('#win').window('close');  // close a window
+		}
+	</script>
+</body>
+</html>

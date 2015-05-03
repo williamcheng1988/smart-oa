@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>重置密码</title>
+	<script type="text/javascript" src="../jquery.min.js"></script>
+	<link id="easyuiTheme" rel="stylesheet" type="text/css" href="../themes/default/easyui.css">
+	<script type="text/javascript" charset="UTF-8" src="../themes/themes.js"></script>
+	<link rel="stylesheet" type="text/css" href="../themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../css/smart.css">
+	<script type="text/javascript" src="../jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="../locale/easyui-lang-zh_CN.js"></script>   
+</head>
+<script type="text/javascript">
+$.extend($.fn.validatebox.defaults.rules, {    
+    equals: {    
+        validator: function(value,param){    
+            return value == $(param[0]).val();    
+        },    
+        message: '两次输入密码不一致！'   
+    },
+    regexpLoginName:{ 
+    	 validator: function(value,param){    
+    		 var patrn=/^[a-zA-Z\d]{1,30}$/;  
+    	     return patrn.exec(value);
+         },    
+         message: '登录名只能包含字母和数字！' 
+    },
+    regexpPwd:{ 
+      	 validator: function(value,param){    
+      		 var patrn=/^[a-zA-Z]{1,30}_*\d*$/;  
+      	     return patrn.exec(value);
+           },    
+           message: '密码只能由字母、数字、下划线组成，且必须包含字母！' 
+    }
+});  
+</script>
+<body>
+	<div align="center" class="datagrid-toolbar page_title">
+		重置密码
+	</div>
+	<div class="easyui-panel" style="width:100%" data-options="border:false" align="center" >
+	    <form id="ff" class="easyui-form" method="post" data-options="novalidate:true" action="../staff!resetPwd.do">
+					<table cellpadding="10px" class="table_form"  width="35%">
+						<tbody>
+							<tr>
+								<th align="center" width="15%">当前密码</th>
+								<td width="35%"><input name="password" maxlength="15" class="easyui-textbox easyui-validatebox" data-options="required:true,validType:'length[6,15]'" type="password">&nbsp;</td>
+							</tr>
+							<tr>
+								<th align="center" width="15%">新密码</th>
+								<td width="35%"><input id="pwd" name="newPassword" maxlength="15" class="easyui-textbox easyui-validatebox" data-options="required:true,validType:['regexpPwd','length[6,15]']" type="password">&nbsp;</td>
+							</tr>
+							<tr>	
+								<th align="center" width="15%">确认新密码</th>
+								<td width="35%"><input maxlength="15" class="easyui-textbox easyui-validatebox" data-options="required:true,validType:'equals[\'#pwd\']'" type="password">&nbsp;&nbsp;</td>
+							</tr>
+						</tbody>
+					</table> 
+		</form>
+	    	<div style="text-align:center;padding:8px">
+		    	<a href="javascript:submitForm()" class="easyui-linkbutton">&nbsp;保&nbsp;存&nbsp;</a>&nbsp;&nbsp;
+		    	<a href="javascript:history.back()" class="easyui-linkbutton">&nbsp;返&nbsp;回&nbsp;</a>&nbsp;&nbsp;
+	   		</div>
+	    </div>
+	</div>
+	<div id="ui_mask" style="display:none" class="datagrid-mask"></div>
+	<div id="ui_mask_msg" style="display:none; left: 50%; height: 16px; margin-left: -85.5px; line-height: 16px;" class="datagrid-mask-msg">正在处理，请稍待。。。</div>
+<script>
+	function submitForm(){
+		$('#ff').form('submit',{
+			onSubmit:function(){
+				var validate = $(this).form('enableValidation').form('validate');
+				if(validate){
+					$('#ui_mask').css('display','block');
+					$('#ui_mask_msg').css('display','block');
+				}
+				return validate;
+			},
+			success: function(result){
+				var json = eval('(' + result + ')');
+				alert(json.msg);
+				if(json.code != 1){
+					$('#ui_mask').css('display','none');
+					$('#ui_mask_msg').css('display','none');
+				}else{
+					history.go(-1);
+				}
+			},
+			error:function(){
+			    alert("系统异常，请稍后再试...");
+			}
+		});
+	}
+</script>
+</body>
+</html>
