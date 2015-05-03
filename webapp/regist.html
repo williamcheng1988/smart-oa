@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>新用户注册</title>
+	<script type="text/javascript" src="jquery.min.js"></script>
+	<link id="easyuiTheme" rel="stylesheet" type="text/css" href="themes/default/easyui.css">
+	<script type="text/javascript" charset="UTF-8" src="themes/themes.js"></script>
+	<link rel="stylesheet" type="text/css" href="themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="css/smart.css">
+	<script type="text/javascript" src="jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="locale/easyui-lang-zh_CN.js"></script>   
+</head>
+<script type="text/javascript">
+$.extend($.fn.validatebox.defaults.rules, {    
+    equals: {    
+        validator: function(value,param){    
+            return value == $(param[0]).val();    
+        },    
+        message: '两次输入密码不一致！'   
+    },
+    regexpLoginName:{ 
+    	 validator: function(value,param){    
+    		 var patrn=/^[a-zA-Z\d]{1,30}$/;  
+    	     return patrn.exec(value);
+         },    
+         message: '登录名只能包含字母和数字！' 
+    }
+});  
+</script>
+<body>
+	<div align="center" class="datagrid-toolbar page_title">
+		新用户注册4
+	</div>
+	<div class="easyui-panel" style="width:100%" data-options="border:false" align="center" >
+	    <form id="ff" class="easyui-form" method="post" data-options="novalidate:true" action="staff!regist.do">
+					<table cellpadding="10px" class="table_form"  width="80%">
+						<tbody>
+							<tr>
+								<th align="center" width="15%">姓 名</th>
+								<td width="35%"><input name="staff.realName" class="easyui-textbox" data-options="required:true,validType:'length[0,30]'"  maxlength="50" type="text">&nbsp;</td>
+								<th align="center" width="15%">登录名</th>
+								<td width="35%"><input name="staff.loginName" class="easyui-textbox easyui-validatebox" data-options="required:true,validType:['regexpLoginName','length[5,30]']" maxlength="50" id="loginName" type="text">&nbsp;</td>
+							</tr>
+							<tr>
+								<th align="center" width="15%">密 码</th>
+								<td width="35%"><input id="pwd" name="staff.password" maxlength="15" class="easyui-textbox easyui-validatebox" data-options="required:true,validType:'length[6,15]'" type="password">&nbsp;</td>
+								<th align="center" width="15%">确认密码</th>
+								<td width="35%"><input maxlength="15" class="easyui-textbox easyui-validatebox" data-options="required:true,validType:'equals[\'#pwd\']'" type="password">&nbsp;&nbsp;</td>
+							</tr>
+							<tr>
+								<th align="center" width="15%">Email</th>
+								<td width="35%"><input name="staff.email" class="easyui-textbox" data-options="required:true,validType:['email',]" type="text">&nbsp;&nbsp;</td>
+								<th align="center" width="15%">性 别</th>
+								<td width="35%"><select name="staff.sex" class="easyui-combobox" data-options="required:true" data-options="validType:'length[0,2]'">
+										<option value="0">保密</option>
+										<option value="1">男</option>
+										<option value="2">女</option>
+								</select></td>
+							</tr>
+							<tr>
+								<th align="center">最高学历</th>
+								<td><select name="staff.lastDegree" class="easyui-combobox" data-options="validType:'length[0,15]'">
+										<option value="">保密</option>
+										<option value="1">大专及以下</option>
+										<option value="2">大专</option>
+										<option value="3">本科</option>
+										<option value="4">硕士</option>
+										<option value="5">博士</option>
+								</select></td>
+								<th align="center">专 业</th>
+								<td><input name="staff.speciality" data-options="validType:'length[0,30]'" class="easyui-textbox" type="text"></td>
+							</tr>
+							<tr>
+								<th align="center">电 话</th>
+								<td><input name="staff.telephone" class="easyui-textbox" type="text" data-options="validType:'length[0,15]'"></td>
+								<th align="center">邮 编</th>
+								<td><input name="staff.zip" data-options="validType:'length[0,6]'" class="easyui-numberbox" type="text"></td>
+							</tr>
+							<tr>
+								<th align="center">通讯地址</th>
+								<td colspan="3"><input name="staff.address" data-options="validType:'length[0,100]'" class="easyui-textbox" style="width:50%;" maxlength="100" type="text"></td>
+							</tr>
+						</tbody>
+					</table> 
+		</form>
+	    	<div style="text-align:center;padding:8px">
+		    	<a href="javascript:submitForm()" class="easyui-linkbutton">&nbsp;保&nbsp;存&nbsp;</a>&nbsp;&nbsp;
+		    	<a href="javascript:clearForm()" class="easyui-linkbutton">&nbsp;重&nbsp;置&nbsp;</a>&nbsp;&nbsp;
+		    	<a href="javascript:history.back()" class="easyui-linkbutton">&nbsp;返&nbsp;回&nbsp;</a>&nbsp;&nbsp;
+	   		</div>
+	    </div>
+	</div>
+	<div id="ui_mask" style="display:none" class="datagrid-mask"></div>
+	<div id="ui_mask_msg" style="display:none; left: 50%; height: 16px; margin-left: -85.5px; line-height: 16px;" class="datagrid-mask-msg">正在处理，请稍待。。。</div>
+<script>
+	function submitForm(){
+		$('#ff').form('submit',{
+			onSubmit:function(){
+				var validate = $(this).form('enableValidation').form('validate');
+				if(validate){
+					$('#ui_mask').css('display','block');
+					$('#ui_mask_msg').css('display','block');
+				}
+				return validate;
+			},
+			success: function(result){
+				var json = eval('(' + result + ')');
+				alert(json.msg);
+				if(json.code != 1){
+					$('#ui_mask').css('display','none');
+					$('#ui_mask_msg').css('display','none');
+				}else{
+					location.href="login.html";
+				}
+			},
+			error:function(){
+			    alert("系统异常，请稍后再试...");
+			}
+		});
+	}
+	function clearForm(){
+		$('#ff').form('clear');
+	}
+</script>
+</body>
+</html>

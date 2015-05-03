@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<script type="text/javascript" src="../jquery.min.js"></script>
+	<link id="easyuiTheme" rel="stylesheet" type="text/css" href="../themes/default/easyui.css">
+	<script type="text/javascript" charset="UTF-8" src="../themes/themes.js"></script>
+	<link rel="stylesheet" type="text/css" href="../themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../css/smart.css">
+	<script type="text/javascript" src="../jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="../locale/easyui-lang-zh_CN.js"></script>   
+</head>
+<body>
+	<div align="center" class="datagrid-toolbar page_title">
+		日历管理
+	</div>
+	<div class="easyui-panel" style="width:100%" data-options="border:false" >
+	    <form id="ff" class="easyui-form" method="post" data-options="novalidate:true" action="../calendarInfo!save.do">
+		    	<table cellpadding="10px" class="table_form" style="width: 100%;">
+		    		<tr>
+		    			<td style="width: 260px;" align="center">
+		    				<div id="datepicker" class="easyui-calendar" style="width:250px;height:250px;"></div>
+		    			</td>
+		    			<td style="width: 850px;" align="left">
+		    				<input id="id" name="calendar.id" type="hidden" />
+		    				<table cellpadding="10px" class="table_form" style="width: 90%;">
+		    					<tr>
+		    						<td align="left">
+		    							日期：<input id="dateSet" name="calendar.dateSet" readonly="readonly" class="easyui-textbox" />
+					    				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					    				假日类型：
+					    				<select id="holidayType" name="calendar.holidayType" class="easyui-combobox" panelHeight="auto" style="width:150px">
+					    					<option value="">--请选择--</option>
+					    					<option value="1">国家法定假日</option>
+					    					<option value="2">周末休息日</option>
+					    					<option value="3">公司福利假日</option>
+					    				</select>
+		    						</td>
+		    					</tr>
+		    					<tr>
+		    						<td valign="middle">
+		    							描述：<textarea id="holidayDesc" name="calendar.holidayDesc" rows="7" style="width:720px;" class="easyui-textarea"></textarea>
+		    						</td>
+		    					</tr>
+		    					<tr>
+					    			<td>
+					    				&nbsp;&nbsp;
+					    				<a href="javascript:save()" class="easyui-linkbutton">&nbsp;保&nbsp;&nbsp;&nbsp;存&nbsp;</a>&nbsp;&nbsp;
+					    			</td>
+					    		</tr>
+		    				</table>
+		    			</td>
+		    		</tr>
+		    	</table>
+		    	<!-- --> 
+		    	<div id="tishi" align="left"><font color="red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;设置提示：每一天的日期只允许设置一条记录</font></div>
+				<table id="dg" class="easyui-datagrid" style="width:100%;height:auto;"
+							data-options="rownumbers:true,url:'../calendarInfo!queryCalendar.do',singleSelect:false,border:false,method:'get',autoRowHeight:true">
+					<thead>
+						<tr>
+							<th data-options="field:'id',width:'8%',formatter:formatOption" align="center">操作</th>
+							<th data-options="field:'dateSet',width:'10%',formatter:formatDate" align="center">日期</th>
+							<th data-options="field:'holidayType',width:'10%',formatter:formatHolidayType" align="center">假日类型</th>
+							<th data-options="field:'holidayDesc',width:'40%'" align="center">假日描述</th>
+							<th data-options="field:'updateUser',width:'10%'" align="center">最后更新用户</th>
+							<th data-options="field:'updateDt',width:'17%'" align="center">最后更新时间</th>
+						</tr>
+					</thead>
+				</table>
+	    </form>
+	</div>
+	<div id="ui_mask" style="display:none;height: 100%" class="datagrid-mask"></div>
+	<div id="ui_mask_msg" style="display:none; left: 50%; height: 16px; margin-left: -85.5px; line-height: 16px;" class="datagrid-mask-msg">正在处理，请稍待。。。</div>
+</body>
+</html>
+
+<script language="javascript">
+
+	// 初始化
+	$(function(){
+		var selectDate = $('#dateSet').val();
+		if(selectDate == null || selectDate == ''){
+			var myDate = new Date();
+            var year = myDate.getFullYear();    
+            var month = myDate.getMonth() + 1;     
+            var day = myDate.getDate();        
+			selectDate = year + "-" + month + "-"+ day;   // 获取当前日期
+			$('#dateSet').textbox('setValue', selectDate);
+			jQuery.ajax({
+				   type: "POST",
+				   url: "../calendarInfo!findCalendar.do",
+				   data: "selectDate="+selectDate,
+				   dataType:"json",
+				   success: function(json){
+					   if(json[0] == 'true'){
+						   $('#id').val(json[1].id);
+						   $('#holidayType').combobox('setValue', json[1].holidayType);
+						   $("#holidayDesc").val(json[1].holidayDesc);
+					   }else{
+						   $('#id').val('');
+						   $('#holidayType').combobox('setValue', '');
+						   $("#holidayDesc").val('');
+					   }
+					   $('#dg').datagrid('load',{selectDate: selectDate});
+				   }
+				});
+		}
+		
+	})
+
+
+	//点击日历控件日期查询数据
+	$('#datepicker').calendar({
+		onSelect: function(date){
+			var selectDate = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
+			$('#dateSet').textbox('setValue', selectDate);
+			jQuery.ajax({
+				   type: "POST",
+				   url: "../calendarInfo!findCalendar.do",
+				   data: "selectDate="+selectDate,
+				   dataType:"json",
+				   success: function(json){
+					   if(json[0] == 'true'){
+						   $('#id').val(json[1].id);
+						   $('#holidayType').combobox('setValue', json[1].holidayType);
+						   $("#holidayDesc").val(json[1].holidayDesc);
+					   }else{
+						   $('#id').val('');
+						   $('#holidayType').combobox('setValue', '');
+						   $("#holidayDesc").val('');
+					   }
+					   $('#dg').datagrid('load',{selectDate: selectDate});
+				   }
+				});
+		}
+	});
+
+	function formatOption(val,row){
+		var str = '<a href="javascript:todelete('+ val +')">删除</a>';
+		return str;
+	}
+	
+	
+	// 列表日期格式化
+	function formatDate(val,row){
+		if(val){
+    		return val.substr(0,10);
+    	}
+	}
+	
+	
+	function formatHolidayType(val,row){
+		if (val == 1){
+			return '<font color="green">国家法定假日</font>';
+		}else if (val == 2){
+			return '<font color="green">周末休息日</font>';
+		}else if(val == 3){
+			return '<font color="green">公司福利假日</font>';
+		}
+		return val;
+	}
+	
+	
+	function todelete(id){
+		var answer = confirm("你确定要删除选中日期的数据吗?");
+		if (answer) {
+			var dateSet = $("#dateSet").val();
+			jQuery.ajax({
+				   type: "POST",
+				   url: "../calendarInfo!delete.do",
+				   data: "id="+id,
+				   dataType:"json",
+				   success: function(json){
+					   if(json == 'true'){
+						   $('#id').val('');
+						   $('#holidayType').combobox('setValue', '');
+						   $("#holidayDesc").val('');
+						   $('#dg').datagrid('load',{
+							   selectDate: dateSet
+							});
+					   }else{
+						   alert("删除失败，请稍候重试!");
+					   }
+				   }
+				});
+		}
+	}
+	
+	
+	function save(){
+		var dateSet = $("#dateSet").val();
+		if(dateSet == null || dateSet == ''){
+			alert("请选择日期！");
+			return;
+		}
+		
+		var holidayType = $("#holidayType").combobox('getValue');
+		if(holidayType == null || holidayType == ''){
+			alert("请选择假日类型！");
+			return;
+		}
+		
+		var holidayDesc = $("#holidayDesc").val();
+		if(holidayDesc == null || holidayDesc == ''){
+			alert("描述不能为空！");
+			return;
+		}
+		
+		var id = $("#id").val();
+		var answer = confirm("你确定要保存修改吗?");
+		if(answer){
+			jQuery.ajax({
+				   type: "POST",
+				   url: "../calendarInfo!save.do",
+				   data: "calendar.dateSet="+dateSet + "&calendar.holidayType=" + holidayType + "&calendar.holidayDesc=" + holidayDesc + "&id=" + id,
+				   dataType:"json",
+				   success: function(json){
+					   if(json[0] == 'true'){
+						   $("#id").val(json[1]);
+						   $('#dg').datagrid('load',{
+							   selectDate: dateSet
+							});
+					   }else if(json[0] == "manyData"){
+						   alert("每一天的日期只能设置一条记录!");
+					   }else{
+						   alert("保存失败，请稍候重试!");
+					   }
+				   }
+				});
+		}
+	}
+	
+</script>
+	

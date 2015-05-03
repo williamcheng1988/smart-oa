@@ -1,0 +1,361 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>citi</title>
+<script type="text/javascript" src="jquery.min.js"></script>
+<link id="easyuiTheme" rel="stylesheet" type="text/css" href="themes/default/easyui.css">
+<script type="text/javascript" charset="UTF-8" src="themes/themes.js"></script>
+<link rel="stylesheet" type="text/css" href="themes/icon.css">
+<link rel="stylesheet" type="text/css" href="css/smart.css">
+<link rel="stylesheet" type="text/css" href="css/entry.css">
+<script type="text/javascript" src="jquery.easyui.min.js"></script>
+
+<script type="text/javascript">
+function ChangeCss(obj,idx)
+{
+     if(idx==1)
+     {
+        if(obj ==1)
+        {
+      	  $("#sel1").removeClass("toggleStyle");
+        }
+        if (obj==2){
+     	  $("#sel1").addClass("toggleStyle");
+        }
+     }
+     if(idx==2)
+     {
+        if(obj ==1)
+        {
+      	  $("#sel2").removeClass("toggleStyle");
+        }
+        if (obj==2){
+     	  $("#sel2").addClass("toggleStyle");
+        }
+     }
+     
+     if(idx==3)
+     {
+        if(obj ==1)
+        {
+      	  $("#sel3").removeClass("toggleStyle");
+        }
+        if (obj==2){
+     	  $("#sel3").addClass("toggleStyle");
+        }
+     }
+     
+     if(idx==4)
+     {
+        if(obj ==1)
+        {
+      	  $("#sel4").removeClass("toggleStyle");
+        }
+        if (obj==2){
+     	  $("#sel4").addClass("toggleStyle");
+        }
+     }
+     
+     if(idx==5)
+     {
+        if(obj ==1)
+        {
+      	  $("#sel5").removeClass("toggleStyle");
+        }
+        if (obj==2){
+     	  $("#sel5").addClass("toggleStyle");
+        }
+     }
+     
+     if(idx==6)
+     {
+        if(obj ==1)
+        {
+      	  $("#sel6").removeClass("toggleStyle");
+        }
+        if (obj==2){
+     	  $("#sel6").addClass("toggleStyle");
+        }
+     }
+     
+     
+      if(idx==7)
+     {
+        if(obj ==1)
+        {
+      	  $("#sel7").removeClass("toggleStyle");
+        }
+        if (obj==2){
+     	  $("#sel7").addClass("toggleStyle");
+        }
+     }
+     
+     if(idx==8)
+     {
+        if(obj ==1)
+        {
+      	  $("#sel8").removeClass("toggleStyle");
+        }
+        if (obj==2){
+     	  $("#sel8").addClass("toggleStyle");
+        }
+     }
+     
+     if(idx==9)
+     {
+        if(obj ==1)
+        {
+      	  $("#sel9").removeClass("toggleStyle");
+        }
+        if (obj==2){
+     	  $("#sel9").addClass("toggleStyle");
+        }
+     }
+     
+     if(idx==10)
+     {
+        if(obj ==1)
+        {
+      	  $("#sel10").removeClass("toggleStyle");
+        }
+        if (obj==2){
+     	  $("#sel10").addClass("toggleStyle");
+        }
+     }
+  }
+  function ChangeCss2(obj,idx)
+  {
+     if(idx==1)
+     {
+        if(obj ==1)
+        {
+      	  $("#sell").removeClass("toggleStyle");
+        }
+        if (obj==2){
+     	  $("#sell").addClass("toggleStyle");
+        }
+     }
+     
+     if(idx==2)
+     {
+        if(obj ==1)
+        {
+      	  $("#sell2").removeClass("toggleStyle");
+        }
+        if (obj==2){
+     	  $("#sell2").addClass("toggleStyle");
+        }
+     }
+     
+     if(idx==3)
+     {
+        if(obj ==1)
+        {
+      	  $("#sell3").removeClass("toggleStyle");
+        }
+        if (obj==2){
+     	  $("#sell3").addClass("toggleStyle");
+        }
+     }
+     
+     if(idx==4)
+     {
+        if(obj ==1)
+        {
+      	  $("#sell4").removeClass("toggleStyle");
+        }
+        if (obj==2){
+     	  $("#sell4").addClass("toggleStyle");
+        }
+     }
+     
+     if(idx==5)
+     {
+        if(obj ==1)
+        {
+      	  $("#sell5").removeClass("toggleStyle");
+        }
+        if (obj==2){
+     	  $("#sell5").addClass("toggleStyle");
+        }
+     }
+     
+     if(idx==6)
+     {
+        if(obj ==1)
+        {
+      	  $("#sell6").removeClass("toggleStyle");
+        }
+        if (obj==2){
+     	  $("#sell6").addClass("toggleStyle");
+        }
+     }
+     
+     
+      if(idx==7)
+     {
+        if(obj ==1)
+        {
+      	  $("#sell7").removeClass("toggleStyle");
+        }
+        if (obj==2){
+     	  $("#sell7").addClass("toggleStyle");
+        }
+     }
+     
+     if(idx==8)
+     {
+        if(obj ==1)
+        {
+      	  $("#sell8").removeClass("toggleStyle");
+        }
+        if (obj==2){
+     	  $("#sell8").addClass("toggleStyle");
+        }
+     }
+     
+     if(idx==9)
+     {
+        if(obj ==1)
+        {
+      	  $("#sell9").removeClass("toggleStyle");
+        }
+        if (obj==2){
+     	  $("#sell9").addClass("toggleStyle");
+        }
+     }
+     
+     if(idx==10)
+     {
+        if(obj ==1)
+        {
+      	  $("#sell10").removeClass("toggleStyle");
+        }
+        if (obj==2){
+     	  $("#sell10").addClass("toggleStyle");
+        }
+     }
+}
+  
+function addPanel(title, url) {
+	var tt = top.$("#tt");
+	if (tt.tabs('exists', title)) {
+		tt.tabs('select', title);
+	} else {
+		tt.tabs(
+			'add',
+			{
+				title : title,
+				style : 'overflow:hidden;padding:10px',
+				content : '<iframe frameborder="0" src="'+url+'" width="100%" height="99%"></iframe>',
+				closable : true
+			});
+		}
+	}
+</script>
+<body>
+	<div class="entry_bgbox" style="opacity: 0.8">
+		<div class="arr">
+			<img width="19" height="10" src="images/citi/entry_arrow.png" id="img">
+		</div>
+		<div class="bg bgcol" id="toggle_bg">
+			<div id="prototype">
+				<div id="sel1" onmousemove="ChangeCss(2,1)" class="block_1"
+					onmouseout="ChangeCss(1,1)" onclick="addPanel('待办任务', 'flow/todoList.html')">
+					<div >
+						<div class="icobox">
+							<img src="images/citi/entry_ico1.png" />
+						</div>
+						<div class="text">待办任务</div>
+					</div>
+				</div>
+				<div id="sel2" onmousemove="ChangeCss(2,2)" class="block_2"
+					onmouseout="ChangeCss(1,2)">
+
+					<div onclick="addPanel('个人信箱', 'mail/mail_frame.jsp')">
+						<div class="icobox">
+							<img src="images/citi/entry_ico2.png" />
+						</div>
+						<div class="text">个人信箱</div>
+					</div>
+				</div>
+				<div id="sel3" onmousemove="ChangeCss(2,3)" class="block_3"
+					onmouseout="ChangeCss(1,3)">
+					<div onclick="addPanel('控制面板', 'admin/config_m.jsp')">
+						<div class="icobox">
+							<img src="images/citi/entry_ico3.png" />
+						</div>
+						<div class="text">控制面板</div>
+					</div>
+				</div>
+				<div id="sel4" onmousemove="ChangeCss(2,4)" class="block_4"
+					onmouseout="ChangeCss(1,4)">
+
+					<div onclick="addPanel('云盘', 'netdisk/clouddisk.jsp')">
+						<div class="icobox">
+							<img src="images/citi/entry_ico4.png" />
+						</div>
+						<div class="text">云盘</div>
+					</div>
+				</div>
+				<div id="sel5" onmousemove="ChangeCss(2,5)" class="block_5"
+					onmouseout="ChangeCss(1,5)">
+					<div onclick="addPanel('通知', 'notice/notice_list.jsp')">
+						<div class="icobox">
+							<img src="images/citi/entry_ico5.png" />
+						</div>
+						<div class="text">通知</div>
+					</div>
+				</div>
+				<div id="sel6" onmousemove="ChangeCss(2,6)" class="block_6"
+					onmouseout="ChangeCss(1,6)">
+					<div onclick="addPanel('@流程', '')">
+						<div class="icobox">
+							<img src="images/citi/entry_ico6.png" />
+						</div>
+						<div class="text">@流程</div>
+					</div>
+				</div>
+				<div id="sel7" onmousemove="ChangeCss(2,7)" class="block_7"
+					onmouseout="ChangeCss(1,7)">
+					<div
+						onclick="addPanel('论坛', 'jump.jsp?fromWhere=oa&toWhere=forum')">
+						<div class="icobox">
+							<img src="images/citi/entry_ico7.png" />
+						</div>
+						<div class="text">论坛</div>
+					</div>
+				</div>
+				<div id="sel8" onmousemove="ChangeCss(2,8)" class="block_8"
+					onmouseout="ChangeCss(1,8)">
+					<div onclick="addPanel('日报', 'mywork/mywork.jsp')">
+						<div class="icobox">
+							<img src="images/citi/entry_ico8.png" />
+						</div>
+						<div class="text">日报</div>
+					</div>
+				</div>
+				<div id="sel9" onmousemove="ChangeCss(2,9)" class="block_9"
+					onmouseout="ChangeCss(1,9)">
+					<div onclick="addPanel('工作计划', 'workplan/workplan_list.jsp')">
+						<div class="icobox">
+							<img src="images/citi/entry_ico9.png" />
+						</div>
+						<div class="text">工作计划</div>
+					</div>
+				</div>
+				<div id="sel10" onmousemove="ChangeCss(2,10)" class="block_10"
+					onmouseout="ChangeCss(1,10)">
+					<div onclick="addPanel('日程安排', 'plan/plan.jsp')">
+						<div class="icobox">
+							<img src="images/citi/entry_ico10.png" />
+						</div>
+						<div class="text">日程安排</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

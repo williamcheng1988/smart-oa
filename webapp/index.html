@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>资产管理办公自动化系统</title>
+	<script type="text/javascript" src="jquery.min.js"></script>
+	<link id="easyuiTheme" rel="stylesheet" type="text/css" href="themes/default/easyui.css">
+	<script type="text/javascript" charset="UTF-8" src="themes/themes.js"></script>
+	<link rel="stylesheet" type="text/css" href="themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="css/smart.css">
+	<script type="text/javascript" src="jquery.easyui.min.js"></script>
+<style type="text/css">
+.tooltip {
+    padding: 0px;
+    border:none;
+}
+.tooltip-arrow-outer,
+.tooltip-arrow-outer{
+	display: none;
+	margin:0;
+}
+.accordion-header{
+	height: 27px;
+}
+</style>	
+</head>
+<body class="easyui-layout">
+	<!-- 头部 -->
+	<div data-options="region:'north',border:false" style="width:100%;height:70px;background:#B3DFDA;padding:3px;background-image: url('images/top_bg.jpg');background-repeat:no-repeat;">
+		<table	style="width:100%;height:100%;border: 1;">
+		<tr>
+			<td></td>
+			<td align="right" style="padding-right: 20px;vertical-align: middle;">
+				<span id="login_tips"></span>
+				<a href="#" onclick="chooseTheme()" class="easyui-linkbutton" data-options="iconCls:'icon-themes',plain:true">主题</a>
+				<a href="#" onclick="switchTopic('home')" class="easyui-linkbutton" data-options="iconCls:'icon-switch',plain:true">切换</a>
+			</td>
+		</tr>
+		<tr>
+			<td ></td>
+			<td align="right" style="padding-right: 20px">
+			<a href="javascript:addPanel('个人信息','staff!staffInfo.do')" class="easyui-linkbutton" data-options="iconCls:#if($staff.sex==2)'icon-woman'#else'icon-man'#end,plain:true"></a>
+			$!staff.realName：您好！欢迎登陆！
+				<a href="javascript:addPanel('主页')"  class="easyui-linkbutton" data-options="iconCls:'icon-home2',plain:true">主页</a>
+				<a href="staff!logout.do" class="easyui-linkbutton" data-options="iconCls:'icon-exit',plain:true">注销</a>
+			</td>
+		</tr>
+		</table>
+	</div>
+	<!-- 导航 -->
+	<div data-options="region:'west',border:false,title:'系统导航'" style="width:15%;padding:0px;">
+		<div id="aa" class="easyui-accordion" data-options="height:35,headerCls:'accordion-header'" style="width:100%;height:100%;">
+		#if($resources)
+			#foreach($entry in $resources)
+				#set($display = false)   
+				#if($entry.checked)
+					#set($display = true)   
+				#end
+				#if($entry.resources && $entry.resources.size() > 0)
+					#foreach($sub in $entry.resources)
+						#if($sub.checked)
+							#set($display = true)
+						#end
+					#end
+				#end
+				#if($display)
+				<!--<div title="$!entry.resourceName" data-options="iconCls:'$!entry.iconName',height:30" style="overflow:auto;padding:2px;"> -->
+					<div title="<span class='tt-inner'>
+					#if($!entry.iconName)
+						<img src='themes/icons/$!entry.iconName'/>
+					#end
+					&nbsp;$!entry.resourceName</span>" style="overflow:auto;padding:0px;">
+						#foreach($sub in $entry.resources)
+							#if($sub.checked)
+							<a class="easyui-linkbutton" data-options="plain:true,iconCls:'$!sub.iconName'" style="width:90%;padding-left:10px;text-align: left;"
+							onclick="addPanel('$!sub.resourceName','$!sub.addressUrl')">$!sub.resourceName</a>
+							#end
+						#end
+					</div>
+				#end
+			#end
+		#end
+		</div>
+	</div>
+	<!-- main -->
+	<div style="display:none">
+		<iframe id='citi' frameborder="0" scrolling="auto" style="overflow-x:hidden; overflow-y:auto;" src="citi.html" width="925px" height="464px" ></iframe>
+	</div>
+	<div data-options="region:'center',border:false">
+		<div id="tt" class="easyui-tabs" data-options="tools:'#tab-tools',fit: true" style="width: 100%;">
+			<!-- tabs -->
+		</div>
+		<div id="tab-tools">
+			<a href="#" class="easyui-linkbutton easyui-tooltip" data-options="
+			plain:true,
+			width:32,
+			iconCls:'icon-citi',
+			hideEvent: 'none',
+			showEvent: 'click',
+			content: function(){return $('#citi');},
+			onShow: function(){
+						var t = $(this);
+						t.tooltip('tip').focus().unbind().bind('blur',function(){
+							t.tooltip('hide');
+						});
+					}
+			"></a> 
+		</div>
+	</div>
+</body>
+</html>
+<script type="text/javascript">
+	function addPanel(title, url) {
+		if ($('#tt').tabs('exists', title)) {
+			$('#tt').tabs('select', title);
+		} else {
+			$('#tt').tabs('add',{
+								title : title,
+								style : 'overflow:hidden;padding:10px',
+								content : '<iframe frameborder="0"  src="'+ url+ '" width="100%" height="99%"></iframe>',
+								closable : true
+							});
+		}
+	}
+	$(function(){
+		$('#tt').tabs('add',{
+			title : '主页',
+			closable:false,
+			iconCls:'icon-home',
+			plain:true,
+			style : 'overflow:hidden;padding:10px',
+			content : '<iframe id="home" name="home" frameborder="0" src="home.html" width="100%" height="99%"></iframe>'  
+		});
+		$('#tt').tabs({    
+		    onSelect:function(title){    
+		    	if(title == "主页"){
+		    		document.getElementById('home').contentWindow.refresh();
+		    	}
+		    }    
+		});  
+	});
+</script>
+<script type="text/javascript">
+	var today = new Date();
+	var weekday=new Array(7)
+	weekday[0]="星期日"  
+	weekday[1]="星期一"
+	weekday[2]="星期二"
+	weekday[3]="星期三"
+	weekday[4]="星期四"
+	weekday[5]="星期五"
+	weekday[6]="星期六"
+	
+	var y=today.getFullYear();
+	var month=today.getMonth();
+	var td=today.getDate();
+	var d=weekday[today.getDay()];
+	
+	$("#login_tips").append(y+"年"+(++month)+"月"+td+"日&nbsp;"+d);
+</script>

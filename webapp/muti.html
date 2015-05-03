@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>用户选择控件</title>
+	<script type="text/javascript" src="jquery.min.js"></script>
+	<link id="easyuiTheme" rel="stylesheet" type="text/css" href="themes/default/easyui.css">
+	<script type="text/javascript" charset="UTF-8" src="themes/themes.js"></script>
+	<link rel="stylesheet" type="text/css" href="themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="css/smart.css">
+	<script type="text/javascript" src="jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="locale/easyui-lang-zh_CN.js"></script>   
+</head>
+<script type="text/javascript">
+	function addUser(){
+		//选中值
+		var selectVal = $("#user_list_").combobox("getValues");
+		//所有数据
+		var data = $("#user_list_").combobox("getData");
+		var temp = data;
+		jQuery.each(temp,function(i, n){
+			jQuery.each(selectVal,function(c,v){
+				if(n.value == v){
+					if($("#selected_users_").find("option[value="+v+"]").size() < 1 ){
+						$("#selected_users_").append(new Option(n.text,n.value));
+					}
+				}
+			});
+		});
+	}
+	
+	function removeUser() {
+		var all_right_obj = $('#selected_users_ option');
+		if (all_right_obj.length == 0) {
+			alert("暂无可移除的人员!");
+			return false;
+		}
+		var selected_right_obj = $('#selected_users_ option:selected');
+		if (selected_right_obj.length == 0) {
+			alert("请先选择要移除的人员!");
+			return false;
+		}
+		if (!$('#selected_users_ option:selected').remove()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+</script>
+<body>
+</div>
+		<table width="30%" cellspacing="1" style="height: 200px;">
+			<tr>
+				<td width="40%" valign="top" align="left">
+					<select id="user_list_" class="easyui-combobox" style="width: 100%;" data-options="multiple:true,heigth:198,validType:'length[0,30]'" name="delegation.fromUser">
+								  		<option value="1">aa</option>
+										<option value="2">bb</option>
+										<option value="3">cc</option>	
+										<option value="4">dd</option>
+										<option value="5">ee</option>
+										<option value="6">ff</option>
+										<option value="7">gg</option>
+										<option value="8">hh</option>
+										<option value="9">jj</option>
+										<option value="10">kk</option>
+										<option value="11">ll</option>
+										<option value="12">mm</option>
+										<option value="13">nn</option>
+										<option value="14">oo</option>
+										<option value="15">pp</option>
+					</select>
+				</td>
+				<td width="10%" style="padding-right: 8px;">
+					<input type="button" value=">>>"  onclick="addUser()"/><br/><br/>
+					<input type="button" value="&lt;&lt;&lt;"  onclick="removeUser()"/>
+				</td>
+				<td width="40%" valign="top" align="left">
+					<select id="selected_users_" style="width:100%;heigth:198px;" multiple="true" size="17" class="combo-panel panel-body panel-body-noheader">
+					</select>
+				</td>
+			</tr>
+		</table>
+</body>
+</html>

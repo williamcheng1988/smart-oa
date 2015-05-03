@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<script type="text/javascript" src="../jquery.min.js"></script>
+	<link id="easyuiTheme" rel="stylesheet" type="text/css" href="../themes/default/easyui.css">
+	<script type="text/javascript" charset="UTF-8" src="../themes/themes.js"></script>
+	<link rel="stylesheet" type="text/css" href="../themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../css/smart.css">
+	<script type="text/javascript" src="../jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="../locale/easyui-lang-zh_CN.js"></script>   
+</head>
+
+<body>
+		<div class="easyui-layout" data-options="fit:true">
+			<div data-options="region:'center'" style="padding:2px">
+				<div id="tb" style="padding:15px;height:auto">
+					<form id="queryParams">
+						    标题：<input id="afficheTitle" name="afficheTitle" value="" type="text" class="easyui-textbox" />
+						     &nbsp;&nbsp;&nbsp;&nbsp;
+						 状态：<select id="afficheStatus" name="afficheStatus" class="easyui-combobox" panelHeight="auto" style="width:100px">
+						 		<option value="1">生效</option>
+						 		<option value="2">暂存</option>
+						    </select>
+						     &nbsp;&nbsp;&nbsp;&nbsp;
+						有效开始日期：<input id="startDate" name="startDate" type="text" class="easyui-datebox" />
+						&nbsp;&nbsp;
+						有效截止日期<input id="endDate" name="endDate" type="text" class="easyui-datebox" />
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						<a href="#" id="queryButton" class="easyui-linkbutton" iconCls="icon-search">&nbsp;查&nbsp;询&nbsp;</a>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<a href="add.html" id="addButton" class="easyui-linkbutton" iconCls="icon-add">&nbsp;新&nbsp;增&nbsp;</a>
+					</form>
+				</div>
+				<div id="title" align="center" class="datagrid-toolbar page_title"></div>
+				<table id="dg" class="easyui-datagrid" style="width:100%;height:auto;"
+						data-options="rownumbers:true,url:'../afficheInfo!queryList.do',singleSelect:false,border:false,method:'get',toolbar:'#tb',autoRowHeight:true,pagination:true,pageSize:10">
+					<thead>
+						<tr align="center">
+							<th data-options="field:'id',checkbox:true"></th>
+							<th data-options="field:'afficheTitle',width:'35%'">标题</th>
+							<th data-options="field:'afficheStatus',width:'8%',formatter:formatStatus">状态</th>
+							<th data-options="field:'startLifedate',width:'16%',formatter:formatDate">有效开始日期</th>
+							<th data-options="field:'endLifedate',width:'16%',formatter:formatDate">有效截止日期</th>
+							<th data-options="field:'updateDt',width:'16%'">最后修改日期</th>
+						</tr>
+					</thead>
+				</table>
+				<div style="width:99%;padding: 5px;" align="center">
+					<a href="javascript:modify()" class="easyui-linkbutton" iconCls="icon-edit">&nbsp;修&nbsp;改&nbsp;</a>&nbsp;&nbsp;&nbsp;
+					<a href="javascript:remove()" class="easyui-linkbutton" iconCls="icon-cancel">&nbsp;删&nbsp;除&nbsp;</a>&nbsp;&nbsp;&nbsp;
+				</div>
+				<div id="ui_mask" style="display:none" class="datagrid-mask"></div>
+				<div id="ui_mask_msg" style="display:none; left: 50%; height: 16px; margin-left: -85.5px; line-height: 16px;" class="datagrid-mask-msg">正在处理，请稍待。。。</div>
+			</div>
+		</div>
+</body>
+</html>
+  
+ <script language="javascript">
+ 
+    // 状态中文格式化
+ 	function formatStatus(val,row){
+ 		if (val == 1){
+			return '<font color="green">生效</font>';
+		}else if (val == 2){
+			return '<font color="red">暂存</font>';
+		}
+		return val;
+ 	}
+ 	
+    // 列表日期格式化
+	function formatDate(val,row){
+		if(val){
+    		return val.substr(0,10);
+    	}
+    	return val;
+	}
+    
+    
+	function queryData(){
+		var paramsArray = $("#queryParams").serializeArray();
+		var results ='{';
+		$.each(paramsArray, function(i, field){
+			val = $.trim(field.value);
+			if(val){
+		  	 	results += '"'+field.name + '":"' + val + '",';
+			}
+		});
+		results += '}';
+		$('#dg').datagrid('load',eval('(' + results + ')')); 
+	}
+	
+	// 查询
+	$(function(){
+		 $('#queryButton').bind('click',queryData);
+	}); 
+    
+    
+    // 跳转修改界面
+	function modify(){
+    	var ids="";
+		var names= [];
+		var rows = $('#dg').datagrid('getSelections');
+		for(var i=0; i<rows.length; i++){
+			 if (!ids) {
+			   	ids =  rows[i].id;
+			 } else {
+				alert("修改公告时不能多选");
+				return;	
+			 }   
+		}
+		if (!ids) {
+			alert("请选择要修改的公告");
+			return;
+		}
+		//var afficheStatus = $('#afficheStatus').combobox('getValues');
+		window.location.href="../afficheInfo!editPage.do?afficheInfo.id=" + ids;
+    }
+    
+    
+    // 删除操作
+    function remove(){
+    	var ids="";
+		var names= [];
+		var rows = $('#dg').datagrid('getSelections');
+		for(var i=0; i<rows.length; i++){
+			 if (!ids) {
+			   	ids =  rows[i].id;
+			 } else {
+				ids += "," + rows[i].id;
+			 }   
+			 names.push(rows[i].afficheTitle);
+		}
+		if (!ids || ids.length == 0) {
+			alert("请选择要删除的公告");
+			return;
+		}
+		var answer = confirm("你确定要删除以下公告记录吗?\n"+names.join('\n'));
+		if (answer) {
+			var afficheTitle = $("#afficheTitle").val();
+			var afficheStatus = $("#afficheStatus").val();
+			var startDate = $("#startDate").val();
+			var endDate = $("#endDate").val();
+            jQuery.ajax({
+				   type: "POST",
+				   url: "../afficheInfo!delete.do",
+				   data: "ids="+ids,
+				   dataType:"json",
+				   success: function(json){
+					   if(json == 'true'){
+						   $('#dg').datagrid('load',{
+							   afficheTitle: afficheTitle,
+							   afficheStatus: afficheStatus,
+							   startDate: startDate,
+							   endDate: endDate
+								});
+					   }else{
+						   alert("公告删除失败，请稍后重试！");
+					   }
+				   }
+				});
+            
+		}
+    }
+    
+   
+ 	
+ </script>
+
+

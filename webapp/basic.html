@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>资产管理办公自动化系统</title>
+	<script type="text/javascript" src="jquery.min.js"></script>
+	<link id="easyuiTheme" rel="stylesheet" type="text/css" href="themes/default/easyui.css">
+	<script type="text/javascript" charset="UTF-8" src="themes/themes.js"></script>
+	<link rel="stylesheet" type="text/css" href="themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="css/smart.css">
+	<script type="text/javascript" src="jquery.easyui.min.js"></script>
+	
+</head>
+<body class="easyui-layout" align="center" style="width: 1100px;margin: 0 auto;">
+	<div data-options="region:'north'" style="height:70px;background:#B3DFDA;background-image: url('images/top_bg.jpg');background-repeat:no-repeat;">
+		<table	style="width:100%;height:100%;border: 1;">
+			<tr>
+				<td>
+				</td>
+				<td align="right" style="padding-right: 20px;vertical-align: middle;">
+					<span id="login_tips"></span>
+					<a href="javascript:void(0)" onclick="chooseTheme()" class="easyui-linkbutton" data-options="iconCls:'icon-themes',plain:true">主题</a>
+					<a href="javascript:void(0)" onclick="switchTopic('index')" class="easyui-linkbutton" data-options="iconCls:'icon-switch',plain:true">切换</a>
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td align="right" style="padding-right: 20px">
+				<a href="javascript:addPanel('个人信息','staff!staffInfo.do')" class="easyui-linkbutton" data-options="iconCls:'icon-woman',plain:true"></a>
+				$!staff.realName：您好！欢迎登陆！
+					<a href="javascript:addPanel('主页')"  class="easyui-linkbutton" data-options="iconCls:'icon-home2',plain:true">主页</a>
+					<a href="staff!logout.do" class="easyui-linkbutton" data-options="iconCls:'icon-exit',plain:true">注销</a>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div data-options="region:'center',border:false">
+		<div id="tt" class="easyui-tabs" data-options="fit: true" style="width: 100%;">
+			<!-- tabs -->
+		</div>
+	</div>
+</body>
+</html>
+<script type="text/javascript">
+		$(function(){
+			$('#tt').tabs('add',{
+				title : '主页',
+				closable:false,
+				iconCls:'icon-home',
+				plain:true,
+				style : 'overflow:hidden;',
+				content : '<iframe id="home" name="home" frameborder="0" src="home!basicHome.do" width="100%" height="99%"></iframe>'
+			});
+			$('#tt').tabs({    
+			    onSelect:function(title){    
+			    	if(title == "主页"){
+			    		 document.getElementById('home').contentWindow.refresh();
+			    	}
+			    }    
+			});  
+		});
+		function addPanel(title, url) {
+			var panel = $('#tt');
+			if(!panel){
+				alert('NO'); 
+				return;
+			}
+			if ($('#tt').tabs('exists', title)) {
+				$('#tt').tabs('select', title);
+			} else {
+				$('#tt').tabs('add',{
+									title : title,
+									style : 'overflow:hidden;padding:10px',
+									content : '<iframe frameborder="0"  src="'+ url+ '" width="100%" height="99%"></iframe>',
+									closable : true
+								});
+			}
+		}
+	</script>
+	<script type="text/javascript">
+		var today = new Date();
+		var weekday=new Array(7)
+		weekday[0]="星期日"  
+		weekday[1]="星期一"
+		weekday[2]="星期二"
+		weekday[3]="星期三"
+		weekday[4]="星期四"
+		weekday[5]="星期五"
+		weekday[6]="星期六"
+		
+		var y=today.getFullYear();
+		var month=today.getMonth();
+		var td=today.getDate();
+		var d=weekday[today.getDay()];
+		
+		$("#login_tips").append(y+"年"+(++month)+"月"+td+"日&nbsp;"+d);
+	</script>

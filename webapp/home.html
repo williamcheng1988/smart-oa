@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>信诺资产管理办公自动化系统</title>
+	<script type="text/javascript" src="jquery.min.js"></script>
+	<link id="easyuiTheme" rel="stylesheet" type="text/css" href="themes/default/easyui.css">
+	<script type="text/javascript" charset="UTF-8" src="themes/themes.js"></script>
+	<link rel="stylesheet" type="text/css" href="themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="css/smart.css">
+	<script type="text/javascript" src="jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="locale/easyui-lang-zh_CN.js"></script>   
+</head>
+<body class="easyui-layout" style="padding:10px;">
+		<div data-options="region:'center'">
+		<!-- main start -->
+			<div id="hidDiv" style="width:97%;float: left;padding-top: 5px;padding-left: 13px;">
+				<div id="workPlanDIV" class="easyui-window" title="工作详细内容" 
+				     data-options="modal:true,closed:true,iconCls:'icon-save'" style="width:85%;height:400px;">
+					<div id="workPlanContentDIV" style="width:75%;height:300px;padding2px;"></div>
+				</div>
+			</div>
+			<div style="width:47%;height: 46%;float: left;padding-top: 5px;padding-left: 13px;">
+				<div id="draftList" class="easyui-panel" title="&nbsp;草稿箱" data-options="iconCls:'icon-mini-write'" style="height:98%;">
+				</div>
+			</div>
+			<div style="width:47%;height: 46%;float: right; padding-top: 5px;padding-right: 13px;">
+				<div id="todoTasks" class="easyui-panel" title="&nbsp;待办任务" data-options="iconCls:'icon-ok'" style="height:98%;">
+				</div>
+			</div>
+			<div style="width:98%;float: left;padding-top: 8px;padding-left: 13px;">
+				<div id="historyTasks" class="easyui-panel" title="&nbsp;任务跟踪" data-options="iconCls:'icon-mini-view'" style="width:99%;height:auto;">
+					<table id="dg_historyTasks" class="easyui-datagrid" style="width:100%;"
+							data-options="singleSelect:false,url:'flow!historyList.do',border:false,method:'get',autoRowHeight:false,pagination:true,pageSize:10">
+						<thead>
+							<tr>
+								<th data-options="field:'businessTitle',width:'20%',formatter:formatOpert">任务名称</th>
+								<th data-options="field:'dealMans',align:'center',width:'30%'">当前处理人</th>
+								<th data-options="field:'dealSteps',align:'center',width:'30%'">流程节点</th>
+								<th data-options="field:'startTime',align:'center',width:'19%'">申请时间</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+			</div>
+		<!-- main end -->
+		</div>
+		<div data-options="region:'east',border:false" style="width:300px;">
+			<div id="p" class="easyui-panel" title="Fluid Panel" data-options="noheader:true,border:false" style="width:100%;height:200px;padding-left:10px;">
+				<div>
+					<p style="font-size: 14px;font-weight: bold;">
+						<a class="easyui-linkbutton" data-options="plain:true" href="#" onclick="addPanel('日程设置','workPlanInfo/manager.html')">我的日程</a>
+					</p><hr/>
+					<div id="planListForWork" style="margin-left: 12px; padding-left: 5px;">
+					</div>
+				</div>
+			</div>
+			<div id="p" class="easyui-panel" title="Fluid Panel"  data-options="noheader:true,fit:true,border:false"  style="padding-left:10px;">
+				<div>
+					<p style="font-size: 14px;font-weight: bold;">
+					<a class="easyui-linkbutton" data-options="plain:true" href="#">通讯录</a>&nbsp;</p><hr/>
+					<div style="width:90%;margin-left: 20px;">
+						<input class="easyui-searchbox" data-options="prompt:'',searcher:doSearch" style="width:99%"></input>
+						<table id="dg" class="easyui-datagrid"
+								data-options="rownumbers:false,singleSelect:true,url:'staff!contacts.do',showHeader:false,method:'get',onDblClickRow:showDetail" style="height:250px;width:99%;">
+							<thead>
+								<tr>
+									<th data-options="field:'realName',width:'100%',formatter:formatRealName"></th>
+									<th data-options="field:'mobile',hidden:true"></th>
+									<th data-options="field:'email',hidden:true"></th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	<div id="dlg" class="easyui-dialog" title="通讯录" data-options="iconCls:'icon-lianxiren',closed:true" style="width:300px;height:150px;padding:12px">
+		<div style="border-bottom-style:1px dashed;">ID：<label id="loginId"></label></div>
+		<div style="border-bottom-style:1px dashed;margin-top:3%">姓名：<label id="realName"></label></div>
+		<div style="border-bottom-style:1px dashed;margin-top:3%">电话：<label id="mobile"></label></div>
+		<div style="border-bottom-style:1px dashed;margin-top:3%">EMAIL：<label id="email"></label></div>
+	</div>
+	<div id="tt1">
+		<a href="javascript:void(0)" class="icon-add" onclick="javascript:alert('add')"></a>
+	</div>
+	<div id="tt2">
+		<a href="javascript:void(0)" class="icon-add" onclick="javascript:alert('add')"></a>
+	</div>
+</body>
+</html>
+<script type="text/javascript">
+$(function(){
+	draftRequestData();
+	todoTaskRequestData();
+	//fileForAfficheRequestData();
+	workPlanForRequestData();
+});
+
+function refresh(){
+	draftRequestData();
+	todoTaskRequestData();
+	workPlanForRequestData();
+	$('#dg_historyTasks').datagrid('load',null);
+}
+
+function doSearch(value){
+	var results ='{';
+	results += '"loginName":"' + value + '",';
+	results += '}';
+	$('#dg').datagrid('load',eval('(' + results + ')')); 
+}
+//格式化数据
+function formatRealName(val,row){
+	if(row){
+		return val+"("+row.loginName+")";
+	}
+}
+//格式化数据
+function formatOpert(val,row){
+	return '<a class="easyui-linkbutton" data-options="plain:true" href="flow!view.do?executionId='+row.executionId+'">'+val+'</a>';
+}
+
+function showDetail(index,row){
+	$('#realName').text(row.realName);
+	$('#loginId').text(row.loginName);
+	$('#mobile').text(row.mobile);
+	$('#email').text(row.email);
+	$('#dlg').dialog('open');
+}
+
+function draftRequestData() {
+    jQuery.ajax({
+        url:'flow!draftList.do',
+        type:'post',
+        dataType:'json',
+        success:function(data){
+        	//删除所有行
+        	$("#draftList").empty();
+        	if(data.total > 0){
+        		jQuery.each(data.rows, function(i,row){
+        			//<a class="easyui-linkbutton" data-options="plain:true,iconCls:\'icon-del\'" style="width:6%;">
+        			var newRow = '<a class="easyui-linkbutton" data-options="plain:true,iconCls:\'icon-point1\'" style="width:90%;padding-left:0px;text-align: left;" onclick="addPanel(\''+row.businessTitle+'\',\'flow!launch.do?executionId='+row.executionId+'\')">'+cutstr(row.businessTitle,35)+'</a><br/>';
+        			$("#draftList").append(newRow);
+        		});
+        	}
+        	//easyUI重新宣染
+        	jQuery.parser.parse($('#draftList'));
+        }
+    });
+};
+
+
+
+function todoTaskRequestData() {
+        jQuery.ajax({
+            url:'flow!todoList.do',
+            type:'post',
+            dataType:'json',
+            success:function(data){
+            	//删除所有行
+            	$("#todoTasks").empty();
+            	if(data.total > 0){
+            		jQuery.each(data.rows, function(i,row){
+            			var newRow = '<a class="easyui-linkbutton" data-options="plain:true,iconCls:\'icon-point2\'" style="width:99%;padding-left:0px;text-align: left;" onclick="addPanel(\'待办：'+row.businessTitle+'\',\'flow!approve.do?taskId='+row.taskId+'\')">'+cutstr(row.businessTitle,22)+'</a>';
+            			$("#todoTasks").append(newRow);
+            			if(i == 7){
+            				return false;
+            			}
+            		});
+            	}else{
+            		$("#todoTasks").append('<a class="easyui-linkbutton" data-options="plain:true" style="width:99%;padding-left:0px;text-align: center;" href="#">暂无待办！</a>');
+            	}
+            	if(data.total > 8){
+            		$("#todoTasks").append('<a class="easyui-linkbutton" data-options="plain:true" style="width:99%;padding-left:0px;text-align: right;" href="#" onclick="addPanel(\'待办任务\',\'flow/todoList.html\')">更多...</a>');
+            	}
+            	//easyUI重新宣染
+            	jQuery.parser.parse($('#todoTasks'));
+            }
+        });
+    };
+    
+    /**
+    function fileForAfficheRequestData() {
+        jQuery.ajax({
+            url:'afficheInfo!firstPageForNewAffiche.do',
+            type:'post',
+            dataType:'json',
+            success:function(data){
+            	//删除所有行
+            	$("#fileListForAffiche").empty();
+            	if(data.length >= 1){
+            		for(var m =0;m<data.length;m++){
+            			var jsonobj = data[m];
+            			if(jsonobj){
+            				var newRow = '<a class="easyui-linkbutton" data-options="plain:true,iconCls:\'icon-point3\'" style="width:99%;padding-left:10px;text-align: left;" onclick="seeAfficeContent(\''+ jsonobj.id + '\')">'+ jsonobj.afficheTitle + '&nbsp;&nbsp;&nbsp;(' + jsonobj.updateDtStr + ')</a><br/>';
+                			$("#fileListForAffiche").append(newRow);
+            			}
+            		}
+            	}else{
+            		document.getElementById("hidDiv").style.display="none";
+            	}
+            	//easyUI重新宣染
+            	jQuery.parser.parse($('#fileListForAffiche'));
+            }
+      });
+    };    
+
+ 	// 查看公告内容
+	function seeAfficeContent(id){
+		jQuery.ajax({
+			   type: "POST",
+			   url: "afficheInfo!firstPgeeForSeeContent.do",
+			   data: "ids="+id,
+			   dataType:"json",
+			   success: function(json){
+				   $("#afficheContentDIV").empty();
+				   $("#afficheContentDIV").append(json);
+				   $('#afficheDIV').window('open');
+			   }
+			});
+	}
+ 	
+ 	*/
+ 	
+	function workPlanForRequestData() {
+        jQuery.ajax({
+            url:'workPlanInfo!firstPageForNewWorkPlan.do',
+            type:'post',
+            dataType:'json',
+            success:function(data){
+            	//删除所有行
+            	$("#planListForWork").empty();
+            	if(data.length >= 1){
+            		for(var m =0;m<4;m++){
+            			var jsonobj = data[m];
+            			if(jsonobj){
+            				var newRow = '<a class="easyui-linkbutton" data-options="plain:true,iconCls:\'icon-alarm-clock\'" style="width:99%;text-align: left;" onclick="seeWorkPlanContent(\''+ jsonobj.id + '\')">'+ jsonobj.workDesc + '&nbsp;&nbsp;&nbsp;(' + jsonobj.workTime + ')</a><br/>';
+                			$("#planListForWork").append(newRow);
+            			}
+            			
+            		}
+            		
+					if(data.length > 4){
+						$("#planListForWork").append('<a class="easyui-linkbutton" data-options="plain:true,iconCls:\'icon-pubInfo\'" style="width:99%;padding-left:10px;text-align: right;" href="#" onclick="addPanel(\'我的日程\',\'workPlanInfo/manager.html\')">更多信息>>></a>');
+            		}
+            	}else{
+            		var newRow = '<a class="easyui-linkbutton" data-options="plain:true,iconCls:\'icon-point3\'" style="width:99%;padding-left:10px;text-align: left;" href="#">暂无工作安排</a>';
+            		$("#planListForWork").append(newRow);
+            	}
+            	//easyUI重新宣染
+            	jQuery.parser.parse($('#planListForWork'));
+            }
+      });
+    };   
+    
+    
+ 	// 查看工作安排详细内容
+	function seeWorkPlanContent(id){
+		jQuery.ajax({
+			   type: "POST",
+			   url: "workPlanInfo!firstPgeeForSeeContent.do",
+			   data: "workPlan.id="+id,
+			   dataType:"json",
+			   success: function(json){
+				   $("#workPlanContentDIV").empty();
+				   $("#workPlanContentDIV").append(json);
+				   $('#workPlanDIV').window('open');
+			   }
+			});
+	}
+    
+    
+/** 
+ * js截取字符串，中英文都能用 
+ * @param str：需要截取的字符串 
+ * @param len: 需要截取的长度 
+ */  
+function cutstr(str,len)  
+{  
+	if(!str){
+		return "";
+	}
+	var str_length = 0;  
+	var str_len = 0;  
+	str_cut = new String();  
+	str_len = str.length;  
+	for(var i = 0; i < str_len; i++)  
+	{  
+		a = str.charAt(i);  
+        str_length++;  
+        if(escape(a).length > 4)  
+        {  
+         	//中文字符的长度经编码之后大于4  
+         	str_length++;  
+   		}  
+    	str_cut = str_cut.concat(a);  
+    	if(str_length>=len)  
+     	{  
+   			str_cut = str_cut.concat("...");  
+         	return str_cut;  
+      	}  
+	}  
+    //如果给定字符串小于指定长度，则返回源字符串；  
+    if(str_length < len){  
+     	return  str;  
+	}  
+}  
+
+//格式化数据
+function formatOpert(val,row){
+	return '<a class="easyui-linkbutton" data-options="plain:true" onclick="addPanel(\''+row.businessTitle+'\',\'flow!view.do?executionId='+row.executionId+'\')">'+val+'</a>';
+}
+
+function addPanel(title, url) {
+	var panel = top.$('#tt');
+	if(!panel){
+		alert('NO'); 
+		return;
+	}
+	if (top.$('#tt').tabs('exists', title)) {
+		top.$('#tt').tabs('select', title);
+	} else {
+		top.$('#tt').tabs('add',{
+							title : title,
+							style : 'overflow:hidden;padding:10px',
+							content : '<iframe frameborder="0"  src="'+ url+ '" width="100%" height="99%"></iframe>',
+							closable : true
+						});
+	}
+}
+
+
+</script>

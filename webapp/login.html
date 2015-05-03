@@ -1,0 +1,126 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<HTML>
+	<HEAD>
+		<title>OA系统登录</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+		<script type="text/javascript" src="jquery.min.js"></script>
+		<link id="easyuiTheme" rel="stylesheet" type="text/css" href="themes/default/easyui.css">
+		<script type="text/javascript" charset="UTF-8" src="themes/themes.js"></script>
+		<link rel="stylesheet" type="text/css" href="themes/icon.css">
+		<link rel="stylesheet" type="text/css" href="css/smart.css">
+		<script type="text/javascript" src="jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="locale/easyui-lang-zh_CN.js"></script> 
+		<style type="text/css">
+			* {
+			  margin:0;
+			  padding:0;
+			  font-size:12px;
+			  font-family: "Microsoft YaHei";
+			}
+			body {
+				color: #333;
+				text-align:center;
+			}
+			.body {
+				width: 1024px;
+				height: 768px;
+				margin: 0 auto;
+				overflow: hidden;
+				background: url(images/bg2.jpg) no-repeat;
+				text-align:left;
+			}
+		</style>
+	</HEAD>
+	<body style="width: 99%;height:98%">
+		<div class="body" style="position:relative;z-index:1;">
+			<form name="form" method="post" id="form">
+				<!-- actionj_security_check -->
+				<div style="margin-left:65.5%;margin-top:26.5%;position:absolute;z-index:2;" width="200px">
+					<label id="error" style="color:red;"></label>
+				</div>
+				<div style="margin-left:68.4%;margin-top:29.6%;position:absolute;z-index:2;" width="200px">
+					&nbsp;<input type="text" id="loginName" name="loginName" maxLength="20" style="width: 160px;BACKGROUND-COLOR: transparent;height: 23px;z-index:3" />
+				</div>
+				<div style="margin-left:68.4%;margin-top:35.5%;;position:absolute;z-index:2;" width="200px">
+					&nbsp;<input type="password" id="password" name="password" maxLength="20" style="width: 160px;BACKGROUND-COLOR: transparent;height: 23px;" />
+				</div>
+				<div style="margin-left:76%;margin-top:39.5%;position:absolute;z-index:2;">
+					<a id="loginBtn"><image src="images/login.png" /></a>
+					&nbsp;&nbsp;&nbsp;
+					<img id="loading" alt="加载中，请稍后。。。" src="images/loading.gif" style="width: 33px;height: 33px;vertical-align:middle;display: none;"/>
+				</div>
+				<div style="margin-left:82%;margin-top:50.5%;position:absolute;z-index:2;">
+					<a href="staff/regist.html" style="color: green;">注&nbsp;册</a>
+				</div>
+			</form>
+		</div>
+	</body>
+<script type="text/javascript" language="javascript">
+
+$(function() {
+	$("#loginBtn").click(function() {
+			var loginName=$.trim($("#loginName").val());
+			var pwd=$.trim($("#password").val());
+			if(!loginName){
+				 $("#error").empty();
+		    	 $("#error").append("用户名不能为空！");
+		    	 return false;
+			}
+			if(!pwd){
+				 $("#error").empty();
+		    	 $("#error").append("密码不能为空！");
+		    	 return false;
+			}
+			$("#loginBtn").attr("disabled",true);
+			$("#loading").show();
+			$.ajax({
+				   type: "POST",
+				   url: "staff!login.do",
+				   data: "staff.loginName="+loginName+"&staff.password="+pwd,
+				   async: false,
+				   dataType:"json",
+				   success: function(result){
+				     if(result.code!=1){
+				    	 $("#error").empty();
+				    	 $("#error").append(result.msg);
+				     }else{
+				    	 var lastUri = GetQueryParam("lastUri");
+				    	 if(lastUri){
+				    		 window.location.href=lastUri;
+				    	 }else{
+				    		 var homePage = cookie("homePage");
+				    		 if(homePage){
+				    			 top.location.href= homePage;
+				    			 return;
+				    		 }
+				    		 top.location.href="home.do";
+				    	 }
+				     }
+				   },
+				   error:function(){
+				     alert("网络异常，请稍后再试...");
+				   },
+				   complete:function(){
+					   $("#loginBtn").attr("disabled",false);
+					   $("#loading").hide();
+				   }
+		});
+	});
+	document.onkeydown = function(e){
+	    var ev = document.all ? window.event : e;
+	    if(ev.keyCode==13) {
+	    	$("#loginBtn").click();
+	     }
+	}
+});
+
+function GetQueryParam(name){
+	var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+	var r = window.location.search.substr(1).match(reg);
+	if(r != null){
+	  return unescape(r[2]);
+	}
+	return null;
+}
+</script>
+</HTML>

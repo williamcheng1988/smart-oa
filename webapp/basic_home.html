@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>主页</title>
+	<script type="text/javascript" src="jquery.min.js"></script>
+	<link id="easyuiTheme" rel="stylesheet" type="text/css" href="themes/default/easyui.css">
+	<script type="text/javascript" charset="UTF-8" src="themes/themes.js"></script>
+	<link rel="stylesheet" type="text/css" href="themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="css/smart.css">
+	<script type="text/javascript" src="jquery.easyui.min.js"></script>
+</head>
+<body align="center">
+<div id="cc" style="width:99.5%;height:500px;" align="center">
+	<table style="width:99%;height:100%;border: 1;">
+		<tr>
+			<td width="20%" valign="top">
+				<div id="accordion1" class="easyui-accordion" data-options="multiple:true,collapsed:false,collapsible:false" style="width:100%">
+					<div id="draftList" title="草稿箱" data-options="iconCls:'icon-mini-write'" style="overflow:auto;padding:10px;">
+					</div>
+					#if($resources)
+						#foreach($entry in $resources)
+							#set($display = false)   
+							#if($entry.checked)
+								#set($display = true)   
+							#end
+							#if($entry.resources && $entry.resources.size() > 0)
+								#foreach($sub in $entry.resources)
+									#if($sub.checked)
+										#set($display = true)
+									#end
+								#end
+							#end
+							#if($display)
+								  #set($resourceId=$!{entry.resourceId})   
+							      #if($resourceId.length()>12)  
+							         #set($resourceId=$resourceId.substring(0,12))
+							         #if($resourceId=='formTmpType-')
+							         <div title="$!entry.resourceName" data-options="iconCls:'icon-mini-write'" style="overflow:auto;padding:10px;">
+										#foreach($sub in $entry.resources)
+											#if($sub.checked)
+											<a class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-point1'" style="width:99%;padding-left:10px;text-align: left;"
+											onclick="addPanel('$!sub.resourceName','$!sub.addressUrl')">$!sub.resourceName</a>
+											#end
+										#end
+									 </div>
+							         #end
+							      #end
+							#end
+						#end
+					#end
+				</div>
+			</td>
+			<td width="60%" valign="top">
+				<!--  
+				<div id="hidDiv" data-options="region:'center'">
+					<div id="afficheDIV" class="easyui-window" title="公告内容" 
+					     data-options="modal:true,closed:true,iconCls:'icon-save'" style="width:85%;height:300px;padding2px;">
+						<div id="afficheContentDIV" style="width:75%;height:300px;padding2px;"></div>
+					</div>
+					<div id="fileListForAffiche" class="easyui-panel" title="公告信息" style="width:99%;">
+					</div>
+				</div>
+				-->
+				<div data-options="region:'center'">
+					<div id="fileListForPublic" class="easyui-panel" title="公共信息" style="width:99%;margin-bottom:5px;">
+					</div>
+					<div id="fileListForTechnology" class="easyui-panel" title="技术信息" style="width:99%;">
+					</div>
+				</div>
+			</td>
+			<td width="20%" valign="top">
+				<div id="accordion2" class="easyui-accordion" data-options="multiple:true" style="width:100%;">
+					<div id="todoTasks" title="待办任务" data-options="iconCls:'icon-ok'" style="overflow:auto;padding:10px;">
+					</div>
+					<div id="historyTasks" title="任务跟踪" data-options="iconCls:'icon-mini-view'" style="padding:10px;">
+					</div>
+					<div id="historyTasks" title="查看文件" data-options="iconCls:'icon-mini-view'" style="padding:10px;">
+						<a class="easyui-linkbutton" data-options="plain:true" style="width:99%;padding-left:10px;text-align: center;"
+							onclick="addPanel('文件查询','filemanager/list_query.html')">文件查询</a>
+					</div>
+					#if($resources)
+						#foreach($entry in $resources)
+							#if($entry.checked)
+								   #if($!{entry.resourceId} == 'reportStatistics_manage')
+								      	<div title="报表统计" data-options="iconCls:'icon-mini-view'" style="padding:10px;">
+										#foreach($sub in $entry.resources)
+											#if($sub.checked)
+												<a class="easyui-linkbutton" data-options="plain:true" style="width:99%;padding-left:10px;text-align: center;"
+												onclick="addPanel('$!sub.resourceName','$!sub.addressUrl')">$!sub.resourceName</a>
+											#end
+										#end
+									</div>
+								#end
+							#end
+						#end
+					#end
+					<div title="系统导航" data-options="iconCls:'icon-mini-setting'" style="padding:10px;">
+						<a class="easyui-linkbutton" data-options="plain:true" style="width:99%;padding-left:10px;text-align: center;"
+												onclick="addPanel('个人信息','staff!staffInfo.do')">个人信息</a>
+                        <a class="easyui-linkbutton" data-options="plain:true" style="width:99%;padding-left:10px;text-align: center;"
+												onclick="addPanel('授权','delegation!delegationSelfPage.do')">授权</a>												
+						#if($resources)
+							#foreach($entry in $resources)
+								#if($!{entry.resourceId} == 'system_setting')
+									#foreach($sub in $entry.resources)
+										#if($sub.checked)
+											<a class="easyui-linkbutton" data-options="plain:true" style="width:99%;padding-left:10px;text-align: center;"
+											onclick="addPanel('$!sub.resourceName','$!sub.addressUrl')">$!sub.resourceName</a>
+										#end
+									#end
+								 #end
+							#end
+						#end
+					</div>
+				</div>
+			</td>
+		</tr>
+	</table>
+</div>	
+	<script type="text/javascript">
+		$(function(){
+			expandAll();
+		});
+		function expandAll(){
+			var panels = $("#accordion1").accordion("panels");
+			for(var key in panels){
+				var index = parseInt(key);
+				$("#accordion1").accordion("select",index);
+			}
+			
+			var panels = $("#accordion2").accordion("panels");
+			for(var key in panels){
+				var index = parseInt(key);
+				$("#accordion2").accordion("select",index);
+			}
+		}
+		function addPanel(title, url) {
+			var panel = top.$('#tt');
+			if(!panel){
+				alert('NO'); 
+				return;
+			}
+			if (top.$('#tt').tabs('exists', title)) {
+				top.$('#tt').tabs('select', title);
+			} else {
+				top.$('#tt').tabs('add',{
+									title : title,
+									style : 'overflow:hidden;padding:10px',
+									content : '<iframe frameborder="0"  src="'+ url+ '" width="100%" height="99%"></iframe>',
+									closable : true
+								});
+			}
+		}
+		
+			function draftRequestData() {
+			    jQuery.ajax({
+			        url:'flow!draftList.do',
+			        type:'post',
+			        dataType:'json',
+			        success:function(data){
+			        	//删除所有行
+			        	$("#draftList").empty();
+			        	if(data.total > 0){
+			        		jQuery.each(data.rows, function(i,row){
+			        			var newRow = '<a class="easyui-linkbutton" data-options="plain:true,iconCls:\'icon-point1\'" style="width:99%;padding-left:10px;text-align:left;" onclick="addPanel(\''+row.businessTitle+'\',\'flow!launch.do?executionId='+row.executionId+'\')">'+cutstr(row.businessTitle,35)+'</a>';
+			        			$("#draftList").append(newRow);
+			        		});
+			        	}
+			        	//easyUI重新宣染
+			        	jQuery.parser.parse($('#draftList'));
+			        }
+			    });
+			};
+		
+		    function timerTodoTaskRequestData() {
+		        jQuery.ajax({
+		            url:'flow!todoList.do',
+		            type:'post',
+		            dataType:'json',
+		            success:function(data){
+		            	//删除所有行
+		            	$("#todoTasks").empty();
+		            	if(data.total > 0){
+		            		jQuery.each(data.rows, function(i,row){
+		            			var newRow = '<a class="easyui-linkbutton" data-options="plain:true,iconCls:\'icon-point2\'" style="width:99%;padding-left:0px;text-align: left;" onclick="addPanel(\'待办：'+row.businessTitle+'\',\'flow!approve.do?taskId='+row.taskId+'\')">'+cutstr(row.businessTitle,22)+'</a>';
+		            			$("#todoTasks").append(newRow);
+		            			if(i == 7){
+		            				return false;
+		            			}
+		            		});
+		            	}else{
+		            		$("#todoTasks").append('<a class="easyui-linkbutton" data-options="plain:true" style="width:99%;padding-left:0px;text-align: center;" href="#">暂无待办！</a>');
+		            	}
+		            	if(data.total > 8){
+		            		$("#todoTasks").append('<a class="easyui-linkbutton" data-options="plain:true" style="width:99%;padding-left:0px;text-align: right;" href="#" onclick="addPanel(\'待办任务\',\'flow/todoList.html\')">更多...</a>');
+		            	}
+		            	//easyUI重新宣染
+		            	jQuery.parser.parse($('#todoTasks'));
+		            }
+		        });
+		    };
+		    function timerHistoryTaskRequestData() {
+		        jQuery.ajax({
+		            url:'flow!historyList.do?page=1&rows=8',
+		            type:'post',
+		            dataType:'json',
+		            success:function(data){
+		            	//删除所有行
+		            	$("#historyTasks").empty();
+		            	if(data.total > 0){
+		            		jQuery.each(data.rows, function(i,row){
+		            			var newRow = '<a class="easyui-linkbutton" data-options="plain:true,iconCls:\'icon-point2\'" style="width:99%;padding-left:0px;text-align: left;" onclick="addPanel(\''+row.businessTitle+'\',\'flow!view.do?executionId='+row.executionId+'\')">'+cutstr(row.businessTitle, 22)+'</a><br/>';
+		            			$("#historyTasks").append(newRow);
+		            		});
+		            	}
+		            	$("#historyTasks").append('<a class="easyui-linkbutton" data-options="plain:true" style="width:99%;padding-left:0px;text-align: right;" href="#" onclick="addPanel(\'任务跟踪\',\'flow!historyListPage.do\')">更多...</a>');
+		            	//easyUI重新宣染
+		            	jQuery.parser.parse($('#historyTasks'));
+		            }
+		      });
+		    };
+		    // 公共信息
+		    function timerFileForPublicRequestData() {
+		        jQuery.ajax({
+		            url:'filemanager!displayInfoForPublic.do',
+		            type:'post',
+		            dataType:'json',
+		            success:function(data){
+		            	//删除所有行
+		            	$("#fileListForPublic").empty();
+		            	if(data.length >= 1){
+		            		for(var i =0;i<data.length;i++){
+		            			var jsonobj = data[i];
+		            			if(jsonobj){
+		            				var newRow = '<a class="easyui-linkbutton" data-options="plain:true,iconCls:\'icon-point3\'" style="width:99%;padding-left:10px;text-align: left;" href="download!filedownLoad.do?fm.id=' + jsonobj.id + '">' + jsonobj.fileDisplayname + '&nbsp;&nbsp;&nbsp;(' + jsonobj.createDtStr + ')</a>';
+			            			$("#fileListForPublic").append(newRow);
+		            			}
+		            		}
+		            		if(data.length >= 8){
+		            			$("#fileListForPublic").append('<a class="easyui-linkbutton" data-options="plain:true,iconCls:\'icon-pubInfo\'" style="width:99%;padding-left:10px;text-align: right;" href="#" onclick="addPanel(\'公共信息\',\'filemanager/query_more_public.html\')">更多信息>>></a>');
+		            		}
+		            	}else{
+		            		var newRow = '<a class="easyui-linkbutton" data-options="plain:true,iconCls:\'icon-point3\'" style="width:99%;padding-left:10px;text-align: left;" href="#">暂无公共信息</a>';
+		            		$("#fileListForPublic").append(newRow);
+		            	}
+		            	//easyUI重新宣染
+		            	jQuery.parser.parse($('#fileListForPublic'));
+		            }
+		      });
+		    };
+		    // 技术信息
+		    function timerFileForTechnologyRequestData() {
+		        jQuery.ajax({
+		            url:'filemanager!displayInfoForTechnology.do',
+		            type:'post',
+		            dataType:'json',
+		            success:function(data){
+		            	//删除所有行
+		            	$("#fileListForTechnology").empty();
+		            	if(data.length >= 1){
+		            		for(var j =0;j<data.length;j++){
+		            			var jsonobj = data[j];
+		            			if(jsonobj){
+		            				var newRow = '<a class="easyui-linkbutton" data-options="plain:true,iconCls:\'icon-point3\'" style="width:99%;padding-left:10px;text-align: left;" href="download!filedownLoad.do?fm.id=' + jsonobj.id + '">' + jsonobj.fileDisplayname + '&nbsp;&nbsp;&nbsp;(' + jsonobj.createDtStr + ')</a>';
+			            			$("#fileListForTechnology").append(newRow);
+		            			}
+		            		}
+		            		if(data.length >= 8){
+		            			$("#fileListForTechnology").append('<a class="easyui-linkbutton" data-options="plain:true,iconCls:\'icon-pubInfo\'" style="width:99%;padding-left:10px;text-align: right;" href="#" onclick="addPanel(\'技术信息\',\'filemanager/query_more_technology.html\')">更多信息>>></a>');
+		            		}
+		            	}else{
+		            		var newRow = '<a class="easyui-linkbutton" data-options="plain:true,iconCls:\'icon-point3\'" style="width:99%;padding-left:10px;text-align: left;" href="#">暂无技术信息</a>';
+		            		$("#fileListForTechnology").append(newRow);
+		            	}
+		            	//easyUI重新宣染
+		            	jQuery.parser.parse($('#fileListForTechnology'));
+		            }
+		      });
+		    };
+		$(function(){
+		   setInterval(timerTodoTaskRequestData,5*60*1000);	
+		   setInterval(timerHistoryTaskRequestData,5*60*1000);
+		   draftRequestData();
+		   timerTodoTaskRequestData();
+		   timerHistoryTaskRequestData();
+		   timerFileForPublicRequestData();
+		   timerFileForTechnologyRequestData();
+		});
+		
+		function refresh(){
+			draftRequestData();
+			timerTodoTaskRequestData();
+			timerHistoryTaskRequestData();
+			timerFileForPublicRequestData();
+			timerFileForTechnologyRequestData();
+		}
+		
+		/** 
+		 * js截取字符串，中英文都能用 
+		 * @param str：需要截取的字符串 
+		 * @param len: 需要截取的长度 
+		 */  
+		function cutstr(str,len)  
+		{  
+			var str_length = 0;  
+			var str_len = 0;  
+			str_cut = new String();  
+			str_len = str.length;  
+			for(var i = 0; i < str_len; i++)  
+			{  
+				a = str.charAt(i);  
+		        str_length++;  
+		        if(escape(a).length > 4)  
+		        {  
+		         	//中文字符的长度经编码之后大于4  
+		         	str_length++;  
+		   		}  
+		    	str_cut = str_cut.concat(a);  
+		    	if(str_length>=len)  
+		     	{  
+		   			str_cut = str_cut.concat("...");  
+		         	return str_cut;  
+		      	}  
+			}  
+		    //如果给定字符串小于指定长度，则返回源字符串；  
+		    if(str_length < len){  
+		     	return  str;  
+			}  
+		} 
+		</script>  
+	</script>
+</body>
+</html>
