@@ -68,7 +68,7 @@
 									<td>
 										<input type="hidden" name="action_obj_type_${velocityCount}" value="${reConf.action_obj_type_}">
 										<input type="hidden" name="action_obj_${velocityCount}" value="${reConf.action_obj_}">
-										<input type="text" name="action_obj_name_${velocityCount}" class="easyui-textbox" data-options="required:true" value="$!{reConf.action_obj_name_}">
+										<input type="text" name="action_obj_name_${velocityCount}" class="easyui-textbox bindClick" data-options="required:true" linenum="${velocityCount}" value="$!{reConf.action_obj_name_}">
 									</td>
 									<td>
 											<input type="checkbox" name="is_turn_${velocityCount}" #if($reConf.is_turn_ == 1)  checked="checked" #end value="1">转办
@@ -101,7 +101,7 @@
 								<td>
 									<input type="hidden" name="action_obj_type_1">
 									<input type="hidden" name="action_obj_1">
-									<input type="text" name="action_obj_name_1" data-options="required:true" class="easyui-textbox" onclick="chooseActionObject(1)">
+									<input type="text" name="action_obj_name_1" data-options="required:true" class="easyui-textbox bindClick" linenum="1" onclick="chooseActionObject(1)">
 								</td>
 								<td>
 										<input type="checkbox" id="is_turn_" name="is_turn_1" value="1">转办
@@ -191,7 +191,7 @@
 </html>
 <script type="text/javascript">
 function actionChange(lineNo,val){
-	alert(val);
+	//alert(val);
 	if(val==3||val==4){
 		$("input[name=is_turn_"+lineNo+"]").prop("disabled",true);
 		$("input[name=is_ask_"+lineNo+"]").prop("disabled",true);
@@ -227,6 +227,13 @@ function formSubmit(){
 }
 
 $(function() {
+	$('.bindClick').each(function(){
+		var lineNum = $(this).attr('linenum');
+		$(this).textbox('textbox').bind('click', function(e){
+			chooseActionObject(lineNum);
+		});
+	});
+	
 	$('#action_type_1').combobox({
 		onSelect: function(i,v){
 			alert(i+":"+v);
@@ -237,11 +244,12 @@ $(function() {
 	var line_no = $("#processDetailGrid tbody").find("tr").length;
     $("#newLineBtn").bind("click", function(e) {
     	line_no++;
-    	var newRow = '<tr line_no="'+line_no+'"><td><input style="width:25px;" class="easyui-numberbox" data-options="required:true,min:1,max:99" name="sort_num_'+line_no+'" value="'+line_no+'" type="text"></td><td><input type="text" name="task_desc_'+line_no+'" class="easyui-textbox" data-options="required:true,validType:\'length[0,20]\'"></td><td><select name="action_type_'+line_no+'" class="easyui-combobox"  onchange="actionChange('+line_no+',this.value);"><option value="1">审批(并行)</option><option value="2">审批(异或)</option><option value="3">阅处</option><option value="4">传阅</option></select></td><td><input type="hidden" name="action_obj_type_'+line_no+'"><input type="hidden" name="action_obj_'+line_no+'"><input type="text" class="easyui-textbox" data-options="required:true,validType:\'length[1,20]\'" name="action_obj_name_'+line_no+'" onclick="chooseActionObject('+line_no+');"></td><td><input type="checkbox" name="is_turn_'+line_no+'" value="1">转办<input type="checkbox" name="is_ask_'+line_no+'" value="1">协办</td><td><input style="width:25px;" class="easyui-numberbox" data-options="required:true,min:1,max:99"  type="text" name="expiry_days_'+line_no+'" value="1"></td><td><input type="checkbox" name="arrive_remind_'+line_no+'" value="1">到达<input type="checkbox" name="expiry_remind_'+line_no+'" value="1">超时</td><td><input type="checkbox" class="selectedItem" key="selectedItem" value="'+line_no+'"</td></tr>';
+    	var newRow = '<tr line_no="'+line_no+'"><td><input style="width:25px;" class="easyui-numberbox" data-options="required:true,min:1,max:99" name="sort_num_'+line_no+'" value="'+line_no+'" type="text"></td><td><input type="text" name="task_desc_'+line_no+'" class="easyui-textbox" data-options="required:true,validType:\'length[0,20]\'"></td><td><select name="action_type_'+line_no+'" class="easyui-combobox"  onchange="actionChange('+line_no+',this.value);"><option value="1">审批(并行)</option><option value="2">审批(异或)</option><option value="3">阅处</option><option value="4">传阅</option></select></td><td><input type="hidden" name="action_obj_type_'+line_no+'"><input type="hidden" name="action_obj_'+line_no+'"><input type="text" class="easyui-textbox" data-options="required:true,validType:\'length[1,20]\'" linenum="'+line_no+'" id="action_obj_name_'+line_no+'" name="action_obj_name_'+line_no+'" onclick="chooseActionObject('+line_no+');"></td><td><input type="checkbox" name="is_turn_'+line_no+'" value="1">转办<input type="checkbox" name="is_ask_'+line_no+'" value="1">协办</td><td><input style="width:25px;" class="easyui-numberbox" data-options="required:true,min:1,max:99"  type="text" name="expiry_days_'+line_no+'" value="1"></td><td><input type="checkbox" name="arrive_remind_'+line_no+'" value="1">到达<input type="checkbox" name="expiry_remind_'+line_no+'" value="1">超时</td><td><input type="checkbox" class="selectedItem" key="selectedItem" value="'+line_no+'"</td></tr>';
    		$("#processDetailGrid tbody tr:last").after(newRow);
    		var newLineNos = $("[name='lineNos']").val()+line_no+",";
    		$("[name='lineNos']").val(newLineNos);
    		jQuery.parser.parse("[line_no='"+line_no+"']");
+   		bindClick('action_obj_name_'+line_no);
 	}); 
     $("#removeLineBtn").bind("click", function(e) {
     	$("[key='selectedItem']:checked").each(function(){ 
@@ -252,6 +260,13 @@ $(function() {
  		}); 
 	}); 
 })
+
+function bindClick(id){
+	var lineNum = $('#'+id).attr('linenum');
+	$('#'+id).textbox('textbox').bind('click', function(e){
+		chooseActionObject(lineNum);
+	});
+}
 
 function chooseActionObject(lineNo){
 	$('#lineNo_box').val(lineNo);
