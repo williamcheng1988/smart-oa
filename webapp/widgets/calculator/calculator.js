@@ -9,18 +9,18 @@ $(function(){
 		
 		var res_array = resources.match(regObj);
 		
-		if(res_array.length==0){return false;}
-		
-		var res = res_array[0];
-		var unique = res.substring(1,res.length-1);
-		
-		$('#xf_f_'+unique).textbox({
-			onChange:function(){
-				var upperValue = upDigit($(this).val());
-				
-				upperDigit.textbox('setValue',upperValue);
-			}
-		});
+		if(res_array!=null && res_array!='null'&&res_array.length>0){
+			var res = res_array[0];
+			var unique = res.substring(1,res.length-1);
+			
+			$('#xf_f_'+unique).textbox({
+				onChange:function(){
+					var upperValue = upDigit($(this).val());
+					
+					upperDigit.textbox('setValue',upperValue);
+				}
+			});
+		}
 	})
 
 	//合计控件 处理函数

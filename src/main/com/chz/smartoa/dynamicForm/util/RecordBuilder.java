@@ -149,7 +149,8 @@ public class RecordBuilder {
             String key = entry.getKey();
             String[] value = entry.getValue();
 
-            if ((value == null) || (value.length == 0)) {
+            //不保存recordId到prop表中,否则在选择项目的时候，造成页面recordId域值修改!!!
+            if (FormConstants.FORMRECORD_ID.equals(key) || (value == null) || (value.length == 0)) {
                 continue;
             }
             

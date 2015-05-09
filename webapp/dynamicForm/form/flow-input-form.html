@@ -24,21 +24,16 @@
 			else{populatPropsFunc(eval('($!{formMap.json})'));}
 		}
 	})
+	function export_Form(){}
 </script>
 <div class="row-fluid">
 
 	<input type="hidden" name="xf_f_formRecordId" id="xf_f_formRecordId" value="$!{formMap.xf_f_formRecordId}" />
-	<textarea id="__gef_content__" name="content" style="display: none;">$!{formTemplate.content}</textarea>
+	<textarea id="__gef_content__" style="display: none;">$!{formTemplate.content}</textarea>
 	
 	<div id="xf-form-tables"></div>
-	
-	
-	##include("widgets/userpicker/userpicker.vm")
-	##include("widgets/userselection/userselection.vm")
-	##include("widgets/proselection/proselection.vm")
-	##include("widgets/calculator/calculator.vm")
 </div>
 <!-- These JS Files should load at the end of the file -->
 <script type="text/javascript" src="widgets/userselection/userselection-min.js"></script>
 <script type="text/javascript" src="widgets/proselection/proselection-min.js"></script>
-<script type="text/javascript" src="widgets/calculator/calculator.js"></script>
+<script type="text/javascript" src="widgets/calculator/calculator-min.js"></script>

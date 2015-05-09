@@ -133,15 +133,15 @@ public class FileLoadAction extends BaseAction{
 				jsonStr = gson.toJson(fm);
 			} catch (FileNotFoundException e) {
 				msg = "false";
-				e.printStackTrace();
+				jsonStr = gson.toJson(msg);
 				logger.error(e.getMessage());
 			} catch (IOException e) {
 				msg = "false";
-				e.printStackTrace();
+				jsonStr = gson.toJson(msg);
 				logger.error(e.getMessage());
 			} catch(Exception e) {
 				msg = "false";
-				e.printStackTrace();
+				jsonStr = gson.toJson(msg);
 				logger.error(e.getMessage());
 			} finally {
 				try {
@@ -154,6 +154,7 @@ public class FileLoadAction extends BaseAction{
 				} catch (IOException e) {
 					msg = "false";
 					logger.error(e.getMessage());
+					jsonStr = gson.toJson(msg);
 				}  
 			}
 		}else{

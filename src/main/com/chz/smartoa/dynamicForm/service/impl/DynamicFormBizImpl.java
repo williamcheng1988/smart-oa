@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.apache.log4j.Logger;
 import org.springframework.dao.DataAccessException;
@@ -392,7 +391,7 @@ public class DynamicFormBizImpl implements DynamicFormBiz {
 			for(FormRecord r: formRecords){
 				//this.findForm(r.getId());
 				FormProp formProp = new FormProp();
-				formProp.setFormRecordId(r.getId());
+				formProp.setFormRecordId(r.getUuId());
 				List<String> codes = formRecord.getPropCodes();
 				if(codes!=null && codes.size()>0){formProp.setPropCodes(codes);}
 				

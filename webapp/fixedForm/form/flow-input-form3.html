@@ -1,101 +1,360 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="UTF-8">
-	<title>一 般 费 用 报 销 单 据</title>
-	<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
-	<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
-	<link rel="stylesheet" type="text/css" href="../demo.css">
-	<script type="text/javascript" src="../../jquery.min.js"></script>
-	<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
-</head>
-<body>
+<script type="text/javascript" src="widgets/loader/jgxLoader-min.js"></script>
+<script type="text/javascript">
+var xf_f_flow_view;   //流程查看
+var UserSelection_new_inner_html='';
+</script>
+
+<input type="hidden" name="xf_f_formRecordId" value="$!{formMap.xf_f_formRecordId}" />
+<input type="hidden" id="xf_f_formRecord_count" value="$!formMap.xf_f_formRecord_count"/>
+<input id="xf_f_wages" name="xf_f_wages" type="hidden" value="" />
 <table class="xf-table" cellspacing="0" cellpadding="0" width="100%" align="center" style="border-collapse: collapse;font-size: 12px;">
 	<tbody>
-		<tr>
-			<td width="12%" nowrap="" align="center" class="tasktd1">费用承担项目</td>
-			<td class="tasktd2" width="20%" colspan="3">
-				<select class="easyui-combobox" id="DetailItem_xmid"
-				name="DetailItem:xmid">
-					<option value="">-- 请选择项目 --</option>
-					<option value="78">0-其他业务-其他角色</option>
-					<option value="61">艾特航模-财务顾问-财务顾问</option>
-					<option value="39">爱视眼科-财务顾问-财务顾问</option>
-					<option value="149">办事处大连-其他业务-其他角色</option>
-					<option value="169">办事处广州-自有投资-其他角色</option>
-					<option value="165">宝航建设1-自有投资-其他角色</option>
-					<option value="119">暴风网际-其他业务-其他角色</option>
-					<option value="143">北京华卓-资本管理-其他角色</option>
-					<option value="166">北京精典-资本管理-其他角色</option>
-					<option value="174">北京鲸鲨5-其他业务-财务顾问</option>
-					<option value="27">博创机械-自有投资-其他角色</option>
-			</select></td>
-			<td width="12%" nowrap="" align="center" class="tasktd1">项目经理</td>
-			<td width="25%" colspan="3"><input class="easyui-textbox" id="DetailItem_xmjl" readonly="" name="DetailItem_xmjl"/></td>
+		<tr id="topic">
+			<td align="center" class="tasktd1" nowrap="">标题</td>
+			<td class="tasktd2"><div class="xf-handler">
+				<input id="xf_f_bt" type="text" readonly="readonly" name="topic" value="工资费用发放单据(2015-1)">&nbsp;</div></td>
+			<td align="center" class="tasktd1" nowrap="">发放月份</td>
+			<td class="tasktd2" colspan="3">
+			<div class="xf-handler"><input id="xf_f_ffyf" type="text" name="month" readonly="readonly" value="2015-1"></div></td>
 		</tr>
 		<tr>
-			<td nowrap="" align="center" class="tasktd1">收款人</td>
-			<td class="tasktd2">
-				<input class="easyui-textbox" id="DetailItem_skr" name="DetailItem:skr"></td>
-			<td nowrap="" align="center" class="tasktd1">收款帐号</td>
-			<td class="tasktd2"><input class="easyui-numberbox" id="DetailItem_skzh"
-				name="DetailItem:skzh"></td>
-			<td nowrap="" align="center" class="tasktd1">职级</td>
-			<td class="tasktd2"><select id="DetailItem_zj" class="easyui-combobox" style="width:135px"
-				name="DetailItem:zj">
-					<option value="分析师">分析师</option>
-					<option value="高级分析师">高级分析师</option>
-					<option value="业务董事">业务董事</option>
-					<option value="执行董事">执行董事</option>
-					<option value="董事总经理">董事总经理</option>
-					<option value="合伙人">合伙人</option>
-					<option value="外聘专家">外聘专家</option>
-			</select></td>
-			<td nowrap="" align="center" class="tasktd1">时间</td>
-			<td class="tasktd2"><input class="easyui-datebox" id="DetailItem_zdsj" name="DetailItem:zdsj"></td>
-		</tr>
-		
-		<tr>
-			<td nowrap="" align="center" class="tasktd1">会议费用</td>
-			<td class="tasktd2"><input class="easyui-numberbox" data-options="min:0,precision:2" id="DetailItem_hyfy" name="DetailItem:hyfy"></td>
-			<td nowrap="" align="center" class="tasktd1">宣传费用</td>
-			<td class="tasktd2"><input class="easyui-numberbox" data-options="min:0,precision:2" id="DetailItem_xcfy" name="DetailItem:xcfy"></td>
-			<td nowrap="" align="center" class="tasktd1">通讯费用</td>
-			<td class="tasktd2"><input class="easyui-numberbox" data-options="min:0,precision:2" id="DetailItem_txfy" name="DetailItem:txfy"></td>
-			<td nowrap="" align="center" class="tasktd1">物业费用</td>
-			<td class="tasktd2"><input class="easyui-numberbox" data-options="min:0,precision:2" id="DetailItem_wyfy" name="DetailItem:wyfy"></td>
-		</tr>
-		
-		<tr>
-			<td nowrap="" align="center" class="tasktd1">资本支出</td>
-			<td class="tasktd2"><input class="easyui-numberbox" data-options="min:0,precision:2" id="DetailItem_zbzc" name="DetailItem:zbzc"></td>
-			<td nowrap="" align="center" class="tasktd1">行政收费</td>
-			<td class="tasktd2"><input class="easyui-numberbox" data-options="min:0,precision:2" id="DetailItem_xzsf" name="DetailItem:xzsf"></td>
-			<td nowrap="" align="center" class="tasktd1">办公费用</td>
-			<td class="tasktd2"><input class="easyui-numberbox" data-options="min:0,precision:2" id="DetailItem_bgfy" name="DetailItem:bgfy"></td>
-			<td nowrap="" align="center" class="tasktd1">交通邮政</td>
-			<td class="tasktd2"><input class="easyui-numberbox" data-options="min:0,precision:2" id="DetailItem_jtyz" name="DetailItem:jtyz"></td>
-		</tr>
-		
-		<tr>
-			<td nowrap="" align="center" class="tasktd1">其他费用</td>
-			<td class="tasktd2"><input class="easyui-numberbox" data-options="min:0,precision:2" id="DetailItem_cf" name="DetailItem:qtfy"></td>
-			<td nowrap="" align="center" class="tasktd1">合计</td>
-			<td class="tasktd2"><input class="easyui-numberbox" data-options="min:0,precision:2" id="DetailItem_fyhj" name="DetailItem:fyhj"></td>
-			<td nowrap="" align="center" class="tasktd1">总计金额(大写)</td>
-			<td colspan="3" class="tasktd2">
-				<input class="easyui-numberbox" data-options="min:0,precision:2" id="DetailItem_fyhjdx" name="DetailItem:fyhjdx">
+			<td colspan="6" style="padding: 0px;text-align: left; padding: 0px; border-style: hidden;">
+				<table width="100%" border="1" cellspacing="0" cellpadding="0" class="xf-fee-table">
+						<tr bgcolor="#dddddd" align="center" line_num="copy-number-0">
+							<td width="4.5%" style="font-size: 12px,text-align:center">姓名</td>
+							<td width="4.5%" style="font-size: 12px,text-align:center">基本工资</td>
+							<td width="4.5%" style="font-size: 12px,text-align:center">考勤补贴</td>
+							<td width="4%" style="font-size: 12px,text-align:center">养老(个人)</td>
+							<td width="4%" style="font-size: 12px,text-align:center">养老(单位)</td>
+							<td width="4%" style="font-size: 12px,text-align:center">住房(个人)</td>
+							<td width="4%" style="font-size: 12px,text-align:center">住房(单位)</td>
+							<td width="4%" style="font-size: 12px,text-align:center">医疗(个人)</td>
+							<td width="4%" style="font-size: 12px,text-align:center">医疗(单位)</td>
+							<td width="4%" style="font-size: 12px,text-align:center">工伤(个人)</td>
+							<td width="4%" style="font-size: 12px,text-align:center">工伤(单位)</td>
+							<td width="4%" style="font-size: 12px,text-align:center">失业(个人)</td>
+							<td width="4%" style="font-size: 12px,text-align:center">失业(单位)</td>
+							<td width="4%" style="font-size: 12px,text-align:center">生育(个人)</td>
+							<td width="4%" style="font-size: 12px,text-align:center">生育(单位)</td>
+							<td width="4%" style="font-size: 12px,text-align:center">所得税</td>
+							<td width="4%" style="font-size: 12px,text-align:center">考勤扣款</td>
+							<td width="4%" style="font-size: 12px,text-align:center">实发工资</td>
+							<td width="10%" style="font-size: 12px,text-align:center">员工签名</td>
+							<td width="4.5%" style="font-size: 12px,text-align:center">&nbsp;&nbsp;&nbsp;&nbsp;备注</td>
+							<td width="4.5%" style="font-size: 12px,text-align:center">外勤费用</td>
+							<td width="4.5%" style="font-size: 12px,text-align:center">现金工资</td>
+							<td width="4.5%" style="font-size: 12px,text-align:center">人力成本</td>
+							<!-- <td width="4.5%" style="font-size: 12px,text-align:center">合计</td> -->
+							<td width="2.5%" style="font-size: 12px,text-align:center">操作</td>
+						</tr>
+						
+						<tr id="handleLine">
+							<td colspan="24" align="right">
+								<div class="xf-handler" style="text-align:right;margin-right:20px;">
+								<!-- <a href="javascript:void(0);" class="easyui-linkbutton" onclick="export_Form()">test</a> -->
+								<a href="javascript:void(0);" class="easyui-linkbutton copyWidget-add" iconCls="icon-add"></a>
+								<a href="javascript:void(0);" class="easyui-linkbutton copyWidget-remove" iconCls="icon-remove"></a>
+								</div>
+							</td>
+						</tr>
+						<tr align="center" id="calLine">
+							<td style="text-align: center">合计</td>
+							<td><div class="xf-handler"><input class="total_row calculator" style="WIDTH: 40px" x="0"
+								readonly="" resources=".fee_col0." name="payBase"></div></td>
+							<td><div class="xf-handler"><input class="total_row calculator" style="WIDTH: 40px" x="1"
+								readonly="" resources=".fee_col1." name="payAttendance"></div></td>
+							<td><div class="xf-handler"><input class="total_row calculator" style="WIDTH: 40px" x="2"
+								readonly="" resources=".fee_col2." name="pensionIndividual"></div></td>
+							<td><div class="xf-handler"><input class="total_row calculator" style="WIDTH: 40px" x="3"
+								readonly="" resources=".fee_col3." name="pensionUnits"></div></td>
+							<td><div class="xf-handler"><input class="total_row calculator" style="WIDTH: 40px" x="4"
+								readonly="" resources=".fee_col4." name="housingIndividual"></div></td>
+							<td><div class="xf-handler"><input class="total_row calculator" style="WIDTH: 40px" x="5"
+								readonly="" resources=".fee_col5." name="housingUnits"></div></td>
+							<td><div class="xf-handler"><input class="total_row calculator" style="WIDTH: 40px" x="6"
+								readonly="" resources=".fee_col6." name="medicalPersonal"></div></td>
+							<td><div class="xf-handler"><input class="total_row calculator" style="WIDTH: 40px" x="7"
+								readonly="" resources=".fee_col7." name="medicalUnits"></div></td>
+							<td><div class="xf-handler"><input class="total_row calculator" style="WIDTH: 40px" x="8"
+								readonly="" resources=".fee_col8." name="injuryPersonal"></div></td>
+							<td><div class="xf-handler"><input class="total_row calculator" style="WIDTH: 40px" x="9"
+								readonly="" resources=".fee_col9." name="injuryUnits"></div></td>
+							<td><div class="xf-handler"><input class="total_row calculator" style="WIDTH: 40px" x="10"
+								readonly="" resources=".fee_col10." name="unemploymentPersonal"></div></td>
+							<td><div class="xf-handler"><input class="total_row calculator" style="WIDTH: 40px" x="11"
+								readonly="" resources=".fee_col11." name="unemploymentUnits"></div></td>
+							<td><div class="xf-handler"><input class="total_row calculator" style="WIDTH: 40px" x="12"
+								readonly="" resources=".fee_col12." name="fertilityPersonal"></div></td>
+							<td><div class="xf-handler"><input class="total_row calculator" style="WIDTH: 40px" x="13"
+								readonly="" resources=".fee_col13." name="fertilityUnits"></div></td>
+							<td><div class="xf-handler"><input class="total_row calculator" style="WIDTH: 40px" x="14"
+								readonly="" resources=".fee_col14." name="incomeTax"></div></td>
+							<td><div class="xf-handler"><input class="total_row calculator" style="WIDTH: 40px" x="15"
+								readonly="" resources=".fee_col15." name="attendanceChargeback"></div></td>
+							<td><div class="xf-handler"><input class="total_row calculator" style="WIDTH: 40px" x="16"
+								resources=".fee_col16." name="realWages"></div></td>
+							<td><div class="xf-handler">&nbsp;</div></td>
+							<td><div class="xf-handler">&nbsp;</div></td>
+							<td><div class="xf-handler"><input class="total_row calculator" style="WIDTH: 40px" x="17"
+								readonly="" resources=".fee_col19." name="fieldCost"></div></td>
+							<td><div class="xf-handler"><input class="total_row calculator" style="WIDTH: 40px" x="18"
+								readonly="" resources=".fee_col20." name="moneyWages"></div></td>
+							<td><div class="xf-handler"><input class="total_row calculator" style="WIDTH: 40px" x="19"
+								readonly="" resources=".fee_col21." name="payHrcost"></div></td>
+							<td><!-- <div class="xf-handler"><input class="total_All calculator" style="WIDTH: 45px"
+								resources=".total_row." name="xf_f_FeeAllTotal" id="xf_f_FeeAllTotal"></div> --></td>
+							<td width="4%"></td>
+						</tr>
+				</table>
 			</td>
-		</tr>
-		
-		<tr>
-			<td nowrap="" align="center" class="tasktd1">附件张数</td>
-			<td class="tasktd2" colspan="7"><input class="easyui-numberbox" data-options="min:0"
-				 id="DetailItem_fjzs" name="DetailItem:fjzs">&nbsp;</td>
 		</tr>
 	</tbody>
 </table>
+<div id="ui_mask" style="display:none" class="datagrid-mask"></div>
+<div id="ui_mask_msg" style="display:none; left: 50%; height: 16px; margin-left: -85.5px; line-height: 16px;" class="datagrid-mask-msg">正在处理，请稍待。。。</div>
+<script type="text/javascript">
+$(function(){
+	initData();
+	initCloneArea();
+	
+	if(!xf_f_flow_view){
+		$('.copyWidget-add').click(function(){
+			var copyNum = $('#xf_f_formRecord_count').val();
+			var newCopyNum = ++copyNum;
+			
+			addRow(newCopyNum);
+			
+			$('#xf_f_formRecord_count').val(newCopyNum);
+		});
+		$('.copyWidget-remove').click(function(){
+			var copyNum = $('#xf_f_formRecord_count').val();
+			if(copyNum==0){
+				return false;
+			}
+			var targetTr = $('[line_num^="copy-number-"]:last');
+			if(!targetTr){return false;}
+			targetTr.remove();
+			
+			$('#xf_f_formRecord_count').val(--copyNum);
+		});
+	}else{
+		$('#handleLine').remove();
+	}
+})
 
+function initData(){
+	var date = new Date();
+	var str = date.getFullYear()+'-'+(date.getMonth());
+	$('#xf_f_ffyf').val(str);
+	$('#xf_f_bt').val('工资费用发放单据('+str+')');
+}
+/**
+ * 外勤费用=人力成本-基本工资-考勤补贴-单位
+ * 现金工资=基本工资-所有
+ * 实发工资=基本工资-个人
+ */
+function changeNum(obj){
+	//纵向合计
+	var x=$(obj).attr('x');
+	var y=$(obj).attr('y');
+	var tar=$('input[class="total_row calculator"][x="'+x+'"]');
+	var valStr='0';
+	$('input[class!="total_row calculator"][x="'+x+'"]').each(function (){
+		//var v_ = $(this).val().replace(/[^\d]/g,'0');
+		v_ = (!v_)?'0':v_;
+		var v_ = getVal($(this).val());
+		valStr+='+'+v_;
+	});
+	tar.val(eval(valStr));
 
-</body>
-</html>
+	//人力成本
+	var payHrcost = getVal($(obj).closest('tr[id^="xf-g-"]').find('input[name="payHrcost"]').val());
+	//基本工资
+	var payBase = getVal($(obj).closest('tr[id^="xf-g-"]').find('input[name="payBase"]').val());
+	//考勤补贴
+	var payAttendance = getVal($(obj).closest('tr[id^="xf-g-"]').find('input[name="payAttendance"]').val());
+	
+	//外勤费用=人力成本-基本工资-考勤补贴-单位
+	var valStr1=payHrcost+'-'+payBase+'-'+payAttendance;
+	$(obj).closest('tr[id^="xf-g-"]').find('.U').each(function(){
+		valStr1+='-'+getVal($(this).val());
+	});
+	$(obj).closest('tr[id^="xf-g-"]').find('input[name="fieldCost"]').val(eval(valStr1));
+
+	//实发工资=基本工资-个人
+	var valStr3=payBase+'';
+	$(obj).closest('tr[id^="xf-g-"]').find('.I').each(function(){
+		valStr3+='-'+getVal($(this).val());
+	});
+	$(obj).closest('tr[id^="xf-g-"]').find('input[name="realWages"]').val(eval(valStr3));
+
+	//现金工资=人力成本-所有
+	var valStr2=payHrcost+'';
+	$(obj).closest('tr[id^="xf-g-"]').find('.A_').each(function(){
+		valStr2+='-'+getVal($(this).val());
+	});
+	$(obj).closest('tr[id^="xf-g-"]').find('input[name="moneyWages"]').val(eval(valStr2));
+}
+
+function getVal(v){
+	if(!v){
+		return '0';
+	}
+	var v_ = v.replace(/[^\d]/g,'0');
+	v_ = (!v_)?'0':v_;
+	return v_;
+}
+function onpaste(){
+	clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''));
+}
+
+function clearNoNum(obj)   
+{   
+	obj.value = obj.value.replace(/[^\d.]/g,"");  //清除“数字”和“.”以外的字符  
+
+	 obj.value = obj.value.replace(/^\./g,"");  //验证第一个字符是数字而不是. 
+
+	  obj.value = obj.value.replace(/\.{2,}/g,"."); //只保留第一个. 清除多余的.   
+
+	obj.value = obj.value.replace(".","$#$").replace(/\./g,"").replace("$#$",".");
+
+}   
+
+//初始化  可复制区域
+function initCloneArea(){
+	var datas;
+	if ('$!{formMap.wage_staffs}' != ''){
+		datas = eval('($!{formMap.wage_staffs})');
+	}
+	
+	var copyNum = datas?datas.length:0;
+	
+	if ('$!{formMap.get("json")}' != ''){
+		var wage = eval('($!{formMap.json})');
+		datas = wage.detail;
+		copyNum = datas.length;
+		//填充统计行
+		populateFields($('[id="calLine"]'),wage.total);
+		//填充标题行
+		populateFields($('[id="topic"]'),wage.total);
+		
+		//$('#xf_f_bt').val(wage.total.topic);
+		//$('#xf_f_ffyf').val(wage.total.month)
+	}
+	
+	if(copyNum>0){
+		$('#xf_f_formRecord_count').val(copyNum-1);
+		var count = parseInt(copyNum);
+		for(var i=0;i<count;i++){
+			addRow(i);
+		}
+		//循环工资详细行
+		for(var i=0;i<count;i++){
+			populateFields($('[line_num="copy-number-'+i+'"]'),datas[i]);
+		}
+	}
+}
+
+//添加行
+function addRow(newCopyNum){
+	var html = '<tr align="center" id="xf-g-'+newCopyNum+'" line_num="copy-number-'+newCopyNum+'">'+
+	'<td><div class="xf-handler" style="display:none;"><input name="loginName" type="hidden" /></div><div class="xf-handler"><input style="width: 53px" name="realName"/></div></div></td>'+
+	'<td><div class="xf-handler"><input onchange="changeNum(this);" onbeforepaste="onpaste()" y="'+newCopyNum+'" x="0" class="fee_row fee_col0" style="width: 40px" name="payBase"></div></td>'+
+	'<td><div class="xf-handler"><input onchange="changeNum(this);" onbeforepaste="onpaste()" y="'+newCopyNum+'" x="1" class="fee_row fee_col1" style="width: 40px" name="payAttendance"></div></td>'+
+	'<td><div class="xf-handler"><input onchange="changeNum(this);" onbeforepaste="onpaste()" y="'+newCopyNum+'" x="2" class="fee_row fee_col2 I A_" style="width: 40px" name="pensionIndividual"></div></td>'+
+	'<td><div class="xf-handler"><input onchange="changeNum(this);" onbeforepaste="onpaste()" y="'+newCopyNum+'" x="3" class="fee_row fee_col3 U A_" style="width: 40px" name="pensionUnits"></div></td>'+
+	'<td><div class="xf-handler"><input onchange="changeNum(this);" onbeforepaste="onpaste()" y="'+newCopyNum+'" x="4" class="fee_row fee_col4 I A_" style="width: 40px" name="housingIndividual"></div></td>'+
+	'<td><div class="xf-handler"><input onchange="changeNum(this);" onbeforepaste="onpaste()" y="'+newCopyNum+'" x="5" class="fee_row fee_col5 U A_" style="width: 40px" name="housingUnits"></div></td>'+
+	'<td><div class="xf-handler"><input onchange="changeNum(this);" onbeforepaste="onpaste()" y="'+newCopyNum+'" x="6" class="fee_row fee_col6 I A_" style="width: 40px" name="medicalPersonal"></div></td>'+
+	'<td><div class="xf-handler"><input onchange="changeNum(this);" onbeforepaste="onpaste()" y="'+newCopyNum+'" x="7" class="fee_row fee_col7 U A_" style="width: 40px" name="medicalUnits"></div></td>'+
+	'<td><div class="xf-handler"><input onchange="changeNum(this);" onbeforepaste="onpaste()" y="'+newCopyNum+'" x="8" class="fee_row fee_col8 I A_" style="width: 40px" name="injuryPersonal"></div></td>'+
+	'<td><div class="xf-handler"><input onchange="changeNum(this);" onbeforepaste="onpaste()" y="'+newCopyNum+'" x="9" class="fee_row fee_col9 U A_" style="width: 40px" name="injuryUnits"></div></td>'+
+	'<td><div class="xf-handler"><input onchange="changeNum(this);" onbeforepaste="onpaste()" y="'+newCopyNum+'" x="10" class="fee_row fee_col10 I A_" style="width: 40px" name="unemploymentPersonal"></div></td>'+
+	'<td><div class="xf-handler"><input onchange="changeNum(this);" onbeforepaste="onpaste()" y="'+newCopyNum+'" x="11" class="fee_row fee_col11 U A_" style="width: 40px" name="unemploymentUnits"></div></td>'+
+	'<td><div class="xf-handler"><input onchange="changeNum(this);" onbeforepaste="onpaste()" y="'+newCopyNum+'" x="12" class="fee_row fee_col12 I A_" style="width: 40px" name="fertilityPersonal"></div></td>'+
+	'<td><div class="xf-handler"><input onchange="changeNum(this);" onbeforepaste="onpaste()" y="'+newCopyNum+'" x="13" class="fee_row fee_col13 U A_" style="width: 40px" name="fertilityUnits"></div></td>'+
+	'<td><div class="xf-handler"><input onchange="changeNum(this);" onbeforepaste="onpaste()" y="'+newCopyNum+'" x="14" class="fee_row fee_col14 A_" style="width: 40px" name="incomeTax"></div></td>'+
+	'<td><div class="xf-handler"><input onchange="changeNum(this);" onbeforepaste="onpaste()" y="'+newCopyNum+'" x="15" class="fee_row fee_col15" style="width: 40px" name="attendanceChargeback"></div></td>'+
+	'<td><div class="xf-handler"><input onchange="changeNum(this);" onbeforepaste="onpaste()" y="'+newCopyNum+'" x="16" class="fee_row fee_col16" style="width: 40px" name="realWages"></div></td>'+
+	'<td><div class="xf-handler">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div></td>'+
+	'<td><div class="xf-handler"><input style="width: 60px" name="remark"/></div></div></td>'+
+	'<td><div class="xf-handler"><input onchange="changeNum(this);" onbeforepaste="onpaste()" y="'+newCopyNum+'" x="17" class="fee_row fee_col19" style="width: 40px" name="fieldCost"></div></td>'+
+	'<td><div class="xf-handler"><input onchange="changeNum(this);" onbeforepaste="onpaste()" y="'+newCopyNum+'" x="18" class="fee_row fee_col20" style="width: 40px" name="moneyWages"></div></td>'+
+	'<td><div class="xf-handler"><input onchange="changeNum(this);" onbeforepaste="onpaste()" y="'+newCopyNum+'" x="19" class="fee_row fee_col21" style="width: 40px" name="payHrcost"></div></td>'+
+	'<td></td>'+
+	'</tr>';
+
+	var targetTr = $('[line_num^="copy-number-"]:last');
+	$(targetTr).after(html);
+}
+
+//填充表单
+function populateFields(line,data){
+	//展示数据
+	if(xf_f_flow_view && line){
+		$(line).find('.xf-handler').each(function(){
+			var field1 = $(this).find('input');
+			var name = field1.attr('name'); 
+			if(name){
+				if(data[name]){
+					$(this).html(data[name]);
+				}else{
+					$(this).html('');
+				}
+			}
+		});
+	}else{
+		$(line).find('.xf-handler').each(function(){
+			var field1 = $(this).find('input');
+			var name = field1.attr('name');
+			if(name){
+				if(data[name]){
+					$(field1).val(data[name]);
+				}
+			}
+		});
+	}
+}
+
+function export_Form(){
+	var detail = '[';
+	$('tr[id^="xf-g-"]').each(function (){
+		var str = '{';
+		$(this).find('.xf-handler').each(function(){
+			var field1 = $(this).find('input');
+			var name = field1.attr('name');
+			if(name){
+				var v_ = $(field1).val();
+				if('realName'!=name && 'loginName'!=name && 'remark'!=name){
+					v_=$(field1).val();//.replace(/[^\d]/g,'0');
+					v_ = (v_=='')?'0':v_;
+				}
+				str+='"'+name+'":"'+v_+'",';
+			}
+		});
+		detail+=str.substring(0,str.length-1)+'},';
+	});
+	detail = detail.substring(0,detail.length-1);
+	detail +=']';
+	
+	var total = '{';
+	$('#calLine').find('.xf-handler').each(function(){
+		var field1 = $(this).find('input');
+		var name = field1.attr('name');
+		if(name){
+			var v_ = $(field1).val();//.replace(/[^\d]/g,'0')
+			total+='"'+name+'":"'+(v_==''?'0':v_)+'",';
+		}
+	});
+	total+='"topic":"'+$('#xf_f_bt').val()+'",'+'"month":"'+$('#xf_f_ffyf').val()+'"';
+	
+	//total = total.substring(0,total.length-1);
+	total +='}';
+	
+	var wages = '{"total":'+total+',"detail":'+detail+'}';
+	
+	$('#xf_f_wages').val(wages);
+	
+	//console.log('xf_f_wages:'+wages);
+}
+</script>

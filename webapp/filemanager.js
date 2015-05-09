@@ -38,13 +38,9 @@ function saveAddFile(){
 			      type : "post",  
 			      data: { fileTypeId: fileTypeId, fileTypeSubId: fileTypeSubId }, 
 		      dataType : "json",     
-		       timeout : 1000,     
+		       timeout : 300000,     
 		     secureuri : false,    // 一般设置为false     
 		 fileElementId : 'file', // 文件上传空间的id属性     
-			     error : function(XMLHttpRequest, textStatus, errorThrown) 
-			     {  
-			    	alert("失败");     
-			     },     
 			   success : function(json) 
 			   {    
 				   if(json == "type"){
@@ -59,7 +55,11 @@ function saveAddFile(){
 					   $("#fileListTab").html($("#fileListTab").html()+str);
 					   $('#fileSpan').html('<input id="file" name="file" type="file" onfocus="beforValidata();" onchange="saveAddFile()" />');
 				   }
-			    }
+			    },
+			    error : function(XMLHttpRequest, textStatus, errorThrown) 
+			     {  
+			    	alert("失败");     
+			     }
 	}); 
 }
 	
@@ -152,7 +152,7 @@ function saveUpdateFile(){
 			      type : "post",  
 			      data: { fileTypeId: fileTypeId, fileTypeSubId: fileTypeSubId, updateId: updateId }, 
 		      dataType : "json",     
-		       timeout : 1000,     
+		       timeout : 300000,     
 		     secureuri : false,    // 一般设置为false     
 		 fileElementId : 'ufile', // 文件上传空间的id属性     
 			     error : function(XMLHttpRequest, textStatus, errorThrown) 
@@ -261,7 +261,7 @@ function saveUpdateFileForAudit(){
 			      type : "post",  
 			      data: { fileTypeId: fileTypeId, fileTypeSubId: fileTypeSubId, updateId: updateId }, 
 		      dataType : "json",     
-		       timeout : 1000,     
+		       timeout : 300000,     
 		     secureuri : false,    // 一般设置为false     
 		 fileElementId : 'ufile', // 文件上传空间的id属性     
 			     error : function(XMLHttpRequest, textStatus, errorThrown) 
@@ -302,7 +302,7 @@ function saveAddFileForAudit(){
 			      type : "post",  
 			      data: { fileTypeId: fileTypeId, fileTypeSubId: fileTypeSubId, groupId: groupId, custCode: custCode }, 
 		      dataType : "json",     
-		       timeout : 1000,     
+		       timeout : 300000,     
 		     secureuri : false,    // 一般设置为false     
 		 fileElementId : 'file', // 文件上传空间的id属性     
 			     error : function(XMLHttpRequest, textStatus, errorThrown) 
