@@ -6,6 +6,7 @@ drop table IF EXISTS t_role_resource;
 drop table IF EXISTS t_resource_option;
 drop table IF EXISTS t_resource;
 DROP TABLE IF EXISTS T_STAFF_BENEFITS;
+DROP TABLE IF EXISTS T_STAFF_WAGES;
 drop table IF EXISTS t_staff;
 drop table IF EXISTS t_role;
 drop table IF EXISTS t_department;
@@ -425,13 +426,17 @@ create table t_notice
 
 
 -- -----------------------------------------------------------------------------
---  T_STAFF_BENEFITS 
+--  T_STAFF_WAGES 
 -- -----------------------------------------------------------------------------
-CREATE TABLE T_STAFF_BENEFITS(
-	ID BIGINT AUTO_INCREMENT 			COMMENT '自增长ID',
-	LOGIN_NAME	VARCHAR(64)				COMMENT '员工',
-	BASIC_WAGE NUMERIC(11,2)            COMMENT '基本工资  ',
-	ATTENDANCE_SUBSIDIES NUMERIC(11,2)  COMMENT '考勤补贴  ',
+CREATE TABLE T_STAFF_WAGES(
+	UUID VARCHAR(64)						COMMENT 'ID',
+	ID VARCHAR(50)			 				COMMENT '编号',
+	TOPIC VARCHAR(50)						COMMENT '标题',
+	MONTH	VARCHAR(50)						COMMENT '发放月份',
+	TEMPLATEID	VARCHAR(50)					COMMENT '模板ID',
+	STATUS int								COMMENT '状态',
+	PAY_BASE NUMERIC(11,2)            	COMMENT '基本工资  ',
+	PAY_ATTENDANCE NUMERIC(11,2)  		COMMENT '考勤补贴  ',
 	PENSION_INDIVIDUAL NUMERIC(11,2)    COMMENT '养老(个人)',
 	PENSION_UNITS NUMERIC(11,2)         COMMENT '养老(单位)',
 	HOUSING_INDIVIDUAL NUMERIC(11,2)    COMMENT '住房(个人)',
@@ -447,13 +452,47 @@ CREATE TABLE T_STAFF_BENEFITS(
 	INCOME_TAX NUMERIC(11,2)            COMMENT '所得税    ',
 	ATTENDANCE_CHARGEBACK NUMERIC(11,2) COMMENT '考勤扣款  ',
 	REAL_WAGES NUMERIC(11,2)            COMMENT '实发工资  ',
-	CREATE_USER VARCHAR(10)   			COMMENT '创建人',
-	CREATE_DATE DATETIME       			COMMENT '创建时间',
-	UPDATE_USER VARCHAR(10)   			COMMENT '更新人',
-	UPDATE_DATE DATETIME       			COMMENT '更新时间',
-        CONSTRAINT PK_STAFF_BENEFITS PRIMARY KEY(ID),
-		CONSTRAINT FK_STAFF_BENEFITS_LOGIN_NAME FOREIGN KEY(LOGIN_NAME) REFERENCES T_STAFF(LOGIN_NAME)
-) ENGINE=INNODB COMMENT'员工福利表';
+	REMARK	 VARCHAR(500) 				COMMENT '备注',
+	FIELD_COST NUMERIC(11,2)			COMMENT '外勤费用',
+	MONEY_WAGES NUMERIC(11,2)			COMMENT '现金工资',
+	PAYHR_COST NUMERIC(11,2)			COMMENT '人力成本',
+	CREATE_USER VARCHAR(10)   				COMMENT '创建人',
+	CREATE_DATE DATETIME       				COMMENT '创建时间',
+	UPDATE_USER VARCHAR(10)   				COMMENT '更新人',
+	UPDATE_DATE DATETIME       				COMMENT '更新时间',
+		CONSTRAINT PK_STAFF_WAGES PRIMARY KEY(UUID)
+) ENGINE=INNODB COMMENT'员工工资总表';
+
+
+-- -----------------------------------------------------------------------------
+--  T_STAFF_BENEFITS 
+-- -----------------------------------------------------------------------------
+CREATE TABLE T_STAFF_BENEFITS(
+	ID VARCHAR(64)			 			COMMENT 'ID',
+	LOGIN_NAME	VARCHAR(64)				COMMENT '员工',
+	REAL_NAME	VARCHAR(64)				COMMENT '员工真实姓名',
+	PAY_BASE NUMERIC(11,2)            	COMMENT '基本工资  ',
+	PAY_ATTENDANCE NUMERIC(11,2)  		COMMENT '考勤补贴  ',
+	PENSION_INDIVIDUAL NUMERIC(11,2)    COMMENT '养老(个人)',
+	PENSION_UNITS NUMERIC(11,2)         COMMENT '养老(单位)',
+	HOUSING_INDIVIDUAL NUMERIC(11,2)    COMMENT '住房(个人)',
+	HOUSING_UNITS NUMERIC(11,2)         COMMENT '住房(单位)',
+	MEDICAL_PERSONAL NUMERIC(11,2)      COMMENT '医疗(个人)',
+	MEDICAL_UNITS NUMERIC(11,2)         COMMENT '医疗(单位)',
+	INJURY_PERSONAL NUMERIC(11,2)       COMMENT '工伤(个人)',
+	INJURY_UNITS NUMERIC(11,2)          COMMENT '工伤(单位)',
+	UNEMPLOYMENT_PERSONAL NUMERIC(11,2) COMMENT '失业(个人)',
+	UNEMPLOYMENT_UNITS NUMERIC(11,2)    COMMENT '失业(单位)',
+	FERTILITY_PERSONAL NUMERIC(11,2)    COMMENT '生育(个人)',
+	FERTILITY_UNITS NUMERIC(11,2)       COMMENT '生育(单位)',
+	INCOME_TAX NUMERIC(11,2)            COMMENT '所得税    ',
+	ATTENDANCE_CHARGEBACK NUMERIC(11,2) COMMENT '考勤扣款  ',
+	REAL_WAGES NUMERIC(11,2)            COMMENT '实发工资  ',
+	REMARK	 VARCHAR(500) 				COMMENT '备注',
+	FIELD_COST NUMERIC(11,2)			COMMENT '外勤费用',
+	MONEY_WAGES NUMERIC(11,2)			COMMENT '现金工资',
+	PAYHR_COST NUMERIC(11,2)			COMMENT '人力成本'
+) ENGINE=INNODB COMMENT'员工工资明细表';
 
 -- 流程共享信息视图：status：1.初始化，2.正常，3.失效
 CREATE OR REPLACE VIEW view_process_public_info

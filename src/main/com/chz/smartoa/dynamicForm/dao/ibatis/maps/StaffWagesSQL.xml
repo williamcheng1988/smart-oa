@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- Always ensure to use the correct XML header as above! -->
+<sqlMap namespace="FormTemplate">
+	<typeAlias alias="staffWages" type="com.chz.smartoa.dynamicForm.pojo.StaffWages"/>
+	
+	<insert id="Form_insertStaffWages" parameterClass="staffWages">
+		<![CDATA[
+			INSERT INTO T_STAFF_WAGES(UUID,ID,TOPIC,MONTH,TEMPLATEID,STATUS,PAY_BASE,PAY_ATTENDANCE,PENSION_INDIVIDUAL,PENSION_UNITS,HOUSING_INDIVIDUAL,HOUSING_UNITS,MEDICAL_PERSONAL,MEDICAL_UNITS,INJURY_PERSONAL,
+				INJURY_UNITS,UNEMPLOYMENT_PERSONAL,UNEMPLOYMENT_UNITS,FERTILITY_PERSONAL,FERTILITY_UNITS,INCOME_TAX,ATTENDANCE_CHARGEBACK,REAL_WAGES,REMARK,FIELD_COST,MONEY_WAGES,PAYHR_COST,CREATE_USER,CREATE_DATE,UPDATE_USER,UPDATE_DATE) 
+			VALUES(#uuid#,#id#,#topic#,#month#,#templateId#,#status#,#payBase#,#payAttendance#,#pensionIndividual#,#pensionUnits#,#housingIndividual#,#housingUnits#,#medicalPersonal#,#medicalUnits#,#injuryPersonal#,
+				#injuryUnits#,#unemploymentPersonal#,#unemploymentUnits#,#fertilityPersonal#,#fertilityUnits#,#incomeTax#,#attendanceChargeback#,#realWages#,#remark#,#fieldCost#,#moneyWages#,#payHrcost#,#createUser#,SYSDATE(),#updateUser#,SYSDATE())
+		]]>
+	</insert>
+	
+	<delete id="Form_deleteStaffWagesById" parameterClass="staffWages">
+		<![CDATA[
+		    DELETE FROM T_STAFF_WAGES WHERE ID=#id#
+		]]>
+	</delete>
+	
+	<update id="Form_updateStaffWages" parameterClass="staffWages">
+	    UPDATE T_STAFF_WAGES SET ID=#id#
+	    <isNotEmpty prepend="," property="status">
+	    	STATUS= #status#</isNotEmpty>
+		<isNotEmpty prepend="," property="payBase">
+				PAY_BASE = #payBase#</isNotEmpty>
+		<isNotEmpty prepend="," property="payAttendance">
+			PAY_ATTENDANCE = #payAttendance#</isNotEmpty>
+		<isNotEmpty prepend="," property="pensionIndividual">
+			PENSION_INDIVIDUAL = #pensionIndividual#</isNotEmpty>
+		<isNotEmpty prepend="," property="pensionUnits">
+			PENSION_UNITS = #pensionUnits#</isNotEmpty>
+		<isNotEmpty prepend="," property="housingIndividual">
+			HOUSING_INDIVIDUAL = #housingIndividual#</isNotEmpty>
+		<isNotEmpty prepend="," property="housingUnits">
+			HOUSING_UNITS = #housingUnits#</isNotEmpty>
+		<isNotEmpty prepend="," property="medicalPersonal">
+			MEDICAL_PERSONAL = #medicalPersonal#</isNotEmpty>
+		<isNotEmpty prepend="," property="medicalUnits">
+			MEDICAL_UNITS = #medicalUnits#</isNotEmpty>
+		<isNotEmpty prepend="," property="injuryPersonal">
+			INJURY_PERSONAL = #injuryPersonal#</isNotEmpty>
+		<isNotEmpty prepend="," property="injuryUnits">
+			INJURY_UNITS = #injuryUnits#</isNotEmpty>
+		<isNotEmpty prepend="," property="unemploymentPersonal">
+			UNEMPLOYMENT_PERSONAL= #unemploymentPersonal#</isNotEmpty>
+		<isNotEmpty prepend="," property="unemploymentUnits">
+			UNEMPLOYMENT_UNITS = #unemploymentUnits#</isNotEmpty>
+		<isNotEmpty prepend="," property="fertilityPersonal">
+			FERTILITY_PERSONAL = #fertilityPersonal#</isNotEmpty>
+		<isNotEmpty prepend="," property="fertilityUnits">
+			FERTILITY_UNITS = #fertilityUnits#</isNotEmpty>
+		<isNotEmpty prepend="," property="incomeTax">
+			INCOME_TAX = #incomeTax#</isNotEmpty>
+		<isNotEmpty prepend="," property="attendanceChargeback">
+			ATTENDANCE_CHARGEBACK= #attendanceChargeback#</isNotEmpty>
+		<isNotEmpty prepend="," property="realWages">
+			REAL_WAGES = #realWages#</isNotEmpty>
+		<isNotEmpty prepend="," property="remark">
+			REMARK = #remark#</isNotEmpty>
+		<isNotEmpty prepend="," property="fieldCost">
+			FIELD_COST = #fieldCost#</isNotEmpty>
+		<isNotEmpty prepend="," property="moneyWages">
+			MONEY_WAGES = #moneyWages#</isNotEmpty>
+		<isNotEmpty prepend="," property="payHrcost">
+			PAYHR_COST = #realWages#</isNotEmpty>
+		<isNotEmpty prepend="," property="updateUser">
+   	   		UPDATE_USER = #updateUser#</isNotEmpty>
+		<isNotEmpty prepend="," property="updateDate">
+   	   		UPDATE_DATE = SYSDATE()</isNotEmpty>
+	    WHERE UUID=#uuid#
+	</update>
+	
+	<sql id="StaffWages_datas">
+		<![CDATA[
+		    SELECT
+		    	ID						AS  id,
+		    	UUID					AS  uuid,
+		    	TOPIC					AS	topic,
+		    	MONTH					AS	month,
+		    	TEMPLATEID				AS 	templateId,
+				STATUS					AS 	status,
+				PAY_BASE               	AS  payBase,
+				PAY_ATTENDANCE    		AS  payAttendance,
+				PENSION_INDIVIDUAL      AS  pensionIndividual,
+				PENSION_UNITS           AS  pensionUnits,
+				HOUSING_INDIVIDUAL      AS  housingIndividual,
+				HOUSING_UNITS           AS  housingUnits,
+				MEDICAL_PERSONAL        AS  medicalPersonal,
+				MEDICAL_UNITS           AS  medicalUnits,
+				INJURY_PERSONAL         AS  injuryPersonal,
+				INJURY_UNITS            AS  injuryUnits,
+				UNEMPLOYMENT_PERSONAL   AS  unemploymentPersonal,
+				UNEMPLOYMENT_UNITS      AS  unemploymentUnits,
+				FERTILITY_PERSONAL      AS  fertilityPersonal,
+				FERTILITY_UNITS         AS  fertilityUnits,
+				INCOME_TAX              AS  incomeTax,
+				ATTENDANCE_CHARGEBACK   AS  attendanceChargeback,
+				REAL_WAGES              AS  realWages,
+				REMARK              	AS  remark,
+				FIELD_COST              AS  fieldCost,
+				MONEY_WAGES             AS  moneyWages,
+				PAYHR_COST              AS  payHrcost,
+		    	CREATE_USER 			AS  createUser,
+		    	CREATE_DATE 			AS  createDate,
+		    	UPDATE_USER 			AS  updateUser,
+		    	UPDATE_DATE 			AS  updateDate
+		    FROM T_STAFF_WAGES SW
+		]]>
+	</sql>
+	
+	<!-- 查询数据集条件 -->
+	<sql id="StaffWages_list_where">
+		<!-- 暂时不需要条件限制 list 查询 -->
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="and" property="status">
+				STATUS = #status#</isNotEmpty>
+			<isNotEmpty prepend="and" property="templateId">
+				TEMPLATEID = #templateId#</isNotEmpty>
+			<isNotEmpty prepend="and" property="housingIndividual">
+				HOUSING_INDIVIDUAL = #housingIndividual#</isNotEmpty>
+			<isNotEmpty prepend="and" property="housingUnits">
+				HOUSING_UNITS = #housingUnits#</isNotEmpty>
+			<isNotEmpty prepend="and" property="medicalPersonal">
+				MEDICAL_PERSONAL = #medicalPersonal#</isNotEmpty>
+			<isNotEmpty prepend="and" property="medicalUnits">
+				MEDICAL_UNITS = #medicalUnits#</isNotEmpty>
+			<isNotEmpty prepend="and" property="injuryPersonal">
+				INJURY_PERSONAL = #injuryPersonal#</isNotEmpty>
+			<isNotEmpty prepend="and" property="injuryUnits">
+				INJURY_UNITS = #injuryUnits#</isNotEmpty>
+			<isNotEmpty prepend="and" property="unemploymentPersonal">
+				UNEMPLOYMENT_PERSONAL= #unemploymentPersonal#</isNotEmpty>
+			<isNotEmpty prepend="and" property="unemploymentUnits">
+				UNEMPLOYMENT_UNITS = #unemploymentUnits#</isNotEmpty>
+			<isNotEmpty prepend="and" property="fertilityPersonal">
+				FERTILITY_PERSONAL = #fertilityPersonal#</isNotEmpty>
+			<isNotEmpty prepend="and" property="fertilityUnits">
+				FERTILITY_UNITS = #fertilityUnits#</isNotEmpty>
+			<isNotEmpty prepend="and" property="incomeTax">
+				INCOME_TAX = #incomeTax#</isNotEmpty>
+			<isNotEmpty prepend="and" property="attendanceChargeback">
+				ATTENDANCE_CHARGEBACK= #attendanceChargeback#</isNotEmpty>
+			<isNotEmpty prepend="and" property="realWages">
+				REAL_WAGES = #realWages#</isNotEmpty>
+			<isNotEmpty prepend="and" property="updateUser">
+	   	   		UPDATE_USER = #updateUser#</isNotEmpty>
+			<isNotEmpty prepend="and" property="createUser">
+	   	   		CREATE_USER = #createUser#</isNotEmpty>
+			<isNotEmpty prepend="and" property = "createDateFrom">
+				<![CDATA[DATEDIFF(CREATE_DATE,#createDateFrom#)>=0]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property = "createDateTo">
+				<![CDATA[DATEDIFF(CREATE_DATE,#createDateTo#)<=0]]>
+			</isNotEmpty>
+		</dynamic>
+	</sql>
+
+	<select id="Form_findStaffWagesById" resultClass="staffWages" parameterClass="staffWages">
+		<include refid="StaffWages_datas"/>
+		WHERE SW.ID = #id#
+	</select>
+	
+	<select id="Form_findStaffWages" resultClass="staffWages" parameterClass="staffWages">
+		<include refid="StaffWages_datas"/>
+		<include refid="StaffWages_list_where"/>
+	</select>
+	
+	<select id="Form_listWageRecordCountByDocNoRule" resultClass="java.lang.Integer" parameterClass="map">
+		<![CDATA[
+		    SELECT COUNT(1) 
+		    FROM T_STAFF_WAGES SW 
+		    WHERE SW.ID LIKE CONCAT(#rule_finalRule#,'%')
+		]]>
+	</select>
+</sqlMap>
