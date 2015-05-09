@@ -42,7 +42,6 @@ public interface FormConstants {
 	/** 表单数据JSON**/
 	public final static String FORMRECORD_JSON="json";
 	
-	
 	/**视图路径**/
 	public final static String VIEW_URL="viewUrl";
 	/**页面传入控件参数(key-value)**/
@@ -51,5 +50,11 @@ public interface FormConstants {
 	
 	/**客户代码**/
 	public final static String CUSTOMER_CODE="customerCode";
+	
+	/**用户信息**/
+	public final static String WAGE_STAFFS="wage_staffs";
+	
+	/**工资信息**/
+	public final static String WAGE_WAGES="xf_f_wages";
 	
 }

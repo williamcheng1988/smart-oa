@@ -7,20 +7,14 @@
 	
 	<insert id="Form_insertStaffBenefits" parameterClass="staffBenefits">
 		<![CDATA[
-			INSERT INTO T_STAFF_BENEFITS(ID,LOGIN_NAME,BASIC_WAGE,ATTENDANCE_SUBSIDIES,PENSION_INDIVIDUAL,PENSION_UNITS,HOUSING_INDIVIDUAL,HOUSING_UNITS,MEDICAL_PERSONAL,MEDICAL_UNITS,INJURY_PERSONAL,
-					INJURY_UNITS,UNEMPLOYMENT_PERSONAL,UNEMPLOYMENT_UNITS,FERTILITY_PERSONAL,FERTILITY_UNITS,INCOME_TAX,ATTENDANCE_CHARGEBACK,REAL_WAGES,CREATE_USER,CREATE_DATE,UPDATE_USER,UPDATE_DATE) 
-			VALUES(#id#,#loginName#,#basicWage#,#attendanceSubsidies#,#pensionIndividual#,#pensionUnits#,#housingIndividual#,#housingUnits#,#medicalPersonal#,#medicalUnits#,#injuryPersonal#,
-				   #injuryUnits#,#unemploymentPersonal#,#unemploymentUnits#,#fertilityPersonal#,#fertilityUnits#,#incomeTax#,#attendanceChargeback#,#realWages#,#createUser#,SYSDATE(),#updateUser#,SYSDATE())
+			INSERT INTO T_STAFF_BENEFITS(ID,LOGIN_NAME,REAL_NAME,PAY_BASE,PAY_ATTENDANCE,PENSION_INDIVIDUAL,PENSION_UNITS,HOUSING_INDIVIDUAL,HOUSING_UNITS,MEDICAL_PERSONAL,MEDICAL_UNITS,INJURY_PERSONAL,
+				INJURY_UNITS,UNEMPLOYMENT_PERSONAL,UNEMPLOYMENT_UNITS,FERTILITY_PERSONAL,FERTILITY_UNITS,INCOME_TAX,ATTENDANCE_CHARGEBACK,REAL_WAGES,REMARK,FIELD_COST,MONEY_WAGES,PAYHR_COST) 
+			VALUES(#id#,#loginName#,#realName#,#payBase#,#payAttendance#,#pensionIndividual#,#pensionUnits#,#housingIndividual#,#housingUnits#,#medicalPersonal#,#medicalUnits#,#injuryPersonal#,
+				#injuryUnits#,#unemploymentPersonal#,#unemploymentUnits#,#fertilityPersonal#,#fertilityUnits#,#incomeTax#,#attendanceChargeback#,#realWages#,#remark#,#fieldCost#,#moneyWages#,#payHrcost#)
 		]]>
 	</insert>
 	
 	<delete id="Form_deleteStaffBenefitsById" parameterClass="staffBenefits">
-		<![CDATA[
-		    DELETE FROM T_STAFF_BENEFITS WHERE ID=#id#
-		]]>
-	</delete>
-	
-	<delete id="Form_deleteStaffBenefitsByLoginName" parameterClass="staffBenefits">
 		<![CDATA[
 		    DELETE FROM T_STAFF_BENEFITS WHERE ID=#id#
 		]]>
@@ -31,13 +25,16 @@
 	    <isNotEmpty prepend="," property="loginName">
    	   		LOGIN_NAME = #loginName#
 		</isNotEmpty>
-		<isNotEmpty prepend="," property="basicWage">
-			BASIC_WAGE = #basicWage#</isNotEmpty>
-		<isNotEmpty prepend="," property="attendanceSubsidies">
-			ATTENDANCE_SUBSIDIES = #attendanceSubsidies#</isNotEmpty>
-		<isNotEmpty prepend="," property="pensionIndividual">
+		<isNotEmpty prepend="," property="realName">
+   	   		REAL_NAME = #realName#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="payBase">
+				PAY_BASE = #payBase#</isNotEmpty>
+		<isNotEmpty prepend="and" property="payAttendance">
+			PAY_ATTENDANCE = #payAttendance#</isNotEmpty>
+		<isNotEmpty prepend="and" property="pensionIndividual">
 			PENSION_INDIVIDUAL = #pensionIndividual#</isNotEmpty>
-		<isNotEmpty prepend="," property="pensionUnits">
+		<isNotEmpty prepend="and" property="pensionUnits">
 			PENSION_UNITS = #pensionUnits#</isNotEmpty>
 		<isNotEmpty prepend="," property="housingIndividual">
 			HOUSING_INDIVIDUAL = #housingIndividual#</isNotEmpty>
@@ -65,10 +62,10 @@
 			ATTENDANCE_CHARGEBACK= #attendanceChargeback#</isNotEmpty>
 		<isNotEmpty prepend="," property="realWages">
 			REAL_WAGES = #realWages#</isNotEmpty>
-		<isNotEmpty prepend="," property="updateUser">
-   	   		UPDATE_USER = #updateUser#</isNotEmpty>
-		<isNotEmpty prepend="," property="updateDate">
-   	   		UPDATE_DATE = SYSDATE()</isNotEmpty>
+		<isNotEmpty prepend="," property="remark">
+			REMARK = #remark#</isNotEmpty>
+		<isNotEmpty prepend="," property="fieldCost">
+			FIELD_COST = #fieldCost#</isNotEmpty>
 	    WHERE ID=#id#
 	</update>
 	
@@ -77,8 +74,9 @@
 		    SELECT
 		    	ID						AS  id,
 				LOGIN_NAME				AS  loginName,
-				BASIC_WAGE              AS  basicWage,
-				ATTENDANCE_SUBSIDIES    AS  attendanceSubsidies,
+				REAL_NAME				AS  realName,
+				PAY_BASE               	AS  payBase,
+				PAY_ATTENDANCE    		AS  payAttendance,
 				PENSION_INDIVIDUAL      AS  pensionIndividual,
 				PENSION_UNITS           AS  pensionUnits,
 				HOUSING_INDIVIDUAL      AS  housingIndividual,
@@ -94,15 +92,10 @@
 				INCOME_TAX              AS  incomeTax,
 				ATTENDANCE_CHARGEBACK   AS  attendanceChargeback,
 				REAL_WAGES              AS  realWages,
-		    	CREATE_USER 			AS createUser,
-		    	CREATE_DATE 			AS createDate,
-		    	UPDATE_USER 			AS updateUser,
-		    	UPDATE_DATE 			AS updateDate,
-		    	FORM_TEMPLATE_ID 		AS formTemplateId,
-		    	CREATE_USER 			AS createUser,
-		    	CREATE_DATE 			AS createDate,
-		    	UPDATE_USER 			AS updateUser,
-		    	UPDATE_DATE 			AS updateDate
+				REMARK              	AS  remark,
+				FIELD_COST              AS  fieldCost,
+				MONEY_WAGES             AS  moneyWages,
+				PAYHR_COST              AS  payHrcost
 		    FROM T_STAFF_BENEFITS SB
 		]]>
 	</sql>
@@ -114,10 +107,10 @@
 			<isNotEmpty prepend="and" property="loginName">
 	   	   		LOGIN_NAME = #loginName#
 			</isNotEmpty>
-			<isNotEmpty prepend="and" property="basicWage">
-				BASIC_WAGE = #basicWage#</isNotEmpty>
-			<isNotEmpty prepend="and" property="attendanceSubsidies">
-				ATTENDANCE_SUBSIDIES = #attendanceSubsidies#</isNotEmpty>
+			<isNotEmpty prepend="and" property="payBase">
+				PAY_BASE = #payBase#</isNotEmpty>
+			<isNotEmpty prepend="and" property="payAttendance">
+				PAY_ATTENDANCE = #payAttendance#</isNotEmpty>
 			<isNotEmpty prepend="and" property="pensionIndividual">
 				PENSION_INDIVIDUAL = #pensionIndividual#</isNotEmpty>
 			<isNotEmpty prepend="and" property="pensionUnits">
@@ -148,16 +141,6 @@
 				ATTENDANCE_CHARGEBACK= #attendanceChargeback#</isNotEmpty>
 			<isNotEmpty prepend="and" property="realWages">
 				REAL_WAGES = #realWages#</isNotEmpty>
-			<isNotEmpty prepend="and" property="updateUser">
-	   	   		UPDATE_USER = #updateUser#</isNotEmpty>
-			<isNotEmpty prepend="and" property="createUser">
-	   	   		CREATE_USER = #createUser#</isNotEmpty>
-			<isNotEmpty prepend="and" property = "createDateFrom">
-				<![CDATA[DATEDIFF(CREATE_DATE,#createDateFrom#)>=0]]>
-			</isNotEmpty>
-			<isNotEmpty prepend="and" property = "createDateTo">
-				<![CDATA[DATEDIFF(CREATE_DATE,#createDateTo#)<=0]]>
-			</isNotEmpty>
 		</dynamic>
 	</sql>
 

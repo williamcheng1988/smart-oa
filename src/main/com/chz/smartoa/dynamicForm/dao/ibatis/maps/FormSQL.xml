@@ -39,14 +39,6 @@
 		]]>
 	</delete>
 	
-	<!-- 根据外键删除记录 -->
-	<delete id="Form_deleteFormPropById" parameterClass="java.util.List">
-		DELETE FROM T_FORM_PROP WHERE ID IN 
-		<iterate conjunction="," open="(" close=")"> 
-			#[]#
-		</iterate>
-	</delete>
-	
 	<delete id="Form_deleteFormRecord" parameterClass="formRecord">
 		<![CDATA[
 		    DELETE FROM T_FROM FORM_RECORD WHERE UUID=#uuId#

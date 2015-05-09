@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.springframework.dao.DataAccessException;
@@ -14,7 +15,11 @@ import com.chz.smartoa.dynamicForm.pojo.FormRecord;
 import com.chz.smartoa.dynamicForm.pojo.FormTemplate;
 import com.chz.smartoa.dynamicForm.pojo.FormTemplateJsonContent;
 import com.chz.smartoa.dynamicForm.pojo.Section;
+import com.chz.smartoa.dynamicForm.pojo.StaffBenefits;
+import com.chz.smartoa.dynamicForm.pojo.StaffWages;
+import com.chz.smartoa.dynamicForm.pojo.Wage;
 import com.chz.smartoa.dynamicForm.service.DynamicFormBiz;
+import com.chz.smartoa.dynamicForm.service.StaffBenefitsBiz;
 import com.chz.smartoa.dynamicForm.util.PublicFunction;
 import com.chz.smartoa.dynamicForm.util.RecordBuilder;
 import com.chz.smartoa.dynamicForm.util.StringUtils;
@@ -24,6 +29,7 @@ import com.chz.smartoa.form.service.FormBiz;
 import com.chz.smartoa.global.ServerInfo;
 import com.chz.smartoa.system.constant.DictionaryConstants;
 import com.chz.smartoa.system.pojo.DictionaryConfig;
+import com.chz.smartoa.system.pojo.Staff;
 import com.chz.smartoa.system.service.DictionaryConfigBiz;
 import com.chz.smartoa.system.service.StaffBiz;
 import com.google.gson.Gson;
@@ -37,6 +43,8 @@ public class FormBizImpl implements FormBiz {
 	private DictionaryConfigBiz dictionaryConfigBiz;
 	
 	private StaffBiz staffBiz;
+	
+	private StaffBenefitsBiz staffBenefitsBiz;
 	
 	public DynamicFormBiz getDynamicFormBiz() {
 		return dynamicFormBiz;
@@ -60,6 +68,14 @@ public class FormBizImpl implements FormBiz {
 
 	public void setStaffBiz(StaffBiz staffBiz) {
 		this.staffBiz = staffBiz;
+	}
+
+	public StaffBenefitsBiz getStaffBenefitsBiz() {
+		return staffBenefitsBiz;
+	}
+
+	public void setStaffBenefitsBiz(StaffBenefitsBiz staffBenefitsBiz) {
+		this.staffBenefitsBiz = staffBenefitsBiz;
 	}
 
 	@Override
@@ -90,15 +106,34 @@ public class FormBizImpl implements FormBiz {
 		paramMap.put(FormConstants.FORMTEMPLATE_TYPE_NAME, formTemplate.getFtType().getType());
 		paramMap.put(FormConstants.FORMTEMPLATE_TYPE_DESCRIPTION, formTemplate.getFtType().getDescription());
 
-		//表单数据 JSON
-		if(!StringUtils.isEmpty(formRecordId)){
-			FormRecord formRecord = dynamicFormBiz.findForm(formRecordId);
-			
-			JSONObject js = net.sf.json.JSONObject.fromObject(RecordBuilder.recordToMap(formRecord));
-			String json = js.toString();
-			paramMap.put(FormConstants.FORMRECORD_JSON, json);
-			paramMap.put(FormConstants.FORMRECORD_ID,formRecordId);
-			paramMap.put(FormConstants.FORMRECORD_COUNT, formRecord.getCount());
+		
+		//如果是工资发放页面
+		if("/fixedForm/form/flow-input-form3.html".equals(viewUrl)){
+			//表单数据 JSON
+			if(!StringUtils.isEmpty(formRecordId)){
+				
+				Wage wage = staffBenefitsBiz.findWageById(new StaffWages(formRecordId));
+				JSONObject js = net.sf.json.JSONObject.fromObject(wage);
+				
+				paramMap.put(FormConstants.FORMRECORD_JSON, js.toString());
+				paramMap.put(FormConstants.FORMRECORD_ID,formRecordId);
+				//paramMap.put(FormConstants.FORMRECORD_COUNT, sbs.size()-1);
+			}else{
+				List<Staff> staffs = staffBiz.listAllStaffs(new Staff());
+				JSONArray js = net.sf.json.JSONArray.fromObject(staffs);
+				paramMap.put(FormConstants.WAGE_STAFFS,js.toString());
+			}
+		}else{
+			//表单数据 JSON
+			if(!StringUtils.isEmpty(formRecordId)){
+				FormRecord formRecord = dynamicFormBiz.findForm(formRecordId);
+				
+				JSONObject js = net.sf.json.JSONObject.fromObject(RecordBuilder.recordToMap(formRecord));
+				String json = js.toString();
+				paramMap.put(FormConstants.FORMRECORD_JSON, json);
+				paramMap.put(FormConstants.FORMRECORD_ID,formRecordId);
+				paramMap.put(FormConstants.FORMRECORD_COUNT, formRecord.getCount());
+			}
 		}
 		return paramMap;
 	}

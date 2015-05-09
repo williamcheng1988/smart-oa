@@ -160,6 +160,23 @@ public class StaffDaoImpl extends SqlMapClientDaoSupport implements StaffDao
     
     /**
      * list.
+     * @param staff staff
+     * @return staff list
+     * @throws DataAccessException DataAccessException
+     */
+    public List listAllStaffs(Staff staff) throws DataAccessException {
+		if (logger.isDebugEnabled()) {
+        	logger.debug("进入listAllStaffs(Staff), 输入参数[" + staff + "]");
+		}
+        List list = getSqlMapClientTemplate().queryForList("Staff_listStaff");
+		if (logger.isDebugEnabled()) {
+        	logger.debug("离开listStaff(Staff), 返回[" + list + "]");
+		}
+        return list;
+    } 
+    
+    /**
+     * list.
      * @return staff list
      * @throws DataAccessException DataAccessException
      */

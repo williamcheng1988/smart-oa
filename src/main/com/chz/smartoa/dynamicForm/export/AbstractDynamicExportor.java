@@ -17,7 +17,11 @@ import com.chz.smartoa.dynamicForm.pojo.FormRecord;
 import com.chz.smartoa.dynamicForm.pojo.FormTemplate;
 import com.chz.smartoa.dynamicForm.pojo.FormTemplateJsonContent;
 import com.chz.smartoa.dynamicForm.pojo.Section;
+import com.chz.smartoa.dynamicForm.pojo.StaffBenefits;
+import com.chz.smartoa.dynamicForm.pojo.StaffWages;
+import com.chz.smartoa.dynamicForm.pojo.Wage;
 import com.chz.smartoa.dynamicForm.service.DynamicFormBiz;
+import com.chz.smartoa.dynamicForm.service.StaffBenefitsBiz;
 import com.chz.smartoa.dynamicForm.util.ServletUtils;
 import com.chz.smartoa.dynamicForm.util.StringUtils;
 import com.google.gson.Gson;
@@ -31,6 +35,13 @@ import com.google.gson.GsonBuilder;
 public abstract class AbstractDynamicExportor implements Exportor {
 	
 	DynamicFormBiz dynamicFormBiz;
+	StaffBenefitsBiz staffBenefitsBiz;
+	public StaffBenefitsBiz getStaffBenefitsBiz() {
+		return staffBenefitsBiz;
+	}
+	public void setStaffBenefitsBiz(StaffBenefitsBiz staffBenefitsBiz) {
+		this.staffBenefitsBiz = staffBenefitsBiz;
+	}
 	public DynamicFormBiz getDynamicFormBiz() {
 		return dynamicFormBiz;
 	}
@@ -300,4 +311,6 @@ public abstract class AbstractDynamicExportor implements Exportor {
         tableModel.setHeadcodes(codes);
         tableModel.setData(recordsExp);
     }
+    
+    
 }

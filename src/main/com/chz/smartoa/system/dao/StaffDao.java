@@ -66,6 +66,13 @@ public interface StaffDao {
      * @throws DataAccessException DataAccessException
      */
     List<Staff> listStaff(Staff staff) throws DataAccessException ;
+    /**
+     * list.
+     * @param staff staff
+     * @return staff list
+     * @throws DataAccessException DataAccessException
+     */
+    List listAllStaffs(Staff staff) throws DataAccessException;
     
     /**
      * list.

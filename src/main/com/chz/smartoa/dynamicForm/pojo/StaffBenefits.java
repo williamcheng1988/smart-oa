@@ -1,43 +1,62 @@
 package com.chz.smartoa.dynamicForm.pojo;
 
-import java.util.Date;
-
 import com.chz.smartoa.common.base.BaseDomain;
+import com.chz.smartoa.dynamicForm.export.ExpColumn;
 
+/**
+ * 员工工资明细表
+ * @author lenovo
+ * @time 15:17 2015/5/2
+ */
 public class StaffBenefits extends BaseDomain {
 	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private Long id;
-	private String loginName;
-	private double basicWage;
-	private double attendanceSubsidies;
-	private double pensionIndividual;
-	private double pensionUnits;
-	private double housingIndividual;
-	private double housingUnits;
-	private double medicalPersonal;
-	private double medicalUnits;
-	private double injuryPersonal;
-	private double injuryUnits;
-	private double unemploymentPersonal;
-	private double unemploymentUnits;
-	private double fertilityPersonal;
-	private double fertilityUnits;
-	private double incomeTax;
-	private double attendanceChargeback;
-	private double realWages;
-    private String createUser;
-    private Date createDate;
-    private String updateUser;
-    private Date updateDate;
-	public Long getId() {
+	private String id;						//
+	private String uuid;					//
+	@ExpColumn("用户名")private String loginName;				//
+	@ExpColumn("姓名")private String realName;				//真实姓名
+	@ExpColumn("基本工资")private double payBase;               	//基本工资
+	@ExpColumn("考勤补贴")private double payAttendance;     		//考勤补贴
+	@ExpColumn("养老(个人)")private double pensionIndividual;       //养老(个人)
+	@ExpColumn("养老(单位)")private double pensionUnits;            //养老(单位)
+	@ExpColumn("住房(个人)")private double housingIndividual;       //住房(个人)
+	@ExpColumn("住房(单位)")private double housingUnits;            //住房(单位)
+	@ExpColumn("医疗(个人)")private double medicalPersonal;         //医疗(个人)
+	@ExpColumn("医疗(单位)")private double medicalUnits;            //医疗(单位)
+	@ExpColumn("工伤(个人)")private double injuryPersonal;          //工伤(个人)
+	@ExpColumn("工伤(单位)")private double injuryUnits;             //工伤(单位)
+	@ExpColumn("失业(个人)")private double unemploymentPersonal;    //失业(个人)
+	@ExpColumn("失业(单位)")private double unemploymentUnits;       //失业(单位)
+	@ExpColumn("生育(个人)")private double fertilityPersonal;       //生育(个人)
+	@ExpColumn("生育(单位)")private double fertilityUnits;          //生育(单位)
+	@ExpColumn("所得税")private double incomeTax;               //所得税
+	@ExpColumn("考勤扣款")private double attendanceChargeback;    //考勤扣款
+	@ExpColumn("实发工资")private double realWages;               //实发工资
+	@ExpColumn("备注")private String remark;                  //备注
+	@ExpColumn("外勤费用")private double fieldCost;               //外勤费用
+    @ExpColumn("现金工资")private double moneyWages;              //现金工资
+	@ExpColumn("人力成本")private double payHrcost;				//人力成本
+    
+    public StaffBenefits(){}
+    
+    public StaffBenefits(String id){
+    	this.id = id;
+    }
+    
+	public String getId() {
 		return id;
 	}
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
+	}
+	public String getUuid() {
+		return uuid;
+	}
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
 	}
 	public String getLoginName() {
 		return loginName;
@@ -45,17 +64,23 @@ public class StaffBenefits extends BaseDomain {
 	public void setLoginName(String loginName) {
 		this.loginName = loginName;
 	}
-	public double getBasicWage() {
-		return basicWage;
+	public String getRealName() {
+		return realName;
 	}
-	public void setBasicWage(double basicWage) {
-		this.basicWage = basicWage;
+	public void setRealName(String realName) {
+		this.realName = realName;
 	}
-	public double getAttendanceSubsidies() {
-		return attendanceSubsidies;
+	public double getPayBase() {
+		return payBase;
 	}
-	public void setAttendanceSubsidies(double attendanceSubsidies) {
-		this.attendanceSubsidies = attendanceSubsidies;
+	public void setPayBase(double payBase) {
+		this.payBase = payBase;
+	}
+	public double getPayAttendance() {
+		return payAttendance;
+	}
+	public void setPayAttendance(double payAttendance) {
+		this.payAttendance = payAttendance;
 	}
 	public double getPensionIndividual() {
 		return pensionIndividual;
@@ -146,35 +171,29 @@ public class StaffBenefits extends BaseDomain {
 	}
 	public void setRealWages(double realWages) {
 		this.realWages = realWages;
-	}public String getCreateUser() {
-		return createUser;
 	}
-
-	public void setCreateUser(String createUser) {
-		this.createUser = createUser;
+	public String getRemark() {
+		return remark;
 	}
-
-	public Date getCreateDate() {
-		return createDate;
+	public void setRemark(String remark) {
+		this.remark = remark;
 	}
-
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
+	public double getFieldCost() {
+		return fieldCost;
 	}
-
-	public String getUpdateUser() {
-		return updateUser;
+	public void setFieldCost(double fieldCost) {
+		this.fieldCost = fieldCost;
 	}
-
-	public void setUpdateUser(String updateUser) {
-		this.updateUser = updateUser;
+	public double getMoneyWages() {
+		return moneyWages;
 	}
-
-	public Date getUpdateDate() {
-		return updateDate;
+	public void setMoneyWages(double moneyWages) {
+		this.moneyWages = moneyWages;
 	}
-
-	public void setUpdateDate(Date updateDate) {
-		this.updateDate = updateDate;
+	public double getPayHrcost() {
+		return payHrcost;
+	}
+	public void setPayHrcost(double payHrcost) {
+		this.payHrcost = payHrcost;
 	}
 }

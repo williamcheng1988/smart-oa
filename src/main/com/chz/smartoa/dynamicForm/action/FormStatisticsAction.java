@@ -2,8 +2,7 @@ package com.chz.smartoa.dynamicForm.action;
 
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,12 +16,18 @@ import com.chz.smartoa.common.base.DataGrid;
 import com.chz.smartoa.common.base.TreeData;
 import com.chz.smartoa.dynamicForm.export.Exportor;
 import com.chz.smartoa.dynamicForm.export.TableModel;
+import com.chz.smartoa.dynamicForm.export.constant.FixedExpConstants;
 import com.chz.smartoa.dynamicForm.export.exception.ExportErrorException;
 import com.chz.smartoa.dynamicForm.pojo.Column;
 import com.chz.smartoa.dynamicForm.pojo.FormRecord;
 import com.chz.smartoa.dynamicForm.pojo.FormTemplate;
 import com.chz.smartoa.dynamicForm.pojo.FormTemplateType;
+import com.chz.smartoa.dynamicForm.pojo.StaffBenefits;
+import com.chz.smartoa.dynamicForm.pojo.StaffWages;
+import com.chz.smartoa.dynamicForm.pojo.Wage;
 import com.chz.smartoa.dynamicForm.service.DynamicFormBiz;
+import com.chz.smartoa.dynamicForm.service.StaffBenefitsBiz;
+import com.chz.smartoa.dynamicForm.util.ReflectUtils;
 import com.chz.smartoa.form.constants.FormStatus;
 import com.chz.smartoa.global.ServerInfo;
 import com.chz.smartoa.system.action.OperateResult;
@@ -52,6 +57,13 @@ public class FormStatisticsAction extends BaseAction {
 	FormRecord formRecord = new FormRecord();
 	//dynamicFormBiz
 	DynamicFormBiz dynamicFormBiz;
+	StaffBenefitsBiz staffBenefitsBiz;
+	public StaffBenefitsBiz getStaffBenefitsBiz() {
+		return staffBenefitsBiz;
+	}
+	public void setStaffBenefitsBiz(StaffBenefitsBiz staffBenefitsBiz) {
+		this.staffBenefitsBiz = staffBenefitsBiz;
+	}
 	public DynamicFormBiz getDynamicFormBiz() {
 		return dynamicFormBiz;
 	}
@@ -120,36 +132,114 @@ public class FormStatisticsAction extends BaseAction {
 		formTemplate = dynamicFormBiz.findFormTemplate(formRecord.getFormTemplateId());
 		formTemplate.setRecord(formRecord);
 		
-		int count = dynamicFormBiz.listFormRecordCount(formRecord.getFormTemplateId());
+		int count = 0;
 		
-		try{
-			
-			Exportor excelExportor = (Exportor)ServerInfo.getBean("excelExportor");
-			//获取可用于导出的数据,与导出获取 formProp 数据方式，保持一致
-			TableModel tableModel = excelExportor.export(getHttpServletResponse(),formTemplate,false);
-			// 列头
-			List<Column> columnsTmp = tableModel.getColumns();
-			List columns = new ArrayList();
-			columns.add(columnsTmp);
-			List rows = new ArrayList();
-			// 数据
-			List<FormRecord> formRecords = tableModel.getData();
-			if(formRecords!=null && formRecords.size()>0){
-				count = formRecords.size();
-				for (FormRecord recordTmp : formRecords) {
-		        	Map<String,String> values = recordTmp.getFormProps();
-		        	values.put("formRecordId", recordTmp.getId());
-		        	rows.add(values);
+		
+		if("/fixedForm/form/flow-input-form3.html".equals(formTemplate.getViewUrl())){
+			try{
+				Map<String,String> headers1 = FixedExpConstants.STAFF_BEN;
+		        Map<String,String> headers2 = FixedExpConstants.STAFF_WAGE;
+		        
+		        FormRecord formRecord = formTemplate.getRecord();
+		    	String tmpId = formTemplate.getId();
+		    	
+		    	StaffWages staffWage = new StaffWages();
+		    	staffWage.setTemplateId(tmpId);
+		    	List<Wage> wages = staffBenefitsBiz.findWagesByTmpId(staffWage);
+	
+				List columns = new ArrayList();
+				List rows = new ArrayList();
+		    	
+		    	List<Column> columnsTmp = new ArrayList<Column>();
+
+				//列头
+				for (Map.Entry<String, String> entry:headers2.entrySet()) {
+					String key = entry.getKey()+"_C";
+					String value = entry.getValue();
+					columnsTmp.add(new Column(key,value,"100px"));
+		        }
+				//列头
+				for (Map.Entry<String, String> entry:headers1.entrySet()) {
+					String key = entry.getKey();
+					String value = entry.getValue();
+					columnsTmp.add(new Column(key,value,"100px"));
+		        }
+				columns.add(columnsTmp);
+				
+				// 数据
+				if(wages!=null && wages.size()>0){
+					for (int i=0;i<wages.size();i++) {
+						Wage myWage = wages.get(i);
+						StaffWages total = myWage.getTotal();
+			        	List<StaffBenefits> detail = myWage.getDetail();
+			        	
+			        	Map<String,String> values = null;
+			        	if(detail!=null&&detail.size()>0){
+				        	for(StaffBenefits ben : detail){
+				        		values = new HashMap<String, String>();
+				        		//数据
+			            		for (Map.Entry<String, String> entry:headers1.entrySet()) {
+			                 		String methodName = ReflectUtils.getGetterMethodName(ben, entry.getKey());
+			                        Object value = ReflectUtils.getMethodValue(ben, methodName);
+	
+			                        String val = (value == null) ? "" : value.toString();
+			                        values.put(entry.getKey(), val);
+			                    }
+			            		
+			            		//数据
+			            		for (Map.Entry<String, String> entry:headers2.entrySet()) {
+			                 		String methodName = ReflectUtils.getGetterMethodName(total, entry.getKey());
+			                        Object value = ReflectUtils.getMethodValue(total, methodName);
+	
+			                        String val = (value == null) ? "" : value.toString();
+			                        values.put(entry.getKey()+"_C", val);
+			                    }
+			            		
+			            		rows.add(values);
+				        	}
+			        	}
+					}
 				}
+				
+				//封装 dataGrid 对象
+				dataGrid = new DataGrid();
+				dataGrid.setTotal(rows.size());
+				dataGrid.setColumns(columns);
+				dataGrid.setRows(rows);
+			}catch(Exception e){
+				logger.error("获取导出数据发生错误："+e.getMessage());
 			}
+		}else{
+			count = dynamicFormBiz.listFormRecordCount(formRecord.getFormTemplateId());
 			
-			//封装 dataGrid 对象
-			dataGrid = new DataGrid();
-			dataGrid.setTotal(count);
-			dataGrid.setColumns(columns);
-			dataGrid.setRows(rows);
-		}catch(Exception e){
-			logger.error("获取导出数据发生错误："+e.getMessage());
+			try{
+				Exportor excelExportor = (Exportor)ServerInfo.getBean("excelExportor");
+				//获取可用于导出的数据,与导出获取 formProp 数据方式，保持一致
+				TableModel tableModel = excelExportor.export(getHttpServletResponse(),formTemplate,false);
+				// 列头
+				List<Column> columnsTmp = tableModel.getColumns();
+				List columns = new ArrayList();
+				columns.add(columnsTmp);
+				List rows = new ArrayList();
+				// 数据
+				List<FormRecord> formRecords = tableModel.getData();
+				if(formRecords!=null && formRecords.size()>0){
+					count = formRecords.size();
+					for (FormRecord recordTmp : formRecords) {
+			        	Map<String,String> values = recordTmp.getFormProps();
+			        	values.put("formRecordId", recordTmp.getId());
+			        	rows.add(values);
+					}
+				}
+				
+				//封装 dataGrid 对象
+				dataGrid = new DataGrid();
+				dataGrid.setTotal(count);
+				dataGrid.setColumns(columns);
+				dataGrid.setRows(rows);
+			}catch(Exception e){
+				logger.error("获取导出数据发生错误："+e.getMessage());
+			}
 		}
 		
 		//转换dataGrid对象为json串

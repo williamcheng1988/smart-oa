@@ -306,6 +306,11 @@ public class StaffBizImpl implements StaffBiz {
 		return list;
 	}
 	
+	public List<Staff> listAllStaffs(Staff staff){
+		List<Staff> list = staffDao.listAllStaffs(staff);
+		return list;
+	}
+	
 	public List<Staff> listStaff(String loginName) {
 		List<Staff> list = staffDao.listStaff(loginName);
 		return list;

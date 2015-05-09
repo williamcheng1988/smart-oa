@@ -14,6 +14,7 @@ import com.chz.smartoa.dynamicForm.pojo.FormProp;
 import com.chz.smartoa.dynamicForm.pojo.FormRecord;
 import com.chz.smartoa.dynamicForm.pojo.FormTemplate;
 import com.chz.smartoa.dynamicForm.pojo.FormTemplateType;
+import com.chz.smartoa.dynamicForm.util.ruleGenerator.IRuleGenerator;
 
 /**
  * DynamicFormImpl
@@ -206,16 +207,6 @@ public class DynamicFormDaoImpl extends SqlMapClientDaoSupport implements Dynami
 		if (logger.isDebugEnabled()) {
     		logger.debug("deleteFormProp(id:"+formProp+")");
     	}
-		
-		/*List<Long> ids = new ArrayList<Long>();
-		List<FormProp> props = this.listFormProp(formProp);
-		if(props!=null && props.size()>0){
-			for(FormProp p : props){
-				ids.add(p.getId());
-			}
-		}*/
-		
-		//getSqlMapClientTemplate().update("Form_deleteFormPropById", ids);
 		
 		/*FormProp formProp = new FormProp();
 		formProp.setId(id);*/

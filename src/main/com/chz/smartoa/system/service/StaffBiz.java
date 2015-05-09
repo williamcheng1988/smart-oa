@@ -19,6 +19,8 @@ public interface StaffBiz {
 
 	List<Staff> listStaff(Staff staff);
 	
+	List<Staff> listAllStaffs(Staff staff);
+	
 	List<Staff> listStaff(String loginName);
 	
 	List<String> listResourceIds(String loginName);

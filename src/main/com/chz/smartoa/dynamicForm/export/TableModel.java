@@ -1,5 +1,6 @@
 package com.chz.smartoa.dynamicForm.export;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.chz.smartoa.dynamicForm.pojo.Column;
+import com.chz.smartoa.dynamicForm.pojo.StaffWages;
 import com.chz.smartoa.dynamicForm.util.ReflectUtils;
 
 public class TableModel {
@@ -41,6 +43,7 @@ public class TableModel {
 
     public void setData(List data) {
         this.data = data;
+        getHeaders(data);
     }
     public List getData() {
         return this.data;
@@ -89,4 +92,41 @@ public class TableModel {
             return "";
         }
     }
+	/**
+	 * 获取导出列头信息
+	 * @param data
+	 */
+	public void getHeaders(List data){
+		if(data!=null && data.size()>0){
+			try{
+				Object object = data.get(0);
+				Class clazz = object.getClass();
+				Field[] fields = clazz.getDeclaredFields();
+				for(Field f : fields){
+					//列 键
+					headcodes.add(f.getName());
+					
+					ExpColumn c = (ExpColumn)f.getAnnotation(ExpColumn.class);
+					if(c==null){continue;}
+					//列头
+					headers.add(c.value());
+					
+					System.out.println(f.getName());
+					
+					System.out.println(c.value());
+				}
+			}catch(Exception e){
+				
+			}
+		}
+	}
+	
+	public static void main(String[] args) {
+		List<StaffWages> datas = new ArrayList<StaffWages>();
+		datas.add(new StaffWages("1"));
+		TableModel t = new TableModel();
+		
+		t.setData(datas);
+	}
+	
 }
