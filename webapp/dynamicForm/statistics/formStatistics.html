@@ -34,9 +34,14 @@
 		}
 		//查询按钮触发
 		function queryRecordData(){
+			if(!$('#queryParams').form('enableValidation').form('validate')){
+				return false;
+			}
+			
 			var tmpId = $('#formTemplateId').val();
 			if(tmpId ==''){
 				$.messager.alert('提示','请选择模板!');
+				return false;
 			}
 			
 			var dg = $('#dg');
@@ -255,7 +260,7 @@
 		<div data-options="region:'center'" style="min-height: 700px;width:100%">
 			<div id="tb" style="padding:15px;height:auto">
 				<input name="formRecord.formTemplateId" id="formTemplateId" type="hidden">
-				<form id="queryParams">
+				<form id="queryParams" class="easyui-form" data-options="novalidate:true">
 					填报编号:
 					<input name="formRecord.id" class="easyui-textbox" style="width:160px">
 					&nbsp;&nbsp;&nbsp;
@@ -263,16 +268,21 @@
 					<div style="margin:10px 0;display: none;"></div>
 					<input class="easyui-datebox" id="dateFrom" name="formRecord.createDateFrom" style="width:90px;"></input>
 					至
-					<input class="easyui-datebox" id="dateTo" name="formRecord.createDateTo" style="width:90px;"></input>
+					<input class="easyui-datebox" id="dateTo" name="formRecord.createDateTo" data-options="validType:'dateTo'" style="width:90px;"></input>
 					<script>
 						$.extend($.fn.validatebox.defaults.rules, {
-							md: {
+							dateTo: {
 								validator: function(value, param){
-									var d1 = new Date();//$.fn.datebox.defaults.parser(param[0]);
+									var d = new Date();
+									var d1 = $.fn.datebox.defaults.parser($('#dateFrom').datebox('getValue'));
 									var d2 = $.fn.datebox.defaults.parser(value);
-									return d2<=d1;
+									if(d1 && d1!=''){
+										return (d2<=d && d2>=d1);
+									}else{
+										return d2<=d;
+									}
 								},
-								message: '结束日期不能大于当天！'
+								message: '结束日期不能大于当天,且不能小于起始日期！'
 							}
 						})
 					</script>

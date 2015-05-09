@@ -81,7 +81,7 @@
 									</div>
 								</td>
 							</tr>
-						</tbody>
+						</tbody
 					</table> <br>
 					<div align="center">
 						<a href="javascript:saveForm()" class="easyui-linkbutton">&nbsp;暂&nbsp;存&nbsp;</a>&nbsp;&nbsp;
@@ -124,6 +124,7 @@
 							validate = $(this).form('enableValidation').form('validate');
 						}
 						if(validate){
+							export_Form();
 							$("#formTemplateId").val($("#templateId").val());
 							$('#ui_mask').css('height',document.body.scrollHeight);
 							$('#ui_mask').css('display', 'block');
@@ -139,7 +140,6 @@
 							alert(json.msg);
 							closeTab();
 						}else if(json.code == 2){
-							debugger;
 							if(json.msg){
 								var data = json.msg.split(',');
 								$('#executionId').val(data[0]);

@@ -21,6 +21,7 @@
  <sqlMap resource="com/chz/smartoa/dynamicForm/dao/ibatis/maps/FormTemplateSQL.xml" />
  <sqlMap resource="com/chz/smartoa/dynamicForm/dao/ibatis/maps/FormSQL.xml" />
  
+ <sqlMap resource="com/chz/smartoa/dynamicForm/dao/ibatis/maps/StaffWagesSQL.xml" />
  <sqlMap resource="com/chz/smartoa/dynamicForm/dao/ibatis/maps/StaffBenefitsSQL.xml" />
 	 
  <!-- Task config -->

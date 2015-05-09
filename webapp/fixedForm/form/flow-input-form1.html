@@ -210,6 +210,7 @@ function parseDate(s){
 
 //添加行
 function addRow(newCopyNum){
+	//data-options="formatter:function(date){var y=date.getFullYear();var m=date.getMonth()+1;var d=date.getDate();return y+\'/\'+(m.length==2?m:(\'0\'+m))+\'/\'+d;}"
 
 	var html = '<tr align="center" id="xf-g-'+newCopyNum+'" line_num="copy-number-'+newCopyNum+'">'+
 					'<td><div class="xf-handler"><input class="easyui-datebox" data-options="formatter:formatDate,parser:parseDate" style="width: 100px" name="xf_f_BeginDate~dy_clone'+newCopyNum+'"/></div></div></td>'+

@@ -260,6 +260,7 @@
 		} else {
 			$('#Form1').form('submit', {    
 				onSubmit:function(){
+					export_Form();
 					var validate = $(this).form('enableValidation').form('validate');
 					return validate;
 				},

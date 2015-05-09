@@ -7,6 +7,10 @@
 	<bean id="dynamicFormDao" class="com.chz.smartoa.dynamicForm.dao.ibatis.DynamicFormDaoImpl">
 		<property name="sqlMapClient" ref="sqlMapClient"/>
 	</bean>
+	
+	<bean id="staffBenefitsDao" class="com.chz.smartoa.dynamicForm.dao.ibatis.StaffBenefitsDaoImpl">
+		<property name="sqlMapClient" ref="sqlMapClient"/>
+	</bean>
 	<!-- ================= Dao ======end========================-->
 	
 	
@@ -16,17 +20,25 @@
 		<property name="resourceDao" ref="resourceDao"/>
 	</bean>	
 	
+	<bean id="staffBenefitsBiz" class="com.chz.smartoa.dynamicForm.service.impl.StaffBenefitsBizImpl">
+		<property name="staffBenefitsDao" ref="staffBenefitsDao"/>
+	</bean>
+	
 	<bean id="dynamicFormAdapter" class="com.chz.smartoa.form.service.impl.DynamicFormAdapter">
 		<property name="dynamicFormBiz" ref="dynamicFormBiz"/>
 		<property name="staffBiz" ref="staffBiz"/>
 	</bean>
-	<bean id="fixedFormAdapter" class="com.chz.smartoa.form.service.impl.FixedFormAdapter"/>
+	<bean id="fixedFormAdapter" class="com.chz.smartoa.form.service.impl.FixedFormAdapter">
+		<property name="staffBenefitsBiz" ref="staffBenefitsBiz"/>
+	</bean>
 	
 	<bean id="formBiz" class="com.chz.smartoa.form.service.impl.FormBizImpl">
 		<!-- <property name="dynamicFormAdapter" ref="dynamicFormAdapter"/>
 		<property name="fixedFormAdapter" ref="fixedFormAdapter"/> -->
 		<property name="dynamicFormBiz" ref="dynamicFormBiz"/>
 		<property name="dictionaryConfigBiz" ref="dictionaryConfigBiz"/>
+		<property name="staffBiz" ref="staffBiz"/>
+		<property name="staffBenefitsBiz" ref="staffBenefitsBiz"/>
 	</bean>
 	<!-- ================= service ======end========================-->
 	
@@ -49,6 +61,7 @@
 	</bean>
 	<bean id="formStatisticsAction" class="com.chz.smartoa.dynamicForm.action.FormStatisticsAction" scope="prototype">
 		<property name="dynamicFormBiz" ref="dynamicFormBiz"/>
+		<property name="staffBenefitsBiz" ref="staffBenefitsBiz"/>
 	</bean>
 	<!-- ================= action ======end========================-->
 	
@@ -67,6 +80,8 @@
 	</bean>
 	<bean id="excelExportor" class="com.chz.smartoa.dynamicForm.export.ExcelExportor">
 		<property name="dynamicFormBiz" ref="dynamicFormBiz"/>
+		<property name="staffBenefitsBiz" ref="staffBenefitsBiz"/>
 	</bean>
+	
 	<!-- ================= Exportor ======end========================-->
 </beans>

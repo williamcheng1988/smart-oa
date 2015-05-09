@@ -1,6 +1,14 @@
 
 jQuery.extend({
 	
+	handleError: function( s, xhr, status, e ) {
+        // If a local callback was specified, fire it
+        if ( s.error )
+            s.error( xhr, status, e );
+        // If we have some XML response text (e.g. from an AJAX call) then log it in the console
+        else if(xhr.responseText)
+            console.log(xhr.responseText);
+    },
 
     createUploadIframe: function(id, uri)
 	{
@@ -191,10 +199,11 @@ jQuery.extend({
         // Get the JavaScript object, if JSON is used.
         if ( type == "json" )
             eval( "data = " + data );
+        	//eval("data = \" "+data+" \" ");
         // evaluate scripts within html
         if ( type == "html" )
             jQuery("<div>").html(data).evalScripts();
-
+        
         return data;
     }
 })
