@@ -103,7 +103,11 @@ public class ResourceMgr
         ByteArrayInputStream byteIn = new ByteArrayInputStream(byteOut.toByteArray());             
         ObjectInputStream in =new ObjectInputStream(byteIn);             
         @SuppressWarnings("unchecked")
-		List<Resource> dest = (List<Resource>)in.readObject();             
+		List<Resource> dest = (List<Resource>)in.readObject();     
+        in.close();
+        byteIn.close();
+        out.close();
+        byteOut.close();
         return dest;         
     }  
 
