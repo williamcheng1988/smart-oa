@@ -126,7 +126,7 @@
   <welcome-file-list>
     <welcome-file>/login.html</welcome-file>
   </welcome-file-list>
-  <!--
+ 
 	<error-page>
 		<error-code>404</error-code>
 		<location>/404.html</location>
@@ -135,10 +135,10 @@
 		<error-code>500</error-code>
 		<location>/error.html</location>
 	</error-page> 
-	 配置异常处理 -->
-	<!-- <error-page>
+	 <!-- 配置异常处理 -->
+	<error-page>
 		<exception-type>java.lang.Exception</exception-type>
 		<location>/error.html</location>
-	</error-page> -->
+	</error-page>
 	
 </web-app>
