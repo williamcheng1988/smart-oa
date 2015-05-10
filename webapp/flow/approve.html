@@ -192,6 +192,7 @@
 <!-- 弹出框  -->
 <div id="dlg" class="easyui-dialog" title="" style="width:40%;height:250px;max-width:800px;padding:10px"
 		data-options="
+		    closed: true,
 			closable: false,
 			buttons: [{
 				text:'确认',
@@ -232,7 +233,6 @@
 </HTML>
 <script type="text/javascript">
 	$(function(){
-		 $('#dlg').dialog('close');
 		$('#ui_mask').css('height',document.body.scrollHeight);
 	}); 
 	function approveRadioClick(txt) {

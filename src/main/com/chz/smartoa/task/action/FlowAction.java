@@ -246,7 +246,6 @@ public class FlowAction extends BaseAction{
 			result.setApproveType(TaskResult.Submit.getVal());
 		}else if("READ".equals(approve_type_)){
 			result.setApproveType(TaskResult.Read.getVal());
-			result.setApproveDesc("已阅");
 		}else if("AGREE".equals(approve_type_)){
 			result.setApproveType(TaskResult.Agree.getVal());
 		}else if("BACK".equals(approve_type_)){
@@ -265,7 +264,12 @@ public class FlowAction extends BaseAction{
 			operateResult = new OperateResult(-1, "流程操作识别失败！");
 			return OPER_RESULT;
 		}
-		result.setApproveDesc(desc_);
+		//设置审批意见
+		if("READ".equals(approve_type_)){
+			result.setApproveDesc("已阅");
+		}else{
+			result.setApproveDesc(desc_);
+		}
 		variables.put("approveResult", result);
 		try {
 			flowService.approveProcess(taskId, variables);
