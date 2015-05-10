@@ -286,7 +286,6 @@ function saveUpdateFileForAudit(){
 // 保存添加的文件
 function saveAddFileForAudit(){
 	var srcGroupId = $("#executionIdAudit").val();
-	alert(srcGroupId);
 	var fileTypeId = $('#fileTypeId').combobox('getValue'); 
 	var fileTypeSubId = $('#fileTypeSubId').combobox('getValue');
 	if(!fileTypeId || !fileTypeSubId){
