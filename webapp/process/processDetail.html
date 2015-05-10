@@ -138,8 +138,10 @@
 		</div>
 <div id="ui_mask" style="display:none" class="datagrid-mask"></div>
 <div id="ui_mask_msg" style="display:none; left: 50%; height: 16px; margin-left: -85.5px; line-height: 16px;" class="datagrid-mask-msg">正在处理，请稍待。。。</div>
-<div id="dlg" class="easyui-dialog" title="&nbsp;选择处理对象" style="width:35%;height:150px;max-width:800px;padding:10px"
-		data-options="closed: true,buttons: [{
+<div id="dlg" class="easyui-dialog" title="&nbsp;选择处理对象" style="width:350px;height:160px;max-width:800px;padding:10px"
+		data-options="closed: true,
+		closable:false,
+		buttons: [{
 				text:'保存',
 				iconCls:'icon-ok',
 				handler:function(){
