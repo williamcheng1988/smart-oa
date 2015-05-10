@@ -68,7 +68,7 @@
 									<td>
 										<input type="hidden" name="action_obj_type_${velocityCount}" value="${reConf.action_obj_type_}">
 										<input type="hidden" name="action_obj_${velocityCount}" value="${reConf.action_obj_}">
-										<input type="text" name="action_obj_name_${velocityCount}" class="easyui-textbox bindClick" data-options="required:true" linenum="${velocityCount}" value="$!{reConf.action_obj_name_}">
+										<input type="text" name="action_obj_name_${velocityCount}" id="action_obj_name_${velocityCount}" class="easyui-textbox bindClick" data-options="required:true" linenum="${velocityCount}" value="$!{reConf.action_obj_name_}">
 									</td>
 									<td>
 											<input type="checkbox" name="is_turn_${velocityCount}" #if($reConf.is_turn_ == 1)  checked="checked" #end value="1">转办
@@ -101,7 +101,7 @@
 								<td>
 									<input type="hidden" name="action_obj_type_1">
 									<input type="hidden" name="action_obj_1">
-									<input type="text" name="action_obj_name_1" data-options="required:true" class="easyui-textbox bindClick" linenum="1" onclick="chooseActionObject(1)">
+									<input type="text" name="action_obj_name_1" id="action_obj_name_1" data-options="required:true" class="easyui-textbox bindClick" linenum="1" onclick="chooseActionObject(1)">
 								</td>
 								<td>
 										<input type="checkbox" id="is_turn_" name="is_turn_1" value="1">转办
@@ -307,12 +307,12 @@ function submitForm(){
 	if(type == 1){
 		$("input[name=action_obj_type_"+lineNo+"]").val(1);
 		$("input[name=action_obj_"+lineNo+"]").val($("#sel_staff").val());
-		$("input[name=action_obj_name_"+lineNo+"]").textbox('setValue', $("#sel_staff").find("option:selected").text());
+		$("#action_obj_name_"+lineNo).textbox('setValue', $("#sel_staff").find("option:selected").text());
 		//$("input[name=action_obj_name_"+lineNo+"]").val($("#sel_staff").find("option:selected").text());
 	}else{
 		$("input[name=action_obj_type_"+lineNo+"]").val(2);
 		$("input[name=action_obj_"+lineNo+"]").val($("#sel_role").val());
-		$("input[name=action_obj_name_"+lineNo+"]").textbox('setValue',$("#sel_role").find("option:selected").text());
+		$("#action_obj_name_"+lineNo).textbox('setValue',$("#sel_role").find("option:selected").text());
 		//$("input[name=action_obj_name_"+lineNo+"]").val($("#sel_role").find("option:selected").text());
 	}
 	jQuery.parser.parse("input[name=action_obj_name_"+lineNo+"]");
