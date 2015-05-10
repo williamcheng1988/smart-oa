@@ -138,10 +138,8 @@
 		</div>
 <div id="ui_mask" style="display:none" class="datagrid-mask"></div>
 <div id="ui_mask_msg" style="display:none; left: 50%; height: 16px; margin-left: -85.5px; line-height: 16px;" class="datagrid-mask-msg">正在处理，请稍待。。。</div>
-<div id="dlg" class="easyui-dialog" title="&nbsp;选择处理对象" data-options="close:true" style="width:35%;height:150px;max-width:800px;padding:10px"
-		data-options="
-			closable: false,
-			buttons: [{
+<div id="dlg" class="easyui-dialog" title="&nbsp;选择处理对象" style="width:35%;height:150px;max-width:800px;padding:10px"
+		data-options="closed: true,buttons: [{
 				text:'保存',
 				iconCls:'icon-ok',
 				handler:function(){
@@ -240,7 +238,7 @@ $(function() {
 		}
 	});
 	
-    $('#dlg').dialog('close');
+ //   $('#dlg').dialog('close');
 	var line_no = $("#processDetailGrid tbody").find("tr").length;
     $("#newLineBtn").bind("click", function(e) {
     	line_no++;
@@ -309,12 +307,15 @@ function submitForm(){
 	if(type == 1){
 		$("input[name=action_obj_type_"+lineNo+"]").val(1);
 		$("input[name=action_obj_"+lineNo+"]").val($("#sel_staff").val());
-		$("input[name=action_obj_name_"+lineNo+"]").val($("#sel_staff").find("option:selected").text());
+		$("input[name=action_obj_name_"+lineNo+"]").textbox('setValue', $("#sel_staff").find("option:selected").text());
+		//$("input[name=action_obj_name_"+lineNo+"]").val($("#sel_staff").find("option:selected").text());
 	}else{
 		$("input[name=action_obj_type_"+lineNo+"]").val(2);
 		$("input[name=action_obj_"+lineNo+"]").val($("#sel_role").val());
-		$("input[name=action_obj_name_"+lineNo+"]").val($("#sel_role").find("option:selected").text());
+		$("input[name=action_obj_name_"+lineNo+"]").textbox('setValue',$("#sel_role").find("option:selected").text());
+		//$("input[name=action_obj_name_"+lineNo+"]").val($("#sel_role").find("option:selected").text());
 	}
+	jQuery.parser.parse("input[name=action_obj_name_"+lineNo+"]");
 	$('#dlg').dialog('close');
 	$('#ui_mask').css('display','none');
 }
