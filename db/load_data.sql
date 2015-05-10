@@ -4,7 +4,7 @@ insert into t_staff
 VALUES  
 ('admin','admin','21218cca77804d2ba1922c33e0151105','13724335201','315307864@qq.com',1,'init',SYSDATE()),
 ('chenyuanming','陈远明','21218cca77804d2ba1922c33e0151105','13724335202','315307864@qq.com',1,'init',SYSDATE()),
-('dinglunfan','丁凡伦','21218cca77804d2ba1922c33e0151105','13724335203','315307864@qq.com',1,'init',SYSDATE()),
+('dingfanlun','丁凡伦','21218cca77804d2ba1922c33e0151105','13724335203','315307864@qq.com',1,'init',SYSDATE()),
 ('fujunru','傅军如','21218cca77804d2ba1922c33e0151105','13724335204','315307864@qq.com',1,'init',SYSDATE()),
 ('gaoxin','高兴','21218cca77804d2ba1922c33e0151105','13724335205','315307864@qq.com',1,'init',SYSDATE()),
 ('huliuxiang','胡柳祥','21218cca77804d2ba1922c33e0151105','13724335206','315307864@qq.com',1,'init',SYSDATE()),
