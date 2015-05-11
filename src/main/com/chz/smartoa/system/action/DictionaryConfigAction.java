@@ -273,7 +273,7 @@ public class DictionaryConfigAction extends BaseAction{
 			DictionaryConfig cfg = dictionaryConfigBiz.findDictionarytCfgById(Integer.valueOf(fileId));
 			cfg.setDictionaryName(config.getDictionaryName());
 			if(StringUtils.isNotEmpty(dictionaryId) && (!dictionaryId.equals("-1"))){
-				cfg.setParentId(config.getParentId());
+				//cfg.setParentId(config.getParentId());
 				cfg.setIsValid(config.getIsValid());
 				if(config.getDicType() != null){
 					cfg.setDicType(config.getDicType());
