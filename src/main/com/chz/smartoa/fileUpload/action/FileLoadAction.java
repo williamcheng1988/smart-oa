@@ -629,7 +629,8 @@ public class FileLoadAction extends BaseAction{
 		String fileAdress = f.getFileAddress();
 		String filename = f.getFileName();
 		filedownAddress = fileAdress + "/" + filename;  
-		this.templateFileName= new String(f.getFileDisplayname().getBytes("gb2312"),"iso8859-1");
+		String outFileName = f.getFileNumber() + f.getFileDisplayname();
+		this.templateFileName= new String(outFileName.getBytes("gb2312"),"iso8859-1");
 		return SUCCESS;
 	}
 	
