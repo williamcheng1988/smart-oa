@@ -33,7 +33,7 @@
 				    <th width="40%" align="right">字典名称：</td>
 				    <td align="left">
 				        #if ($dictionaryList)
-				    	<select id="parentId" name="config.parentId" class="easyui-combobox">
+				    	<select id="parentId" name="config.parentId" class="easyui-combobox" disabled="disabled">
 				    		#foreach( $dictionary in $dictionaryList)
 				    		<option value="$!dictionary.id" #if($!dictionary.id == $!config.parentId) selected="selected" #end>$!dictionary.dictionaryName</option>
 				    		#end
