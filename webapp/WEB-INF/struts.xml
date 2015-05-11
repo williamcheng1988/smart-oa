@@ -18,6 +18,17 @@
 		<result-types>
 		    <result-type name="json" class="org.apache.struts2.json.JSONResult" />
 		</result-types>
+
+		<!-- 向Struts2框架中注册拦截器或者拦截器栈，一般多用于自定义拦截器或拦截器栈的注册 -->
+		<interceptors>
+			<interceptor name="monitoring" class="net.bull.javamelody.StrutsInterceptor" />
+			<interceptor-stack name="javamelodyStack">
+				<interceptor-ref name="monitoring" />
+				<interceptor-ref name="defaultStack" />
+			</interceptor-stack>
+		</interceptors>
+		<!--设置整个包范围内所有Action所要应用的默认拦截器信息 -->
+		<default-interceptor-ref name="javamelodyStack" />
 		
         <global-results>
             <result name="commonFailure"  type="velocity">/common/error.html</result>
@@ -65,7 +76,7 @@
 			</exception-mapping>
 		</global-exception-mappings>
     	 -->
-    </package> 
+    </package>
 	
 	<include file="../struts-sys.xml" />
 	<include file="../struts-dynamicForm.xml" />
