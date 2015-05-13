@@ -50,7 +50,7 @@ public class CookieUtil {
 		//向客户端写入
 		response.addCookie(cookie);
 	}
-	public static void readCookieAndLogin(HttpServletRequest request ,HttpServletResponse response,FilterChain chain) throws ServletException, IOException{
+	public static boolean readCookieAndLogin(HttpServletRequest request ,HttpServletResponse response,FilterChain chain) throws ServletException, IOException{
 		Boolean isAuth = false;
 		//根据cookieName取cookieValue
 		Cookie[] cookies = request.getCookies();
@@ -91,12 +91,12 @@ public class CookieUtil {
 									+ ":" + validTimeInCookie + ":" + CookieUtil.webKey).getBytes());
 							//将结果与Cookie中的MD5码相比较,如果相同,写入Session,自动登陆成功,并继续用户请求
 							if(md5ValueFromUser.equals(md5ValueInCookie)){
-								LoginUtils.setLoginStaff(staff, request.getSession(true));
+								LoginUtils.setLoginStaff(staff,request.getSession(true),request);
 								//这个会导致客户端地址不改变 其实已经到主页
 								//request.getRequestDispatcher("home.do").forward(request, response);
 								isAuth = true;
-								response.sendRedirect("home.do");
-							} else {
+//								response.sendRedirect("home.do");
+							}else {
 								CookieUtil.clearCookie(response);
 							}
 						} else {
@@ -107,10 +107,7 @@ public class CookieUtil {
 				}
 			}
 		}
-		if (!isAuth) {
-			//没有通过就继续走
-			chain.doFilter(request, response);
-		}
+		return isAuth;
 	}
 	//清除Cookie
 	public static void clearCookie( HttpServletResponse response){

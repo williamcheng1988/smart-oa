@@ -2,7 +2,7 @@
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
   <display-name>smartoa</display-name>
   <welcome-file-list>
-    <welcome-file>/login.html</welcome-file>
+    <welcome-file>/redirect.html</welcome-file>
   </welcome-file-list>
   <servlet>
     <servlet-name>StartupServlet</servlet-name>
@@ -114,6 +114,8 @@
     <filter-name>authorize</filter-name>
     <url-pattern>*.jsp</url-pattern>
   </filter-mapping>
+  
+  
   <filter>
     <filter-name>struts2</filter-name>
     <filter-class>org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter</filter-class>
@@ -126,19 +128,9 @@
   </filter>
   <filter-mapping>
     <filter-name>struts2</filter-name>
-    <!-- 当这个地方拦截*.do 的时候， 自动记住密码  /login.html 请求 自动登录时 日志用户信息  loginUtils 23行 ServletActionContext  为空 所以改了 -->
-    <url-pattern><!-- *.do -->/*</url-pattern>
+    <url-pattern>*.do</url-pattern>
   </filter-mapping>
-   <filter>
-    <display-name>AutoLoginAuth</display-name>
-    <filter-name>AutoLoginAuth</filter-name>
-    <filter-class>com.chz.smartoa.common.filter.AutoLoginAuth</filter-class>
-  </filter>
-  <filter-mapping>
-    <filter-name>AutoLoginAuth</filter-name>
-    <!-- 直接拦截/login.html  这种情况（http://localhost:9180/smartoa）没拦住 其他的干扰了 你看看  -->
-    <url-pattern>/*</url-pattern>
-  </filter-mapping>
+  
   <error-page>
     <error-code>404</error-code>
     <location>/404.html</location>

@@ -18,9 +18,18 @@ public class LoginUtils {
 	public static void setLoginStaff(Staff staff, HttpSession httpSession) {
 		// 写在会话中.
 		httpSession.setAttribute(LOGIN_STAFF, staff);
-		
 		// 同时写入客户端IP
         HttpServletRequest request = ServletActionContext.getRequest();
+        if (request != null) { 
+        	String clientIp =  getClientIp(request);
+        	httpSession.setAttribute(CLIENT_IP, clientIp);
+        } 
+	}
+	
+	public static void setLoginStaff(Staff staff, HttpSession httpSession ,HttpServletRequest request) {
+		// 写在会话中.
+		httpSession.setAttribute(LOGIN_STAFF, staff);
+		// 同时写入客户端IP
         if (request != null) { 
         	String clientIp =  getClientIp(request);
         	httpSession.setAttribute(CLIENT_IP, clientIp);
@@ -32,15 +41,13 @@ public class LoginUtils {
         if (request == null) {
             return null;
         }
-        
         HttpSession session = request.getSession(true);        
         if (session == null) {
             return null;
         }
-
         return getLoginStaff(session);
 	}
-
+	
 	public static String getClientIp() {
         HttpServletRequest request = ServletActionContext.getRequest();
         if (request == null) {
@@ -67,20 +74,22 @@ public class LoginUtils {
 		return clientIp;		
 	}		
 	
-	public static Staff getLoginStaff(HttpSession httpSession) {
+	public static Staff getLoginStaff(HttpServletRequest request) {
+		HttpSession httpSession = request.getSession();
 		Staff staff = null;
-		
 		// 从会话中得到登录用户
 		if (httpSession != null) {
 			staff = (Staff)httpSession.getAttribute(LOGIN_STAFF);
 		}
-		
-		// 测试代码
-//		if (staff == null) {
-//			staff = new Staff();
-//			staff.setStaffId("1");
-//			staff.setLoginName("abc");
-//		}
+		return staff;		
+	}
+	
+	public static Staff getLoginStaff(HttpSession httpSession) {
+		Staff staff = null;
+		// 从会话中得到登录用户
+		if (httpSession != null) {
+			staff = (Staff)httpSession.getAttribute(LOGIN_STAFF);
+		}
 		return staff;		
 	}	
 	

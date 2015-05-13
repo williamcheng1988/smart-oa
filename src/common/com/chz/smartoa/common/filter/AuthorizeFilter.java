@@ -16,6 +16,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import com.chz.smartoa.common.util.CookieUtil;
 import com.chz.smartoa.common.util.LoginUtils;
 import com.chz.smartoa.global.ResourceMgr;
 import com.chz.smartoa.system.pojo.Staff;
@@ -52,15 +53,24 @@ public class AuthorizeFilter implements Filter {
 
         // 是否登录标志.
         boolean isLogin = false;
-        List<String> operationUris = null;
-        if (session !=null ){
-        	Staff loginStaff = LoginUtils.getLoginStaff(session);
-        	if(loginStaff != null){
-        		operationUris = loginStaff.getPermission().getOperationUris();
-        		loginName = loginStaff.getLoginName();
-                isLogin = true;
+        Staff loginStaff = null;//当前登录用户
+        List<String> operationUris = null; //已授权操作地址
+        
+        if(session != null){
+        	loginStaff = LoginUtils.getLoginStaff(session);//获取用户信息
+        }
+        if(loginStaff == null){//尝试自动登录
+        	boolean loginFlag = CookieUtil.readCookieAndLogin(httpRequest, (HttpServletResponse)response,chain);
+        	if(loginFlag){//自动登录成功
+        		loginStaff = LoginUtils.getLoginStaff(httpRequest); //获取用户信息
         	}
         }
+        
+        if(loginStaff != null){
+    		operationUris = loginStaff.getPermission().getOperationUris();
+    		loginName = loginStaff.getLoginName();
+            isLogin = true;
+    	}
         
         // 得到访问的URL和参数MAP
         String contextPath = httpRequest.getContextPath();
@@ -117,6 +127,10 @@ public class AuthorizeFilter implements Filter {
     	if(logger.isDebugEnabled()){
  			logger.debug("进入authorizeAddress方法，参数loginName=" +loginName+",addressUrl="+addressUrl);
  		}
+    	
+    	if("/".equals(addressUrl)){
+    		return true;
+    	}
     	
     	if (StringUtils.isEmpty(addressUrl)) {
             logger.debug("addressUrl为空！");

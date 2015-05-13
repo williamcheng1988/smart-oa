@@ -26,6 +26,7 @@ values
 ('reset_pwd_page','other','用户密码重置页面','staff/resetPwd.html',null,1,'LOGIN_AUTH',1),
 ('reset_pwd','other','用户密码重置','/staff!resetPwd.do',null,1,'LOGIN_AUTH',1),
 ('staff_login_page','other','用户登录页面','/login.html',null,1,'UNAUTH',1),
+('index_redirect','other','默认页面跳转','/redirect.html',null,1,'UNAUTH',1),
 ('staff_login','other','用户登录','/staff!login.do',null,1,'UNAUTH',1),
 ('staff_logout','other','用户登出','/staff!logout.do',null,1,'UNAUTH',1),
 ('common_auth','other','auth','/common/authError.html',null,1,'UNAUTH',1),
