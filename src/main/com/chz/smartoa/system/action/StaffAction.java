@@ -17,6 +17,7 @@ import org.springframework.util.DigestUtils;
 
 import com.chz.smartoa.common.base.BaseAction;
 import com.chz.smartoa.common.base.DataGrid;
+import com.chz.smartoa.common.util.CookieUtil;
 import com.chz.smartoa.common.util.LoginUtils;
 import com.chz.smartoa.global.ResourceMgr;
 import com.chz.smartoa.system.constant.OperateLogType;
@@ -43,59 +44,59 @@ public class StaffAction extends BaseAction {
 	private String loginName;
 
 	private Staff staff = new Staff();
-	
+
 	private List<Staff> staffs;
-	
+
 	private List<Resource> resources = new ArrayList<Resource>();
-	
+
 	private List<Role> roles;
 
 	private StaffBiz staffBiz;
 
 	private String roleIds;
-	
+
 	private String password;
-	
+
 	private String newPassword;
 
 	private OperateLogBiz operateLogBiz;
-	
+
 	//待办任务列表
 	private List<RuTaskVo> todoList;
 	private int todoCount;
 	// 跟踪任务列表
 	private List<HiTaskVo> historyList;
-	
+
 	/**
 	 * 登录
 	 * @return
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public String login() throws IOException {
 		// 参数检查
-		if (StringUtils.isEmpty(staff.getLoginName())|| StringUtils.isEmpty(staff.getPassword())) {
-			logger.error("用户名或密码为空");
-			operateLogBiz.info(OperateLogType.STAFF_LOGIN,staff.getLoginName(),staff.getLoginName(), "登录失败");
-			operateResult = new OperateResult(-4, "用户名或密码为空!");
-			return OPER_RESULT;
+		if (StringUtils.isEmpty(this.staff.getLoginName())|| StringUtils.isEmpty(this.staff.getPassword())) {
+			StaffAction.logger.error("用户名或密码为空");
+			this.operateLogBiz.info(OperateLogType.STAFF_LOGIN,this.staff.getLoginName(),this.staff.getLoginName(), "登录失败");
+			this.operateResult = new OperateResult(-4, "用户名或密码为空!");
+			return BaseAction.OPER_RESULT;
 		}
 		// 登录
 		try {
-			staff = staffBiz.login(staff.getLoginName(), staff.getPassword());
+			this.staff = this.staffBiz.login(this.staff.getLoginName(), this.staff.getPassword());
 		} catch (StaffLoginNameErrorException e) {
-			String name = staff.getLoginName();
-			operateLogBiz.info(OperateLogType.STAFF_LOGIN, name, name, "登录失败，用户名错误!");
-			operateResult = new OperateResult(-1, "登录失败，用户名错误!");
-			return OPER_RESULT;
+			String name = this.staff.getLoginName();
+			this.operateLogBiz.info(OperateLogType.STAFF_LOGIN, name, name, "登录失败，用户名错误!");
+			this.operateResult = new OperateResult(-1, "登录失败，用户名错误!");
+			return BaseAction.OPER_RESULT;
 		} catch (StaffPasswordErrorException e) {
-			int cnt = staffBiz.updatePwdErrCount(staff.getLoginName());
-			operateLogBiz.info(OperateLogType.STAFF_LOGIN, staff.getLoginName(),staff.getLoginName(), "登录失败，密码错误!");
+			int cnt = this.staffBiz.updatePwdErrCount(this.staff.getLoginName());
+			this.operateLogBiz.info(OperateLogType.STAFF_LOGIN, this.staff.getLoginName(),this.staff.getLoginName(), "登录失败，密码错误!");
 			String msg = "密码错误!";
 			if(cnt >= 2){
 				msg += "还可尝试登录"+(StaffBizImpl.PWD_LOCK_COUNT-cnt)+"次，"+(StaffBizImpl.PWD_LOCK_COUNT-cnt)+"次后账号将被锁定!";
 			}
-			operateResult = new OperateResult(-1, msg);
-			return OPER_RESULT;
+			this.operateResult = new OperateResult(-1, msg);
+			return BaseAction.OPER_RESULT;
 		} catch (StaffLockException e) {
 			String msg = "";
 			if("0".equals(e.getCode())){
@@ -107,94 +108,98 @@ public class StaffAction extends BaseAction {
 			}else{
 				msg = "未知用户状态!";
 			}
-			operateLogBiz.info(OperateLogType.STAFF_LOGIN, staff.getLoginName(),staff.getLoginName(), "登录失败，"+msg);
-			operateResult = new OperateResult(-2,msg);
-			return OPER_RESULT;
+			this.operateLogBiz.info(OperateLogType.STAFF_LOGIN, this.staff.getLoginName(),this.staff.getLoginName(), "登录失败，"+msg);
+			this.operateResult = new OperateResult(-2,msg);
+			return BaseAction.OPER_RESULT;
 		} catch (PasswordMustChangeException e) {
 			// 用户信息保存在会话
-			staff = staffBiz.findStaffByLoginName(staff.getLoginName());
+			this.staff = this.staffBiz.findStaffByLoginName(this.staff.getLoginName());
 			// 不写进session
 			// setLoginStaff(staff);
-			operateLogBiz.info(OperateLogType.STAFF_LOGIN, staff.getLoginName(),staff.getLoginName(), "登录失败");
+			this.operateLogBiz.info(OperateLogType.STAFF_LOGIN, this.staff.getLoginName(),this.staff.getLoginName(), "登录失败");
 			// 跳转到修改密码页
 			return "beforeChangePassword";
 		} catch (Exception e) {
-			logger.error("系统繁忙，请稍后再试...", e);
-			operateResult = new OperateResult(-3, "系统繁忙，请稍后再试...");
-			return OPER_RESULT;
+			StaffAction.logger.error("系统繁忙，请稍后再试...", e);
+			this.operateResult = new OperateResult(-3, "系统繁忙，请稍后再试...");
+			return BaseAction.OPER_RESULT;
 		}
-		setLoginStaff(staff);		
+		this.setLoginStaff(this.staff);
+		if ("true".equals(this.getHttpServletRequest().getParameter("rememberPass"))) {
+			//写入cookie
+			CookieUtil.saveLoginCookie(this.staff, this.getHttpServletResponse());
+		}
 		// 写业务日志
-		operateLogBiz.info(OperateLogType.STAFF_LOGIN, staff.getLoginName(),staff.getRealName(), "登录成功");
-		operateResult = new OperateResult(1, "sucess");
-		return OPER_RESULT;
+		this.operateLogBiz.info(OperateLogType.STAFF_LOGIN, this.staff.getLoginName(),this.staff.getRealName(), "登录成功");
+		this.operateResult = new OperateResult(1, "sucess");
+		return BaseAction.OPER_RESULT;
 	}
-	
+
 
 	public String main() throws SQLException, IOException, ClassNotFoundException{
 		// 得到登录用户信息
-		staff = getLoginStaff();
+		this.staff = this.getLoginStaff();
 		// 拷贝系统所有操作资源
-		resources = ResourceMgr.getInstance().deepCopy();
-		
+		this.resources = ResourceMgr.getInstance().deepCopy();
+
 		String loginName = LoginUtils.getLoginStaff().getLoginName();
 		//查询用户可操作资源ID
-		List<String> resourceIds = staffBiz.listResourceIds(LoginUtils.getLoginStaff().getLoginName());
+		List<String> resourceIds = this.staffBiz.listResourceIds(LoginUtils.getLoginStaff().getLoginName());
 		// 过滤用户权限
-		filterResource(resources, resourceIds);
-		
+		this.filterResource(this.resources, resourceIds);
+
 		//查询用户数据权限
-		int permission = staffBiz.getHasAllDataPermission(loginName);
+		int permission = this.staffBiz.getHasAllDataPermission(loginName);
 		if(permission == 1){//查看所有数据权限
 			LoginUtils.getLoginStaff().getPermission().getDataPermissions().put(Permission.ALL_DATA, 1);
 		}else{
-			List<String> projectIds = staffBiz.getOnwerProjectId(loginName);
-			if(projectIds != null && projectIds.size() > 0){
+			List<String> projectIds = this.staffBiz.getOnwerProjectId(loginName);
+			if((projectIds != null) && (projectIds.size() > 0)){
 				LoginUtils.getLoginStaff().getPermission().getDataPermissions().put(Permission.PROJECT_IDS,projectIds);
 			}
 			LoginUtils.getLoginStaff().getPermission().getDataPermissions().put(Permission.LOGIN_NAME,loginName);
 		}
-		
+
 		return "index";
 	}
-	
+
 	public String basicHome() throws SQLException, IOException, ClassNotFoundException{
 		// 得到登录用户信息
-		staff = getLoginStaff();
+		this.staff = this.getLoginStaff();
 		// 查询系统所有操作资源
-		resources = ResourceMgr.getInstance().deepCopy();
-		
+		this.resources = ResourceMgr.getInstance().deepCopy();
+
 		String loginName = LoginUtils.getLoginStaff().getLoginName();
 		//查询用户可操作资源ID
-		List<String> resourceIds = staffBiz.listResourceIds(LoginUtils.getLoginStaff().getLoginName());
+		List<String> resourceIds = this.staffBiz.listResourceIds(LoginUtils.getLoginStaff().getLoginName());
 		// 过滤用户权限
-		filterResource(resources, resourceIds);
-		
+		this.filterResource(this.resources, resourceIds);
+
 		//查询用户数据权限
-		int permission = staffBiz.getHasAllDataPermission(loginName);
+		int permission = this.staffBiz.getHasAllDataPermission(loginName);
 		if(permission == 1){//查看所有数据权限
 			LoginUtils.getLoginStaff().getPermission().getDataPermissions().put(Permission.ALL_DATA, 1);
 		}else{
-			List<String> projectIds = staffBiz.getOnwerProjectId(loginName);
-			if(projectIds != null && projectIds.size() > 0){
+			List<String> projectIds = this.staffBiz.getOnwerProjectId(loginName);
+			if((projectIds != null) && (projectIds.size() > 0)){
 				LoginUtils.getLoginStaff().getPermission().getDataPermissions().put(Permission.PROJECT_IDS,projectIds);
 			}
 			LoginUtils.getLoginStaff().getPermission().getDataPermissions().put(Permission.LOGIN_NAME,loginName);
 		}
 		return "basic_home";
 	}
-	
+
 	private void filterResource(List<Resource> resources,List<String> resourceIds){
-		if(resources != null && resourceIds != null){
+		if((resources != null) && (resourceIds != null)){
 			for (Resource r : resources) {
 				if(!"1".equals(r.getResourceType())){
-						continue;
+					continue;
 				}
-			   if(resourceIds.contains(r.getResourceId())||!Resource.AUTH_TYPE_AUTH.equals(r.getAuthType())){
+				if(resourceIds.contains(r.getResourceId())||!Resource.AUTH_TYPE_AUTH.equals(r.getAuthType())){
 					r.setChecked(true);
-					filterResource(r.getResources(),resourceIds);
-				}else if(r.getResources() != null &&r.getResources().size() > 0){
-					filterResource(r.getResources(),resourceIds);
+					this.filterResource(r.getResources(),resourceIds);
+				}else if((r.getResources() != null) &&(r.getResources().size() > 0)){
+					this.filterResource(r.getResources(),resourceIds);
 				}
 			}
 		}
@@ -202,32 +207,33 @@ public class StaffAction extends BaseAction {
 
 	/**
 	 * 退出登录
-	 * 
+	 *
 	 * @return
 	 */
 	public String logout() {
 		// 删除会话信息
-		getSession().invalidate();// 清空session
-		if (getHttpServletRequest().getCookies() != null) {
-			for (Cookie cookie : getHttpServletRequest().getCookies()) {
+		this.getSession().invalidate();// 清空session
+		if (this.getHttpServletRequest().getCookies() != null) {
+			for (Cookie cookie : this.getHttpServletRequest().getCookies()) {
 				if ("JSESSIONID".equals(cookie.getName().toUpperCase())) {
 					cookie.setMaxAge(0);// 让cookie过期
 					break;
 				}
 			}
 		}
+		CookieUtil.clearCookie(this.getHttpServletResponse());
 		// 跳转到首页
 		return "logout";
 	}
 
 	/**
 	 * 修改密码准备
-	 * 
+	 *
 	 * @return
 	 */
 	public String beforeChangePassword() {
 		// 得到登录用户信息
-		staff = getLoginStaff();
+		this.staff = this.getLoginStaff();
 		// 跳转到首页
 		return "beforeChangePassword";
 	}
@@ -238,84 +244,84 @@ public class StaffAction extends BaseAction {
 	 */
 	public String resetPwd() {
 		// 得到登录用户信息
-		staff = getLoginStaff();
-		if(staff.getPassword().equals(DigestUtils.md5DigestAsHex(password.getBytes()))){//允许修改密码
+		this.staff = this.getLoginStaff();
+		if(this.staff.getPassword().equals(DigestUtils.md5DigestAsHex(this.password.getBytes()))){//允许修改密码
 			Staff s = new Staff();
-			s.setLoginName(staff.getLoginName());
-			String md5Password = DigestUtils.md5DigestAsHex(newPassword.getBytes());
+			s.setLoginName(this.staff.getLoginName());
+			String md5Password = DigestUtils.md5DigestAsHex(this.newPassword.getBytes());
 			s.setPassword(md5Password);
-			staffBiz.updateStaff(s);
-			operateLogBiz.info(OperateLogType.STAFF_MANAGE, staff.getLoginName(),staff.getRealName(), "修改密码成功!");
-			operateResult = new OperateResult(1, "修改密码成功!");
+			this.staffBiz.updateStaff(s);
+			this.operateLogBiz.info(OperateLogType.STAFF_MANAGE, this.staff.getLoginName(),this.staff.getRealName(), "修改密码成功!");
+			this.operateResult = new OperateResult(1, "修改密码成功!");
 		}else{
-			operateResult = new OperateResult(-1, "[当前密码]验证不通过!");
+			this.operateResult = new OperateResult(-1, "[当前密码]验证不通过!");
 		}
-		return OPER_RESULT;
+		return BaseAction.OPER_RESULT;
 	}
 
 	/**
 	 * 列表用户
-	 * 
+	 *
 	 * @return
 	 */
 	public String list() {
 		// 如果是分页查询，调用基类方法设置分页属性（start,limit,sort,order等）
-		setPagination(staff);
+		this.setPagination(this.staff);
 		// 得到分页结果
-		staffs = staffBiz.listStaff(staff);
+		this.staffs = this.staffBiz.listStaff(this.staff);
 		// 封装数据
-		dataGrid = new DataGrid(staffBiz.listStaffCount(staff), staffs);
-		return DATA_GRID;
+		this.dataGrid = new DataGrid(this.staffBiz.listStaffCount(this.staff), this.staffs);
+		return BaseAction.DATA_GRID;
 	}
-	
+
 	/**
 	 * 通讯录
 	 * @return
 	 */
 	public String contacts() {
-		staffs = staffBiz.listStaff(loginName);
+		this.staffs = this.staffBiz.listStaff(this.loginName);
 		// 封装数据
-		dataGrid = new DataGrid(staffs.size(), staffs);
-		return DATA_GRID;
+		this.dataGrid = new DataGrid(this.staffs.size(), this.staffs);
+		return BaseAction.DATA_GRID;
 	}
-	
+
 	public String beforeInsert(){
-		roles = staffBiz.getRoles(new Role());
+		this.roles = this.staffBiz.getRoles(new Role());
 		return "beforeInsert";
 	}
-	
+
 	/**
 	 * 用户注册
 	 * @return
 	 * @throws Exception
 	 */
 	public String regist() throws Exception {
-		if (null == staff || StringUtils.isBlank(staff.getLoginName())) {
-			operateResult = new OperateResult(-1, "参数非法!");
-			return OPER_RESULT;
+		if ((null == this.staff) || StringUtils.isBlank(this.staff.getLoginName())) {
+			this.operateResult = new OperateResult(-1, "参数非法!");
+			return BaseAction.OPER_RESULT;
 		}
 		try {
 			// 检查名称是否重复
-			Staff tmpStaff = staffBiz.findStaffByLoginName(staff.getLoginName());
+			Staff tmpStaff = this.staffBiz.findStaffByLoginName(this.staff.getLoginName());
 			if (tmpStaff != null) {
-				operateLogBiz.info(OperateLogType.STAFF_MANAGE, tmpStaff.getLoginName(),tmpStaff.getLoginName(), "用户注册失败：该登录名己存在!");
-				operateResult = new OperateResult(-2, "登录名己存在!");
-				return OPER_RESULT;
+				this.operateLogBiz.info(OperateLogType.STAFF_MANAGE, tmpStaff.getLoginName(),tmpStaff.getLoginName(), "用户注册失败：该登录名己存在!");
+				this.operateResult = new OperateResult(-2, "登录名己存在!");
+				return BaseAction.OPER_RESULT;
 			}
-			staff.setCreateUser("regist");
-			staff.setStatus(Staff.STAFF_STATUS_INACTIVE);
-			
+			this.staff.setCreateUser("regist");
+			this.staff.setStatus(Staff.STAFF_STATUS_INACTIVE);
+
 			// 增加用户
-			staffBiz.insertStaff(staff,null);
+			this.staffBiz.insertStaff(this.staff,null);
 		} catch (Exception e) {
-			logger.error(e);
-			operateResult = new OperateResult(-3, "用户注册失败!");
-			return OPER_RESULT;
+			StaffAction.logger.error(e);
+			this.operateResult = new OperateResult(-3, "用户注册失败!");
+			return BaseAction.OPER_RESULT;
 		}
-		operateResult = new OperateResult(1, "注册成功!请耐心等待审核，审核结果将以邮件告知，请注意查收!");
-		return OPER_RESULT;
+		this.operateResult = new OperateResult(1, "注册成功!请耐心等待审核，审核结果将以邮件告知，请注意查收!");
+		return BaseAction.OPER_RESULT;
 	}
-	
+
 
 	/**
 	 * 增加用户
@@ -323,33 +329,33 @@ public class StaffAction extends BaseAction {
 	 * @throws Exception
 	 */
 	public String insert() throws Exception {
-		if(isdo != 1){
-			return beforeInsert();
+		if(this.isdo != 1){
+			return this.beforeInsert();
 		}
-		if (null == staff || StringUtils.isBlank(staff.getLoginName())) {
-			operateResult = new OperateResult(-1, "参数非法!");
-			return OPER_RESULT;
+		if ((null == this.staff) || StringUtils.isBlank(this.staff.getLoginName())) {
+			this.operateResult = new OperateResult(-1, "参数非法!");
+			return BaseAction.OPER_RESULT;
 		}
 		try {
 			// 检查名称是否重复
-			Staff tmpStaff = staffBiz.findStaffByLoginName(staff.getLoginName());
+			Staff tmpStaff = this.staffBiz.findStaffByLoginName(this.staff.getLoginName());
 			if (tmpStaff != null) {
-				operateLogBiz.info(OperateLogType.STAFF_MANAGE, tmpStaff.getLoginName(),tmpStaff.getLoginName(), "新增用户失败：该登录名己存在!");
-				operateResult = new OperateResult(-2, "成员名称己存在!");
-				return OPER_RESULT;
+				this.operateLogBiz.info(OperateLogType.STAFF_MANAGE, tmpStaff.getLoginName(),tmpStaff.getLoginName(), "新增用户失败：该登录名己存在!");
+				this.operateResult = new OperateResult(-2, "成员名称己存在!");
+				return BaseAction.OPER_RESULT;
 			}
-			Staff loginStaff = getLoginStaff();
-			staff.setPassword("good888");
-			staff.setCreateUser(loginStaff.getLoginName());
+			Staff loginStaff = this.getLoginStaff();
+			this.staff.setPassword("good888");
+			this.staff.setCreateUser(loginStaff.getLoginName());
 			// 增加用户
-			staffBiz.insertStaff(staff,roleIds);
+			this.staffBiz.insertStaff(this.staff,this.roleIds);
 		} catch (Exception e) {
-			logger.error(e);
-			operateResult = new OperateResult(-3, "增加用户失败!");
-			return OPER_RESULT;
+			StaffAction.logger.error(e);
+			this.operateResult = new OperateResult(-3, "增加用户失败!");
+			return BaseAction.OPER_RESULT;
 		}
-		operateResult = new OperateResult(1, "新增用户成功!");
-		return OPER_RESULT;
+		this.operateResult = new OperateResult(1, "新增用户成功!");
+		return BaseAction.OPER_RESULT;
 	}
 
 	/**
@@ -358,17 +364,17 @@ public class StaffAction extends BaseAction {
 	 */
 	public String beforeUpdate() {
 		// 查询成员
-		staff = staffBiz.findStaffByLoginName(loginName);
-		if (staff == null) {
-			operateResult = new OperateResult(1, "用户不存在!");
-			return OPER_RESULT;
+		this.staff = this.staffBiz.findStaffByLoginName(this.loginName);
+		if (this.staff == null) {
+			this.operateResult = new OperateResult(1, "用户不存在!");
+			return BaseAction.OPER_RESULT;
 		}
 		Role role_temp = new Role();
 		role_temp.setLimit(50);
-		roles = staffBiz.getRoles(role_temp);
-		if(roles!=null && staff.getRoles()!=null){
-			for (Role role : roles) {
-				if(staff.getRoles().contains(role)){
+		this.roles = this.staffBiz.getRoles(role_temp);
+		if((this.roles!=null) && (this.staff.getRoles()!=null)){
+			for (Role role : this.roles) {
+				if(this.staff.getRoles().contains(role)){
 					role.setChecked(true);
 				}
 			}
@@ -382,24 +388,24 @@ public class StaffAction extends BaseAction {
 	 * @throws Exception
 	 */
 	public String update() throws Exception {
-		if(isdo != 1){
-			return beforeUpdate();
+		if(this.isdo != 1){
+			return this.beforeUpdate();
 		}
 		try {
 			// 修改成员
-			if(roleIds==null){
-				roleIds = "";
+			if(this.roleIds==null){
+				this.roleIds = "";
 			}
-			staffBiz.updateStaff(staff,roleIds);
+			this.staffBiz.updateStaff(this.staff,this.roleIds);
 		} catch (Exception e) {
-			operateLogBiz.info(OperateLogType.STAFF_MANAGE, staff.getLoginName(),staff.getRealName(), "用户修改失败!");
-			operateResult = new OperateResult(-1, "修改用户失败!");
-			return OPER_RESULT;
+			this.operateLogBiz.info(OperateLogType.STAFF_MANAGE, this.staff.getLoginName(),this.staff.getRealName(), "用户修改失败!");
+			this.operateResult = new OperateResult(-1, "修改用户失败!");
+			return BaseAction.OPER_RESULT;
 		}
-		operateResult = new OperateResult(1, "修改用户成功!");
-		return OPER_RESULT;
+		this.operateResult = new OperateResult(1, "修改用户成功!");
+		return BaseAction.OPER_RESULT;
 	}
-	
+
 	/**
 	 * 查看个人资料
 	 * @return
@@ -408,19 +414,19 @@ public class StaffAction extends BaseAction {
 	public String staffInfo() throws Exception {
 
 		// 查询成员
-		staff = LoginUtils.getLoginStaff();
-		if (staff == null) {
-			operateResult = new OperateResult(1, "用户不存在!");
-			return OPER_RESULT;
+		this.staff = LoginUtils.getLoginStaff();
+		if (this.staff == null) {
+			this.operateResult = new OperateResult(1, "用户不存在!");
+			return BaseAction.OPER_RESULT;
 		}
 		Role role_temp = new Role();
 		role_temp.setLimit(50);
-		List<Role> roleList = staffBiz.getRoles(role_temp);
-		if (roleList != null && staff.getRoles() != null) {
-			roles = new ArrayList<Role>();
+		List<Role> roleList = this.staffBiz.getRoles(role_temp);
+		if ((roleList != null) && (this.staff.getRoles() != null)) {
+			this.roles = new ArrayList<Role>();
 			for (Role role : roleList) {
-				if (staff.getRoles().contains(role)) {
-					roles.add(role);
+				if (this.staff.getRoles().contains(role)) {
+					this.roles.add(role);
 				}
 			}
 		}
@@ -429,40 +435,40 @@ public class StaffAction extends BaseAction {
 
 	/**
 	 * 删除成员
-	 * 
+	 *
 	 * @return
 	 */
 	public String delete() {
 		String[] loginNames;
 		// 修改组织或员工角色
-		if(loginName!=null&&!"".equals(loginName)){
-			loginNames = loginName.split(",");
+		if((this.loginName!=null)&&!"".equals(this.loginName)){
+			loginNames = this.loginName.split(",");
 		}else{
-			operateResult = new OperateResult(-1, "请选择要注销的用户!");
-			return OPER_RESULT;
+			this.operateResult = new OperateResult(-1, "请选择要注销的用户!");
+			return BaseAction.OPER_RESULT;
 		}
-		staffBiz.deleteStaffs(loginNames);
-		operateResult = new OperateResult(1, "用户注销成功!");
-		operateLogBiz.info(OperateLogType.STAFF_MANAGE, loginName,loginName, "用户注销成功！");
-		return OPER_RESULT;
+		this.staffBiz.deleteStaffs(loginNames);
+		this.operateResult = new OperateResult(1, "用户注销成功!");
+		this.operateLogBiz.info(OperateLogType.STAFF_MANAGE, this.loginName,this.loginName, "用户注销成功！");
+		return BaseAction.OPER_RESULT;
 	}
-	
+
 	/**
 	 * 重置密码
 	 * @return
 	 */
 	public String reset() {
 		String[] loginNames;
-		if(loginName!=null&&!"".equals(loginName)){
-			loginNames = loginName.split(",");
+		if((this.loginName!=null)&&!"".equals(this.loginName)){
+			loginNames = this.loginName.split(",");
 		}else{
-			operateResult = new OperateResult(-1, "请选择要重置密码的账户！");
-			return OPER_RESULT;
+			this.operateResult = new OperateResult(-1, "请选择要重置密码的账户！");
+			return BaseAction.OPER_RESULT;
 		}
-		String result  = staffBiz.resetPwds(loginNames);
-		operateLogBiz.info(OperateLogType.STAFF_MANAGE,loginName,loginName, "重置密码成功！");
-		operateResult = new OperateResult(1, "密码重置成功！新密码如下：\n"+result);
-		return OPER_RESULT;
+		String result  = this.staffBiz.resetPwds(loginNames);
+		this.operateLogBiz.info(OperateLogType.STAFF_MANAGE,this.loginName,this.loginName, "重置密码成功！");
+		this.operateResult = new OperateResult(1, "密码重置成功！新密码如下：\n"+result);
+		return BaseAction.OPER_RESULT;
 	}
 
 	/**
@@ -478,38 +484,38 @@ public class StaffAction extends BaseAction {
 		response.setDateHeader("Expires", 0);
 
 		// 查询成员
-		staff = staffBiz.findStaffByLoginName(loginName);
-		if (staff == null) {
-			operateLogBiz.info(OperateLogType.STAFF_MANAGE, loginName,
-					loginName, "用户锁定成功！");
+		this.staff = this.staffBiz.findStaffByLoginName(this.loginName);
+		if (this.staff == null) {
+			this.operateLogBiz.info(OperateLogType.STAFF_MANAGE, this.loginName,
+					this.loginName, "用户锁定成功！");
 			try {
 				response.getWriter().print("成员不存在！");
 			} catch (IOException ex) {
-				logger.error("输出数据到页面时出错！");
+				StaffAction.logger.error("输出数据到页面时出错！");
 			}
 			return null;
 		}
 
 		// 判断用户状态是否正常
-		if (Staff.STAFF_STATUS_NORMAL.equals(staff.getStatus())) {
-			staff.setStatus(Staff.STAFF_STATUS_LOCK);
+		if (Staff.STAFF_STATUS_NORMAL.equals(this.staff.getStatus())) {
+			this.staff.setStatus(Staff.STAFF_STATUS_LOCK);
 
 			Date now = new Date();
 			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			String lockDate = df.format(now);
-			staff.setLockDate(lockDate);
+			this.staff.setLockDate(lockDate);
 
-			staffBiz.updateStaff(staff,null);
-			operateLogBiz.info(OperateLogType.STAFF_MANAGE, loginName, staff.getRealName(), "锁定成功");
-			operateLogBiz.info(OperateLogType.STAFF_MANAGE, loginName,
-					loginName, "用户注销成功！");
+			this.staffBiz.updateStaff(this.staff,null);
+			this.operateLogBiz.info(OperateLogType.STAFF_MANAGE, this.loginName, this.staff.getRealName(), "锁定成功");
+			this.operateLogBiz.info(OperateLogType.STAFF_MANAGE, this.loginName,
+					this.loginName, "用户注销成功！");
 		} else {
 			// setErrorMsg("成员状态不是正常状态，不能加锁!");
-			operateLogBiz.info(OperateLogType.STAFF_MANAGE, loginName, staff.getRealName(), "锁定失败");
+			this.operateLogBiz.info(OperateLogType.STAFF_MANAGE, this.loginName, this.staff.getRealName(), "锁定失败");
 			try {
 				response.getWriter().print("成员状态不是正常状态，不能加锁！");
 			} catch (IOException ex) {
-				logger.error("输出数据到页面时出错！");
+				StaffAction.logger.error("输出数据到页面时出错！");
 			}
 			return null;
 		}
@@ -517,7 +523,7 @@ public class StaffAction extends BaseAction {
 		try {
 			response.getWriter().print("成员加锁成功！");
 		} catch (IOException ex) {
-			logger.error("输出数据到页面时出错！");
+			StaffAction.logger.error("输出数据到页面时出错！");
 		}
 
 		return null;
@@ -525,7 +531,7 @@ public class StaffAction extends BaseAction {
 
 	/**
 	 * 解锁
-	 * 
+	 *
 	 * @return
 	 */
 	public String unlock() {
@@ -537,29 +543,29 @@ public class StaffAction extends BaseAction {
 		response.setDateHeader("Expires", 0);
 
 		// 查询成员
-		staff = staffBiz.findStaffByLoginName(loginName);
-		if (staff == null) {
-			operateLogBiz.info(OperateLogType.STAFF_MANAGE, loginName, loginName, "解锁失败");
+		this.staff = this.staffBiz.findStaffByLoginName(this.loginName);
+		if (this.staff == null) {
+			this.operateLogBiz.info(OperateLogType.STAFF_MANAGE, this.loginName, this.loginName, "解锁失败");
 			try {
 				response.getWriter().print("成员不存在！");
 			} catch (IOException ex) {
-				logger.error("输出数据到页面时出错！");
+				StaffAction.logger.error("输出数据到页面时出错！");
 			}
 			return null;
 		}
 
 		// 判断用户状态是否正常
-		if (Staff.STAFF_STATUS_LOCK.equals(staff.getStatus())) {
-			staff.setStatus(Staff.STAFF_STATUS_NORMAL);
-			staff.setPwdErrCount("0");
-			staffBiz.updateStaff(staff,roleIds);
-			operateLogBiz.info(OperateLogType.STAFF_MANAGE, loginName, staff.getRealName(), "解锁成功");
+		if (Staff.STAFF_STATUS_LOCK.equals(this.staff.getStatus())) {
+			this.staff.setStatus(Staff.STAFF_STATUS_NORMAL);
+			this.staff.setPwdErrCount("0");
+			this.staffBiz.updateStaff(this.staff,this.roleIds);
+			this.operateLogBiz.info(OperateLogType.STAFF_MANAGE, this.loginName, this.staff.getRealName(), "解锁成功");
 		} else {
-			operateLogBiz.info(OperateLogType.STAFF_MANAGE, loginName, staff.getRealName(), "解锁失败");
+			this.operateLogBiz.info(OperateLogType.STAFF_MANAGE, this.loginName, this.staff.getRealName(), "解锁失败");
 			try {
 				response.getWriter().print("成员状态不是加锁状态，不能解锁！");
 			} catch (IOException ex) {
-				logger.error("输出数据到页面时出错！");
+				StaffAction.logger.error("输出数据到页面时出错！");
 			}
 			return null;
 		}
@@ -567,7 +573,7 @@ public class StaffAction extends BaseAction {
 		try {
 			response.getWriter().print("成员解锁成功！");
 		} catch (IOException ex) {
-			logger.error("输出数据到页面时出错！");
+			StaffAction.logger.error("输出数据到页面时出错！");
 		}
 		return null;
 	}
@@ -577,7 +583,7 @@ public class StaffAction extends BaseAction {
 	}
 
 	public Staff getStaff() {
-		return staff;
+		return this.staff;
 	}
 
 	public void setStaff(Staff staff) {
@@ -590,14 +596,14 @@ public class StaffAction extends BaseAction {
 	}
 	public List<Staff> getStaffs() {
 
-		return staffs;
+		return this.staffs;
 	}
 	public List<Resource> getResources() {
-		return resources;
+		return this.resources;
 	}
 
 	public String getLoginName() {
-		return loginName;
+		return this.loginName;
 	}
 
 	public void setLoginName(String loginName) {
@@ -608,28 +614,28 @@ public class StaffAction extends BaseAction {
 		this.operateLogBiz = operateLogBiz;
 	}
 	public OperateResult getResult() {
-		return operateResult;
+		return this.operateResult;
 	}
 	public void setResult(OperateResult result) {
 		this.operateResult = result;
 	}
 	public List<Role> getRoles() {
-		return roles;
+		return this.roles;
 	}
 	public void setRoleIds(String roleIds) {
 		this.roleIds = roleIds;
 	}
 	public List<RuTaskVo> getTodoList() {
-		return todoList;
+		return this.todoList;
 	}
 	public int getTodoCount() {
-		return todoCount;
+		return this.todoCount;
 	}
 	public List<HiTaskVo> getHistoryList() {
-		return historyList;
+		return this.historyList;
 	}
 	public String getPassword() {
-		return password;
+		return this.password;
 	}
 	public void setPassword(String password) {
 		this.password = password;
@@ -638,7 +644,7 @@ public class StaffAction extends BaseAction {
 		this.newPassword = newPassword;
 	}
 	public String getNewPassword() {
-		return newPassword;
+		return this.newPassword;
 	}
 }
 

@@ -37,6 +37,9 @@
 				<div style="margin-left:68.4%;margin-top:35.5%;;position:absolute;z-index:2;" width="200px">
 					&nbsp;<input type="password" id="password" name="password" maxLength="20" style="width: 160px;BACKGROUND-COLOR: transparent;height: 23px;" />
 				</div>
+				<div style="margin-left:60.4%;margin-top:40.5%;;position:absolute;z-index:2;" width="200px">
+					<label><input type="checkbox" style="text-align: left;" id="rememberPass" name="rememberPassFlag" />两周自动登录</label>
+				</div>
 				<div style="margin-left:76%;margin-top:39.5%;position:absolute;z-index:2;">
 					<a id="loginBtn"><image src="images/login.png" /></a>
 					&nbsp;&nbsp;&nbsp;
@@ -63,6 +66,7 @@ $(function() {
 	$("#loginBtn").click(function() {
 			var loginName=$.trim($("#loginName").val());
 			var pwd=$.trim($("#password").val());
+			var rememberPass = $("#rememberPass").is(':checked');
 			if(!loginName){
 				 $("#error").empty();
 		    	 $("#error").append("用户名不能为空！");
@@ -78,7 +82,7 @@ $(function() {
 			$.ajax({
 				   type: "POST",
 				   url: "staff!login.do",
-				   data: "staff.loginName="+loginName+"&staff.password="+pwd,
+				   data: "staff.loginName="+loginName+"&staff.password="+pwd+"&rememberPass="+rememberPass,
 				   async: false,
 				   dataType:"json",
 				   success: function(result){
