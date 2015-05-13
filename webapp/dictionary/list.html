@@ -54,6 +54,9 @@
 				$("#dictionaryId").val(node.id);
 	            var params = '{"dictionaryId":"' + id + '"}';   // 封装查询参数
 	            $('#dg').datagrid('load',eval('(' + params + ')')); 
+			},
+			onLoadSuccess:function(node, data){
+				$('#tt').tree('collapseAll');
 			}
 		});
 
