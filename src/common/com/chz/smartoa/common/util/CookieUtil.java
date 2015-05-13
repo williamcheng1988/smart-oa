@@ -96,6 +96,8 @@ public class CookieUtil {
 								//request.getRequestDispatcher("home.do").forward(request, response);
 								isAuth = true;
 								response.sendRedirect("home.do");
+							} else {
+								CookieUtil.clearCookie(response);
 							}
 						} else {
 							//删除Cookie  用户都不存在了要cookie何用。
