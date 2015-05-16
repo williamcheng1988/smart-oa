@@ -14,16 +14,7 @@
 								</td>
 								<td>
 									&nbsp;&nbsp;
-									<input class="easyui-combobox"   
-									   id="fileTypeId"  
-									   name="fileTypeId" 
-									   value="--请选择--" 
-									   url="filemanager!addWindow.do"   
-									   valueField="id"   
-									   textField="dictionaryName"   
-									   panelHeight="auto" 
-									   editable="false" 
-									   />
+									<input id="fileTypeId" name="fileTypeId">  
 									   
 									&nbsp;&nbsp;  
 									<input class="easyui-combobox"   
@@ -58,6 +49,12 @@
 </div>
 
 <script language="javascript">
+
+	$('#fileTypeId').combobox({    
+	    url:'filemanager!addWindow.do',    
+	    valueField:'id',    
+	    textField:'dictionaryName'   
+	});
 
 	$(function(){
 		$(document).delegate('.a_removeCurrentFile', 'click', function(e) {
