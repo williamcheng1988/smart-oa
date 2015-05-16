@@ -20,18 +20,30 @@
 					<div id="workPlanContentDIV" style="width:75%;height:300px;padding2px;"></div>
 				</div>
 			</div>
-			<div style="width:47%;height: 46%;float: left;padding-top: 5px;padding-left: 13px;">
-				<div id="draftList" class="easyui-panel" title="&nbsp;草稿箱" data-options="iconCls:'icon-mini-write'" style="height:98%;">
-				</div>
+			<div style="width:47%;float: left;padding-top: 5px;padding-left: 13px;min-height: 20%">
+				 	<!--  <p><font style="font-size: 12px;font-weight: bold;color: #0E2D5F;height: 16px;line-height: 16px;">草稿箱</font></p> -->
+				 	<p style="font-size: 14px;font-weight: bold;">
+				 		<a class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-computer_edit'" href="#">草稿箱</a>&nbsp;
+				 	</p>
+				 	<div style="width:100%;height:1px;margin:0px auto;padding:0px;background-color:#D5D5D5;overflow:hidden;"></div>
+				 	 <div id="draftList"></div>
 			</div>
-			<div style="width:47%;height: 46%;float: right; padding-top: 5px;padding-right: 13px;">
-				<div id="todoTasks" class="easyui-panel" title="&nbsp;待办任务" data-options="iconCls:'icon-ok'" style="height:98%;">
-				</div>
+			<div style="width:47%;float: right; padding-top: 5px;padding-right: 13px;min-height: 20%"">
+				<!-- <div id="todoTasks" class="easyui-panel" title="&nbsp;待办任务" data-options="iconCls:'icon-ok'" style="height:98%;">
+				</div> -->
+					<p style="font-size: 14px;font-weight: bold;">
+				 		<a class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-ok'" href="#">待办任务</a>&nbsp;
+				 	</p>
+					<div style="width:100%;height:1px;margin:0px auto;padding:0px;background-color:#D5D5D5;overflow:hidden;"></div>
+				 	 <div id="todoTasks"></div>
 			</div>
 			<div style="width:98%;float: left;padding-top: 8px;padding-left: 13px;">
-				<div id="historyTasks" class="easyui-panel" title="&nbsp;任务跟踪" data-options="iconCls:'icon-mini-view'" style="width:99%;height:auto;">
-					<table id="dg_historyTasks" class="easyui-datagrid" style="width:100%;"
-							data-options="singleSelect:false,url:'flow!historyList.do',border:false,method:'get',autoRowHeight:false,pagination:true,pageSize:10">
+				<!-- <div id="historyTasks" class="" title="&nbsp;任务跟踪" data-options="iconCls:'icon-mini-view',boder:false" style="width:99%;height:auto;"> -->
+					<p style="font-size: 14px;font-weight: bold;">
+				 		<a class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-mini-view'" href="#">&nbsp;任务跟踪</a>&nbsp;
+				 	</p>
+					<table id="dg_historyTasks" class="easyui-datagrid" style="width:100%;border:none;"
+							data-options="singleSelect:false,url:'flow!historyList.do',method:'get',autoRowHeight:false,pagination:true,pageSize:10,boder:false">
 						<thead>
 							<tr>
 								<th data-options="field:'businessTitle',width:'20%',formatter:formatOpert">任务名称</th>
@@ -41,7 +53,7 @@
 							</tr>
 						</thead>
 					</table>
-				</div>
+				<!-- </div> -->
 			</div>
 		<!-- main end -->
 		</div>
@@ -50,7 +62,8 @@
 				<div>
 					<p style="font-size: 14px;font-weight: bold;">
 						<a class="easyui-linkbutton" data-options="plain:true" href="#" onclick="addPanel('日程设置','workPlanInfo/manager.html')">我的日程</a>
-					</p><hr/>
+					</p>
+					<div style="width:100%;height:1px;margin:0px auto;padding:0px;background-color:#D5D5D5;overflow:hidden;"></div>
 					<div id="planListForWork" style="margin-left: 12px; padding-left: 5px;">
 					</div>
 				</div>
@@ -58,7 +71,8 @@
 			<div id="p" class="easyui-panel" title="Fluid Panel"  data-options="noheader:true,fit:true,border:false"  style="padding-left:10px;">
 				<div>
 					<p style="font-size: 14px;font-weight: bold;">
-					<a class="easyui-linkbutton" data-options="plain:true" href="#">通讯录</a>&nbsp;</p><hr/>
+					<a class="easyui-linkbutton" data-options="plain:true" href="#">通讯录</a>&nbsp;</p>
+					<div style="width:100%;height:1px;margin:0px auto;padding:0px;background-color:#D5D5D5;overflow:hidden;line-height: 40px;"></div>
 					<div style="width:90%;margin-left: 20px;">
 						<input class="easyui-searchbox" data-options="prompt:'',searcher:doSearch" style="width:99%"></input>
 						<table id="dg" class="easyui-datagrid"
