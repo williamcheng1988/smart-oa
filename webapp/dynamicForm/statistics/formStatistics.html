@@ -244,6 +244,7 @@
 								$('#formTemplateId').val(node.id);
 								$('#queryButton').linkbutton({disabled:false});
 							}else{$('#queryButton').linkbutton({disabled:true});}
+							$('#show_title').html(node.text);
 						},
 						onDblClick:function(node){
 							if($('#tt').tree('isLeaf', node.target)){
@@ -252,7 +253,9 @@
 								queryRecordData();
 								return false;
 							}
-						}
+							$('#show_title').html(node.text);
+						},
+						onLoadSuccess:function(node, data){$('#tt').tree('collapseAll');}
 						">
 				</ul>
 			</div>
@@ -309,7 +312,7 @@
 				</form>
 			</div>
 			<div class="panel-header">
-				<div class="panel-title">填报数据</div>
+				<div class="panel-title" id="show_title">填报数据</div>
 			</div>
 			<table id="dg" class="easyui-datagrid" style="width:100%;height:auto;"
 					data-options="rownumbers:true,singleSelect:true,border:false,method:'get',toolbar:'#tb',autoRowHeight:false,fitColumns:true,pagination:true,pageSize:10">
