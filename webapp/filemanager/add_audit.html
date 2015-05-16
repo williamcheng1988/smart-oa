@@ -14,7 +14,9 @@
 								</td>
 								<td>
 									&nbsp;&nbsp;
-									<input id="fileTypeId" name="fileTypeId">  
+									<input class="easyui-combobox" id="fileTypeId" name="fileTypeId" editable='false'
+									       data-options="valueField:'id', textField:'dictionaryName', panelHeight:'auto'" >
+									
 									   
 									&nbsp;&nbsp;  
 									<input class="easyui-combobox"   
@@ -50,10 +52,24 @@
 
 <script language="javascript">
 
-	$('#fileTypeId').combobox({    
-	    url:'filemanager!addWindow.do',    
-	    valueField:'id',    
-	    textField:'dictionaryName'   
+	$(function(){
+		jQuery.ajax({
+			   type: "POST",
+			   url: "filemanager!addWindow.do",
+			   dataType:"json",
+			   success: function(json){
+				   $("#fileTypeId").find("option").remove(); 
+				   var data = [];
+				   if(json){
+					   for(var i =0;i<json.length;i++){
+						   var jsonobj = json[i];
+						   data.push({ "dictionaryName": jsonobj.dictionaryName, "id": jsonobj.id });
+					   }
+					   $("#fileTypeId").combobox("loadData", data); 
+				   }
+			   }
+			});
+		
 	});
 
 	$(function(){
