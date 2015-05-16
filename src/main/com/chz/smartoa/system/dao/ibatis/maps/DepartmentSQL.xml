@@ -44,8 +44,7 @@
 <![CDATA[
     DELETE  FROM  t_department WHERE DEPARTMENT_ID = #departmentId#
 ]]>
-		
-</delete>    
+</delete>
 
 <update id="Department_updateDepartment" parameterClass="department">
     UPDATE t_department 
