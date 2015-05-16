@@ -191,7 +191,7 @@ VALUES
 INSERT into t_staff_role(login_name,role_id)VALUES ('admin',(SELECT role_id from t_role where role_name = '系统管理员'));
 INSERT into t_staff_role(login_name,role_id)VALUES ('fujunru',(SELECT role_id from t_role where role_name = '公司经理'));
 INSERT into t_staff_role(login_name,role_id)VALUES ('chenyuanming',(SELECT role_id from t_role where role_name = '公司董事'));
-INSERT into t_staff_role(login_name,role_id)VALUES ('dinglunfan',(SELECT role_id from t_role where role_name = '公司监事'));
+INSERT into t_staff_role(login_name,role_id)VALUES ('dingfanlun',(SELECT role_id from t_role where role_name = '公司监事'));
 INSERT into t_staff_role(login_name,role_id)VALUES ('miaoyan',(SELECT role_id from t_role where role_name = '行政信息专员'));
 		
 

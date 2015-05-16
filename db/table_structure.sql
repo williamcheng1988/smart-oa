@@ -2,6 +2,7 @@ drop table IF EXISTS t_schedule_task;
 drop table IF EXISTS t_operate_log;
 drop table IF EXISTS t_department_role;
 drop table IF EXISTS t_staff_role;
+drop table IF EXISTS t_department_post_staff;
 drop table IF EXISTS t_role_resource;
 drop table IF EXISTS t_resource_option;
 drop table IF EXISTS t_resource;
@@ -10,6 +11,7 @@ DROP TABLE IF EXISTS T_STAFF_WAGES;
 drop table IF EXISTS t_staff;
 drop table IF EXISTS t_role;
 drop table IF EXISTS t_department;
+drop table IF EXISTS t_post;
 drop table IF EXISTS t_delegation;
 drop table IF EXISTS t_delegation_log;
 drop table IF EXISTS  T_HI_TASK;
@@ -40,6 +42,8 @@ create table t_department
   department_name  varchar(100) not null,
   department_desc  varchar(100),
   parent_id        varchar(16),
+  level            int(2),
+  status           int(1) not null default 1,
   create_user      varchar(20) not null,
   create_date      datetime not null,
   last_update_date datetime
@@ -49,12 +53,38 @@ create table t_department
 --  comment on column t_department.department_name  is '组织名称';
 --  comment on column t_department.department_desc is '组织描述';
 --  comment on column t_department.parent_id is '父级组织ID';
+--  comment on column t_department.level is '组织级别';
+--  comment on column t_department.status is '状态：1有效 0无效';
 --  comment on column t_department.email is '组织的邮件';
 --  comment on column t_department.create_user is '组织创建者';
 --  comment on column t_department.create_date is '组织创建时间';
 --  comment on column t_department.last_update_date is '组织最后修改时间';
-
 alter table t_department add primary key (department_id);
+
+-- 岗位表
+create table t_post
+(
+  post_id    varchar(64) not null,
+  post_name  varchar(100) not null,
+  create_user      varchar(20) not null,
+  create_date      datetime not null,
+  last_update_date datetime
+);
+alter table t_post add primary key (post_id);
+
+-- 岗位关系表
+create table t_department_post_staff
+(
+  dept_id          varchar(64) not null,
+  post_id          varchar(64) not null,
+  staff_ids        varchar(20) not null,
+	create_user      varchar(20) not null,
+  create_date      datetime not null,
+  last_update_date datetime
+);
+alter table t_department_post_staff add primary key (dept_id,post_id);
+alter table t_department_post_staff add foreign key (dept_id) references t_department (department_id) on delete cascade on update cascade;
+alter table t_department_post_staff add foreign key (post_id) references t_post (post_id) on delete cascade on update cascade;
 
 -- prompt creating t_role
 create table t_role
@@ -735,7 +765,4 @@ CREATE TABLE T_FORM_PROP(
 -- ALTER TABLE T_FORM_PROP ADD 	PARENT_CODE	VARCHAR(200)	COMMENT '所属父元素 ';
 -- ALTER TABLE T_FORM_PROP change CODE NAME VARCHAR(200)   	COMMENT '内部name';
 -- ALTER TABLE T_FORM_PROP change PARENT_CODE INNER_NAME VARCHAR(200)   	COMMENT '内部name';
-
-
-
 
