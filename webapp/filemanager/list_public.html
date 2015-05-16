@@ -41,13 +41,13 @@
 						<input id="fileTypeId" name="fquery.fileTypeId" type="hidden" >
 					</form>
 				</div>
-				<div id="title" align="center" class="datagrid-toolbar page_title"></div>
+				<div id="title" align="center" class="datagrid-toolbar page_title">公共信息</div>
 				<table id="dg" class="easyui-datagrid" style="width:100%;height:auto;"
 						data-options="rownumbers:true,url:'../filemanager!listForPublic.do',singleSelect:false,border:false,method:'get',toolbar:'#tb',autoRowHeight:true,pagination:true,pageSize:10">
 					<thead>
 						<tr>
 							<th data-options="field:'id',checkbox:true"></th>
-							<th data-options="field:'fileDisplayname',width:'45%'">文件名称</th>
+							<th data-options="field:'fileDisplayname',width:'40%'">文件名称</th>
 							<th data-options="field:'fileStatus',width:'12%',formatter:formatIsStatus">状态</th>
 							<th data-options="field:'isPublic',width:'12%',formatter:formatIsPublic">是否公开</th>
 							<th data-options="field:'realName',width:'12%'">创建人</th>
@@ -225,6 +225,12 @@
     
     
  	function queryData(){
+ 		var dictionaryId = $("#dictionaryId").val();
+		var fileTypeId = $("#fileTypeId").val();
+		if(!dictionaryId || !fileTypeId){
+			$('#title').text("提示：请先选择左侧公共信息类型");
+			return;	
+		}
 		var paramsArray = $("#queryParams").serializeArray();
 		var results ='{';
 		$.each(paramsArray, function(i, field){
