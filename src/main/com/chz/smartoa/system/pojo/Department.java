@@ -42,6 +42,10 @@ public class Department extends BaseDomain {
 	 * 组织级别
 	 */
 	private int level;
+	/**
+	 * 状态：1有效，0失效
+	 */
+	private int status;
 
 	public String getDepartmentId() {
 		return this.departmentId;
@@ -74,7 +78,12 @@ public class Department extends BaseDomain {
 	public void setLevel(int level) {
 		this.level = level;
 	}
-
+	public int getStatus() {
+		return status;
+	}
+	public void setStatus(int status) {
+		this.status = status;
+	}
 	public String getCreateDate() {
 		return this.createDate;
 	}
