@@ -147,13 +147,11 @@
 						}else{
 							alert(json.msg);
 						}
+						$('#ui_mask').css('display', 'none');
+						$('#ui_mask_msg').css('display', 'none');
 					},
 					error : function() {
 						alert("系统异常，请稍后再试...");
-					},
-					complete:function(){
-						$('#ui_mask').css('display', 'none');
-						$('#ui_mask_msg').css('display', 'none');
 					}
 				});
 	}
