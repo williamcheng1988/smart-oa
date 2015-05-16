@@ -1,4 +1,4 @@
-package com.chz.smartoa.common.base;
+package com.chz.smartoa.common.util;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
