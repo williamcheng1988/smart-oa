@@ -50,18 +50,23 @@
 				</div>
 			</form>
 		</div>
+		<link id='easyuiTheme' rel='stylesheet' type='text/css' href='themes/default/easyui.css'>
+		<script type='text/javascript' charset='UTF-8' src='themes/themes.js'></script>
+		<link rel='stylesheet' type='text/css' href='themes/icon.css'>
+	<script type='text/javascript' src='jquery.easyui.min.js'></script>
+	<script type='text/javascript' src='locale/easyui-lang-zh_CN.js'></script>
+	<script type="text/javascript" src="jquery.min.js"></script>
 	</body>
 </HTML>	
-<script type="text/javascript" src="jquery.min.js"></script>
+
 <script type="text/javascript" language="javascript">
 $(function() {
 	//延迟加载JS
-	$("#head").append("<link id='easyuiTheme' rel='stylesheet' type='text/css' href='themes/default/easyui.css'>");
-	$("#head").append("<link id='easyuiTheme' rel='stylesheet' type='text/css' href='themes/default/easyui.css'>");
-	$("#head").append("<script type='text/javascript' charset='UTF-8' src='themes/themes.js'><\/script>");
-	$("#head").append("<link rel='stylesheet' type='text/css' href='themes/icon.css'>");
-	$("#head").append("<script type='text/javascript' src='jquery.easyui.min.js'><\/script>");
-	$("#head").append("<script type='text/javascript' src='locale/easyui-lang-zh_CN.js'><\/script>");
+	//$("#head").append("<link id='easyuiTheme' rel='stylesheet' type='text/css' href='themes/default/easyui.css'>");
+	//$("#head").append("<script type='text/javascript' charset='UTF-8' src='themes/themes.js'><\/script>");
+	//$("#head").append("<link rel='stylesheet' type='text/css' href='themes/icon.css'>");
+	//$("#head").append("<script type='text/javascript' src='jquery.easyui.min.js'><\/script>");
+	//$("#head").append("<script type='text/javascript' src='locale/easyui-lang-zh_CN.js'><\/script>");
 	$("#loginName").focus();
 	$("#loginBtn").click(function() {
 			var loginName=$.trim($("#loginName").val());
