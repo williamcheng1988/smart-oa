@@ -10,7 +10,6 @@ import com.chz.smartoa.common.base.BaseDomain;
  */
 public class Department extends BaseDomain {
 	private static final long serialVersionUID = 1L;
-	
 	/**
 	 * 组织ID.
 	 */
@@ -23,10 +22,6 @@ public class Department extends BaseDomain {
 	 * 组织名称.
 	 */
 	private String departmentName;
-	/**
-	 * 组织的邮件.
-	 */
-	private String email;
 	/**
 	 * 组织创建时间.
 	 */
@@ -43,6 +38,10 @@ public class Department extends BaseDomain {
 	 * 父级组织ID.
 	 */
 	private String parentId;
+	/**
+	 * 组织级别
+	 */
+	private int level;
 
 	public String getDepartmentId() {
 		return this.departmentId;
@@ -67,13 +66,13 @@ public class Department extends BaseDomain {
 	public void setDepartmentName(String departmentName) {
 		this.departmentName = departmentName;
 	}
-
-	public String getEmail() {
-		return this.email;
+	
+	public int getLevel() {
+		return level;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public void setLevel(int level) {
+		this.level = level;
 	}
 
 	public String getCreateDate() {
@@ -114,7 +113,7 @@ public class Department extends BaseDomain {
 		sb.append("departmentId:").append(departmentId).append(",");
 		sb.append("createUser:").append(createUser).append(",");
 		sb.append("departmentName:").append(departmentName).append(",");
-		sb.append("email:").append(email).append(",");
+		sb.append("level:").append(level).append(",");
 		sb.append("createDate:").append(createDate).append(",");
 		sb.append("departmentDesc:").append(departmentDesc).append(",");
 		sb.append("lastUpdateDate:").append(lastUpdateDate).append(",");
