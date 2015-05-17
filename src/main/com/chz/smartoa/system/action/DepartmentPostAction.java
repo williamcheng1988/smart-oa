@@ -2,13 +2,17 @@ package com.chz.smartoa.system.action;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
+
 import com.chz.smartoa.common.base.BaseAction;
 import com.chz.smartoa.common.base.DataGrid;
+import com.chz.smartoa.system.pojo.Department;
 import com.chz.smartoa.system.pojo.DepartmentPostStaffs;
 import com.chz.smartoa.system.pojo.Post;
+import com.chz.smartoa.system.service.DepartmentBiz;
 import com.chz.smartoa.system.service.DepartmentPostBiz;
 
 
@@ -21,6 +25,8 @@ public class DepartmentPostAction extends BaseAction{
 	private static final Logger logger = Logger.getLogger(DepartmentPostAction.class);
 	
 	private DepartmentPostBiz departmentPostBiz;
+	
+	private DepartmentBiz departmentBiz;
 	
 	private List<DepartmentPostStaffs> dpsList;
 	
@@ -35,6 +41,12 @@ public class DepartmentPostAction extends BaseAction{
 	private String departmentId;
 	
 	private String departmentName;
+	
+	private String postId;
+	
+	private String staffIds;
+	
+	private String mainId;
 	
 	
 	
@@ -56,6 +68,65 @@ public class DepartmentPostAction extends BaseAction{
 	
 	
 	
+	public String insetDepartmentPostPage(){
+		return "toAdd";
+	}
+	
+	
+	public String saveDepartmentPost(){
+		try {
+			DepartmentPostStaffs departmentPost = departmentPostBiz.getDepartmentPostByDepIdAndPostId(dps.getDepartmentId(), dps.getPostId());
+			if(departmentPost != null){
+				msg = "exist";
+			}else{
+				dps.setCreateUser(getLoginStaff().getCreateUser());
+				departmentPostBiz.insertDepartmentPost(dps);
+				msg ="true";
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			e.printStackTrace();
+			msg ="false";
+		}
+		operateResult = new OperateResult(1, msg);
+		return OPER_RESULT;
+	}
+	
+	
+	public String toEditPage(){
+		dps = departmentPostBiz.getDepartmentPostById(Long.valueOf(mainId));
+		Department department = departmentBiz.findDepartment(dps.getDepartmentId());
+		if(department != null){
+			departmentName = department.getDepartmentName();
+		}
+		postId = dps.getPostId();
+		staffIds = dps.getStaffIds();
+		return "toModify";
+	}
+	
+	
+	public String saveUpdate(){
+		try {
+			if(dps.getId() != null){
+				DepartmentPostStaffs uDps = departmentPostBiz.getDepartmentPostById(dps.getId());
+				if(uDps != null){
+					uDps.setPostId(dps.getPostId());
+					uDps.setStaffIds(dps.getStaffIds());
+					departmentPostBiz.updateDepartmentPost(uDps);
+					operateResult = new OperateResult(1, "岗位信息修改成功！");
+				}else{
+					operateResult = new OperateResult(-1, "岗位信息修改失败！");
+				}
+			}else{
+				operateResult = new OperateResult(-1, "岗位信息修改失败！");
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			e.printStackTrace();
+			operateResult = new OperateResult(-1, "岗位信息修改失败！");
+		}
+		return OPER_RESULT;
+	}
 	
 
 	public DepartmentPostBiz getDepartmentPostBiz() {
@@ -63,6 +134,13 @@ public class DepartmentPostAction extends BaseAction{
 	}
 	public void setDepartmentPostBiz(DepartmentPostBiz departmentPostBiz) {
 		this.departmentPostBiz = departmentPostBiz;
+	}
+
+	public DepartmentBiz getDepartmentBiz() {
+		return departmentBiz;
+	}
+	public void setDepartmentBiz(DepartmentBiz departmentBiz) {
+		this.departmentBiz = departmentBiz;
 	}
 
 	public List<DepartmentPostStaffs> getDpsList() {
@@ -112,6 +190,27 @@ public class DepartmentPostAction extends BaseAction{
 	}
 	public void setDepartmentName(String departmentName) {
 		this.departmentName = departmentName;
+	}
+
+	public String getPostId() {
+		return postId;
+	}
+	public void setPostId(String postId) {
+		this.postId = postId;
+	}
+
+	public String getStaffIds() {
+		return staffIds;
+	}
+	public void setStaffIds(String staffIds) {
+		this.staffIds = staffIds;
+	}
+
+	public String getMainId() {
+		return mainId;
+	}
+	public void setMainId(String mainId) {
+		this.mainId = mainId;
 	}
 	
 

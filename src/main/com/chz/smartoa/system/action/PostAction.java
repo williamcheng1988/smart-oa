@@ -1,10 +1,17 @@
 package com.chz.smartoa.system.action;
 
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
+
 import com.chz.smartoa.common.base.BaseAction;
+import com.chz.smartoa.system.pojo.Department;
 import com.chz.smartoa.system.pojo.Post;
 import com.chz.smartoa.system.service.PostBiz;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 
 
@@ -17,13 +24,53 @@ public class PostAction extends BaseAction{
 	
 	private PostBiz postBiz;
 	
+	private List<Post> postList;
+	
 	private Post pt;
 	
 	private String msg;
 	
 	private String jsonStr;
 	
+	private String postId;
 	
+	private String postName;
+	
+	
+	public String getAllPost(){
+		postList = postBiz.findAllPost();
+		Gson gson = new GsonBuilder().create();
+		jsonStr = gson.toJson(postList);
+		return "json";
+	}
+	
+	
+	public String savePost(){
+		try {
+			if(StringUtils.isNotEmpty(postId)){
+				Post post = postBiz.findPostById(postId);
+				if(post != null){
+					msg = "exist";
+				}else{
+					Post insertPost = new Post();
+					insertPost.setPostId(postId);
+					insertPost.setPostName(postName);
+					insertPost.setCreateUser(getLoginStaff().getCreateUser());
+					postBiz.insertPost(insertPost);
+					msg ="true";
+				}
+			}else{
+				msg ="postIsNull";
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			e.printStackTrace();
+			msg ="false";
+		}
+		Gson gson = new GsonBuilder().create();
+		jsonStr = gson.toJson(msg);
+		return "json";
+	}
 	
 	
 	
@@ -33,6 +80,13 @@ public class PostAction extends BaseAction{
 	}
 	public void setPostBiz(PostBiz postBiz) {
 		this.postBiz = postBiz;
+	}
+	
+	public List<Post> getPostList() {
+		return postList;
+	}
+	public void setPostList(List<Post> postList) {
+		this.postList = postList;
 	}
 	
 	public Post getPt() {
@@ -55,8 +109,20 @@ public class PostAction extends BaseAction{
 	public void setJsonStr(String jsonStr) {
 		this.jsonStr = jsonStr;
 	}
-	
-	
-	
 
+
+	public String getPostId() {
+		return postId;
+	}
+	public void setPostId(String postId) {
+		this.postId = postId;
+	}
+
+	public String getPostName() {
+		return postName;
+	}
+	public void setPostName(String postName) {
+		this.postName = postName;
+	}
+	
 }

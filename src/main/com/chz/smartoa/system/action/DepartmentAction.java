@@ -109,7 +109,9 @@ public class DepartmentAction extends BaseAction{
 		if(StringUtils.isNotEmpty(departmentId)){
 			dpment = departmentBiz.findDepartment(departmentId);
 			if(dpment != null){
-				parentName = departmentBiz.findDepartment(dpment.getParentId()).getDepartmentName();
+				if(departmentBiz.findDepartment(dpment.getParentId()) != null){
+					parentName = departmentBiz.findDepartment(dpment.getParentId()).getDepartmentName();
+				}
 			}
 		}
 		return "toModify";
