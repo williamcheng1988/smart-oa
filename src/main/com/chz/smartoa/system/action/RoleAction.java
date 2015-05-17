@@ -273,7 +273,7 @@ public class RoleAction extends BaseAction {
 			}
 			// 删除角色
 			roleBiz.deleteRole(roleId);
-			operateLogBiz.info(OperateLogType.ROLE_MANAGE, roleId.toString(), roleId.toString(), "删除成功");
+			//operateLogBiz.info(OperateLogType.ROLE_MANAGE, roleId.toString(), roleId.toString(), "删除成功");
 			operateResult = new OperateResult(1, "删除角色成功！");
 		} catch (Exception e) {
 			operateLogBiz.info(OperateLogType.ROLE_MANAGE, roleId.toString(), roleId.toString(), "删除失败");
