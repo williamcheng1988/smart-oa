@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    <title>流程配置</title>
+    <title>修改流程</title>
 	<script type="text/javascript" src="jquery.min.js"></script>
 	<link id="easyuiTheme" rel="stylesheet" type="text/css" href="themes/default/easyui.css">
 	<script type="text/javascript" charset="UTF-8" src="themes/themes.js"></script>
@@ -29,15 +29,15 @@
 }
 </style>	
   </head>
-
   <body>
   <div align="center" class="datagrid-toolbar page_title">
-		【$!{reProcdef.name_}&nbsp;V$!{reProcdef.version_}】流程配置
-	</div>
+		修改流程
+  </div>
 <div class="content-inner">
-<form id="processDetailForm"  class="easyui-form" method="post" data-options="novalidate:true" action="process!insertReconf.do?isdo=1">
-<input type="hidden" name="procdefId" value="${reProcdef.procdef_id_}">
+<form id="processDetailForm"  class="easyui-form" method="post" data-options="novalidate:true" action="flow!saveReconf.do">
+<input type="hidden" name="executionId" value="${executionId}">
 <input type="hidden" name="lineNos" value="$!{lineNos}">
+<input type="hidden" name="toDeleteIds" value="$!{toDeleteIds}">
   <table id="processDetailGrid" class="m-table table-hover">
 						<thead>
 							<tr>
@@ -52,73 +52,46 @@
 							</tr>
 						</thead>
 						<tbody>
-							#if($reConfs)
-								#foreach($reConf in $reConfs)
+							#if($ruconfs)
+								#foreach($ruConf in $ruconfs)
 								<tr line_no="${velocityCount}">
-									<td><input style="width:25px;" class="easyui-numberbox" data-options="required:true,min:1,max:99" name="sort_num_${velocityCount}"  value="${reConf.sort_num_}"/></td>
-									<td><input type="text" class="easyui-textbox" data-options="required:true,validType:'length[0,20]'" name="task_desc_${velocityCount}" value="${reConf.task_desc_}"></td>
+									<td><input style="width:25px;" class="easyui-numberbox" data-options="required:true,min:1,max:99#if($ruConf.is_edit_ == 0),disabled:true #end" name="sort_num_${velocityCount}"  value="${ruConf.sort_num_}"/></td>
+									<td><input type="text" class="easyui-textbox" data-options="required:true,validType:'length[0,20]'#if($ruConf.is_edit_ == 0),disabled:true #end" name="task_desc_${velocityCount}" value="${ruConf.task_desc_}"></td>
 									<td>
-									<select name="action_type_${velocityCount}" class="easyui-combobox">
-										<option value="1" #if($reConf.action_type_ == 1) selected="selected" #end>审批(并行)</option>
-										<option value="2" #if($reConf.action_type_ == 2) selected="selected" #end>审批(异或)</option>
-										<option value="3" #if($reConf.action_type_ == 3) selected="selected" #end>阅处</option>
-										<option value="4" #if($reConf.action_type_ == 4) selected="selected" #end>传阅</option>
+									<select name="action_type_${velocityCount}" class="easyui-combobox" data-options="#if($ruConf.is_edit_ == 0)disabled:true #end">
+										<option value="1" #if($ruConf.action_type_ == 1) selected="selected" #end>审批(并行)</option>
+										<option value="2" #if($ruConf.action_type_ == 2) selected="selected" #end>审批(异或)</option>
+										<option value="3" #if($ruConf.action_type_ == 3) selected="selected" #end>阅处</option>
+										<option value="4" #if($ruConf.action_type_ == 4) selected="selected" #end>传阅</option>
 									</select>
 									</td>
 									<td>
-										<input type="hidden" name="action_obj_type_${velocityCount}" value="${reConf.action_obj_type_}">
-										<input type="hidden" name="action_obj_${velocityCount}" value="${reConf.action_obj_}">
-										<input type="text" name="action_obj_name_${velocityCount}" id="action_obj_name_${velocityCount}" class="easyui-textbox bindClick" data-options="required:true" linenum="${velocityCount}" value="$!{reConf.action_obj_name_}">
+										<input type="hidden" name="action_obj_type_${velocityCount}" value="${ruConf.action_obj_type_}">
+										<input type="hidden" name="action_obj_${velocityCount}" value="${ruConf.action_obj_}">
+										<input type="text" name="action_obj_name_${velocityCount}" id="action_obj_name_${velocityCount}" class="easyui-textbox bindClick" data-options="required:true#if($ruConf.is_edit_ == 0),disabled:true #end" linenum="${velocityCount}" value="$!{ruConf.action_obj_name_}">
 									</td>
 									<td>
-											<input type="checkbox" name="is_turn_${velocityCount}" #if($reConf.is_turn_ == 1)  checked="checked" #end value="1">转办
-											<input type="checkbox" name="is_ask_${velocityCount}" #if($reConf.is_ask_ == 1)  checked="checked" #end value="1">协办
+											<input type="checkbox" name="is_turn_${velocityCount}" #if($ruConf.is_edit_ == 0) disabled #end #if($ruConf.is_turn_ == 1)  checked="checked" #end value="1">转办
+											<input type="checkbox" name="is_ask_${velocityCount}" #if($ruConf.is_edit_ == 0) disabled #end #if($ruConf.is_ask_ == 1)  checked="checked" #end value="1">协办
 											<!-- 
-											<input type="checkbox" name="is_modify_${velocityCount}" #if($reConf.is_modify_ == 1)  checked="checked" #end value="1">流程变更
+											<input type="checkbox" name="is_modify_${velocityCount}" #if($ruConf.is_modify_ == 1)  checked="checked" #end value="1">流程变更
 											 -->
 									</td>
-									<td><input style="width:25px;" class="easyui-numberbox" data-options="required:true,min:1,max:99"  type="text" name="expiry_days_${velocityCount}" value="${reConf.expiry_days_}"></td>
+									<td><input style="width:25px;" class="easyui-numberbox" data-options="required:true,min:1,max:99#if($ruConf.is_edit_ == 0),disabled:true #end"  type="text" name="expiry_days_${velocityCount}" value="${ruConf.expiry_days_}"></td>
 									<td>
-											<input type="checkbox" name="arrive_remind_${velocityCount}" #if($reConf.arrive_remind_ == 1)  checked="checked" #end value="1">到达
-											<input type="checkbox" name="expiry_remind_${velocityCount}" #if($reConf.expiry_remind_ == 1)  checked="checked" #end value="1">超时
+											<input type="checkbox" name="arrive_remind_${velocityCount}" #if($ruConf.is_edit_ == 0) disabled #end #if($ruConf.arrive_remind_ == 1)  checked="checked" #end value="1">到达
+											<input type="checkbox" name="expiry_remind_${velocityCount}" #if($ruConf.is_edit_ == 0) disabled #end #if($ruConf.expiry_remind_ == 1)  checked="checked" #end value="1">超时
 									</td>
 									<td>
 										#if($velocityCount > 1)
-											<input key="selectedItem" type="checkbox"  class="selectedItem" value="${velocityCount}">
+											<input key="selectedItem" type="checkbox" #if($ruConf.is_edit_ == 0) disabled #end class="selectedItem" value="${velocityCount}">
 										#end
 									</td> 
 								</tr>
 								#end
 							#else
 							<tr>
-								<td><input style="width:25px;" class="easyui-numberbox" data-options="required:true,min:1,max:99" name="sort_num_1" value="1"/></td>
-								<td><input name="task_desc_1" class="easyui-textbox" data-options="required:true,validType:'length[0,20]'" maxlength="20"></td>
-								<td>
-								<select name="action_type_1" class="easyui-combobox">
-									<option value="1">审批(并行)</option>
-									<option value="2">审批(异或)</option>
-									<option value="3">阅处</option>
-									<option value="4">传阅</option>
-								</select>
-								</td>
-								<td>
-									<input type="hidden" name="action_obj_type_1">
-									<input type="hidden" name="action_obj_1">
-									<input type="text" name="action_obj_name_1" id="action_obj_name_1" data-options="required:true" class="easyui-textbox bindClick" linenum="1" onclick="chooseActionObject(1)">
-								</td>
-								<td>
-										<input type="checkbox" id="is_turn_" name="is_turn_1" value="1">转办
-										<input type="checkbox" id="is_ask_" name="is_ask_1" value="1">协办
-										<!-- 
-										<input type="checkbox" id="is_modify_" name="is_modify_1" value="1">流程变更
-										-->
-								</td>
-								<td><input style="width:25px;" class="easyui-numberbox" data-options="required:true,min:1,max:99"  type="text" name="expiry_days_1" value="1"></td>
-								<td>
-										<input type="checkbox" name="arrive_remind_1" value="1">到达
-										<input type="checkbox" name="expiry_remind_1" value="1">超时
-								</td>
-								<td></td> 
+								<td colspan="8">流程为空！</td> 
 							</tr>
 							#end
 						</tbody>
@@ -133,7 +106,7 @@
 							</tr>
 							<tr>
 								<th colspan="8" align="center" valign="bottom">
-									<a href="javascript:formSubmit()" class="easyui-linkbutton">保存模板</a>&nbsp;&nbsp;
+									<a href="javascript:formSubmit()" class="easyui-linkbutton">保存修改</a>&nbsp;&nbsp;
 									&nbsp;&nbsp;
 									<a href="javascript:history.back()" class="easyui-linkbutton">&nbsp;返&nbsp;回&nbsp;</a>&nbsp;&nbsp;
 								</th>
@@ -197,7 +170,6 @@
 </html>
 <script type="text/javascript">
 function actionChange(lineNo,val){
-	//alert(val);
 	if(val==3||val==4){
 		$("input[name=is_turn_"+lineNo+"]").prop("disabled",true);
 		$("input[name=is_ask_"+lineNo+"]").prop("disabled",true);
@@ -223,7 +195,7 @@ function formSubmit(){
 				$('#ui_mask_msg').css('display','none');
 				alert(json.msg);
 			}else{
-				location.href="process!listPage.do";
+				location.href="flow!view.do?executionId=${executionId}";
 			}
 		},
 		error:function(){
@@ -239,14 +211,6 @@ $(function() {
 			chooseActionObject(lineNum);
 		});
 	});
-	
-	$('#action_type_1').combobox({
-		onSelect: function(i,v){
-			alert(i+":"+v);
-		}
-	});
-	
- //   $('#dlg').dialog('close');
 	var line_no = $("#processDetailGrid tbody").find("tr").length;
     $("#newLineBtn").bind("click", function(e) {
     	line_no++;
@@ -273,7 +237,6 @@ function bindClick(id){
 		chooseActionObject(lineNum);
 	});
 }
-
 function chooseActionObject(lineNo){
 	$('#lineNo_box').val(lineNo);
 	$('#sel_role').val(null);
@@ -316,12 +279,10 @@ function submitForm(){
 		$("input[name=action_obj_type_"+lineNo+"]").val(1);
 		$("input[name=action_obj_"+lineNo+"]").val($("#sel_staff").val());
 		$("#action_obj_name_"+lineNo).textbox('setValue', $("#sel_staff").find("option:selected").text());
-		//$("input[name=action_obj_name_"+lineNo+"]").val($("#sel_staff").find("option:selected").text());
 	}else{
 		$("input[name=action_obj_type_"+lineNo+"]").val(2);
 		$("input[name=action_obj_"+lineNo+"]").val($("#sel_role").val());
 		$("#action_obj_name_"+lineNo).textbox('setValue',$("#sel_role").find("option:selected").text());
-		//$("input[name=action_obj_name_"+lineNo+"]").val($("#sel_role").find("option:selected").text());
 	}
 	jQuery.parser.parse("input[name=action_obj_name_"+lineNo+"]");
 	$('#dlg').dialog('close');

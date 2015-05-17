@@ -16,13 +16,13 @@ import com.chz.smartoa.delegation.pojo.DelegationLog;
 import com.chz.smartoa.task.Handler.NoticeHandler;
 import com.chz.smartoa.task.Handler.UserHandler;
 import com.chz.smartoa.task.dao.GeExecutionDao;
+import com.chz.smartoa.task.dao.RuConfDao;
 import com.chz.smartoa.task.dao.RuTaskDao;
 import com.chz.smartoa.task.enumcode.ExecutionStatus;
 import com.chz.smartoa.task.exception.NotFoundUserByRoleException;
 import com.chz.smartoa.task.pojo.GeExecution;
-import com.chz.smartoa.task.pojo.ReConf;
+import com.chz.smartoa.task.pojo.RuConf;
 import com.chz.smartoa.task.pojo.RuTask;
-import com.chz.smartoa.task.pojo.RuTaskVo;
 import com.chz.smartoa.task.service.HistoryService;
 import com.chz.smartoa.task.service.RuntimeService;
 
@@ -72,23 +72,23 @@ public class RuntimeServiceImpl implements RuntimeService {
 	}
 
 	@Override
-	public int insertRuTasks(ReConf reconf,GeExecution execution,int upLink)throws NotFoundUserByRoleException, DataAccessException {
+	public int insertRuTasks(RuConf ruconf,GeExecution execution,int upLink)throws NotFoundUserByRoleException, DataAccessException {
 		int cnt = 0;//插入待办条数记录
 		RuTask task = new RuTask();// 待办任务
 		task.setExecutionId(execution.getExecutionId());
-		task.setConfId(reconf.getConf_id_());
-		task.setExpiryDays(reconf.getExpiry_days_());
+		task.setConfId(ruconf.getConf_id_());
+		task.setExpiryDays(ruconf.getExpiry_days_());
 		
-		logger.debug("处理对象：" + reconf.getAction_obj_type_());
+		logger.debug("处理对象：" + ruconf.getAction_obj_type_());
 		
-		if (reconf.getAction_obj_type_() == 1) {// 个人
-			task.setAssignee(reconf.getAction_obj_());
-			cnt += insertRuTask(task, reconf.getArrive_remind_(), upLink);
-		}else if (reconf.getAction_obj_type_() == 2) {// 角色
-			List<String> userList = userHandler.listUsersByRole(reconf.getAction_obj_(),execution.getProjectId());
+		if (ruconf.getAction_obj_type_() == 1) {// 个人
+			task.setAssignee(ruconf.getAction_obj_());
+			cnt += insertRuTask(task, ruconf.getArrive_remind_(), upLink);
+		}else if (ruconf.getAction_obj_type_() == 2) {// 角色
+			List<String> userList = userHandler.listUsersByRole(ruconf.getAction_obj_(),execution.getProjectId());
 			for (String user : userList) {
 				task.setAssignee(user);
-				cnt += insertRuTask(task, reconf.getArrive_remind_(), upLink);
+				cnt += insertRuTask(task, ruconf.getArrive_remind_(), upLink);
 			}
 		}
 		return cnt;

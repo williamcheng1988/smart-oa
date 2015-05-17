@@ -12,7 +12,6 @@
  <sqlMap resource="com/chz/smartoa/system/dao/ibatis/maps/RoleSQL.xml" />
  <sqlMap resource="com/chz/smartoa/system/dao/ibatis/maps/OperateLogSQL.xml" />
  <sqlMap resource="com/chz/smartoa/system/dao/ibatis/maps/ResourceSQL.xml" />
- <sqlMap resource="com/chz/smartoa/system/dao/ibatis/maps/DepartmentSQL.xml" />
  <sqlMap resource="com/chz/smartoa/system/dao/ibatis/maps/StaffSQL.xml" />
  <sqlMap resource="com/chz/smartoa/system/dao/ibatis/maps/DictionaryConfigSQL.xml" />
 	 
@@ -28,6 +27,7 @@
  <sqlMap resource="com/chz/smartoa/task/dao/ibatis/maps/ReProcdefSQL.xml" />
  <sqlMap resource="com/chz/smartoa/task/dao/ibatis/maps/ReConfSQL.xml" />
  <sqlMap resource="com/chz/smartoa/task/dao/ibatis/maps/GeExecutionSQL.xml" />
+  <sqlMap resource="com/chz/smartoa/task/dao/ibatis/maps/RuConfSQL.xml" />
  <sqlMap resource="com/chz/smartoa/task/dao/ibatis/maps/RuTaskSQL.xml" />
  <sqlMap resource="com/chz/smartoa/task/dao/ibatis/maps/HiTaskSQL.xml" />
  

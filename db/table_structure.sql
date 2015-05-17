@@ -17,6 +17,7 @@ drop table IF EXISTS t_delegation_log;
 drop table IF EXISTS  T_HI_TASK;
 drop table IF EXISTS  T_RU_TASK;
 drop table IF EXISTS  T_RE_CONF;
+drop table IF EXISTS  T_RU_CONF;
 drop table IF EXISTS  T_RE_PROCDEF;
 drop table IF EXISTS  T_GE_EXECUTION;
 drop table IF EXISTS  t_notice;
@@ -75,7 +76,6 @@ alter table t_post add primary key (post_id);
 -- 岗位关系表
 create table t_department_post_staff
 (
-  id               int(10)  not null primary key auto_increment,
   dept_id          varchar(64) not null,
   post_id          varchar(64) not null,
   staff_ids        varchar(320) not null,
@@ -343,17 +343,16 @@ create table T_RE_CONF
 	action_type_ int not NULL,
 	action_obj_ VARCHAR(64) not NULL,
 	action_obj_type_ int not NULL,
+	action_obj_src_ VARCHAR(64),
 	is_turn_ int,
 	is_ask_ int,
+	is_modify_ int,
 	expiry_days_ int,
 	arrive_remind_ int,
 	expiry_remind_ int,
 	template_id_ VARCHAR(64)
 );
-
 alter table T_RE_CONF add foreign key (procdef_id_) references T_RE_PROCDEF (procdef_id_) on delete cascade on update cascade;
-
-
 
 -- 流程实例表
 create table T_GE_EXECUTION
@@ -374,6 +373,28 @@ create table T_GE_EXECUTION
 	end_time_ datetime
 );
 alter table T_GE_EXECUTION add primary key (execution_id_); 
+
+
+-- 流程运行步骤表
+create table T_RU_CONF
+(
+	conf_id_ Int(10) not null primary key auto_increment,
+	sort_num_ int not null,
+	execution_id_ VARCHAR(64) not NULL,
+	task_desc_ VARCHAR(64),
+	action_type_ int not NULL,
+	action_obj_ VARCHAR(64) not NULL,
+	action_obj_type_ int not NULL,
+	action_obj_src_ VARCHAR(64),
+	is_turn_ int,
+	is_ask_ int,
+	is_modify_ int,
+	expiry_days_ int,
+	arrive_remind_ int,
+	expiry_remind_ int,
+	template_id_ VARCHAR(64)
+);
+alter table T_RU_CONF add foreign key (execution_id_) references T_GE_EXECUTION (execution_id_) on delete cascade on update cascade;
 
 
 -- 流程运行时任务数据表

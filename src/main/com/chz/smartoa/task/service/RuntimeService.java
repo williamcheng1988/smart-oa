@@ -1,7 +1,7 @@
 package com.chz.smartoa.task.service;
 
 import com.chz.smartoa.task.pojo.GeExecution;
-import com.chz.smartoa.task.pojo.ReConf;
+import com.chz.smartoa.task.pojo.RuConf;
 import com.chz.smartoa.task.pojo.RuTask;
 
 /**
@@ -41,12 +41,12 @@ public interface RuntimeService{
 	String insertRuTasks(RuTask ruTask);
 	/**
 	 * 新增待办任务
-	 * @param reconf
+	 * @param ruconf
 	 * @param executionId
 	 * @param upLink
 	 * @return
 	 */
-	int insertRuTasks(ReConf reconf,GeExecution execution,int upLink);
+	int insertRuTasks(RuConf ruconf,GeExecution execution,int upLink);
 	/**
 	 * 删除单条待办任务
 	 * @param taskId 任务ID

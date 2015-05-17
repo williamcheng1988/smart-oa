@@ -39,7 +39,8 @@
             <result name="approve" type="velocity">/flow/approve.html</result>  
             <result name="view" type="velocity">/flow/view.html</result>  
             <result name="historyPage" type="velocity">/flow/historyList.html</result>  
-            <result name="approveResult" type="velocity">/flow/approveResult.html</result>  
+            <result name="approveResult" type="velocity">/flow/approveResult.html</result> 
+            <result name="modifyFlow" type="velocity">/flow/flowDetail.html</result> 
         </action>  
         
         

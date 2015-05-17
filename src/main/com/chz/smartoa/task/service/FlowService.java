@@ -1,8 +1,10 @@
 package com.chz.smartoa.task.service;
 
+import java.util.List;
 import java.util.Map;
 
 import com.chz.smartoa.task.exception.TaskInvalidException;
+import com.chz.smartoa.task.pojo.RuConf;
 
 /**
  * 流程统一处理接口
@@ -97,5 +99,13 @@ public interface FlowService {
 	 * @param exectuionId 任务实例ID 
 	 */ 
 	void abolishProcess(String exectuionId);
+	
+	/**
+	 * 修改流程修改运行中的流程
+	 * @param confs 新流配置
+	 * @param executionId 实例ID
+	 * @param toDeleteIds 待删除ID
+	 */
+	void saveRuConfs(List<RuConf> confs,String executionId,String toDeleteIds);
 	
 }

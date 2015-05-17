@@ -7,8 +7,10 @@ import org.apache.log4j.Logger;
 
 import com.chz.smartoa.task.dao.ReConfDao;
 import com.chz.smartoa.task.dao.ReProcdefDao;
+import com.chz.smartoa.task.dao.RuConfDao;
 import com.chz.smartoa.task.pojo.ReConf;
 import com.chz.smartoa.task.pojo.ReProcdef;
+import com.chz.smartoa.task.pojo.RuConf;
 import com.chz.smartoa.task.service.RepositoryService;
 	
 /**
@@ -21,6 +23,7 @@ public class RepositoryServiceImpl implements RepositoryService{
 	
 	private ReProcdefDao reProcdefDao_;
 	private ReConfDao reConfDao_;
+	private RuConfDao ruConfDao_;
 	
 	@Override
 	public String insertReProcdef(ReProcdef reProcdef) {
@@ -70,8 +73,8 @@ public class RepositoryServiceImpl implements RepositoryService{
 		return reProcdefDao_.findReProcdefById(reProcdef_id_);
 	}
 	@Override
-	public List<Map<String, String>> listReporcdefConf(String reProcdef_id_) {
-		return reProcdefDao_.findReProcdefConf(reProcdef_id_);
+	public List<Map<String, String>> listReporcdefConf(String executionId) {
+		return ruConfDao_.getRuConfMap(executionId);
 	}
 	
 	@Override
@@ -92,22 +95,40 @@ public class RepositoryServiceImpl implements RepositoryService{
 	}
 	@Override
 	public int getActionType(Integer confId) {
-		return reConfDao_.getActionType(confId);
+		return ruConfDao_.getActionType(confId);
+	}
+	@Override  
+	public List<RuConf> listRuConf(String executionId, int sort_num_) {
+		return ruConfDao_.listRuConf(executionId, sort_num_);
 	}
 	@Override
-	public List<ReConf> listReConf(String procdef_id_, int sort_num_) {
-		return reConfDao_.listReConf(procdef_id_, sort_num_);
+	public List<RuConf> listRuConfWithStatus(String executionId) {
+		return ruConfDao_.listRuConfWithStatus(executionId);
 	}
 	@Override
 	public int getIsManager(String procdef_id_,String manager) {
 		return reProcdefDao_.getIsManager(procdef_id_, manager);
 	}
-	
+	@Override
+	public void insertRuConfs(String executionId,String procdefId) {
+		ruConfDao_.initRuConfs(executionId,procdefId);
+	}
+	@Override
+	public void insertRuConfs(List<RuConf> confs, String executionId) {
+		ruConfDao_.insertRuConf(confs,executionId);
+	}
+	@Override
+	public void deleteRuConfs(String[] confIds) {
+		ruConfDao_.deleteRuConf(confIds);
+		
+	}
 	public void setReProcdefDao_(ReProcdefDao reProcdefDao_) {
 		this.reProcdefDao_ = reProcdefDao_;
 	}
 	public void setReConfDao_(ReConfDao reConfDao_) {
 		this.reConfDao_ = reConfDao_;
 	}
-	
+	public void setRuConfDao_(RuConfDao ruConfDao_) {
+		this.ruConfDao_ = ruConfDao_;
+	}
 }

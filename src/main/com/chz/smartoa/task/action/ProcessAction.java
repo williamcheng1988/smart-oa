@@ -112,7 +112,7 @@ public class ProcessAction extends BaseAction{
 		return OPER_RESULT;
 	}
 
-	public List<ReConf> putReconfToList(){
+	private List<ReConf> putReconfToList(){
 		List<ReConf> list = new ArrayList<ReConf>();
 		Map<String, String[]> parasMap = (Map<String, String[]>)super.getHttpServletRequest().getParameterMap();
 		try {
@@ -138,6 +138,12 @@ public class ProcessAction extends BaseAction{
 					conf.setIs_ask_(Integer.parseInt(parasMap.get("is_ask_"+i)[0].trim()));
 				}else{
 					conf.setIs_ask_(0);
+				}
+				//流程变更
+				if (parasMap.containsKey("is_modify_"+i)) {
+					conf.setIs_modify_(Integer.parseInt(parasMap.get("is_modify_"+i)[0].trim()));
+				}else{
+					conf.setIs_modify_(0);
 				}
 				//过期时间
 				conf.setExpiry_days_(Integer.parseInt(parasMap.get("expiry_days_"+i)[0]));

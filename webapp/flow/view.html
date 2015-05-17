@@ -92,7 +92,11 @@
 					<tbody>
 						<tr>
 							<td align="center" class="tasktd1">请示事项要点</td>
-							<td colspan="3" class="tasktd2">$!task.business_title_</td>
+							<td colspan="2" class="tasktd2">$!task.business_title_</td>
+							<td align="center" class="tasktd1">
+								#if($!task.priority_ == 1)<label style="display: inline;color:#FF7F27;font-weight: normal;">紧急！ </label>#end
+								#if($!task.priority_ == 2)<label style="display: inline;color:red;font-weight: normal;">加急！ </label>#end
+							</td>
 						</tr>
 						<tr>
 							<td width="15%" align="center" class="tasktd1">报送人</td>
@@ -125,6 +129,7 @@
 				<div align="center">
 					<a href="flow!approveResult.do?executionId=$!{task.execution_id_}" class="easyui-linkbutton">&nbsp;打印预览&nbsp;</a>&nbsp;&nbsp;
 					#if($task.isManager > 0)
+						<a href="javascript:deal('MODIFY');" class="easyui-linkbutton" #if($task.task_status_ != 1) data-options="disabled:true" #end>&nbsp;修改流程&nbsp;</a>&nbsp;&nbsp;
 					  	<a href="javascript:deal('SKIP');" class="easyui-linkbutton" #if($task.task_status_ != 1) data-options="disabled:true" #end>&nbsp;跳过当前步骤&nbsp;</a>&nbsp;&nbsp;
 					  	<a href="javascript:deal('INVALID');" class="easyui-linkbutton" #if($task.task_status_ != 1) data-options="disabled:true" #end>&nbsp;流程作废&nbsp;</a>&nbsp;&nbsp;
 					#end
@@ -144,7 +149,10 @@
 <script type="text/javascript">
 	function deal(dealType) {
 		var dealDesc = "";
-		if("SKIP"== dealType){
+		if("MODIFY"){ //修改流程步骤
+			location="flow!manage.do?executionId=$!{task.execution_id_}&approve_type_="+dealType;
+			return false;
+		}else if("SKIP"== dealType){
 			dealDesc = "跳过当前步骤";
 		}else if("INVALID" == dealType){
 			dealType = "将该流程作废";
@@ -152,7 +160,6 @@
 		if(!confirm("请确认是否"+dealDesc+"?此操作不可恢复！")){
 			return;
 		}
-		
 		$('#ui_mask').css('display','block');
 		$('#ui_mask_msg').css('display','block');
 		jQuery.ajax({
@@ -176,7 +183,6 @@
 			}
 		});
 	}
-	
 	// 更新选择的面板的新标题和内容
 	function refrush(){
 		var tt = top.$("#tt");
@@ -191,7 +197,6 @@
 
 		}
 	}
-	
 	function back(){
 		var lastUrl = document.referrer;
 		var idx = lastUrl.indexOf('flow');
@@ -202,7 +207,6 @@
 			closeTab();
 		}
 	}
-	
 	function closeTab() {
 		var tt = top.$("#tt");
 		var tab = tt.tabs('getSelected');
@@ -212,7 +216,6 @@
 		}
 		tt.tabs('select', '主页');
 	}
-	
 	$(function(){
 		$('#ui_mask').css('height',document.body.scrollHeight);
 	});

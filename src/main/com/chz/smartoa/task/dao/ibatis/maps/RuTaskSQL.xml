@@ -179,12 +179,13 @@
        ge_e.desc_,
        ru_t.assignee_,
        ru_t.consult_,
-      IFNULL(re_c.action_type_,0) action_type_,
-       re_c.is_turn_,
-       re_c.is_ask_
+      IFNULL(RU_C.action_type_,0) action_type_,
+       RU_C.is_turn_,
+       RU_C.is_ask_,
+       RU_C.is_modify_
   FROM T_RU_TASK RU_T
   LEFT JOIN T_GE_EXECUTION GE_E ON RU_T.EXECUTION_ID_ = GE_E.EXECUTION_ID_
-  LEFT JOIN T_RE_CONF RE_C ON RU_T.CONF_ID_ = RE_C.CONF_ID_
+  LEFT JOIN T_RU_CONF RU_C ON RU_T.CONF_ID_ = RU_C.CONF_ID_
  WHERE RU_T.TASK_ID_ = #taskId# AND  ru_t.assignee_ = #user#
 ]]>
 </select>
@@ -249,9 +250,9 @@ ORDER BY $sort$ $order$
 <![CDATA[
 select count(1)
   from t_ru_task ru
-  LEFT JOIN t_re_conf re on ru.conf_id_ = re.conf_id_
+  LEFT JOIN t_ru_conf rc on ru.conf_id_ = rc.conf_id_
  where ru.execution_id_ = #executionId#
-   AND re.action_obj_type_ != 4
+   AND rc.action_obj_type_ != 4
 ]]>
 </select>
 

@@ -1,5 +1,6 @@
 package com.chz.smartoa.task.action;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +15,9 @@ import com.chz.smartoa.common.util.LoginUtils;
 import com.chz.smartoa.dynamicForm.util.PublicFunction;
 import com.chz.smartoa.form.constants.FormConstants;
 import com.chz.smartoa.system.action.OperateResult;
+import com.chz.smartoa.system.constant.OperateLogType;
 import com.chz.smartoa.system.pojo.Staff;
+import com.chz.smartoa.system.service.OperateLogBiz;
 import com.chz.smartoa.system.service.StaffBiz;
 import com.chz.smartoa.task.enumcode.RecodeType;
 import com.chz.smartoa.task.enumcode.TaskError;
@@ -26,6 +29,8 @@ import com.chz.smartoa.task.pojo.ApproveResult;
 import com.chz.smartoa.task.pojo.GeExecution;
 import com.chz.smartoa.task.pojo.HiTask;
 import com.chz.smartoa.task.pojo.HiTaskVo;
+import com.chz.smartoa.task.pojo.ReConf;
+import com.chz.smartoa.task.pojo.RuConf;
 import com.chz.smartoa.task.pojo.RuTaskVo;
 import com.chz.smartoa.task.service.FlowService;
 import com.chz.smartoa.task.service.HistoryService;
@@ -66,6 +71,12 @@ public class FlowAction extends BaseAction{
 	private Map<String, Object> task;
 	//跟踪任务
 	private  HiTask hiTask = new HiTask();
+	//流程配置行号
+	private String lineNos = "";
+	//待删除运行节点
+	private String toDeleteIds = "";
+	//运行中的流程节点
+	private List<RuConf> ruconfs;
 	
 	private Map<String, Object> formMap;
 	
@@ -73,6 +84,8 @@ public class FlowAction extends BaseAction{
 	private TaskService taskService;
 	private HistoryService historyService;
 	private RepositoryService repositoryService;
+	
+	private OperateLogBiz operateLogBiz;
 	
 	private StaffBiz staffBiz;
 	
@@ -246,6 +259,8 @@ public class FlowAction extends BaseAction{
 			result.setApproveType(TaskResult.Submit.getVal());
 		}else if("READ".equals(approve_type_)){
 			result.setApproveType(TaskResult.Read.getVal());
+		}else if("READONLY".equals(approve_type_)){
+			result.setApproveType(TaskResult.Readonly.getVal());
 		}else if("AGREE".equals(approve_type_)){
 			result.setApproveType(TaskResult.Agree.getVal());
 		}else if("BACK".equals(approve_type_)){
@@ -290,7 +305,21 @@ public class FlowAction extends BaseAction{
 	//任务管理
 	public String manage(){
 		try{
-			if("SKIP".equals(approve_type_)){
+			if("MODIFY".equals(approve_type_)){
+				//查询当前流程步骤
+				ruconfs = repositoryService.listRuConfWithStatus(executionId);
+				if(ruconfs != null && ruconfs.size() > 0){
+					int i = 1;
+					for (RuConf conf : ruconfs) {
+						if(conf.getIs_edit_() == 1){
+							lineNos += i+",";
+							toDeleteIds += conf.getConf_id_();
+						}
+						i++;
+					}
+				}
+				return "modifyFlow";
+			}else if("SKIP".equals(approve_type_)){
 				flowService.skipProcess(executionId);
 			}else if("INVALID".equals(approve_type_)){
 				flowService.abolishProcess(executionId);
@@ -303,6 +332,82 @@ public class FlowAction extends BaseAction{
 		}
 		return OPER_RESULT;
 	} 
+
+	/**
+	 * 新增流程明细
+	 * @return
+	 */
+	public String saveReconf() {
+		List<RuConf> confs = putReconfToList();
+		if(confs.size() > 0){
+			try {
+				flowService.saveRuConfs(confs,executionId,toDeleteIds);
+			} catch (Exception e) {
+				logger.error(e);
+				operateResult = new OperateResult(1,"系统繁忙，请稍后再试！");
+				operateLogBiz.info(OperateLogType.FLOW_MANAGE, executionId, "修改流程："+executionId,"修改流程失败");
+				return OPER_RESULT;
+			}
+		}
+		operateResult = new OperateResult(1,"流程修改成功！");
+		operateLogBiz.info(OperateLogType.FLOW_MANAGE, executionId, "修改流程："+executionId,"修改流程成功");
+		return OPER_RESULT;
+	}
+
+	private List<RuConf> putReconfToList(){
+		List<RuConf> list = new ArrayList<RuConf>();
+		Map<String, String[]> parasMap = (Map<String, String[]>)super.getHttpServletRequest().getParameterMap();
+		try {
+			String[]  nos = lineNos.split(",");
+			for (String i : nos) {
+				if(i==null||"".equals(i.trim())){
+					continue;
+				}
+				RuConf conf = new RuConf();
+				conf.setSort_num_(Integer.parseInt(parasMap.get("sort_num_"+i)[0]));
+				conf.setTask_desc_(parasMap.get("task_desc_"+i)[0]);
+				conf.setAction_type_(Integer.parseInt(parasMap.get("action_type_"+i)[0]));
+				conf.setAction_obj_type_(Integer.parseInt(parasMap.get("action_obj_type_"+i)[0]));
+				conf.setAction_obj_(parasMap.get("action_obj_"+i)[0]);
+				//转办
+				if (parasMap.containsKey("is_turn_"+i)) {
+					conf.setIs_turn_(Integer.parseInt(parasMap.get("is_turn_"+i)[0].trim()));
+				}else{
+					conf.setIs_turn_(0);
+				}
+				//征询
+				if (parasMap.containsKey("is_ask_"+i)) {
+					conf.setIs_ask_(Integer.parseInt(parasMap.get("is_ask_"+i)[0].trim()));
+				}else{
+					conf.setIs_ask_(0);
+				}
+				//流程变更
+				if (parasMap.containsKey("is_modify_"+i)) {
+					conf.setIs_modify_(Integer.parseInt(parasMap.get("is_modify_"+i)[0].trim()));
+				}else{
+					conf.setIs_modify_(0);
+				}
+				//过期时间
+				conf.setExpiry_days_(Integer.parseInt(parasMap.get("expiry_days_"+i)[0]));
+				//到达提醒
+				if (parasMap.containsKey("arrive_remind_"+i)) {
+					conf.setArrive_remind_(Integer.parseInt(parasMap.get("arrive_remind_"+i)[0].trim()));
+				}else{
+					conf.setArrive_remind_(0);
+				}
+				//过期提醒
+				if (parasMap.containsKey("expiry_remind_"+i)) {
+					conf.setExpiry_remind_(Integer.parseInt(parasMap.get("expiry_remind_"+i)[0].trim()));
+				}else{
+					conf.setExpiry_remind_(0);
+				}
+				list.add(conf);
+			}
+		} catch (Exception e) {
+			logger.error(e);
+		}
+		return list;
+	}
 	
 	//查看任务
 	public String view() {
@@ -310,7 +415,7 @@ public class FlowAction extends BaseAction{
 		//查询是否是流程管理员
 		task.put("isManager", repositoryService.getIsManager(String.valueOf(task.get("procdef_id_")),getStaff().getLoginName()));
 		// 流程图
-		List<Map<String, String>> confs = repositoryService.listReporcdefConf(String.valueOf(task.get("procdef_id_")));
+		List<Map<String, String>> confs = repositoryService.listReporcdefConf(executionId);
 		task.put("confs", confs);
 		// 审批意见
 		Map<String, Object> params  = new HashMap<String, Object>();
@@ -468,5 +573,23 @@ public class FlowAction extends BaseAction{
 	}
 	public void setStatus_(int status_) {
 		this.status_ = status_;
+	}
+	public String getLineNos() {
+		return lineNos;
+	}
+	public void setLineNos(String lineNos) {
+		this.lineNos = lineNos;
+	}
+	public String getToDeleteIds() {
+		return toDeleteIds;
+	}
+	public void setToDeleteIds(String toDeleteIds) {
+		this.toDeleteIds = toDeleteIds;
+	}
+	public List<RuConf> getRuconfs() {
+		return ruconfs;
+	}
+	public void setOperateLogBiz(OperateLogBiz operateLogBiz) {
+		this.operateLogBiz = operateLogBiz;
 	}
  }

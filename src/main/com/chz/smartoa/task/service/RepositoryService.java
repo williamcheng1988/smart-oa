@@ -7,6 +7,7 @@ import org.springframework.dao.DataAccessException;
 
 import com.chz.smartoa.task.pojo.ReConf;
 import com.chz.smartoa.task.pojo.ReProcdef;
+import com.chz.smartoa.task.pojo.RuConf;
 
 /**
  * 管理 流程定义、控制发布 操作
@@ -72,10 +73,10 @@ public interface RepositoryService{
 	ReProcdef findReProcdef(String reProcdef_id_);
 	/**
 	 * 查询流程定义明细
-	 * @param reProcdef_id_
+	 * @param executionId
 	 * @return
 	 */
-	List<Map<String, String>> listReporcdefConf(String reProcdef_id_);
+	List<Map<String, String>> listReporcdefConf(String executionId);
 	 /**
      * 查询最新版本流程
      * @param procdefName
@@ -92,11 +93,18 @@ public interface RepositoryService{
     ReProcdef findReProcdefByExecutionId(String executionId);
 	/**
 	 * 查询当前节点流程明细
-	 * @param procdef_id_
+	 * @param executionId
 	 * @param sort_num_
 	 * @return
 	 */
-	List<ReConf> listReConf(String procdef_id_,int sort_num_);
+	List<RuConf> listRuConf(String executionId,int sort_num_);
+	/**
+	 * 查询当前节点流程明细
+	 * @param executionId
+	 * @param sort_num_
+	 * @return
+	 */
+	List<RuConf> listRuConfWithStatus(String executionId);
 	/**
 	 * 通过confId查询审批类型
 	 * @param confId
@@ -122,4 +130,24 @@ public interface RepositoryService{
 	 * @return
 	 */
 	int getIsManager(String procdef_id_,String manager);
+	/**
+	 * 保存运行时的流程节点
+	 * @param executionId
+	 * @param procdefId
+	 * @return
+	 */
+	void insertRuConfs(String executionId,String procdefId);
+	/**
+	 *  保存运行时的流程节点
+	 * @param confs
+	 * @param executionId
+	 */
+	void insertRuConfs(List<RuConf> confs,String executionId);
+	/**
+	 * 删除运行时的可修改的流程节点
+	 * @param executionId
+	 * @param procdefId
+	 * @return
+	 */
+	void deleteRuConfs(String[] confIds);
 }

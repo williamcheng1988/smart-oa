@@ -11,8 +11,10 @@
     <result property="action_type_" column="action_type_"/>
     <result property="action_obj_type_" column="action_obj_type_"/>
     <result property="action_obj_" column="action_obj_"/>
+    <result property="action_obj_src_" column="action_obj_src_"/>
     <result property="is_turn_" column="is_turn_"/>
     <result property="is_ask_" column="is_ask_"/>
+    <result property="is_modify_" column="is_modify_"/>
     <result property="arrive_remind_" column="arrive_remind_"/>
     <result property="expiry_remind_" column="expiry_remind_"/>
     <result property="expiry_days_" column="expiry_days_"/>
@@ -27,10 +29,12 @@
 			sort_num_,
 			task_desc_,
 			action_type_,
+			action_obj_src_,
 			action_obj_,
 			action_obj_type_,
 			is_turn_,
 			is_ask_,
+			is_modify_,
 			expiry_days_,
 			arrive_remind_,
 			expiry_remind_,
@@ -41,10 +45,12 @@
 			#sort_num_#,
 			#task_desc_#,
 			#action_type_#,
+			#action_obj_src_#,
 			#action_obj_#,
 			#action_obj_type_#,
 			#is_turn_#,
 			#is_ask_#,
+			#is_modify_#,
 			#expiry_days_#,
 			#arrive_remind_#,
 			#expiry_remind_#,
@@ -66,10 +72,12 @@
 			procdef_id_,
 			task_desc_,
 			action_type_,
+			action_obj_src_,
 			action_obj_,
 			action_obj_type_,
 			is_turn_,
 			is_ask_,
+			is_modify_,
 			expiry_days_,
 			arrive_remind_,
 			expiry_remind_,

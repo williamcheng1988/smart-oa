@@ -16,6 +16,7 @@ import com.chz.smartoa.task.pojo.RuTaskVo;
  *
  */
 public interface RuTaskDao {
+	
 	/**
 	 * 插入待办任务
 	 * @param ruTask

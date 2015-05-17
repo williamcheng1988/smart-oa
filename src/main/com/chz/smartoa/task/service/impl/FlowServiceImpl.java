@@ -21,8 +21,8 @@ import com.chz.smartoa.task.exception.NotFoundReProcedfException;
 import com.chz.smartoa.task.exception.TaskInvalidException;
 import com.chz.smartoa.task.pojo.ApproveResult;
 import com.chz.smartoa.task.pojo.GeExecution;
-import com.chz.smartoa.task.pojo.ReConf;
 import com.chz.smartoa.task.pojo.ReProcdef;
+import com.chz.smartoa.task.pojo.RuConf;
 import com.chz.smartoa.task.pojo.RuTask;
 import com.chz.smartoa.task.service.FlowService;
 import com.chz.smartoa.task.service.HistoryService;
@@ -113,6 +113,10 @@ public class FlowServiceImpl implements FlowService {
 			String procdefId = procdef.getProcdef_id_();
 			//插入流程实例
 			executionId = runtimeService.insertGeExcution(procdefId,businessKey,businessTitle,templateId,projectId,desc_,priority,status,executionId);
+			
+			//生成运行流程节点
+			repositoryService.insertRuConfs(executionId,procdefId);
+			
 			GeExecution execution = taskService.getGeExecution(executionId);
 			//插入待办任务
 			addTodoTask(execution,1,procdef);
@@ -149,6 +153,7 @@ public class FlowServiceImpl implements FlowService {
 	@Override
 	public Map<String, Object> findTodoTask(String taskId,String user) {
 		Map<String, Object> map =  taskService.getTodoTask(taskId,user);
+		/* 2015-05-17
 		if("4".equals(String.valueOf(map.get("action_type_")))){//传阅
 			RuTask ruTask = taskService.getRutask(taskId);
 			GeExecution execution = taskService.getGeExecution(ruTask.getExecutionId());
@@ -156,7 +161,8 @@ public class FlowServiceImpl implements FlowService {
 			runtimeService.deleteRuTaskByTaskId(taskId);
 			//插入历史记录
 			historyService.insertTaskHistory(execution, ruTask, TaskResult.View.getVal());
-		}
+		}*/
+		
 		//查询当前节点处理意见
 		Map<String, Object> params  = new HashMap<String, Object>();
 		params.put("task_id_", taskId);
@@ -261,6 +267,11 @@ public class FlowServiceImpl implements FlowService {
 			runtimeService.doneConsult(ruTask);
 			//发送到达邮件
 			noticeHandler.arriveNotice(1,ruTask.getConsult(),execution.getExecutionId());
+		}else if(approveType == TaskResult.Readonly.getVal()){//传阅
+			//删除待办任务
+			runtimeService.deleteRuTaskByTaskId(taskId);
+			//插入历史记录
+			historyService.insertTaskHistory(execution, ruTask, TaskResult.View.getVal());
 		}
 	}
 	
@@ -296,15 +307,15 @@ public class FlowServiceImpl implements FlowService {
 		int cnt = 0;//插入任务条数
 		do {
 			//查询流程节点
-			List<ReConf> reConfs = repositoryService.listReConf(procdef.getProcdef_id_(),sortNum);
-			if(reConfs == null||reConfs.size()==0){
+			List<RuConf> ruConfs = repositoryService.listRuConf(execution.getExecutionId(),sortNum);
+			if(ruConfs == null||ruConfs.size()==0){
 				throw new NotFoundReConfException(TaskError.NotFoundReConf.getVal(), "未找到流程["+procdef.getProcdef_id_()+"]步骤："+sortNum);
 			}
-			for (ReConf reconf : reConfs) {
-				if(reconf.getAction_type_() != 4){//不是阅处
+			for (RuConf ruconf : ruConfs) {
+				if(ruconf.getAction_type_() != 4){//不是阅处
 					isNext = 0;
 				}
-				cnt += runtimeService.insertRuTasks(reconf,execution,procdef.getUplink_());
+				cnt += runtimeService.insertRuTasks(ruconf,execution,procdef.getUplink_());
 			}
 			//更新流程步骤
 			runtimeService.updateGeExecutionTaskNum(execution.getExecutionId(), sortNum);
@@ -359,6 +370,27 @@ public class FlowServiceImpl implements FlowService {
 		operateLogBiz.info(OperateLogType.TASK_MANAGE,execution.getExecutionId(), execution.getBusinessTitle(),"流程废弃成功");
 		//发送完成邮件，废弃
 		noticeHandler.abolishNotice(execution);
+	}
+	
+	@Override
+	public void saveRuConfs(List<RuConf> confs, String executionId,String toDeleteIds) {
+		//删除可修改节点
+		if(toDeleteIds != null){
+			String[] confIds = toDeleteIds.split(",");
+			if(confIds.length > 0)
+				repositoryService.deleteRuConfs(confIds);
+		}
+		//保存修改后节点
+		if(confs != null && confs.size() > 0){
+			repositoryService.insertRuConfs(confs, executionId);
+		}
+		//删除当前任务
+		runtimeService.deleteRuTaskByExecutionId(executionId);
+		//当前是否还有待办任务（阅处除外）
+		GeExecution execution = taskService.getGeExecution(executionId);
+		execution.setTaskNum(execution.getTaskNum()-1);//回退一步
+		//进入流程下一步
+		addTodoTask(execution);
 	}
 
 	public void setTaskService(TaskService taskService) {

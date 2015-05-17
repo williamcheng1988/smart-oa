@@ -40,10 +40,13 @@
 								</td>
 								<td align="center" class="tasktd1" width="25%">
 								#if($!importantGrade_ > 0)
+								<!-- 2015-05-17
 								是否紧急：
 									<label style="display: inline;font-weight: normal;"><input type="radio" name="priority_" value="0" checked>普通</label>
 									<label style="display: inline;color:#FF7F27;font-weight: normal;"><input type="radio" name="priority_" value="1" #if($importantGrade_ == 1) checked #end>紧急</label>
 									<label style="display: inline;color: red;font-weight: normal;"><input type="radio" name="priority_" value="2" #if($importantGrade_ == 2) checked #end>加急</label>
+									 -->
+									 <label style="display: inline;color:#FF7F27;font-weight: normal;"><input type="checkbox" name="priority_" value="1" #if($importantGrade_ == 1) checked #end>紧急</label>
 								#end
 								</td>
 							</tr>

@@ -61,6 +61,7 @@ values
 ('flow_history','other','办结任务列表','flow!historyList.do',null,1,'LOGIN_AUTH',1),	
 ('flow_view','other','查看任务','flow!view.do',null,1,'LOGIN_AUTH',1),
 ('flow_manage','other','任务管理','flow!manage.do',null,1,'LOGIN_AUTH',1),
+('flow_modify','other','修改流程','flow!saveReconf.do',null,1,'LOGIN_AUTH',1),
 ('delegation_list','other','授权列表','delegation!list.do',null,1,'LOGIN_AUTH',1),
 ('delegation_insert','other','新增授权','delegation!insert.do',null,1,'LOGIN_AUTH',1),
 ('delegation_log_page','other','授权日志页面','delegation!logPage.do',null,1,'LOGIN_AUTH',1),

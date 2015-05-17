@@ -24,7 +24,7 @@ public class RuTaskDaoImpl extends BaseDaoiBatis implements RuTaskDao
      * logger.
      */
     private static final Logger logger = Logger.getLogger(RuTaskDaoImpl.class);
-
+    
     public String insertRuTask(RuTask ruTask) throws DataAccessException {
 		if (logger.isDebugEnabled()) {
     		logger.debug("进入insertRuTask(RuTask), 输入参数[" + ruTask + "]");

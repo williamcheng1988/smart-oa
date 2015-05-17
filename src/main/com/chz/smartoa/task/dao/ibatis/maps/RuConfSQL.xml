@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="RuConf_">
+<typeAlias alias="ruConf" type="com.chz.smartoa.task.pojo.RuConf"/> 
+<resultMap id="ruConf_result" class="ruConf">
+    <result property="conf_id_" column="conf_id_"/>
+    <result property="sort_num_" column="sort_num_"/>
+    <result property="execution_id_" column="execution_id_"/>
+    <result property="task_desc_" column="task_desc_"/>
+    <result property="action_type_" column="action_type_"/>
+    <result property="action_obj_type_" column="action_obj_type_"/>
+    <result property="action_obj_" column="action_obj_"/>
+    <result property="action_obj_src_" column="action_obj_src_"/>
+    <result property="is_turn_" column="is_turn_"/>
+    <result property="is_ask_" column="is_ask_"/>
+    <result property="is_modify_" column="is_modify_"/>
+    <result property="arrive_remind_" column="arrive_remind_"/>
+    <result property="expiry_remind_" column="expiry_remind_"/>
+    <result property="expiry_days_" column="expiry_days_"/>
+    <result property="template_id_" column="template_id_"/>
+    <result property="action_obj_name_" column="action_obj_name_"/>
+</resultMap>
+
+<insert id="RuConf_initRuTaskConfs" parameterClass="java.util.Map" >
+<![CDATA[
+    insert into t_ru_conf(
+			execution_id_,
+			sort_num_,
+			task_desc_,
+			action_type_,
+			action_obj_src_,
+			action_obj_,
+			action_obj_type_,
+			is_turn_,
+			is_ask_,
+			is_modify_,
+			expiry_days_,
+			arrive_remind_,
+			expiry_remind_,
+			template_id_)
+ select 
+			#executionId#,
+			sort_num_,
+			task_desc_,
+			action_type_,
+			action_obj_src_,
+			action_obj_,
+			action_obj_type_,
+			is_turn_,
+			is_ask_,
+			is_modify_,
+			expiry_days_,
+			arrive_remind_,
+			expiry_remind_,
+			template_id_
+ from t_re_conf where procdef_id_ = #procdefId#;
+]]>
+</insert>
+
+<insert id="RuConf_insertRuConf_" parameterClass="ruConf" >
+<![CDATA[
+    INSERT INTO t_ru_conf (
+			execution_id_,
+			sort_num_,
+			task_desc_,
+			action_type_,
+			action_obj_src_,
+			action_obj_,
+			action_obj_type_,
+			is_turn_,
+			is_ask_,
+			is_modify_,
+			expiry_days_,
+			arrive_remind_,
+			expiry_remind_,
+			template_id_
+        )
+    VALUES (
+			#execution_id_#,
+			#sort_num_#,
+			#task_desc_#,
+			#action_type_#,
+			#action_obj_src_#,
+			#action_obj_#,
+			#action_obj_type_#,
+			#is_turn_#,
+			#is_ask_#,
+			#is_modify_#,
+			#expiry_days_#,
+			#arrive_remind_#,
+			#expiry_remind_#,
+			#template_id_#
+	)
+]]>
+</insert>
+
+<delete id="RuConf_deleteRuConf" parameterClass="java.lang.String">
+<![CDATA[
+    DELETE  FROM  t_ru_conf WHERE execution_id_ = #execution_id_#
+]]>
+</delete> 
+
+<delete id="RuConf_deleteRuConfByIds">
+<![CDATA[
+    DELETE  FROM  t_ru_conf WHERE 
+]]>
+	<dynamic>
+			<isNotEmpty>
+				conf_id_ IN 
+				<iterate conjunction="," open="(" close=")"> 
+					#[]# 
+				</iterate>
+			</isNotEmpty>
+	</dynamic>
+</delete> 
+
+<select id="RuConf_listRuConf_" resultMap="ruConf_result" parameterClass="java.util.Map">
+    SELECT
+       		conf_id_,
+       		sort_num_,
+			execution_id_,
+			task_desc_,
+			action_type_,
+			action_obj_,
+			action_obj_src_,
+			action_obj_type_,
+			is_turn_,
+			is_ask_,
+			is_modify_,
+			expiry_days_,
+			arrive_remind_,
+			expiry_remind_,
+			template_id_,
+			CASE action_obj_type_
+					WHEN 1 THEN (select real_name from t_staff where login_name = action_obj_)
+					WHEN 2 THEN (select role_name from t_role where role_id = action_obj_)
+					END action_obj_name_
+			from t_ru_conf
+	where execution_id_ = #execution_id_#
+<dynamic>
+	<isNotEmpty prepend="and" property = "sort_num_">
+		sort_num_ = #sort_num_#
+	</isNotEmpty>
+</dynamic>
+	order by sort_num_,conf_id_
+</select>
+
+<select id="RuConf_listRuConfWithStatus_" resultClass="ruConf" parameterClass="string">
+<![CDATA[
+select * from (
+	SELECT
+	       		c.conf_id_,
+	       		c.sort_num_,
+				c.execution_id_,
+				c.task_desc_,
+				c.action_type_,
+				c.action_obj_,
+				c.action_obj_src_,
+				c.action_obj_type_,
+				c.is_turn_,
+				c.is_ask_,
+				c.is_modify_,
+				c.expiry_days_,
+				c.arrive_remind_,
+				c.expiry_remind_,
+				c.template_id_,
+				0 is_edit_,
+				CASE action_obj_type_
+						WHEN 1 THEN (select real_name from t_staff where login_name = action_obj_)
+						WHEN 2 THEN (select role_name from t_role where role_id = action_obj_)
+						END action_obj_name_
+				from t_ru_conf c , t_ge_execution g 	
+	      where c.execution_id_ = g.execution_id_
+	      and c.sort_num_ <= g.task_num_
+	      and c.conf_id_ not in (select conf_id_ from t_ru_task where execution_id_ = #executionId#)
+		  and c.execution_id_ = #executionId#
+	UNION
+	SELECT
+	       		c.conf_id_,
+	       		c.sort_num_,
+				c.execution_id_,
+				c.task_desc_,
+				c.action_type_,
+				c.action_obj_,
+				c.action_obj_src_,
+				c.action_obj_type_,
+				c.is_turn_,
+				c.is_ask_,
+				c.is_modify_,
+				c.expiry_days_,
+				c.arrive_remind_,
+				c.expiry_remind_,
+				c.template_id_,
+				1 is_edit_,
+				CASE action_obj_type_
+						WHEN 1 THEN (select real_name from t_staff where login_name = action_obj_)
+						WHEN 2 THEN (select role_name from t_role where role_id = action_obj_)
+						END action_obj_name_
+				from t_ru_conf c , t_ge_execution g 	
+	      where c.execution_id_ = g.execution_id_
+	      and c.sort_num_ >= g.task_num_
+	      and c.conf_id_ in (select conf_id_ from t_ru_task where execution_id_ = #executionId#)
+	      and c.execution_id_ = #executionId#
+	) temp
+	ORDER BY is_edit_,sort_num_
+	]]>
+</select>
+
+<select id="RuConf_mapRuConf_" resultClass="java.util.HashMap" parameterClass="string">
+<![CDATA[
+select * from 
+(SELECT conf_id_,sort_num_,task_desc_,action_type_,action_obj_type_,0 is_doing_,
+	  CASE action_obj_type_ 
+	          WHEN 1 THEN (select real_name from t_staff where login_name = action_obj_)
+	          WHEN 2 THEN (select role_name from t_role where role_id = action_obj_)
+	          END action_obj_name_      
+	FROM T_RU_CONF
+	WHERE execution_id_ = #execution_id_#
+  and sort_num_ != (select task_num_ from t_ge_execution where execution_id_ = #execution_id_#)
+UNION
+SELECT c.conf_id_,sort_num_,task_desc_,action_type_,action_obj_type_,IF(ISNULL(t.conf_id_),0,1) is_doing_,
+	  CASE action_obj_type_ 
+	          WHEN 1 THEN (select real_name from t_staff where login_name = action_obj_)
+	          WHEN 2 THEN (select role_name from t_role where role_id = action_obj_)
+	          END action_obj_name_      
+	FROM T_RU_CONF c LEFT JOIN t_ru_task t on c.conf_id_ = t.conf_id_
+	WHERE sort_num_ = (select task_num_ from t_ge_execution where execution_id_ = #execution_id_#)
+  and c.execution_id_ = #execution_id_#) temp
+order by sort_num_,conf_id_
+]]>
+</select>
+
+<select id="RuConf_getActionType_" resultClass="java.lang.Integer" parameterClass="java.lang.Integer">
+    SELECT action_type_ from t_ru_conf where conf_id_ = #conf_id_#
+</select>
+
+</sqlMap>

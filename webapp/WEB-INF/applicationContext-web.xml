@@ -31,6 +31,11 @@
 	<bean id="reConfDao_" class="com.chz.smartoa.task.dao.impl.ReConfDaoImpl">
 		<property name="sqlMapClient" ref="sqlMapClient"/>
 	</bean>
+	
+	<bean id="ruConfDao_" class="com.chz.smartoa.task.dao.impl.RuConfDaoImpl">
+		<property name="sqlMapClient" ref="sqlMapClient"/>
+	</bean>
+	
 	<bean id="reProcdefDao_" class="com.chz.smartoa.task.dao.impl.ReProcdefDaoImpl">
 		<property name="sqlMapClient" ref="sqlMapClient"/>
 	</bean>
@@ -109,10 +114,11 @@
 	<bean id="repositoryService" class="com.chz.smartoa.task.service.impl.RepositoryServiceImpl">
 		<property name="reProcdefDao_" ref="reProcdefDao_"/>	
 		<property name="reConfDao_" ref="reConfDao_"/>	
+		<property name="ruConfDao_" ref="ruConfDao_"/>	
 	</bean>	
 	<bean id="runtimeService" class="com.chz.smartoa.task.service.impl.RuntimeServiceImpl">
 		<property name="geExecutionDao" ref="geExecutionDao"/>	
-		<property name="ruTaskDao" ref="ruTaskDao"/>	
+		<property name="ruTaskDao" ref="ruTaskDao"/>
 		<property name="delegationDao" ref="delegationDao"/>
 		<property name="delegationLogDao" ref="delegationLogDao"/>		
 		<property name="userHandler" ref="userHandler"/>
@@ -179,6 +185,7 @@
 		<property name="repositoryService" ref="repositoryService"/>	
 		
 		<property name="staffBiz" ref="staffBiz"/>
+		<property name="operateLogBiz" ref="operateLogBiz"/>
 	</bean>
 	
 	<bean id="dictionary" class="com.chz.smartoa.dictionary.action.DictionaryAction" scope="prototype">

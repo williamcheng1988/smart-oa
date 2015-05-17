@@ -5,9 +5,9 @@ import java.io.Serializable;
 import com.chz.smartoa.common.base.BaseDomain;
 
 /**
- * 流程定义配置明细
+ * 运行中的流程步骤
  */
-public class ReConf extends BaseDomain implements Serializable{
+public class RuConf extends BaseDomain implements Serializable{
 	private static final long serialVersionUID = 1L;
 	/**
 	 * ID 自增长
@@ -18,9 +18,9 @@ public class ReConf extends BaseDomain implements Serializable{
 	 */
 	protected int sort_num_;
 	/**
-	 * 流程ID
+	 * 实例ID
 	 */
-	protected String procdef_id_;
+	protected String execution_id_;
 	/**
 	 * 任务描述
 	 */
@@ -69,10 +69,15 @@ public class ReConf extends BaseDomain implements Serializable{
 	 * 模板ID
 	 */
 	protected String template_id_;
+	
 	/**
 	 * 处理对象名称
 	 */
 	protected String action_obj_name_;
+	/**
+	 * 是否允许修改
+	 */
+	private int is_edit_;
 	
 	public int getConf_id_() {
 		return conf_id_;
@@ -80,11 +85,11 @@ public class ReConf extends BaseDomain implements Serializable{
 	public void setConf_id_(int conf_id_) {
 		this.conf_id_ = conf_id_;
 	}
-	public String getProcdef_id_() {
-		return procdef_id_;
+	public String getExecution_id_() {
+		return execution_id_;
 	}
-	public void setProcdef_id_(String procdef_id_) {
-		this.procdef_id_ = procdef_id_;
+	public void setExecution_id_(String execution_id_) {
+		this.execution_id_ = execution_id_;
 	}
 	public String getTask_desc_() {
 		return task_desc_;
@@ -164,10 +169,16 @@ public class ReConf extends BaseDomain implements Serializable{
 	public void setAction_obj_name_(String action_obj_name_) {
 		this.action_obj_name_ = action_obj_name_;
 	}
+	public int getIs_edit_() {
+		return is_edit_;
+	}
+	public void setIs_edit_(int is_edit_) {
+		this.is_edit_ = is_edit_;
+	}
 	@Override
 	public String toString() {
-		return "ReConf [conf_id_=" + conf_id_ + ", sort_num_=" + sort_num_
-				+ ", procdef_id_=" + procdef_id_ + ", task_desc_=" + task_desc_
+		return "RuConf [conf_id_=" + conf_id_ + ", sort_num_=" + sort_num_
+				+ ", execution_id_=" + execution_id_ + ", task_desc_=" + task_desc_
 				+ ", action_type_=" + action_type_ + ", action_obj_="
 				+ action_obj_ + ", action_obj_type_=" + action_obj_type_
 				+ ", is_turn_=" + is_turn_ + ", is_ask_=" + is_ask_

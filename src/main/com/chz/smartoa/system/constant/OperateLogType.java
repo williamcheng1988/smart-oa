@@ -13,6 +13,6 @@ public enum OperateLogType {
 	DEPARTMENT_MANAGE,//部门管理
 	ROLE_MANAGE,//角色管理
 	PROCESS_MANAGE,//流程管理
+	FLOW_MANAGE,//运行中的流程管理
 	TASK_MANAGE;//任务管理
-	
 }
