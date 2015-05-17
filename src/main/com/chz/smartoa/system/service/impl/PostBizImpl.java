@@ -24,8 +24,15 @@ public class PostBizImpl implements PostBiz{
 	
 	
 	@Override
+	public Post findPostById(String postId) {
+		return postDao.findPostById(postId);
+	}
+	
+	
+	@Override
 	public List<Post> findAllPost() {
 		return postDao.findAllPost();
 	}
+	
 
 }

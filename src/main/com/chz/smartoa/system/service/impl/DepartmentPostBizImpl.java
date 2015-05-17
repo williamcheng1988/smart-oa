@@ -1,6 +1,7 @@
 package com.chz.smartoa.system.service.impl;
 
 import java.util.List;
+
 import com.chz.smartoa.system.dao.DepartmentPostDao;
 import com.chz.smartoa.system.pojo.DepartmentPostStaffs;
 import com.chz.smartoa.system.service.DepartmentPostBiz;
@@ -25,6 +26,21 @@ public class DepartmentPostBizImpl implements DepartmentPostBiz{
 	@Override
 	public List<DepartmentPostStaffs> findListByDepartmentId(String departmentId) {
 		return departmentPostDao.findListByDepartmentId(departmentId);
+	}
+	
+	@Override
+	public DepartmentPostStaffs getDepartmentPostById(Long id) {
+		return departmentPostDao.getDepartmentPostById(id);
+	}
+	
+	@Override
+	public DepartmentPostStaffs getDepartmentPostByDepIdAndPostId(String departmentId, String postId) {
+		return departmentPostDao.getDepartmentPostByDepIdAndPostId(departmentId, postId);
+	}
+	
+	@Override
+	public void updateDepartmentPost(DepartmentPostStaffs dps) {
+		departmentPostDao.updateDepartmentPost(dps);
 	}
 
 }

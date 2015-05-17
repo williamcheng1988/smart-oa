@@ -8,5 +8,7 @@ public interface PostBiz {
 	
 	public void insertPost(Post pt);
 	
+	public Post findPostById(String postId);
+	
 	public List<Post> findAllPost();
 }
