@@ -12,10 +12,10 @@
 </head>
 <body>
 	<div align="center" class="datagrid-toolbar page_title">
-		新增岗位信息
+		修改岗位信息
 	</div>
 	<div class="easyui-panel" style="width:100%" data-options="border:false" align="center" >
-	    <form id="ff" class="easyui-form" method="post" data-options="novalidate:true" action="departmentPostRelation!saveDepartmentPost.do">
+	    <form id="ff" class="easyui-form" method="post" data-options="novalidate:true" action="departmentPostRelation!saveUpdate.do">
 	    	<table cellpadding="10px" class="table_form" style="width: 70%;">
 			  <tr>
 			    <th width="40%" align="right">用户账号：</td>
@@ -23,14 +23,14 @@
 			    	<select id="staffIds" name="dps.staffIds" class="easyui-combobox" data-options="multiple:true" style="width: 132px;">
     					<option value="">&nbsp;</option>
 						#optionTag("NORMAL_USERS")
-					</select>
+					</select> 
+			    	<input name="dps.id" value="$!dps.id" type="hidden">
 			    </td>
 			  </tr>
 			  <tr>
 			    <th width="40%" align="right">部门名称：</td>
 			    <td width="60%" align="left">
-			    	<input type="hidden" name="dps.departmentId"  value="$!departmentId" />
-			    	<input class="easyui-textbox" type="text"  value="$!departmentName" disabled="disabled"></input>
+			    	<input class="easyui-textbox" type="text" name="departmentName"  value="$!departmentName" disabled="disabled"></input>
 			    </td>
 			  </tr>
 			  <tr>
@@ -47,8 +47,6 @@
 									textField:'postName',
 									panelHeight:'auto'
 							">
-			    	&nbsp;&nbsp;&nbsp;
-			    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="$('#addPostWin').window('open')">&nbsp;定&nbsp;义&nbsp;新&nbsp;岗&nbsp;位</a>
 			    </td>
 			  </tr>
 		      <tr>
@@ -60,33 +58,20 @@
 		      </tr>
 			</table>
 	    </form>
-	    <div id="addPostWin" class="easyui-window" title="新增岗位" data-options="modal:true,closed:true,iconCls:'icon-save'" style="width:500px;height:200px;padding:10px;">
-			<table cellpadding="10px" class="table_form" style="width: 100%;">
-				<tr>
-				    <th width="40%" align="right">岗位账号：</td>
-				    <td width="60%" align="left">
-				    	<input class="easyui-textbox" type="text" id="ptPostId" name="pt.postId" ></input>
-				    </td>
-				  </tr>
-				  <tr>
-				    <th width="40%" align="right">岗位名称：</td>
-				    <td width="60%" align="left">
-				    	<input class="easyui-textbox" type="text" id="ptPostName" name="pt.postName" ></input>
-				    </td>
-				  </tr>
-				  <tr>
-				    <th colspan="2" align="center">
-				        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				    	<a href="javascript:savePost()" class="easyui-linkbutton">&nbsp;保&nbsp;存&nbsp;</a>&nbsp;&nbsp;
-        				<a href="javascript:void(0)" class="easyui-linkbutton" onclick="$('#addPostWin').window('close')">&nbsp;返&nbsp;回&nbsp;</a>
-				    </td>
-				  </tr>
-			</table>
-		</div>
 	</div>
 	<div id="ui_mask" style="display:none;height: 100%" class="datagrid-mask"></div>
 	<div id="ui_mask_msg" style="display:none; left: 50%; height: 16px; margin-left: -85.5px; line-height: 16px;" class="datagrid-mask-msg">正在处理，请稍待。。。</div>
 <script>
+
+
+	$('#ff').form('load',{
+		'dps.id':"$!dps.id",
+		'dps.staffIds':"$!staffIds",
+		'departmentName':"$!departmentName",
+		'dps.postId':"$!postId"
+	});
+
+	
 
 	function submitForm(){
 		
@@ -113,16 +98,17 @@
 				return validate;
 			},
 			success: function(result){
-				$('#ui_mask').css('display','none');
-				$('#ui_mask_msg').css('display','none');
 				var json = eval('(' + result + ')');
-				if(json.msg == 'true'){
-				  location.href="departmentPost/list.html";
-			    }else if(json.msg == 'exist'){
-			    	alert("部门编号已存在，请修改后再保存！");
-			    }else{
-				   alert("部门信息保存失败，请稍后重试！");
-			    }
+				if(json.code != 1){
+					$('#ui_mask').css('display','none');
+					$('#ui_mask_msg').css('display','none');
+					alert(json.msg);
+				}else{
+					alert(json.msg);
+					$('#ui_mask').css('display','none');
+					$('#ui_mask_msg').css('display','none');
+					location.href="departmentPost/list.html";
+				}
 			},
 			error:function(){
 			    alert("系统异常，请稍后再试...");
@@ -132,43 +118,6 @@
 	
 	function back(){
 		location.href="departmentPost/list.html";
-	}
-	
-	
-	function savePost(){
-		var postId = $("#ptPostId").val();  // 岗位门编号
-		if(!postId){
-			alert("岗位门编号不能为空！");
-			return;
-		}
-		
-		var postName = $("#ptPostName").val();    // 岗位名称
-		if(postName == null || postName == ''){
-			alert("岗位名称不能为空！");
-			return;
-		}
-		
-		jQuery.ajax({
-			   type: "POST",
-			   url: "postManager!savePost.do",
-			   data: { postId: postId, postName: postName }, 
-			   timeout : 300000, 
-			   dataType:"json",
-			   success: function(json){
-				   if(json == 'true'){
-					   $('#postId').combobox('reload');      
-					   $('#addPostWin').window('close');
-				   }else if(json == 'postIsNull'){
-				      alert("岗位编号不能为空！");
-				   }else if(json == 'exist'){
-				      alert("岗位编号已存在，请修改后再保存！");
-				   }else{
-					  alert("岗位新增失败，请稍后重试！");
-				   }
-				   
-			   }
-			});
-		
 	}
 	
 </script>

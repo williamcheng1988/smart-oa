@@ -41,7 +41,8 @@
 				    <td width="50%" align="left">
 				    	<input class="easyui-textbox" type="text" id="level" name="dpment.level" value="$!dpment.level" ></input>
 				    </td>
-				  </tr>
+				</tr>
+				#if($!dpment.parentId != '')
 	    		<tr>
 				  	<th align="right">是否有效：</td>
 				    <td align="left">
@@ -51,6 +52,7 @@
 				    	</select>
 				    </td>
 				</tr>
+				#end
 	    	</table>
 	    </form>
     	<div style="text-align:center;padding:8px">

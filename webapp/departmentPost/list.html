@@ -33,7 +33,7 @@
 				</table>
 				<div style="width:80%;padding: 5px;" align="left">
 					<div align="center">
-						<a href="javascript:add()" class="easyui-linkbutton" iconCls="icon-add">&nbsp;新&nbsp;增&nbsp;</a>&nbsp;&nbsp;&nbsp;
+						<a href="javascript:addPost()" class="easyui-linkbutton" iconCls="icon-add">&nbsp;新&nbsp;增&nbsp;</a>&nbsp;&nbsp;&nbsp;
 						<a href="javascript:modify()" class="easyui-linkbutton" iconCls="icon-add">&nbsp;修&nbsp;改&nbsp;</a>&nbsp;&nbsp;&nbsp;
 					</div>
 				</div>
@@ -58,8 +58,36 @@
 	});
 
     
-	function add(){
+	function addPost(){
+		var departmentId = $('#departmentId').val();
+		var departmentName = $('#departmentName').val();
+		if(departmentId && departmentName){
+			window.location.href="../departmentPostRelation!insetDepartmentPostPage.do?departmentId="+departmentId +"&departmentName="+departmentName;
+ 		}else{
+ 			alert("请先点击左侧的部门菜单作为新增岗位的所属部门");
+ 		}
+	}
+	
+	
+	function modify(){
+		var id="";
+		var rows = $('#dg').datagrid('getSelections');
+		if(rows){
+			for(var i=0; i<rows.length; i++){
+				 if (!id) {
+				   	id =  rows[i].id;
+				 } else {
+					alert("修改用户岗位信息时不能多选！");
+					return;	
+				 }   
+			}
+		}
 		
+		if (!id) {
+			alert("请选择要修改的用户岗位记录");
+			return;
+		}
+		window.location.href="../departmentPostRelation!toEditPage.do?mainId="+id;
 	}
 	
  	

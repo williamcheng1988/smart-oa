@@ -68,6 +68,8 @@
         
         <action name="departmentPostRelation" class="departmentPostAction">
         	<result name="json" type="velocity">/departmentPost/json.vm</result>
+        	<result name="toAdd" type="velocity">/departmentPost/add.html</result>
+        	<result name="toModify" type="velocity">/departmentPost/modify.html</result>
         </action>
         
     </package> 

@@ -130,6 +130,7 @@
 	
 	<bean id="departmentPostAction" class="com.chz.smartoa.system.action.DepartmentPostAction" scope="prototype">
 		<property name="departmentPostBiz" ref="departmentPostBiz"/>
+		<property name="departmentBiz" ref="departmentBiz"/>
 	</bean>
 	<!-- ================= action ======end========================-->
 	
