@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<script type="text/javascript" src="jquery.min.js"></script>
+	<link id="easyuiTheme" rel="stylesheet" type="text/css" href="themes/default/easyui.css">
+	<script type="text/javascript" charset="UTF-8" src="themes/themes.js"></script>
+	<link rel="stylesheet" type="text/css" href="themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="css/smart.css">
+	<script type="text/javascript" src="jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="locale/easyui-lang-zh_CN.js"></script>   
+</head>
+<body>
+	<div align="center" class="datagrid-toolbar page_title">
+		新增部门信息
+	</div>
+	<div class="easyui-panel" style="width:100%" data-options="border:false" align="center" >
+	    <form id="ff" class="easyui-form" method="post" data-options="novalidate:true" action="departmentManager!saveDepartment.do">
+	    	<table cellpadding="10px" class="table_form" style="width: 70%;">
+			  <tr>
+			    <th width="40%" align="right">部门编号：</td>
+			    <td width="60%" align="left">
+			    	<input class="easyui-textbox" type="text" id="departmentId" name="dpment.departmentId" ></input>
+			    	<span><font color="red">提示：保存后不允许再修改</font></span>
+			    </td>
+			  </tr>
+			  <tr>
+			    <th width="40%" align="right">上级部门：</td>
+			    <td width="60%" align="left">
+			    	<input type="hidden" name="dpment.parentId"  value="$!parentId" />
+			    	<input class="easyui-textbox" type="text"  value="$!parentName" disabled="disabled"></input>
+			    </td>
+			  </tr>
+			  <tr>
+			    <th width="40%" align="right">部门名称：</td>
+			    <td width="60%" align="left">
+			    	<input class="easyui-textbox" type="text" id="departmentName" name="dpment.departmentName" ></input>
+			    </td>
+			  </tr>
+			  <tr>
+			    <th width="40%" align="right">部门级别：</td>
+			    <td width="60%" align="left">
+			    	<input class="easyui-textbox" type="text" id="level" name="dpment.level" ></input>
+			    </td>
+			  </tr>
+		      <tr>
+	        	<th width="100%" colspan="2" align="center">
+	        		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	        		<a href="javascript:submitForm()" class="easyui-linkbutton">&nbsp;保&nbsp;存&nbsp;</a>&nbsp;&nbsp;
+	        		<a href="javascript:back()" class="easyui-linkbutton">&nbsp;返&nbsp;回&nbsp;</a>&nbsp;&nbsp;
+	        	</td>
+		      </tr>
+			</table>
+	    </form>
+	</div>
+	<div id="ui_mask" style="display:none;height: 100%" class="datagrid-mask"></div>
+	<div id="ui_mask_msg" style="display:none; left: 50%; height: 16px; margin-left: -85.5px; line-height: 16px;" class="datagrid-mask-msg">正在处理，请稍待。。。</div>
+<script>
+
+
+	function submitForm(){
+		
+		$('#ff').form('submit',{
+			onSubmit:function(){
+				
+				var departmentId = $("#departmentId").val();  // 部门编号
+				if(!departmentId){
+					alert("部门编号不能为空！");
+					return false;
+				}
+				
+				var departmentName = $("#departmentName").val();    // 部门名称
+				if(departmentName == null || departmentName == ''){
+					alert("部门名称不能为空！");
+					return false;
+				}
+				
+				var level = $("#level").val();    // 部门级别
+				if(level){
+					if(isNaN(level)){
+						alert("部门级别只能输入数字！");
+						return false;
+					}
+				}else{
+					alert("部门级别不能为空！");
+					return false;
+				}
+				
+				var validate = $(this).form('enableValidation').form('validate');
+				if(validate){
+					$('#ui_mask').css('display','block');
+					$('#ui_mask_msg').css('display','block');
+				}
+				return validate;
+			},
+			success: function(result){
+				$('#ui_mask').css('display','none');
+				$('#ui_mask_msg').css('display','none');
+				var json = eval('(' + result + ')');
+				if(json.msg == 'true'){
+				  location.href="department/list.html";
+			    }else if(json.msg == 'exist'){
+			    	alert("部门编号已存在，请修改后再保存！");
+			    }else{
+				   alert("部门信息保存失败，请稍后重试！");
+			    }
+			},
+			error:function(){
+			    alert("系统异常，请稍后再试...");
+			}
+		});
+	}
+	
+	function back(){
+		location.href="department/list.html";
+	}
+	
+</script>
+</body>
+</html>
+	

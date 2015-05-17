@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<script type="text/javascript" src="jquery.min.js"></script>
+	<link id="easyuiTheme" rel="stylesheet" type="text/css" href="themes/default/easyui.css">
+	<script type="text/javascript" charset="UTF-8" src="themes/themes.js"></script>
+	<link rel="stylesheet" type="text/css" href="themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="css/smart.css">
+	<script type="text/javascript" src="jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="locale/easyui-lang-zh_CN.js"></script>   
+</head>
+<body>
+	<div align="center" class="datagrid-toolbar page_title">
+		修改部门信息
+	</div>
+	<div class="easyui-panel" style="width:100%" data-options="border:false" align="center" >
+	    <form id="ff" class="easyui-form" method="post" data-options="novalidate:true" action="departmentManager!saveUpdate.do">
+	    	<table cellpadding="10px" class="table_form" style="width: 95%;">
+	    		<tr>
+	    			<th	width="40%" align="right" >部门编号：</th>
+	    			<td align="left">
+	    				<input class="easyui-textbox" value="$!dpment.departmentId" disabled="disabled" />
+	    				<input name="dpment.departmentId" value="$!dpment.departmentId" type="hidden">
+	    			</td>
+	    		</tr>
+	    		<tr>
+				    <th width="50%" align="right">上级部门：</td>
+				    <td width="50%" align="left">
+				    	<input class="easyui-textbox" type="text"  value="$!parentName" disabled="disabled"></input>
+				    </td>
+				  </tr>
+	    		<tr>
+	    			<th	width="40%" align="right" >部门名称：</th>
+	    			<td align="left">
+	    				<input class="easyui-textbox" id="departmentName" name="dpment.departmentName" value="$!dpment.departmentName" />
+	    			</td>
+	    		</tr>
+	    		<tr>
+				    <th width="50%" align="right">级别：</td>
+				    <td width="50%" align="left">
+				    	<input class="easyui-textbox" type="text" id="level" name="dpment.level" value="$!dpment.level" ></input>
+				    </td>
+				  </tr>
+	    		<tr>
+				  	<th align="right">是否有效：</td>
+				    <td align="left">
+				    	<select id="status" name="dpment.status" style="width: 100px;" class="easyui-combobox">
+				    		<option value="1" #if($!dpment.status == 1) selected="selected" #end >有效</option>
+				    		<option value="0" #if($!dpment.status == 0) selected="selected" #end >失效</option>
+				    	</select>
+				    </td>
+				</tr>
+	    	</table>
+	    </form>
+    	<div style="text-align:center;padding:8px">
+	    	<a href="javascript:submitForm()" class="easyui-linkbutton">&nbsp;保&nbsp;存&nbsp;</a>&nbsp;&nbsp;
+	    	<a href="javascript:back()" class="easyui-linkbutton">&nbsp;返&nbsp;回&nbsp;</a>&nbsp;&nbsp;
+   		</div>
+	</div>
+	<div id="ui_mask" style="display:none" class="datagrid-mask"></div>
+	<div id="ui_mask_msg" style="display:none; left: 50%; height: 16px; margin-left: -85.5px; line-height: 16px;" class="datagrid-mask-msg">正在处理，请稍待。。。</div>
+<script>
+	function submitForm(){
+		$('#ff').form('submit',{
+			onSubmit:function(){
+				
+				var departmentName = $("#departmentName").val();    // 部门名称
+				if(departmentName == null || departmentName == ''){
+					alert("部门名称不能为空！");
+					return false;
+				}
+				
+				var level = $("#level").val();    // 部门级别
+				if(level){
+					if(isNaN(level)){
+						alert("部门级别只能输入数字！");
+						return false;
+					}
+				}else{
+					alert("部门级别不能为空！");
+					return false;
+				}
+				
+				var validate = $(this).form('enableValidation').form('validate');
+				if(validate){
+					$('#ui_mask').css('display','block');
+					$('#ui_mask_msg').css('display','block');
+					
+					var nodes = $('#tt').tree('getChecked');
+					var s = '';
+					for(var i=0; i<nodes.length; i++){
+						if (s != '') s += ',';
+						s += nodes[i].id;
+					}
+					$('#resourceIds').val(s);
+				}
+				return validate;
+			},
+			success: function(result){
+				var json = eval('(' + result + ')');
+				if(json.code != 1){
+					$('#ui_mask').css('display','none');
+					$('#ui_mask_msg').css('display','none');
+					alert(json.msg);
+				}else{
+					$('#ui_mask').css('display','none');
+					$('#ui_mask_msg').css('display','none');
+					location.href="department/list.html";
+				}
+			},
+			error:function(){
+			    alert("系统异常，请稍后再试...");
+			}
+		});
+	}
+	
+	function back(){
+		location.href="department/list.html";
+	}
+</script>
+</body>
+</html>

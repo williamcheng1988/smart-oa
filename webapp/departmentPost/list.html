@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<script type="text/javascript" src="../jquery.min.js"></script>
+	<link id="easyuiTheme" rel="stylesheet" type="text/css" href="../themes/default/easyui.css">
+	<script type="text/javascript" charset="UTF-8" src="../themes/themes.js"></script>
+	<link rel="stylesheet" type="text/css" href="../themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../css/smart.css">
+	<script type="text/javascript" src="../jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="../locale/easyui-lang-zh_CN.js"></script>   
+</head>
+
+<body>
+		<div class="easyui-layout" data-options="fit:true">
+			<div data-options="region:'west',split:true" style="width:20%;padding:10px">
+				<ul id="tt" class="easyui-tree" data-options="url:'../departmentManager!genDepartmentTree.do',method:'get',animate:true,dnd:true"></ul>
+			</div>
+			<div data-options="region:'center'" style="padding:2px">
+				<div id="title" align="center" class="datagrid-toolbar page_title"></div>
+				<input id="departmentId" name="departmentId" type="hidden" >
+				<input id="departmentName" name="departmentName" type="hidden" >
+				<table id="dg" class="easyui-datagrid" style="width:100%;height:auto;"
+						data-options="rownumbers:true,url:'../departmentPostRelation!queryDepartmentPost.do',singleSelect:false,border:false,method:'get',toolbar:'#tb',autoRowHeight:false">
+					<thead>
+						<tr>
+							<th data-options="field:'id',width:'2%',checkbox:true"></th>
+							<th data-options="field:'staffIds',width:'20%',align:'center'">用户账号</th>
+							<th data-options="field:'departmentName',width:'30%',align:'center'">部门名称</th>
+							<th data-options="field:'postName',width:'30%',align:'center'">岗位名称</th>
+						</tr>
+					</thead>
+				</table>
+				<div style="width:80%;padding: 5px;" align="left">
+					<div align="center">
+						<a href="javascript:add()" class="easyui-linkbutton" iconCls="icon-add">&nbsp;新&nbsp;增&nbsp;</a>&nbsp;&nbsp;&nbsp;
+						<a href="javascript:modify()" class="easyui-linkbutton" iconCls="icon-add">&nbsp;修&nbsp;改&nbsp;</a>&nbsp;&nbsp;&nbsp;
+					</div>
+				</div>
+				<div id="ui_mask" style="display:none" class="datagrid-mask"></div>
+				<div id="ui_mask_msg" style="display:none; left: 50%; height: 16px; margin-left: -85.5px; line-height: 16px;" class="datagrid-mask-msg">正在处理，请稍待。。。</div>
+			</div>
+		</div>
+</body>
+</html>
+  
+ <script language="javascript">
+ 
+	 $('#tt').tree({
+		onClick: function(node){
+			var id = node.id;
+			$('#title').text(node.text);
+			$("#departmentName").val(node.text);
+			$("#departmentId").val(node.id);
+         var params = '{"departmentId":"' + id + '"}';   // 封装查询参数
+         $('#dg').datagrid('load',eval('(' + params + ')')); 
+		}
+	});
+
+    
+	function add(){
+		
+	}
+	
+ 	
+ </script>
+
+

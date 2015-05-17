@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<script type="text/javascript" src="../jquery.min.js"></script>
+	<link id="easyuiTheme" rel="stylesheet" type="text/css" href="../themes/default/easyui.css">
+	<script type="text/javascript" charset="UTF-8" src="../themes/themes.js"></script>
+	<link rel="stylesheet" type="text/css" href="../themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../css/smart.css">
+	<script type="text/javascript" src="../jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="../locale/easyui-lang-zh_CN.js"></script>   
+</head>
+
+<body>
+		<div class="easyui-layout" data-options="fit:true">
+			<div data-options="region:'west',split:true" style="width:20%;padding:10px">
+				<ul id="tt" class="easyui-tree" data-options="url:'../departmentManager!genDepartmentTree.do',method:'get',animate:true,dnd:true"></ul>
+			</div>
+			<div data-options="region:'center'" style="padding:2px">
+				<div id="title" align="center" class="datagrid-toolbar page_title"></div>
+				<input id="parentId" name="parentId" type="hidden" >
+				<input id="parentName" name="parentName" type="hidden" >
+				<table id="dg" class="easyui-datagrid" style="width:100%;height:auto;"
+						data-options="rownumbers:true,url:'../departmentManager!queryDepartment.do',singleSelect:false,border:false,method:'get',toolbar:'#tb',autoRowHeight:false">
+					<thead>
+						<tr>
+						    <th data-options="field:'id',width:'2%',checkbox:true"></th>
+							<th data-options="field:'departmentId',width:'20%',align:'center'">部门编号</th>
+							<th data-options="field:'departmentName',width:'30%',align:'center'">部门名称</th>
+							<th data-options="field:'level',width:'10%',align:'center'">部门级别</th>
+							<th data-options="field:'status',width:'15%',align:'center',formatter:formatStatus">是否有效</th>
+						</tr>
+					</thead>
+				</table>
+				<div style="width:80%;padding: 5px;" align="left">
+					<div align="center">
+						<a href="javascript:addDepartment()" class="easyui-linkbutton" iconCls="icon-add">&nbsp;新&nbsp;增&nbsp;</a>&nbsp;&nbsp;&nbsp;
+						<a href="javascript:modify()" class="easyui-linkbutton" iconCls="icon-edit">&nbsp;修&nbsp;改&nbsp;</a>&nbsp;&nbsp;&nbsp;
+					</div>
+				</div>
+				<div id="ui_mask" style="display:none" class="datagrid-mask"></div>
+				<div id="ui_mask_msg" style="display:none; left: 50%; height: 16px; margin-left: -85.5px; line-height: 16px;" class="datagrid-mask-msg">正在处理，请稍待。。。</div>
+			</div>
+		</div>
+</body>
+</html>
+  
+ <script language="javascript">
+ 
+	 $('#tt').tree({
+		onClick: function(node){
+			var id = node.id;
+			$('#title').text(node.text);
+			$("#parentName").val(node.text);
+			$("#parentId").val(node.id);
+         var params = '{"parentId":"' + id + '"}';   // 封装查询参数
+         $('#dg').datagrid('load',eval('(' + params + ')')); 
+		}
+	});
+
+    
+	//格式化数据
+	function formatStatus(val,row){
+		if(val){
+			if (val == 1){
+				return '有效';
+			}else if(val == 0) {
+				return '失效';
+			}
+		}else{
+			if(val == 0){
+				return '失效';
+			}
+			return val;
+		}
+	}
+	
+	
+	function addDepartment(){
+		var parentId = $('#parentId').val();
+		var parentName = $('#parentName').val();
+		if(parentId){
+			window.location.href="../departmentManager!insetDepartment.do?parentId="+parentId +"&parentName="+parentName;
+ 		}else{
+ 			alert("请先点击左侧的部门菜单作为新增部门的上级部门");
+ 		}
+	}
+	
+	
+	function modify(){
+		var id="";
+		var rows = $('#dg').datagrid('getSelections');
+		if(rows){
+			for(var i=0; i<rows.length; i++){
+				 if (!id) {
+				   	id =  rows[i].departmentId;
+				 } else {
+					alert("修改部门信息时不能多选！");
+					return;	
+				 }   
+			}
+		}
+		
+		if (!id) {
+			alert("请选择要修改的部门记录");
+			return;
+		}
+		window.location.href="../departmentManager!toEditPage.do?departmentId="+id;
+	}
+	
+ 	
+ 	
+ </script>
+
+
