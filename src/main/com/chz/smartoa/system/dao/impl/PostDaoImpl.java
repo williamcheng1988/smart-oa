@@ -18,8 +18,8 @@ public class PostDaoImpl extends SqlMapClientDaoSupport implements PostDao{
 	
 	@Override
 	public Post findPostById(String postId) {
-		
-		return null;
+		Post post = (Post)getSqlMapClientTemplate().queryForObject("pt_findPostByPostId", postId);
+		return post;
 	}
 
 

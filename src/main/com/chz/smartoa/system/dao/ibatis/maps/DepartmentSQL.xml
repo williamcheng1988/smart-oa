@@ -80,7 +80,7 @@
 				   CREATE_DATE AS createDate,
 				   LAST_UPDATE_DATE AS lastUpdateDate
 			  FROM T_DEPARTMENT 
-			 WHERE PARENT_ID = #parentId#
+			 WHERE PARENT_ID = #parentId# OR DEPARTMENT_ID = #parentId#
 		]]>
 	</select>
 	
@@ -114,6 +114,20 @@
 	</insert>
 	
 	
+	<!--  查找部门、岗位、用户对应列表(根据岗位编号) -->
+	<select id="pt_findPostByPostId" resultClass="pt" parameterClass="java.lang.String">
+		<![CDATA[
+		    SELECT POST_ID AS postId,
+				   POST_NAME AS postName,
+				   CREATE_USER AS createUser,
+				   CREATE_DATE AS createDate,
+				   LAST_UPDATE_DATE AS lastUpdateDate
+			  FROM T_POST
+			 WHERE POST_ID = #postId#
+		]]>
+	</select>
+	
+	
 	<!--  查找所有岗位 -->
 	<select id="pt_findAllPost" resultClass="pt" >
 		<![CDATA[
@@ -143,11 +157,11 @@
 		 SYSDATE())
 	</insert>
 	
-	
-	<!--  查找部门、岗位、用户对应列表(根据部门) -->
+	<!--  查找部门、岗位、用户对应列表(根据部门ID) -->
 	<select id="dps_findListByDepartmentId" resultClass="dps" parameterClass="java.lang.String">
 		<![CDATA[
-		    SELECT dps.DEPT_ID AS departmentId,
+		    SELECT dps.ID AS id,
+		           dps.DEPT_ID AS departmentId,
 			       dps.POST_ID AS postId,
 			       dps.STAFF_IDS AS staffIds,
 			       dps.CREATE_USER AS createUser,
@@ -161,6 +175,49 @@
 			     AND pt.POST_ID = dps.POST_ID
 		]]>
 	</select>
+	
+	
+	<!--  查找部门、岗位、用户对应列表(根据自增长ID) -->
+	<select id="dps_departmentPostById" resultClass="dps" parameterClass="java.lang.Long">
+		<![CDATA[
+		    SELECT dps.ID AS id,
+		           dps.DEPT_ID AS departmentId,
+			       dps.POST_ID AS postId,
+			       dps.STAFF_IDS AS staffIds,
+			       dps.CREATE_USER AS createUser,
+			       dps.CREATE_DATE AS createDate,
+			       dps.LAST_UPDATE_DATE AS lastUpdateDate
+			  FROM T_DEPARTMENT_POST_STAFF dps
+			   WHERE dps.ID = #id#
+		]]>
+	</select>
+	
+	
+	<!--  查找部门、岗位、用户对应列表(根据部门ID和岗位ID) -->
+	<select id="dps_departmentPostByDepIdAndPostId" resultClass="dps" parameterClass="dps">
+		<![CDATA[
+		    SELECT dps.ID AS id,
+		           dps.DEPT_ID AS departmentId,
+			       dps.POST_ID AS postId,
+			       dps.STAFF_IDS AS staffIds,
+			       dps.CREATE_USER AS createUser,
+			       dps.CREATE_DATE AS createDate,
+			       dps.LAST_UPDATE_DATE AS lastUpdateDate
+			  FROM T_DEPARTMENT_POST_STAFF dps
+			   WHERE dps.DEPT_ID = #departmentId#
+			     AND dps.POST_ID = #postId#
+		]]>
+	</select>
+	
+	
+	<!-- 修改用户所属岗位信息  -->
+	<update id="dps_updateDepartmentPost" parameterClass="dps">
+		UPDATE T_DEPARTMENT_POST_STAFF
+		SET POST_ID = #postId#,
+		    STAFF_IDS = #staffIds#,
+		    LAST_UPDATE_DATE = SYSDATE()
+		WHERE ID = #id#
+	</update>
 	
 
 </sqlMap>
