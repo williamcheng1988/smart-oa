@@ -76,6 +76,7 @@ alter table t_post add primary key (post_id);
 -- 岗位关系表
 create table t_department_post_staff
 (
+  id               int(10)  not null primary key auto_increment,
   dept_id          varchar(64) not null,
   post_id          varchar(64) not null,
   staff_ids        varchar(320) not null,
