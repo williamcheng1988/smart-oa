@@ -119,19 +119,6 @@ public class RoleBizImpl implements RoleBiz {
 		operateLogBiz.info(OperateLogType.ROLE_MANAGE, staff.getLoginName(), staff.getLoginName(), "赋予角色成功："+roleIds);		
 	}
 
-	public void updateDepartmentRole(String departmentId, String[] roleIds) throws DepartmentNotFoundException{
-		Department department = departmentDao.findDepartment(departmentId);
-		if (departmentId == null) {
-			throw new DepartmentNotFoundException("组织不存在");
-		}
-		
-		roleDao.updateDepartmentRole(departmentId, roleIds);
-		
-		// 写业务日志
-		operateLogBiz.info(OperateLogType.ROLE_MANAGE, 
-				department.getDepartmentId(), 
-				department.getDepartmentName(), "赋予角色成功："+roleIds);		
-	}
 
 	public void setStaffDao(StaffDao staffDao) {
 		this.staffDao = staffDao;
