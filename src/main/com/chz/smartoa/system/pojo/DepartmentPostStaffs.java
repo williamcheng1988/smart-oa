@@ -1,5 +1,8 @@
 package com.chz.smartoa.system.pojo;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import com.chz.smartoa.common.base.BaseDomain;
 
 /**
@@ -62,7 +65,11 @@ public class DepartmentPostStaffs extends BaseDomain {
 		return staffIds;
 	}
 	public void setStaffIds(String staffIds) {
-		this.staffIds = staffIds;
+		if(staffIds != null){
+			this.staffIds =  replaceBlank(staffIds);
+		}else{
+			this.staffIds = staffIds;
+		}
 	}
 	
 	public String getCreateUser() {
@@ -83,6 +90,14 @@ public class DepartmentPostStaffs extends BaseDomain {
 	public void setLastUpdateDate(String lastUpdateDate) {
 		this.lastUpdateDate = lastUpdateDate;
 	}
-
+	private String replaceBlank(String str) {
+        String dest = "";
+        if (str!=null) {
+            Pattern p = Pattern.compile("\\s*|\t|\r|\n");
+            Matcher m = p.matcher(str);
+            dest = m.replaceAll("");
+        }
+        return dest;
+    }
 	
 }

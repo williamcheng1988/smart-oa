@@ -64,11 +64,9 @@
 <script>
 
 $(function (){
-	var staffIds = '$!staffIds';
-	var ids = staffIds?staffIds.split(','):[];
 	$('#ff').form('load',{
 		'dps.id':"$!dps.id",
-		'dps.staffIds':ids,
+		'dps.staffIds':"$!staffIds",
 		'departmentName':"$!departmentName",
 		'dps.postId':"$!postId"
 	});
