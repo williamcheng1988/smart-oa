@@ -19,6 +19,13 @@ insert into t_resource_option values('department_manager','保存新增部门信
 insert into t_resource_option values('department_manager','保存修改后的部门信息','departmentManager!saveUpdate.do');
 
 insert into t_resource_option values('post_manager','获取用户所属部门列表','departmentPostRelation!queryDepartmentPost.do');
+insert into t_resource_option values('post_manager','保存新定义的岗位','postManager!savePost.do');
+insert into t_resource_option values('post_manager','获取所有岗位名称','postManager!getAllPost.do');
+insert into t_resource_option values('post_manager','新增用户岗位界面','departmentPostRelation!insetDepartmentPostPage.do');
+insert into t_resource_option values('post_manager','保存用户岗位','departmentPostRelation!saveDepartmentPost.do');
+insert into t_resource_option values('post_manager','修改用户岗位信息','departmentPostRelation!toEditPage.do');
+insert into t_resource_option values('post_manager','保存修改后的用户岗位信息','departmentPostRelation!saveUpdate.do');
+
 
 
 -- 初始化部门sql
