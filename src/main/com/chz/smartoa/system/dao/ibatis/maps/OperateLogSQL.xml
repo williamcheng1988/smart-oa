@@ -89,6 +89,7 @@
 				LOG_TYPE != #logType#
 			</isNotEmpty>
 		</dynamic>
+		ORDER BY OPERATE_DATE DESC
 </select>
 
 <select id="OperateLog_listOperateLogCount" resultClass="java.lang.Integer" parameterClass="operateLog">
