@@ -9,11 +9,13 @@ import org.springframework.stereotype.Controller;
 
 import com.chz.smartoa.common.base.BaseAction;
 import com.chz.smartoa.common.base.DataGrid;
+import com.chz.smartoa.system.constant.OperateLogType;
 import com.chz.smartoa.system.pojo.Department;
 import com.chz.smartoa.system.pojo.DepartmentPostStaffs;
 import com.chz.smartoa.system.pojo.Post;
 import com.chz.smartoa.system.service.DepartmentBiz;
 import com.chz.smartoa.system.service.DepartmentPostBiz;
+import com.chz.smartoa.system.service.OperateLogBiz;
 
 
 
@@ -27,6 +29,8 @@ public class DepartmentPostAction extends BaseAction{
 	private DepartmentPostBiz departmentPostBiz;
 	
 	private DepartmentBiz departmentBiz;
+	
+	private OperateLogBiz operateLogBiz;
 	
 	private List<DepartmentPostStaffs> dpsList;
 	
@@ -81,10 +85,12 @@ public class DepartmentPostAction extends BaseAction{
 			}else{
 				dps.setCreateUser(getLoginStaff().getCreateUser());
 				departmentPostBiz.insertDepartmentPost(dps);
+				operateLogBiz.info(OperateLogType.DEP_POST_STAFF_MANAGE, String.valueOf(dps.getDepartmentId()),String.valueOf(dps.getStaffIds()), "新增用户岗位成功");
 				msg ="true";
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
+			operateLogBiz.info(OperateLogType.DEP_POST_STAFF_MANAGE, String.valueOf(dps.getDepartmentId()),String.valueOf(dps.getStaffIds()), "新增用户岗位失败");
 			e.printStackTrace();
 			msg ="false";
 		}
@@ -114,16 +120,20 @@ public class DepartmentPostAction extends BaseAction{
 					uDps.setStaffIds(dps.getStaffIds());
 					departmentPostBiz.updateDepartmentPost(uDps);
 					operateResult = new OperateResult(1, "岗位信息修改成功！");
+					operateLogBiz.info(OperateLogType.DEP_POST_STAFF_MANAGE, String.valueOf(dps.getId()),String.valueOf(dps.getStaffIds()), "修改用户岗位成功");
 				}else{
 					operateResult = new OperateResult(-1, "岗位信息修改失败！");
+					operateLogBiz.info(OperateLogType.DEP_POST_STAFF_MANAGE, String.valueOf(dps.getId()),String.valueOf(dps.getStaffIds()), "修改用户岗位失败");
 				}
 			}else{
 				operateResult = new OperateResult(-1, "岗位信息修改失败！");
+				operateLogBiz.info(OperateLogType.DEP_POST_STAFF_MANAGE, String.valueOf(dps.getId()),String.valueOf(dps.getStaffIds()), "修改用户岗位失败");
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			e.printStackTrace();
 			operateResult = new OperateResult(-1, "岗位信息修改失败！");
+			operateLogBiz.info(OperateLogType.DEP_POST_STAFF_MANAGE, String.valueOf(dps.getId()),String.valueOf(dps.getStaffIds()), "修改用户岗位失败");
 		}
 		return OPER_RESULT;
 	}
@@ -141,6 +151,13 @@ public class DepartmentPostAction extends BaseAction{
 	}
 	public void setDepartmentBiz(DepartmentBiz departmentBiz) {
 		this.departmentBiz = departmentBiz;
+	}
+
+	public OperateLogBiz getOperateLogBiz() {
+		return operateLogBiz;
+	}
+	public void setOperateLogBiz(OperateLogBiz operateLogBiz) {
+		this.operateLogBiz = operateLogBiz;
 	}
 
 	public List<DepartmentPostStaffs> getDpsList() {

@@ -12,8 +12,10 @@ import com.chz.smartoa.common.base.BaseAction;
 import com.chz.smartoa.common.base.DataGrid;
 import com.chz.smartoa.common.base.TreeData;
 import com.chz.smartoa.system.constant.LogType;
+import com.chz.smartoa.system.constant.OperateLogType;
 import com.chz.smartoa.system.pojo.DictionaryConfig;
 import com.chz.smartoa.system.service.DictionaryConfigBiz;
+import com.chz.smartoa.system.service.OperateLogBiz;
 
 
 @Controller
@@ -26,6 +28,8 @@ public class DictionaryConfigAction extends BaseAction{
 	private static final Logger logger = Logger.getLogger(DictionaryConfigAction.class);
 	
 	private DictionaryConfigBiz dictionaryConfigBiz;
+	
+	private OperateLogBiz operateLogBiz;
 	
 	private DictionaryConfig config;
 	
@@ -71,9 +75,6 @@ public class DictionaryConfigAction extends BaseAction{
 	 * @return
 	 */
 	public String generateTree(){
-		
-		
-		
 		List<TreeData> tree = new ArrayList<TreeData>();
 		List<DictionaryConfig> parentList = dictionaryConfigBiz.findDictionarytCfgByParentId(LogType.MAXNODE_PARENTID);
 		List<DictionaryConfig> sonList1 = null;
@@ -171,8 +172,10 @@ public class DictionaryConfigAction extends BaseAction{
 			config.setIsValid(Integer.valueOf(1));         // 默认为有效
 			config.setParentId(LogType.MAXNODE_PARENTID);  // 默认父节点为-1      
 			dictionaryConfigBiz.insertDictionaryConfig(config);
+			operateLogBiz.info(OperateLogType.DICTIONARY_MANAGE, myKey,config.getDictionaryName(), "字典新增成功");
 			msg = "true";
 		} catch (Exception e) {
+			operateLogBiz.info(OperateLogType.DICTIONARY_MANAGE, null,config.getDictionaryName(), "字典新增失败");
 			logger.error(e.getMessage());
 			e.printStackTrace();
 			msg = "false";
@@ -225,8 +228,10 @@ public class DictionaryConfigAction extends BaseAction{
 			config.setIsValid(Integer.valueOf(1));         // 默认为有效
 			config.setParentId(parentId);                  // 设置父节点
 			dictionaryConfigBiz.insertDictionaryConfig(config);
+			operateLogBiz.info(OperateLogType.DICTIONARY_MANAGE, myKey,config.getDictionaryName(), "字典项新增成功");
 			msg ="true";
 		} catch (Exception e) {
+			operateLogBiz.info(OperateLogType.DICTIONARY_MANAGE, null,config.getDictionaryName(), "字典项新增失败");
 			logger.error(e.getMessage());
 			e.printStackTrace();
 			msg ="false";
@@ -283,8 +288,10 @@ public class DictionaryConfigAction extends BaseAction{
 				cfg.setIsPublic(config.getIsPublic());
 			}
 			dictionaryConfigBiz.updateDictionaryConfig(cfg);
+			operateLogBiz.info(OperateLogType.DICTIONARY_MANAGE, fileId,config.getDictionaryName(), "字典项修改成功");
 			operateResult = new OperateResult(1, "字典项修改成功！");
 		} catch (Exception e) {
+			operateLogBiz.info(OperateLogType.DICTIONARY_MANAGE, fileId,config.getDictionaryName(), "字典项修改失败");
 			logger.error(e.getMessage());
 			e.printStackTrace();
 			operateResult = new OperateResult(1, "字典项修改成功！");
@@ -302,6 +309,13 @@ public class DictionaryConfigAction extends BaseAction{
 		this.dictionaryConfigBiz = dictionaryConfigBiz;
 	}
 
+	public OperateLogBiz getOperateLogBiz() {
+		return operateLogBiz;
+	}
+
+	public void setOperateLogBiz(OperateLogBiz operateLogBiz) {
+		this.operateLogBiz = operateLogBiz;
+	}
 	public DictionaryConfig getConfig() {
 		return config;
 	}

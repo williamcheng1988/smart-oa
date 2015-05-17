@@ -1,18 +1,16 @@
 package com.chz.smartoa.system.action;
 
 import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
-
 import com.chz.smartoa.common.base.BaseAction;
-import com.chz.smartoa.system.pojo.Department;
+import com.chz.smartoa.system.constant.OperateLogType;
 import com.chz.smartoa.system.pojo.Post;
+import com.chz.smartoa.system.service.OperateLogBiz;
 import com.chz.smartoa.system.service.PostBiz;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 
 
 @Controller
@@ -23,6 +21,8 @@ public class PostAction extends BaseAction{
 	private static final Logger logger = Logger.getLogger(PostAction.class);
 	
 	private PostBiz postBiz;
+	
+	private OperateLogBiz operateLogBiz;
 	
 	private List<Post> postList;
 	
@@ -57,6 +57,7 @@ public class PostAction extends BaseAction{
 					insertPost.setPostName(postName);
 					insertPost.setCreateUser(getLoginStaff().getCreateUser());
 					postBiz.insertPost(insertPost);
+					operateLogBiz.info(OperateLogType.POST_MANAGE, postId,postName, "新岗位定义成功");
 					msg ="true";
 				}
 			}else{
@@ -64,6 +65,7 @@ public class PostAction extends BaseAction{
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
+			operateLogBiz.info(OperateLogType.POST_MANAGE, postId,postName, "新岗位定义失败");
 			e.printStackTrace();
 			msg ="false";
 		}
@@ -82,6 +84,13 @@ public class PostAction extends BaseAction{
 		this.postBiz = postBiz;
 	}
 	
+	public OperateLogBiz getOperateLogBiz() {
+		return operateLogBiz;
+	}
+	public void setOperateLogBiz(OperateLogBiz operateLogBiz) {
+		this.operateLogBiz = operateLogBiz;
+	}
+
 	public List<Post> getPostList() {
 		return postList;
 	}

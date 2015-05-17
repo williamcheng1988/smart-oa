@@ -2,14 +2,18 @@ package com.chz.smartoa.system.action;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
+
 import com.chz.smartoa.common.base.BaseAction;
 import com.chz.smartoa.common.base.DataGrid;
 import com.chz.smartoa.common.base.TreeData;
+import com.chz.smartoa.system.constant.OperateLogType;
 import com.chz.smartoa.system.pojo.Department;
 import com.chz.smartoa.system.service.DepartmentBiz;
+import com.chz.smartoa.system.service.OperateLogBiz;
 
 
 @Controller
@@ -22,6 +26,8 @@ public class DepartmentAction extends BaseAction{
 	private List<Department> departmentList;
 	
 	private DepartmentBiz departmentBiz;
+	
+	private OperateLogBiz operateLogBiz;
 	
 	private Department dpment;
 	
@@ -61,14 +67,20 @@ public class DepartmentAction extends BaseAction{
 	
 	
 	private List<TreeData> generateTree(String parentId){
-		List<TreeData> list = departmentBiz.getDepartmentTreeByParentId(parentId); 
-		if(list != null && list.size() > 0){
-			for (TreeData tree: list) {
-				List<TreeData> child = generateTree(tree.getId()); 
-				if(child != null && child.size() > 0){
-					tree.setChildren(child);
+		List<TreeData> list = null;
+		try {
+			list = departmentBiz.getDepartmentTreeByParentId(parentId); 
+			if(list != null && list.size() > 0){
+				for (TreeData tree: list) {
+					List<TreeData> child = generateTree(tree.getId()); 
+					if(child != null && child.size() > 0){
+						tree.setChildren(child);
+					}
 				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return list;
 	}
@@ -90,6 +102,7 @@ public class DepartmentAction extends BaseAction{
 					dpment.setStatus(1);  // 有效
 					dpment.setCreateUser(getLoginStaff().getCreateUser());
 					departmentBiz.insertDepartment(dpment);
+					operateLogBiz.info(OperateLogType.DEPARTMENT_MANAGE, dpment.getDepartmentId(),dpment.getDepartmentName(), "部门新增成功");
 					msg ="true";
 				}else{
 					msg ="false";
@@ -97,6 +110,7 @@ public class DepartmentAction extends BaseAction{
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
+			operateLogBiz.info(OperateLogType.DEPARTMENT_MANAGE, dpment.getDepartmentId(),dpment.getDepartmentName(), "部门新增失败");
 			e.printStackTrace();
 			msg ="false";
 		}
@@ -126,14 +140,18 @@ public class DepartmentAction extends BaseAction{
 					uDepartment.setLevel(dpment.getLevel());
 					uDepartment.setStatus(dpment.getStatus());
 					departmentBiz.updateDepartment(uDepartment);
+					operateLogBiz.info(OperateLogType.DEPARTMENT_MANAGE, uDepartment.getDepartmentId(),uDepartment.getDepartmentName(), "部门修改成功");
 					operateResult = new OperateResult(1, "部门信息修改成功！");
 				}else{
 					operateResult = new OperateResult(-1, "部门信息修改失败！");
+					operateLogBiz.info(OperateLogType.DEPARTMENT_MANAGE, dpment.getDepartmentId(),dpment.getDepartmentName(), "部门修改失败");
 				}
 			}else{
 				operateResult = new OperateResult(-1, "部门信息修改失败！");
+				operateLogBiz.info(OperateLogType.DEPARTMENT_MANAGE, dpment.getDepartmentId(),dpment.getDepartmentName(), "部门修改失败");
 			}
 		} catch (Exception e) {
+			operateLogBiz.info(OperateLogType.DEPARTMENT_MANAGE, dpment.getDepartmentId(),dpment.getDepartmentName(), "部门修改失败");
 			logger.error(e.getMessage());
 			e.printStackTrace();
 			operateResult = new OperateResult(-1, "部门信息修改失败！");
@@ -157,6 +175,13 @@ public class DepartmentAction extends BaseAction{
 		this.departmentBiz = departmentBiz;
 	}
 	
+	public OperateLogBiz getOperateLogBiz() {
+		return operateLogBiz;
+	}
+	public void setOperateLogBiz(OperateLogBiz operateLogBiz) {
+		this.operateLogBiz = operateLogBiz;
+	}
+
 	public Department getDpment() {
 		return dpment;
 	}

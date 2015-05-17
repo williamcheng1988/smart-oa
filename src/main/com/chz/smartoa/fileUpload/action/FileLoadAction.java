@@ -25,8 +25,10 @@ import com.chz.smartoa.fileUpload.pojo.FileManager;
 import com.chz.smartoa.fileUpload.service.FileGroupBiz;
 import com.chz.smartoa.fileUpload.service.FileManagerBiz;
 import com.chz.smartoa.fileUpload.util.PerpertiesTool;
+import com.chz.smartoa.system.constant.OperateLogType;
 import com.chz.smartoa.system.pojo.DictionaryConfig;
 import com.chz.smartoa.system.service.DictionaryConfigBiz;
+import com.chz.smartoa.system.service.OperateLogBiz;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -42,6 +44,8 @@ public class FileLoadAction extends BaseAction{
 	private DictionaryConfigBiz dictionaryConfigBiz;
 	
 	private FileGroupBiz fileGroupBiz;
+	
+	private OperateLogBiz operateLogBiz;
 	
 	private FileManager fm;
 	
@@ -580,16 +584,20 @@ public class FileLoadAction extends BaseAction{
 				fmer.setFileNumber(fileNumber);
 				fmer.setUpdateUser(getLoginStaff().getLoginName());
 				fileManagerBiz.updateFileByObject(fmer);
+				operateLogBiz.info(OperateLogType.FILE_MANAGE, fmer.getId(),fmer.getFileDisplayname(), "文件修改成功");
 				msg = "true";
 			} catch (FileNotFoundException e) {
+				operateLogBiz.info(OperateLogType.FILE_MANAGE, fmer.getId(),fmer.getFileDisplayname(), "文件修改失败");
 				msg = "false";
 				e.printStackTrace();
 				logger.error(e.getMessage());
 			} catch (IOException e) {
+				operateLogBiz.info(OperateLogType.FILE_MANAGE, fmer.getId(),fmer.getFileDisplayname(), "文件修改失败");
 				msg = "false";
 				e.printStackTrace();
 				logger.error(e.getMessage());
 			} catch (Exception e){
+				operateLogBiz.info(OperateLogType.FILE_MANAGE, fmer.getId(),fmer.getFileDisplayname(), "文件修改失败");
 				msg = "false";
 				e.printStackTrace();
 				logger.error(e.getMessage());
@@ -815,6 +823,13 @@ public class FileLoadAction extends BaseAction{
 		this.dictionaryConfigBiz = dictionaryConfigBiz;
 	}
 	
+	public OperateLogBiz getOperateLogBiz() {
+		return operateLogBiz;
+	}
+	public void setOperateLogBiz(OperateLogBiz operateLogBiz) {
+		this.operateLogBiz = operateLogBiz;
+	}
+
 	public FileManager getFm() {
 		return fm;
 	}

@@ -7,9 +7,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
+
 import com.chz.smartoa.common.base.BaseAction;
 import com.chz.smartoa.common.base.DataGrid;
 import com.chz.smartoa.fileUpload.pojo.FileManager;
@@ -18,8 +20,10 @@ import com.chz.smartoa.fileUpload.service.FileGroupBiz;
 import com.chz.smartoa.fileUpload.service.FileManagerBiz;
 import com.chz.smartoa.fileUpload.service.RoleFiletypeBiz;
 import com.chz.smartoa.fileUpload.util.FileQuery;
+import com.chz.smartoa.system.constant.OperateLogType;
 import com.chz.smartoa.system.pojo.DictionaryConfig;
 import com.chz.smartoa.system.service.DictionaryConfigBiz;
+import com.chz.smartoa.system.service.OperateLogBiz;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -37,6 +41,8 @@ public class FileManagerAction extends BaseAction{
 	private DictionaryConfigBiz dictionaryConfigBiz;
 	
 	private RoleFiletypeBiz roleFiletypeBiz;
+	
+	private OperateLogBiz operateLogBiz;
 	
 	private FileManager fm;
 	
@@ -313,8 +319,10 @@ public class FileManagerAction extends BaseAction{
 		try {
 			String[]arrMainId = mainIds.split(",");
 			fileManagerBiz.deleteFileManager(arrMainId, Integer.valueOf(3));
+			operateLogBiz.info(OperateLogType.FILE_MANAGE, mainIds,null, "文件删除成功");
 			msg ="true";
 		} catch (Exception e) {
+			operateLogBiz.info(OperateLogType.FILE_MANAGE, mainIds,null, "文件删除失败");
 			logger.error(e.getMessage());
 			msg = "false";
 		}
@@ -335,8 +343,10 @@ public class FileManagerAction extends BaseAction{
 		try {
 			String[]arrMainId = mainIds.split(",");
 			fileManagerBiz.toUnorPublic(arrMainId,Integer.valueOf(1));
+			operateLogBiz.info(OperateLogType.FILE_MANAGE, mainIds,null, "文件公开成功");
 			msg = "true";
 		} catch (Exception e) {
+			operateLogBiz.info(OperateLogType.FILE_MANAGE, mainIds,null, "文件公开失败");
 			msg = "false";
 			logger.error(e.getMessage());
 		}
@@ -351,8 +361,10 @@ public class FileManagerAction extends BaseAction{
 		try {
 			String[]arrMainId = mainIds.split(",");
 			fileManagerBiz.toUnorPublic(arrMainId,Integer.valueOf(2));
+			operateLogBiz.info(OperateLogType.FILE_MANAGE, mainIds,null, "文件不公开成功");
 			msg = "true";
 		} catch (Exception e) {
+			operateLogBiz.info(OperateLogType.FILE_MANAGE, mainIds,null, "文件不公开失败");
 			msg = "false";
 			logger.error(e.getMessage());
 		}
@@ -558,6 +570,13 @@ public class FileManagerAction extends BaseAction{
 	}
 	public void setRoleFiletypeBiz(RoleFiletypeBiz roleFiletypeBiz) {
 		this.roleFiletypeBiz = roleFiletypeBiz;
+	}
+
+	public OperateLogBiz getOperateLogBiz() {
+		return operateLogBiz;
+	}
+	public void setOperateLogBiz(OperateLogBiz operateLogBiz) {
+		this.operateLogBiz = operateLogBiz;
 	}
 
 	public FileManager getFm() {
