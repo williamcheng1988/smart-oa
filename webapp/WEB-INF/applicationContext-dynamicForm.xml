@@ -47,21 +47,25 @@
 	<bean id="formTemplateTypeAction" class="com.chz.smartoa.dynamicForm.action.FormTemplateTypeAction" scope="prototype">
 		<property name="dynamicFormBiz" ref="dynamicFormBiz"/>
 		<property name="resourceBiz" ref="resourceBiz"/>
+		<property name="operateLogBiz" ref="operateLogBiz"/>
 	</bean>
 	
 	<bean id="formTemplateAction" class="com.chz.smartoa.dynamicForm.action.FormTemplateAction" scope="prototype">
 		<property name="dynamicFormBiz" ref="dynamicFormBiz"/>
 		<property name="dictionaryConfigBiz" ref="dictionaryConfigBiz"/>
 		<property name="resourceBiz" ref="resourceBiz"/>
+		<property name="operateLogBiz" ref="operateLogBiz"/>
 	</bean>
 	
 	<bean id="formAction" class="com.chz.smartoa.dynamicForm.action.FormAction" scope="prototype">
 		<property name="dynamicFormBiz" ref="dynamicFormBiz"/>
 		<property name="dictionaryConfigBiz" ref="dictionaryConfigBiz"/>
+		<property name="operateLogBiz" ref="operateLogBiz"/>
 	</bean>
 	<bean id="formStatisticsAction" class="com.chz.smartoa.dynamicForm.action.FormStatisticsAction" scope="prototype">
 		<property name="dynamicFormBiz" ref="dynamicFormBiz"/>
 		<property name="staffBenefitsBiz" ref="staffBenefitsBiz"/>
+		<property name="operateLogBiz" ref="operateLogBiz"/>
 	</bean>
 	<!-- ================= action ======end========================-->
 	

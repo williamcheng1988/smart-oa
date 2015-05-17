@@ -174,3 +174,9 @@
 .icon-computer_edit{
 	background:url('icons/computer_edit.png') no-repeat center center;
 }
+.icon-expand{
+	background:url('icons/expand.png') no-repeat center center;
+}
+.icon-collapse{
+	background:url('icons/collapse.png') no-repeat center center;
+}

@@ -13,7 +13,7 @@
 </head>
 <body>
 	<table id="dg" class="easyui-datagrid" style="width:100%;height:auto;"
-			data-options="url:'formTemplate!listData.do',remoteSort:false,multiSort:true,rownumbers:true,singleSelect:true,border:false,method:'get',toolbar:'#tb',autoRowHeight:false,pagination:true,pageSize:10">
+			data-options="remoteSort:false,multiSort:true,rownumbers:true,singleSelect:true,border:false,method:'get',toolbar:'#tb',autoRowHeight:false,pagination:true,pageSize:10">
 		<thead>
 			<tr>
 				<th data-options="field:'id',checkbox:true"></th>
@@ -91,11 +91,15 @@
 					queryData;  
 			}
 		});
-		//var typeId = $('#formTemplateType').combobox('getValue');
+		
 		var typeId = '$formTemplate.typeId';
-		if(typeId && typeId!=undefined){
-			$('#dg').datagrid('load',{'formTemplate.typeId':typeId});
-		}
+		//if(typeId && typeId!=undefined){
+		//	$('#dg').datagrid('load',{'formTemplate.typeId':typeId});
+		//}
+		
+		$('#dg').datagrid({
+			url:'formTemplate!listData.do'+(typeId?('?formTemplate.typeId='+typeId):'')
+		});
 	});
 	
 	function formatStatus(val,row){

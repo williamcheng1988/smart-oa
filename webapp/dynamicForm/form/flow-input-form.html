@@ -1,7 +1,8 @@
-
 #set ( $formTemplate = ${formMap.get("formTemplate")} )
-<script type="text/javascript" src="widgets/loader/jgxLoader-min.js"></script>
-<script type="text/javascript" src="widgets/xform/view-xform-all-min.js"></script>
+<script type="text/javascript">
+#include('widgets/loader/jgxLoader-min.js')
+#include('widgets/xform/view-xform-all-min.js')
+</script>
 
 <script type="text/javascript">
 	var countOfUserSelection=100;
@@ -34,6 +35,8 @@
 	<div id="xf-form-tables"></div>
 </div>
 <!-- These JS Files should load at the end of the file -->
-<script type="text/javascript" src="widgets/userselection/userselection-min.js"></script>
-<script type="text/javascript" src="widgets/proselection/proselection-min.js"></script>
-<script type="text/javascript" src="widgets/calculator/calculator-min.js"></script>
+<script type="text/javascript">
+#include('widgets/userselection/userselection-min.js')
+#include('widgets/proselection/proselection-min.js')
+#include('widgets/calculator/calculator-min.js')
+</script>

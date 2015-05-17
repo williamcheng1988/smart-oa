@@ -3,14 +3,26 @@
 <HEAD>
 <title>任务申请</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<script type="text/javascript" src="jquery.min.js"></script>
+	<!-- <script type="text/javascript" src="jquery.min.js"></script> -->
 	<link id="easyuiTheme" rel="stylesheet" type="text/css" href="themes/default/easyui.css">
-	<script type="text/javascript" charset="UTF-8" src="themes/themes.js"></script>
+	<!-- <script type="text/javascript" charset="UTF-8" src="themes/themes.js"></script> -->
 	<link rel="stylesheet" type="text/css" href="themes/icon.css">
-	<link rel="stylesheet" type="text/css" href="css/smart.css">
-	<script type="text/javascript" src="jquery.easyui.min.js"></script>
+	<!-- <link rel="stylesheet" type="text/css" href="css/smart.css"> -->
+	<!-- <script type="text/javascript" src="jquery.easyui.min.js"></script>
 	<script type="text/javascript" src="locale/easyui-lang-zh_CN.js"></script> 
-	<script type="text/javascript" src="filemanager.js"></script> 
+	<script type="text/javascript" src="filemanager.js"></script>  -->
+	
+	<style type="text/css">
+	#include('css/smart.css')
+	</style>
+	
+	<script type="text/javascript">
+	#include('jquery.min.js')
+	#include('themes/themes.js')
+	#include('jquery.easyui.min.js')
+	#include('locale/easyui-lang-zh_CN.js')
+	#include('filemanager.js')
+	</script>
 </HEAD>
 <body>
 <input type="hidden" id="templateId" value="$!formTemplateId" />

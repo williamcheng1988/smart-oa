@@ -1,5 +1,5 @@
-<script type="text/javascript" src="widgets/loader/jgxLoader-min.js"></script>
 <script type="text/javascript">
+#include('widgets/loader/jgxLoader-min.js')
 var xf_f_flow_view;   //流程查看
 var UserSelection_new_inner_html='';
 </script>
@@ -116,7 +116,6 @@ var UserSelection_new_inner_html='';
 <div id="ui_mask" style="display:none" class="datagrid-mask"></div>
 <div id="ui_mask_msg" style="display:none; left: 50%; height: 16px; margin-left: -85.5px; line-height: 16px;" class="datagrid-mask-msg">正在处理，请稍待。。。</div>
 <script type="text/javascript">
-
 $(function(){
 	initCloneArea();
 	
@@ -389,5 +388,7 @@ $(function (){
 });
 </script>
 <!-- These JS Files should load at the end of the file -->
-<script type="text/javascript" src="widgets/userselection/userselection-min.js"></script>
-<script type="text/javascript" src="widgets/proselection/proselection-min.js"></script>
+<script type="text/javascript">
+#include('widgets/userselection/userselection-min.js')
+#include('widgets/proselection/proselection-min.js')
+</script>

@@ -1,5 +1,5 @@
-<script type="text/javascript" src="widgets/loader/jgxLoader-min.js"></script>
 <script type="text/javascript">
+#include('widgets/loader/jgxLoader-min.js')
 var xf_f_flow_view;   //流程查看
 var UserSelection_new_inner_html='';
 </script>
@@ -463,5 +463,7 @@ $(function (){
 });
 </script>
 <!-- These JS Files should load at the end of the file -->
-<script type="text/javascript" src="widgets/userselection/userselection-min.js"></script>
-<script type="text/javascript" src="widgets/proselection/proselection-min.js"></script>
+<script type="text/javascript">
+#include('widgets/userselection/userselection-min.js')
+#include('widgets/proselection/proselection-min.js')
+</script>

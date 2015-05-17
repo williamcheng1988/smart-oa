@@ -2289,7 +2289,7 @@ xf.field.DatePicker.prototype.display = function() {
 	if(xf_f_flow_view){
 		html += (this.value ? this.value : '');
 	}else{
-		html += '<input class="easyui-datebox" name="' + this.name + '" '+ (this.readOnly ? 'readOnly="" ' : '') + ' value="' + (this.value ? this.value : '') +'"'
+		html += '<input class="easyui-datebox" data-options="editable:false" name="' + this.name + '" '+ (this.readOnly ? 'readOnly="" ' : '') + ' value="' + (this.value ? this.value : '') +'"'
 		+ (this.required?'required ':'')+'></input>';
 	}
 	html += '</div>';
@@ -2645,8 +2645,8 @@ xf.field.ProSelection.prototype.viewForm = function(formNode) {
 	formNode.innerHTML = '';
 	xf.createField(xf.field.attrName(), this.name, this.updateName, this, formNode);
 	xf.createField(xf.field.attrAlias(), this.alias, this.updateAlias, this, formNode);
-	xf.createSelect(xf.field.attrDic(), this.dic, this.updateDic, this, formNode);
-	xf.createField(xf.field.attrItems(), this.items, this.updateItems, this, formNode);
+	//xf.createSelect(xf.field.attrDic(), this.dic, this.updateDic, this, formNode);
+	//xf.createField(xf.field.attrItems(), this.items, this.updateItems, this, formNode);
 	xf.createBooleanField(xf.field.attrRequired(), this.required, this.updateRequired, this, formNode);
 	xf.createBooleanField(xf.field.attrReadOnly(), this.readOnly, this.updateReadOnly, this, formNode);
 	//Add by William
