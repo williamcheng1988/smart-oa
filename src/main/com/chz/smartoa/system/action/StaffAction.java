@@ -449,7 +449,7 @@ public class StaffAction extends BaseAction {
 		}
 		this.staffBiz.deleteStaffs(loginNames);
 		this.operateResult = new OperateResult(1, "用户注销成功!");
-		this.operateLogBiz.info(OperateLogType.STAFF_MANAGE, this.loginName,this.loginName, "用户注销成功！");
+		//this.operateLogBiz.info(OperateLogType.STAFF_MANAGE, this.loginName,this.loginName, "用户注销成功！");
 		return BaseAction.OPER_RESULT;
 	}
 
