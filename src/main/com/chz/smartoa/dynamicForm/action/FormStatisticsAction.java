@@ -31,6 +31,8 @@ import com.chz.smartoa.dynamicForm.util.ReflectUtils;
 import com.chz.smartoa.form.constants.FormStatus;
 import com.chz.smartoa.global.ServerInfo;
 import com.chz.smartoa.system.action.OperateResult;
+import com.chz.smartoa.system.constant.OperateLogType;
+import com.chz.smartoa.system.service.OperateLogBiz;
 
 /**
  * 表单管理类
@@ -58,6 +60,11 @@ public class FormStatisticsAction extends BaseAction {
 	//dynamicFormBiz
 	DynamicFormBiz dynamicFormBiz;
 	StaffBenefitsBiz staffBenefitsBiz;
+	
+	private OperateLogBiz operateLogBiz;
+	public void setOperateLogBiz(OperateLogBiz operateLogBiz) {
+		this.operateLogBiz = operateLogBiz;
+	}
 	public StaffBenefitsBiz getStaffBenefitsBiz() {
 		return staffBenefitsBiz;
 	}
@@ -247,7 +254,8 @@ public class FormStatisticsAction extends BaseAction {
 		String json = js.toString();
 		
 		entry = json;
-		
+
+		operateLogBiz.info(OperateLogType.FORM_STATISTICS,this.formTemplate.getId(),formTemplate.getName(), "查询成功");
 		return ENTRY;
 	}
 	
@@ -284,9 +292,11 @@ public class FormStatisticsAction extends BaseAction {
 			
 			Exportor excelExportor = (Exportor)ServerInfo.getBean("excelExportor");
 			excelExportor.export(getHttpServletResponse(),formTemplate,true);
+			operateLogBiz.info(OperateLogType.FORM_STATISTICS,this.formTemplate.getId(),formTemplate.getName(), "导出成功");
 		} catch (ExportErrorException e) {
 			String msg = e.getMessage();
 			operateResult = new OperateResult(-1, "导出出现错误："+msg);
+			operateLogBiz.info(OperateLogType.FORM_STATISTICS,this.formTemplate.getId(),formTemplate.getName(), "导出失败");
 			return OPER_RESULT;
 		}
         

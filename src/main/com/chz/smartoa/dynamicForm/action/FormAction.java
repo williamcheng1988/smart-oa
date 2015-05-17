@@ -30,9 +30,11 @@ import com.chz.smartoa.global.ServerInfo;
 import com.chz.smartoa.system.action.OperateResult;
 import com.chz.smartoa.system.action.ResultEntry;
 import com.chz.smartoa.system.constant.DictionaryConstants;
+import com.chz.smartoa.system.constant.OperateLogType;
 import com.chz.smartoa.system.pojo.DictionaryConfig;
 import com.chz.smartoa.system.pojo.Staff;
 import com.chz.smartoa.system.service.DictionaryConfigBiz;
+import com.chz.smartoa.system.service.OperateLogBiz;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -65,6 +67,11 @@ public class FormAction extends BaseAction {
 	FormRecord formRecord = new FormRecord();
 	
 	DictionaryConfigBiz dictionaryConfigBiz;
+	
+	private OperateLogBiz operateLogBiz;
+	public void setOperateLogBiz(OperateLogBiz operateLogBiz) {
+		this.operateLogBiz = operateLogBiz;
+	}
 	
 	private String saveUrl = null;
 	
@@ -204,16 +211,19 @@ public class FormAction extends BaseAction {
 		try{
 			if(StringUtils.isEmpty(this.saveType)){
 				this.setErrorMsg("保存失败！保存类型为空！");
+				operateLogBiz.info(OperateLogType.FORM,formRecord.getId(),formRecord.getTitle(), "新增失败");
 				return get();
 			}else if("Draft".equalsIgnoreCase(this.saveType)){
 				//表单信息保存为：草稿
 				formRecord.setStatus(FormStatus.DRAFT.value);
 				dynamicFormBiz.insertForm(formRecord);
+				operateLogBiz.info(OperateLogType.FORM,formRecord.getId(),formRecord.getTitle(), "新增成功");
 				this.setSuccessMsg("保存草稿成功!");
 			}else if("Submit".equalsIgnoreCase(this.saveType)){
 				//表单信息保存为：提交
 				formRecord.setStatus(FormStatus.NORMAL.value);
 				dynamicFormBiz.insertForm(formRecord);
+				operateLogBiz.info(OperateLogType.FORM,formRecord.getId(),formRecord.getTitle(), "新增成功");
 				this.setSuccessMsg("提交成功!");
 			}
 		}catch(Exception e){
@@ -272,16 +282,19 @@ public class FormAction extends BaseAction {
 		
 		if(StringUtils.isEmpty(this.saveType)){
 			this.setErrorMsg("保存失败！保存类型为空！");
+			operateLogBiz.info(OperateLogType.FORM,formRecord.getId(),formRecord.getTitle(), "更新失败");
 			return get();
 		}else if("Draft".equalsIgnoreCase(this.saveType)){
 			//表单信息保存为：草稿
 			formRecord.setStatus(FormStatus.DRAFT.value);
 			dynamicFormBiz.updateForm(formRecord);
+			operateLogBiz.info(OperateLogType.FORM,formRecord.getId(),formRecord.getTitle(), "更新成功");
 			this.setSuccessMsg("保存草稿成功!");
 		}else if("Submit".equalsIgnoreCase(this.saveType)){
 			//表单信息保存为：提交
 			formRecord.setStatus(FormStatus.NORMAL.value);
 			dynamicFormBiz.updateForm(formRecord);
+			operateLogBiz.info(OperateLogType.FORM,formRecord.getId(),formRecord.getTitle(), "更新成功");
 			this.setSuccessMsg("提交成功!");
 		}
 		

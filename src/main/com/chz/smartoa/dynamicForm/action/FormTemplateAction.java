@@ -24,9 +24,11 @@ import com.chz.smartoa.form.constants.FormStatus;
 import com.chz.smartoa.system.action.OperateResult;
 import com.chz.smartoa.system.action.ResultEntry;
 import com.chz.smartoa.system.constant.DictionaryConstants;
+import com.chz.smartoa.system.constant.OperateLogType;
 import com.chz.smartoa.system.pojo.DictionaryConfig;
 import com.chz.smartoa.system.pojo.Staff;
 import com.chz.smartoa.system.service.DictionaryConfigBiz;
+import com.chz.smartoa.system.service.OperateLogBiz;
 import com.chz.smartoa.system.service.ResourceBiz;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -53,6 +55,11 @@ public class FormTemplateAction extends BaseAction {
 	DynamicFormBiz dynamicFormBiz;
 	
 	DictionaryConfigBiz dictionaryConfigBiz;
+	
+	private OperateLogBiz operateLogBiz;
+	public void setOperateLogBiz(OperateLogBiz operateLogBiz) {
+		this.operateLogBiz = operateLogBiz;
+	}
 	
 	ResourceBiz resourceBiz;
 	
@@ -188,12 +195,14 @@ public class FormTemplateAction extends BaseAction {
 				formTemplate.setDynamicForm("T");
 				//新增模板记录
 				dynamicFormBiz.insertFormTemplate(formTemplate);
-				
+				operateLogBiz.info(OperateLogType.FORM_TEMP,id,name, "添加成功");
 				operateResult =  new OperateResult(1, "添加模板成功！");
 			}else{
+				operateLogBiz.info(OperateLogType.FORM_TEMP,id,name, "新增失败");
 				operateResult =  new OperateResult(-1, "添加模板失败！");
 			}
 		}else{
+			operateLogBiz.info(OperateLogType.FORM_TEMP,"","", "新增失败");
 			operateResult =  new OperateResult(-1, "添加模板失败！");
 		}
 		
@@ -217,6 +226,7 @@ public class FormTemplateAction extends BaseAction {
 			//record.setFormTemplateId(id);
 			if(dynamicFormBiz.listFormRecordCount(id)>0){
 				canDelete = false;
+				operateLogBiz.info(OperateLogType.FORM_TEMP,id,id, "删除失败-已被引用");
 				operateResult = new OperateResult(-1, "删除失败！ 该模板["+id+"]已被引用,暂无法删除!");
 				break;
 			}
@@ -227,6 +237,7 @@ public class FormTemplateAction extends BaseAction {
 		}
 		
 		dynamicFormBiz.deleteFormTemplates(selectedItem,true);
+		operateLogBiz.info(OperateLogType.FORM_TEMP,entityKeys,entityKeys, "删除成功");
 		operateResult = new OperateResult(1, "删除模板成功！");
 				
 		return OPER_RESULT;
@@ -273,9 +284,11 @@ public class FormTemplateAction extends BaseAction {
 			
 			//更新记录
 			dynamicFormBiz.updateFormTemplate(formTemplate);
-			
+
+			operateLogBiz.info(OperateLogType.FORM_TEMP,formTemplate.getId(),formTemplate.getName(), "更新成功");
 			operateResult =  new OperateResult(1, "更新模板成功！");
 		}catch(Exception e){
+			operateLogBiz.info(OperateLogType.FORM_TEMP,formTemplate.getId(),formTemplate.getName(), "更新失败");
 			operateResult =  new OperateResult(-1, "更新模板失败！");
 		}
 		

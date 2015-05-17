@@ -15,8 +15,10 @@ import com.chz.smartoa.dynamicForm.pojo.FormTemplateType;
 import com.chz.smartoa.dynamicForm.service.DynamicFormBiz;
 import com.chz.smartoa.dynamicForm.util.StringUtils;
 import com.chz.smartoa.system.action.OperateResult;
+import com.chz.smartoa.system.constant.OperateLogType;
 import com.chz.smartoa.system.pojo.Resource;
 import com.chz.smartoa.system.pojo.Staff;
+import com.chz.smartoa.system.service.OperateLogBiz;
 import com.chz.smartoa.system.service.ResourceBiz;
 
 /**
@@ -45,6 +47,11 @@ public class FormTemplateTypeAction extends BaseAction {
 	FormTemplateType formTemplateType = new FormTemplateType();
 	
 	List<FormTemplateType> formTemplateTypes;
+	
+	private OperateLogBiz operateLogBiz;
+	public void setOperateLogBiz(OperateLogBiz operateLogBiz) {
+		this.operateLogBiz = operateLogBiz;
+	}
 	
 	private List<String> typeIds = new ArrayList<String>();
 	private String entityKeys;
@@ -107,7 +114,6 @@ public class FormTemplateTypeAction extends BaseAction {
 	 */
 	public String insert(){
 		logger.debug("进入FormTemplateTypeAction>>insert>>isdo:"+isdo);
-		
 		if(isdo!=1){
 			return beforeInsert();
 		}
@@ -119,6 +125,7 @@ public class FormTemplateTypeAction extends BaseAction {
 		ftt.setType(formTemplateType.getType());
 		
 		if(dynamicFormBiz.findFormTemplateType(ftt)!=null){
+			operateLogBiz.info(OperateLogType.FORM_TEMP_TYPE,"",formTemplateType.getType(), "新增失败-已存在");
 			operateResult = new OperateResult(-1, "该模板类型己存在!");
 			return OPER_RESULT;
 		}
@@ -131,6 +138,8 @@ public class FormTemplateTypeAction extends BaseAction {
 		formTemplateType.setId(UUID.randomUUID().toString());
 		//调用插入数据方法
 		dynamicFormBiz.insertFormTemplateType(formTemplateType);
+
+		operateLogBiz.info(OperateLogType.FORM_TEMP_TYPE,formTemplateType.getId(),formTemplateType.getType(), "新增成功");
 		
 		operateResult = new OperateResult(1, "添加模板类型成功！");
 		
@@ -157,6 +166,7 @@ public class FormTemplateTypeAction extends BaseAction {
 			if(dynamicFormBiz.listFormTemplateCount(ft)>0){
 				canDelete = false;
 				operateResult = new OperateResult(-1, "删除失败！ 该模板类型ID["+id+"]已被引用,暂无法删除!");
+				operateLogBiz.info(OperateLogType.FORM_TEMP_TYPE,id,id, "删除失败-已被引用");
 				break;
 			}
 			typeIds.add(id);
@@ -165,7 +175,7 @@ public class FormTemplateTypeAction extends BaseAction {
 			return OPER_RESULT;
 		}
 		dynamicFormBiz.deleteFormTemplateType(typeIds);
-		
+		operateLogBiz.info(OperateLogType.FORM_TEMP_TYPE,entityKeys,entityKeys, "删除成功");
 		operateResult = new OperateResult(1, "删除模板类型成功！");
 		return OPER_RESULT;
 	}
@@ -206,12 +216,14 @@ public class FormTemplateTypeAction extends BaseAction {
 		ftt.setType(formTemplateType.getType());
 		FormTemplateType fttExist = dynamicFormBiz.findFormTemplateType(ftt);
 		if(fttExist!=null && (!fttExist.getId().equals(formTemplateType.getId()))){
+			operateLogBiz.info(OperateLogType.FORM_TEMP_TYPE,formTemplateType.getId(),formTemplateType.getType(), "更新失败-该模板类型己存在!");
 			operateResult = new OperateResult(-1, "该模板类型己存在!");
 			return OPER_RESULT;
 		}
 		
 		//调用更新数据方法
 		dynamicFormBiz.updateFormTemplateType(formTemplateType);
+		operateLogBiz.info(OperateLogType.FORM_TEMP_TYPE,formTemplateType.getId(),formTemplateType.getType(), "更新成功");
 		operateResult = new OperateResult(1, "更新模板类型成功！");
 		
 		//返回模板列表页面
