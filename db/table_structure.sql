@@ -75,16 +75,19 @@ alter table t_post add primary key (post_id);
 -- 岗位关系表
 create table t_department_post_staff
 (
+  id               int(10)  not null primary key auto_increment,
   dept_id          varchar(64) not null,
   post_id          varchar(64) not null,
   staff_ids        varchar(20) not null,
-	create_user      varchar(20) not null,
+  create_user      varchar(20) not null,
   create_date      datetime not null,
   last_update_date datetime
 );
-alter table t_department_post_staff add primary key (dept_id,post_id);
+
+create unique index idx_t_department_post_staff on t_department_post_staff (dept_id,post_id);
 alter table t_department_post_staff add foreign key (dept_id) references t_department (department_id) on delete cascade on update cascade;
 alter table t_department_post_staff add foreign key (post_id) references t_post (post_id) on delete cascade on update cascade;
+
 
 -- prompt creating t_role
 create table t_role
