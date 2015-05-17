@@ -14,5 +14,9 @@ public enum OperateLogType {
 	ROLE_MANAGE,//角色管理
 	PROCESS_MANAGE,//流程管理
 	FLOW_MANAGE,//运行中的流程管理
+	FILE_MANAGE, // 文件管理
+	DICTIONARY_MANAGE,  // 字典管理
+	DEP_POST_STAFF_MANAGE, // 用户岗位管理
+	POST_MANAGE,  // 岗位管理
 	TASK_MANAGE;//任务管理
 }
