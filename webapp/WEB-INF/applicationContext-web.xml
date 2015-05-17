@@ -194,6 +194,7 @@
 	<!-- 字典配置 -->
 	<bean id="dictionaryAction" class="com.chz.smartoa.system.action.DictionaryConfigAction" scope="prototype">
 		<property name="dictionaryConfigBiz" ref="dictionaryConfigBiz"/>
+		<property name="operateLogBiz" ref="operateLogBiz"/>
 	</bean>
 	<!-- ================= action ======end========================-->
 </beans>

@@ -100,11 +100,13 @@
 		<property name="dictionaryConfigBiz" ref="dictionaryConfigBiz"/>
 		<property name="fileGroupBiz" ref="fileGroupBiz"/>
 		<property name="roleFiletypeBiz" ref="roleFiletypeBiz"/>
+		<property name="operateLogBiz" ref="operateLogBiz"/>
 	</bean>
 	<bean id="fileLoadAction" class="com.chz.smartoa.fileUpload.action.FileLoadAction" scope="prototype">
 		<property name="fileManagerBiz" ref="fileManagerBiz"/>
 		<property name="dictionaryConfigBiz" ref="dictionaryConfigBiz"/>
 		<property name="fileGroupBiz" ref="fileGroupBiz"/>
+		<property name="operateLogBiz" ref="operateLogBiz"/>
 	</bean>
 	<bean id="afficheInfoAction" class="com.chz.smartoa.system.action.AfficheInfoAction" scope="prototype">
 		<property name="afficheInfoBiz" ref="afficheInfoBiz"/>
@@ -122,15 +124,18 @@
 	
 	<bean id="departmentAction" class="com.chz.smartoa.system.action.DepartmentAction" scope="prototype">
 		<property name="departmentBiz" ref="departmentBiz"/>
+		<property name="operateLogBiz" ref="operateLogBiz"/>
 	</bean>
 	
 	<bean id="postAction" class="com.chz.smartoa.system.action.PostAction" scope="prototype">
 		<property name="postBiz" ref="postBiz"/>
+		<property name="operateLogBiz" ref="operateLogBiz"/>
 	</bean>
 	
 	<bean id="departmentPostAction" class="com.chz.smartoa.system.action.DepartmentPostAction" scope="prototype">
 		<property name="departmentPostBiz" ref="departmentPostBiz"/>
 		<property name="departmentBiz" ref="departmentBiz"/>
+		<property name="operateLogBiz" ref="operateLogBiz"/>
 	</bean>
 	<!-- ================= action ======end========================-->
 	

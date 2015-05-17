@@ -48,5 +48,8 @@
  
   <!-- WorkPlanManager config -->
  <sqlMap resource="com/chz/smartoa/system/dao/ibatis/maps/WorkPlanSQL.xml" />
+ 
+ <!-- WorkPlanManager config -->
+ <sqlMap resource="com/chz/smartoa/system/dao/ibatis/maps/DepartmentSQL.xml" />
 	 
 </sqlMapConfig>
