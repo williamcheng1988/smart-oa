@@ -1,5 +1,7 @@
 package com.chz.smartoa.system.pojo;
 
+import java.util.List;
+
 import com.chz.smartoa.common.base.BaseDomain;
 
 /**
@@ -46,6 +48,10 @@ public class Department extends BaseDomain {
 	 * 状态：1有效，0失效
 	 */
 	private int status;
+	
+	private String id;
+	
+	private List<Department> departmentList;
 
 	public String getDepartmentId() {
 		return this.departmentId;
@@ -115,7 +121,24 @@ public class Department extends BaseDomain {
 	public void setParentId(String parentId) {
 		this.parentId = parentId;
 	}
+	
+	public List<Department> getDepartmentList() {
+		return departmentList;
+	}
 
+	public void setDepartmentList(List<Department> departmentList) {
+		this.departmentList = departmentList;
+	}
+	
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
 		sb.append("{");

@@ -19,7 +19,7 @@ public class Post extends BaseDomain {
 	/**
 	 * 岗位名称.
 	 */
-	private String departmentName;
+	private String postName;
 	/**
 	 * 组织创建时间.
 	 */
@@ -41,11 +41,11 @@ public class Post extends BaseDomain {
 	public void setCreateUser(String createUser) {
 		this.createUser = createUser;
 	}
-	public String getDepartmentName() {
-		return departmentName;
+	public String getPostName() {
+		return postName;
 	}
-	public void setDepartmentName(String departmentName) {
-		this.departmentName = departmentName;
+	public void setPostName(String postName) {
+		this.postName = postName;
 	}
 	public String getCreateDate() {
 		return createDate;

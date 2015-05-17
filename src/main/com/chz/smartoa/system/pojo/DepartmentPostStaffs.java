@@ -10,6 +10,8 @@ public class DepartmentPostStaffs extends BaseDomain {
 	
 	private static final long serialVersionUID = 1L;
 	
+	private Integer id;
+	
 	//部门ID
 	private String departmentId;
 	//部门名称 
@@ -20,7 +22,19 @@ public class DepartmentPostStaffs extends BaseDomain {
 	private String postName;
 	//用户账号，多个账号以英文逗号分隔
 	private String staffIds;
+	private String createUser;
+	private String createDate;
+	private String lastUpdateDate;
 	
+	
+	
+	
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
 	public String getDepartmentId() {
 		return departmentId;
 	}
@@ -51,4 +65,25 @@ public class DepartmentPostStaffs extends BaseDomain {
 	public void setStaffIds(String staffIds) {
 		this.staffIds = staffIds;
 	}
+	
+	public String getCreateUser() {
+		return createUser;
+	}
+	public void setCreateUser(String createUser) {
+		this.createUser = createUser;
+	}
+	public String getCreateDate() {
+		return createDate;
+	}
+	public void setCreateDate(String createDate) {
+		this.createDate = createDate;
+	}
+	public String getLastUpdateDate() {
+		return lastUpdateDate;
+	}
+	public void setLastUpdateDate(String lastUpdateDate) {
+		this.lastUpdateDate = lastUpdateDate;
+	}
+
+	
 }
