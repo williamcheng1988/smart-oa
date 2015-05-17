@@ -21,7 +21,7 @@
 			    <th width="40%" align="right">用户账号：</td>
 			    <td width="60%" align="left" style="border:none;">
 			    	<select id="staffIds" name="dps.staffIds" class="easyui-combobox" data-options="multiple:true" style="width: 132px;">
-    					<option value="">&nbsp;</option>
+    					<!-- <option value="">&nbsp;</option> -->
 						#optionTag("NORMAL_USERS")
 					</select> 
 			    	<input name="dps.id" value="$!dps.id" type="hidden">
@@ -63,15 +63,16 @@
 	<div id="ui_mask_msg" style="display:none; left: 50%; height: 16px; margin-left: -85.5px; line-height: 16px;" class="datagrid-mask-msg">正在处理，请稍待。。。</div>
 <script>
 
-
+$(function (){
+	var staffIds = '$!staffIds';
+	var ids = staffIds?staffIds.split(','):[];
 	$('#ff').form('load',{
 		'dps.id':"$!dps.id",
-		'dps.staffIds':"$!staffIds",
+		'dps.staffIds':ids,
 		'departmentName':"$!departmentName",
 		'dps.postId':"$!postId"
 	});
-
-	
+});
 
 	function submitForm(){
 		
