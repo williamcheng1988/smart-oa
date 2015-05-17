@@ -2,29 +2,19 @@ package com.chz.smartoa.system.service;
 
 import java.util.List;
 
-import com.chz.smartoa.system.exception.DepartmentHasChildException;
-import com.chz.smartoa.system.exception.DepartmentHasStaffException;
-import com.chz.smartoa.system.exception.DepartmentNotFoundException;
+import com.chz.smartoa.common.base.TreeData;
 import com.chz.smartoa.system.pojo.Department;
 
+
 public interface DepartmentBiz {
-	Department findDepartment(String id);
 	
-	List listDepartment(Department department);
+	public Department findDepartment(String departmentId);
 	
-	List listRecursiveDepartment(Department department);	
+	public List<Department> getDepartmentByParentId(String perentId);
 	
-	int listDepartmentCount(Department department);	
+	public List<TreeData> getDepartmentTreeByParentId(String perentId);
 	
-	Department findDepartmentByName(String name);
+	public void insertDepartment(Department department);
 	
-	String insertDepartment(Department department);
-
-	void updateDepartment(Department department);
-
-	void deleteDepartment(String id) 
-		throws DepartmentHasChildException, 
-			   DepartmentHasStaffException, DepartmentNotFoundException;
-	
-	void assignRole(String id, String[] roleIds);
+	public void updateDepartment(Department department);
 }

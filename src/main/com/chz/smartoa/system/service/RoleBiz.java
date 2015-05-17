@@ -17,6 +17,5 @@ public interface RoleBiz {
 	String insertRole(Role role, String[] operationIds);
 	void updateRole(Role role, String[] operationIds);
 	void updateStaffRole(String staffId, String[] roleIds) throws StaffNotFoundException;	
-	void updateDepartmentRole(String departmentId, String[] roleIds) throws DepartmentNotFoundException;	
 	void deleteRole(String[] ids);
 }
