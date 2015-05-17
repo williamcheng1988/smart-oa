@@ -30,6 +30,18 @@
 	<bean id="roleFiletypeDao" class="com.chz.smartoa.fileUpload.dao.impl.RoleFiletypeDaoImpl">
 		<property name="sqlMapClient" ref="sqlMapClient"/>
 	</bean>
+	
+	<bean id="departmentDao" class="com.chz.smartoa.system.dao.impl.DepartmentDaoImpl">
+		<property name="sqlMapClient" ref="sqlMapClient"/>
+	</bean>
+	
+	<bean id="postDao" class="com.chz.smartoa.system.dao.impl.PostDaoImpl">
+		<property name="sqlMapClient" ref="sqlMapClient"/>
+	</bean>
+	
+	<bean id="departmentPostDao" class="com.chz.smartoa.system.dao.impl.DepartmentPostDaoImpl">
+		<property name="sqlMapClient" ref="sqlMapClient"/>
+	</bean>
 	<!-- ================= Dao ======end========================-->
 	
 	
@@ -65,6 +77,18 @@
 		<property name="roleDao" ref="roleDao"/>
 	</bean>
 	
+	<bean id="departmentBiz" class="com.chz.smartoa.system.service.impl.DepartmentBizImpl">
+		<property name="departmentDao" ref="departmentDao"/>
+	</bean>
+	
+	<bean id="postBiz" class="com.chz.smartoa.system.service.impl.PostBizImpl">
+		<property name="postDao" ref="postDao"/>
+	</bean>
+	
+	<bean id="departmentPostBiz" class="com.chz.smartoa.system.service.impl.DepartmentPostBizImpl">
+		<property name="departmentPostDao" ref="departmentPostDao"/>
+	</bean>
+	
 	<!-- ================= service ======end========================-->
 	
 	
@@ -94,6 +118,18 @@
 	</bean>
 	<bean id="workPlanAction" class="com.chz.smartoa.system.action.WorkPlanAction" scope="prototype">
 		<property name="workPlanBiz" ref="workPlanBiz"/>
+	</bean>
+	
+	<bean id="departmentAction" class="com.chz.smartoa.system.action.DepartmentAction" scope="prototype">
+		<property name="departmentBiz" ref="departmentBiz"/>
+	</bean>
+	
+	<bean id="postAction" class="com.chz.smartoa.system.action.PostAction" scope="prototype">
+		<property name="postBiz" ref="postBiz"/>
+	</bean>
+	
+	<bean id="departmentPostAction" class="com.chz.smartoa.system.action.DepartmentPostAction" scope="prototype">
+		<property name="departmentPostBiz" ref="departmentPostBiz"/>
 	</bean>
 	<!-- ================= action ======end========================-->
 	
