@@ -2,173 +2,165 @@
 <!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
 
 <!-- Always ensure to use the correct XML header as above! -->
-<sqlMap namespace="Department">
-<typeAlias alias="department" type="com.chz.smartoa.system.pojo.Department"/> 
-<resultMap id="department_result" class="department">
-    <result property="departmentId" column="DEPARTMENT_ID"/>
-    <result property="createUser" column="CREATE_USER"/>
-    <result property="departmentName" column="DEPARTMENT_NAME"/>
-    <result property="email" column="EMAIL"/>
-    <result property="createDate" column="CREATE_DATE"/>
-    <result property="departmentDesc" column="DEPARTMENT_DESC"/>
-    <result property="lastUpdateDate" column="LAST_UPDATE_DATE"/>
-    <result property="parentId" column="PARENT_ID"/>
-</resultMap>
+<sqlMap namespace="department">
 
-<insert id="Department_insertDepartment" parameterClass="department" >
-<![CDATA[
-    INSERT INTO t_department (
-            DEPARTMENT_ID, 
-            CREATE_USER, 
-            DEPARTMENT_NAME, 
-            EMAIL, 
-            CREATE_DATE, 
-            DEPARTMENT_DESC, 
-            LAST_UPDATE_DATE, 
-            PARENT_ID
-        )
-    VALUES (
-       		#departmentId#,
-		       		#createUser#,
-		       		#departmentName#,
-		       		#email#,
-		        	str_to_date(#createDate:DATE#,'%Y-%m-%d'),
-		       		#departmentDesc#,
-		        	str_to_date(#lastUpdateDate:DATE#,'%Y-%m-%d'),
-		       		#parentId#
-		    )
-]]>
-</insert>
-
-<delete id="Department_deleteDepartment" parameterClass="java.lang.String">
-<![CDATA[
-    DELETE  FROM  t_department WHERE DEPARTMENT_ID = #departmentId#
-]]>
-</delete>
-
-<update id="Department_updateDepartment" parameterClass="department">
-    UPDATE t_department 
-    SET
-    	DEPARTMENT_ID = #departmentId#
-	<isNotEmpty prepend="," property="createUser">
-     	   		CREATE_USER = #createUser#
-				</isNotEmpty>
-	<isNotEmpty prepend="," property="departmentName">
-     	   		DEPARTMENT_NAME = #departmentName#
-				</isNotEmpty>
-	<isNotEmpty prepend="," property="email">
-     	   		EMAIL = #email#
-				</isNotEmpty>
-	<isNotEmpty prepend="," property="createDate">
-     	    	CREATE_DATE = str_to_date(#createDate:DATE#,'%Y-%m-%d')
-				</isNotEmpty>
-	<isNotEmpty prepend="," property="departmentDesc">
-     	   		DEPARTMENT_DESC = #departmentDesc#
-				</isNotEmpty>
-	<isNotEmpty prepend="," property="lastUpdateDate">
-     	    	LAST_UPDATE_DATE = str_to_date(#lastUpdateDate:DATE#,'%Y-%m-%d')
-				</isNotEmpty>
-	<isNotEmpty prepend="," property="parentId">
-     	   		PARENT_ID = #parentId#
-				</isNotEmpty>
-    WHERE DEPARTMENT_ID = #departmentId#
-</update> 
-
-<select id="Department_findDepartment" resultMap="department_result" parameterClass="string">
-<![CDATA[
-    SELECT
-       		DEPARTMENT_ID,
-		       		CREATE_USER,
-		       		DEPARTMENT_NAME,
-		       		EMAIL,
-		        	date_format(CREATE_DATE,'%Y-%m-%d') CREATE_DATE,
-		       		DEPARTMENT_DESC,
-		        	date_format(LAST_UPDATE_DATE,'%Y-%m-%d') LAST_UPDATE_DATE,
-		       		PARENT_ID
-		    FROM t_department WHERE DEPARTMENT_ID = #departmentId#
-]]>
-</select>
-
-<select id="Department_listDepartment" resultMap="department_result" parameterClass="department">
-<![CDATA[
-    SELECT
-       		DEPARTMENT_ID,
-		       		CREATE_USER,
-		       		DEPARTMENT_NAME,
-		       		EMAIL,
-		        	date_format(CREATE_DATE,'%Y-%m-%d') CREATE_DATE,
-		       		DEPARTMENT_DESC,
-		        	date_format(LAST_UPDATE_DATE,'%Y-%m-%d') LAST_UPDATE_DATE,
-		       		PARENT_ID
-		    FROM t_department
-]]>
-		<dynamic prepend="WHERE">
-			<isNotEmpty prepend="and" property = "departmentId">
-				DEPARTMENT_ID = #departmentId#
-			</isNotEmpty>
-			<isNotEmpty prepend="and" property = "createUser">
-				CREATE_USER = #createUser#
-			</isNotEmpty>
-			<isNotEmpty prepend="and" property = "departmentName">
-				DEPARTMENT_NAME = #departmentName#
-			</isNotEmpty>
-			<isNotEmpty prepend="and" property = "email">
-				EMAIL = #email#
-			</isNotEmpty>
-			<isNotEmpty prepend="and" property = "createDate">
-				CREATE_DATE = #createDate#
-			</isNotEmpty>
-			<isNotEmpty prepend="and" property = "departmentDesc">
-				DEPARTMENT_DESC = #departmentDesc#
-			</isNotEmpty>
-			<isNotEmpty prepend="and" property = "lastUpdateDate">
-				LAST_UPDATE_DATE = #lastUpdateDate#
-			</isNotEmpty>
-			<isNotEmpty prepend="and" property = "parentId">
-				PARENT_ID = #parentId#
-			</isNotEmpty>
-		</dynamic>
-</select>
-
-<select id="Department_listDepartmentPage" resultMap="department_result" parameterClass="java.lang.String">
-<![CDATA[
- $sql$
-]]>
-</select>
-
-
-<select id="Department_listDepartmentCount" resultClass="java.lang.Integer" parameterClass="department">
-<![CDATA[
-    SELECT
-		COUNT(*)
-    FROM t_department
-]]>
-		<dynamic prepend="WHERE">
-			<isNotEmpty prepend="and" property = "departmentId">
-				DEPARTMENT_ID = #departmentId#
-			</isNotEmpty>
-			<isNotEmpty prepend="and" property = "createUser">
-				CREATE_USER = #createUser#
-			</isNotEmpty>
-			<isNotEmpty prepend="and" property = "departmentName">
-				DEPARTMENT_NAME = #departmentName#
-			</isNotEmpty>
-			<isNotEmpty prepend="and" property = "email">
-				EMAIL = #email#
-			</isNotEmpty>
-			<isNotEmpty prepend="and" property = "createDate">
-				CREATE_DATE = #createDate#
-			</isNotEmpty>
-			<isNotEmpty prepend="and" property = "departmentDesc">
-				DEPARTMENT_DESC = #departmentDesc#
-			</isNotEmpty>
-			<isNotEmpty prepend="and" property = "lastUpdateDate">
-				LAST_UPDATE_DATE = #lastUpdateDate#
-			</isNotEmpty>
-			<isNotEmpty prepend="and" property = "parentId">
-				PARENT_ID = #parentId#
-			</isNotEmpty>
-		</dynamic>
-</select>
+	<!-- 部门管理实体类  -->
+	<typeAlias alias="dpt" type="com.chz.smartoa.system.pojo.Department"/>
+	<typeAlias alias="tree" type="com.chz.smartoa.common.base.TreeData"/>
+	<typeAlias alias="pt" type="com.chz.smartoa.system.pojo.Post"/>
+	<typeAlias alias="dps" type="com.chz.smartoa.system.pojo.DepartmentPostStaffs"/>
+	
+	
+	<!-- 新增部门 -->
+	<insert id="dpt_insertDpt" parameterClass="dpt">
+		INSERT INTO T_DEPARTMENT
+		(DEPARTMENT_ID,
+		 DEPARTMENT_NAME,
+		 DEPARTMENT_DESC,
+		 PARENT_ID,
+		 LEVEL,
+		 STATUS,
+		 CREATE_USER,
+		 CREATE_DATE,
+		 LAST_UPDATE_DATE)
+		VALUES
+		(#departmentId#,
+		 #departmentName#,
+		 #departmentDesc#,
+		 #parentId#,
+		 #level#,
+		 #status#,
+		 #createUser#,
+		 SYSDATE(),
+		 SYSDATE())
+	</insert>
+	
+	
+	<!-- 修改部门信息  -->
+	<update id="dpt_updateDpt" parameterClass="dpt">
+		UPDATE T_DEPARTMENT
+		SET DEPARTMENT_NAME = #departmentName#,
+		    DEPARTMENT_DESC = #departmentDesc#,
+		    LEVEL = #level#,
+		    STATUS = #status#,
+		    LAST_UPDATE_DATE = SYSDATE()
+		WHERE DEPARTMENT_ID = #departmentId#
+	</update>
+	
+	
+	<!--  查找部门信息 (根据部门编号) -->
+	<select id="dpt_departmentById" resultClass="dpt" parameterClass="java.lang.String">
+		<![CDATA[
+		    SELECT DEPARTMENT_ID AS departmentId,
+			       DEPARTMENT_NAME AS departmentName,
+				   DEPARTMENT_DESC AS departmentDesc,
+				   PARENT_ID AS parentId,
+				   LEVEL AS level,
+				   STATUS AS status,
+				   CREATE_USER AS createUser,
+				   CREATE_DATE AS createDate,
+				   LAST_UPDATE_DATE AS lastUpdateDate
+			  FROM T_DEPARTMENT 
+			 WHERE DEPARTMENT_ID = #departmentId#
+		]]>
+	</select>
+	
+	
+	<!--  查找部门信息 (根据父ID获取子列表) -->
+	<select id="dpt_departmentByParentId" resultClass="dpt" parameterClass="java.lang.String">
+		<![CDATA[
+		    SELECT DEPARTMENT_ID AS departmentId,
+		    	   DEPARTMENT_ID AS id,
+			       DEPARTMENT_NAME AS departmentName,
+				   DEPARTMENT_DESC AS departmentDesc,
+				   PARENT_ID AS parentId,
+				   LEVEL AS level,
+				   STATUS AS status,
+				   CREATE_USER AS createUser,
+				   CREATE_DATE AS createDate,
+				   LAST_UPDATE_DATE AS lastUpdateDate
+			  FROM T_DEPARTMENT 
+			 WHERE PARENT_ID = #parentId#
+		]]>
+	</select>
+	
+	
+	<!--  查找部门信息 (根据父ID获取子列表) -->
+	<select id="dpt_departmentTreeByParentId" resultClass="tree" parameterClass="java.lang.String">
+		<![CDATA[
+		    SELECT DEPARTMENT_ID id,
+			       DEPARTMENT_NAME text
+			  FROM T_DEPARTMENT 
+			 WHERE PARENT_ID = #parentId#
+		]]>
+	</select>
+	
+	
+	
+	<!-- 新增岗位 -->
+	<insert id="pt_insertPost" parameterClass="pt">
+		INSERT INTO T_POST
+		(POST_ID,
+		 POST_NAME,
+		 CREATE_USER,
+		 CREATE_DATE,
+		 LAST_UPDATE_DATE)
+		VALUES
+		(#postId#,
+		 #postName#,
+		 #createUser#,
+		 SYSDATE(),
+		 SYSDATE())
+	</insert>
+	
+	
+	<!--  查找所有岗位 -->
+	<select id="pt_findAllPost" resultClass="pt" >
+		<![CDATA[
+		    SELECT POST_ID AS postId,
+			       POST_NAME AS postName
+			  FROM T_POST 
+		]]>
+	</select>
+	
+	
+	
+	<!-- 新增 部门、岗位、用户关系 -->
+	<insert id="dps_insertDepartmentPost" parameterClass="dps">
+		INSERT INTO T_DEPARTMENT_POST_STAFF
+		(DEPT_ID,
+		 POST_ID,
+		 STAFF_IDS,
+		 CREATE_USER,
+		 CREATE_DATE,
+		 LAST_UPDATE_DATE)
+		VALUES
+		(#departmentId#,
+		 #postId#,
+		 #staffIds#,
+		 #createUser#,
+		 SYSDATE(),
+		 SYSDATE())
+	</insert>
+	
+	
+	<!--  查找部门、岗位、用户对应列表(根据部门) -->
+	<select id="dps_findListByDepartmentId" resultClass="dps" parameterClass="java.lang.String">
+		<![CDATA[
+		    SELECT dps.DEPT_ID AS departmentId,
+			       dps.POST_ID AS postId,
+			       dps.STAFF_IDS AS staffIds,
+			       dps.CREATE_USER AS createUser,
+			       dps.CREATE_DATE AS createDate,
+			       dps.LAST_UPDATE_DATE AS lastUpdateDate,
+			       dpt.DEPARTMENT_NAME AS departmentName,
+			       pt.POST_NAME AS postName
+			  FROM T_DEPARTMENT_POST_STAFF dps,T_DEPARTMENT dpt,T_POST pt
+			   WHERE dpt.DEPARTMENT_ID = #departmentId#
+			     AND dps.DEPT_ID = dpt.DEPARTMENT_ID
+			     AND pt.POST_ID = dps.POST_ID
+		]]>
+	</select>
+	
 
 </sqlMap>
