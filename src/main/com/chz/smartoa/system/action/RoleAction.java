@@ -252,9 +252,9 @@ public class RoleAction extends BaseAction {
 			operateLogBiz.info(OperateLogType.ROLE_MANAGE, String.valueOf(role.getRoleId()),String.valueOf(role.getRoleName()), "修改失败");
 			throw e;
 		}
+		operateLogBiz.info(OperateLogType.ROLE_MANAGE, String.valueOf(role.getRoleId()),String.valueOf(role.getRoleName()), "修改成功");
 		// 调用列表方法
 		role = new Role();
-		operateLogBiz.info(OperateLogType.ROLE_MANAGE, String.valueOf(role.getRoleId()),String.valueOf(role.getRoleName()), "修改成功");
 		operateResult = new OperateResult(1, "修改角色成功！");
 		return OPER_RESULT;
 	}
