@@ -319,10 +319,10 @@ public class FileManagerAction extends BaseAction{
 		try {
 			String[]arrMainId = mainIds.split(",");
 			fileManagerBiz.deleteFileManager(arrMainId, Integer.valueOf(3));
-			operateLogBiz.info(OperateLogType.FILE_MANAGE, mainIds,null, "文件删除成功");
+			operateLogBiz.info(OperateLogType.FILE_MANAGE, mainIds,"BatchFile", "文件删除成功");
 			msg ="true";
 		} catch (Exception e) {
-			operateLogBiz.info(OperateLogType.FILE_MANAGE, mainIds,null, "文件删除失败");
+			operateLogBiz.info(OperateLogType.FILE_MANAGE, mainIds,"BatchFile", "文件删除失败");
 			logger.error(e.getMessage());
 			msg = "false";
 		}
@@ -343,10 +343,10 @@ public class FileManagerAction extends BaseAction{
 		try {
 			String[]arrMainId = mainIds.split(",");
 			fileManagerBiz.toUnorPublic(arrMainId,Integer.valueOf(1));
-			operateLogBiz.info(OperateLogType.FILE_MANAGE, mainIds,null, "文件公开成功");
+			operateLogBiz.info(OperateLogType.FILE_MANAGE, mainIds,"BatchFile", "文件公开成功");
 			msg = "true";
 		} catch (Exception e) {
-			operateLogBiz.info(OperateLogType.FILE_MANAGE, mainIds,null, "文件公开失败");
+			operateLogBiz.info(OperateLogType.FILE_MANAGE, mainIds,"BatchFile", "文件公开失败");
 			msg = "false";
 			logger.error(e.getMessage());
 		}
@@ -361,10 +361,10 @@ public class FileManagerAction extends BaseAction{
 		try {
 			String[]arrMainId = mainIds.split(",");
 			fileManagerBiz.toUnorPublic(arrMainId,Integer.valueOf(2));
-			operateLogBiz.info(OperateLogType.FILE_MANAGE, mainIds,null, "文件不公开成功");
+			operateLogBiz.info(OperateLogType.FILE_MANAGE, mainIds,"BatchFile", "文件不公开成功");
 			msg = "true";
 		} catch (Exception e) {
-			operateLogBiz.info(OperateLogType.FILE_MANAGE, mainIds,null, "文件不公开失败");
+			operateLogBiz.info(OperateLogType.FILE_MANAGE, mainIds,"BatchFile", "文件不公开失败");
 			msg = "false";
 			logger.error(e.getMessage());
 		}
