@@ -214,6 +214,7 @@ VALUES
 (18,3,'866fc82a-15d5-4582-84f2-4514e2c0924a','抄送公司监事阅处',3,'4',2,0,0,1,0,0,NULL),
 (19,3,'866fc82a-15d5-4582-84f2-4514e2c0924a','抄送公司股东阅处',3,'1',2,0,0,1,0,0,NULL),
 (20,5,'866fc82a-15d5-4582-84f2-4514e2c0924a','抄送行政专员阅处',3,'26',2,0,0,1,0,0,NULL);
+update t_re_conf set is_modify_ = 0;
 
 insert into t_resource
 (resource_id,parent_id,resource_name,address_url,resource_desc,resource_type,auth_type,sort_num)
@@ -661,7 +662,7 @@ INSERT INTO `t_resource` (`resource_id`, `parent_id`, `resource_name`, `address_
 INSERT INTO `t_resource` (`resource_id`, `parent_id`, `resource_name`, `address_url`, `resource_desc`, `resource_type`, `auth_type`, `icon_name`, `sort_num`) VALUES ('formTmp-dfdcc112-f94a-4146-b41d-0649e8c6fad7', 'formTmpType-778c99a5-f066-4270-977e-2e2153f03aa0', '一般费用报销单据', 'flow!launch.do?formTemplateId=dfdcc112-f94a-4146-b41d-0649e8c6fad7', NULL, '1', 'AUTH', NULL, 0);
 INSERT INTO `t_resource` (`resource_id`, `parent_id`, `resource_name`, `address_url`, `resource_desc`, `resource_type`, `auth_type`, `icon_name`, `sort_num`) VALUES ('formTmp-fb9242e7-9f34-4159-bf60-2089b3c1c9a5', 'formTmpType-0cb4a172-4954-45d7-a0b9-388985331e85', '项目总结报告', 'flow!launch.do?formTemplateId=fb9242e7-9f34-4159-bf60-2089b3c1c9a5', NULL, '1', 'AUTH', NULL, 6);
 
---邮件定时任务
+-- 邮件定时任务
 INSERT INTO `t_schedule_task` VALUES ('DCFC_EmailReminder', '邮件定时任务', '每30秒调用一次', 'DCFC_EmailReminder', '邮件定时任务', '0/30 * * * * ?', 'com.chz.smartoa.taskScheduler.EmailReminder', NULL, NULL, NULL, 0, 0);
 
 
