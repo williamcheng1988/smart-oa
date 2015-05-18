@@ -64,7 +64,13 @@
 			onSubmit:function(){
 				
 				var departmentId = $("#departmentId").val();  // 部门编号
-				if(!departmentId){
+				if(departmentId){
+					reg=/^[a-zA-Z0-9_]+$/; 
+					if(!reg.test(departmentId)){    
+			            alert("部门编号只能是英文字母和数字!"); 
+			            return false;
+			        }   
+				}else{
 					alert("部门编号不能为空！");
 					return false;
 				}

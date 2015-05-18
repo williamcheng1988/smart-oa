@@ -137,7 +137,13 @@
 	
 	function savePost(){
 		var postId = $("#ptPostId").val();  // 岗位门编号
-		if(!postId){
+		if(postId){
+			reg=/^[a-zA-Z0-9_]+$/; 
+			if(!reg.test(postId)){    
+	            alert("岗位编号只能是英文字母和数字!"); 
+	            return;
+	        } 
+		}else{
 			alert("岗位门编号不能为空！");
 			return;
 		}
