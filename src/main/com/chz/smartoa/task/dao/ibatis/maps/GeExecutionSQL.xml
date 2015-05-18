@@ -70,6 +70,14 @@
 ]]>
 </insert>
 
+<select id="GeExecution_getCurrentSortNum" resultClass="java.lang.Integer" parameterClass="java.lang.String">
+   select MIN(sort_num_)
+	  from t_ru_conf c
+	  LEFT JOIN t_ge_execution e ON c.execution_id_ = e.execution_id_
+	where e.execution_id_ = #executionId#
+	 and c.sort_num_ >= e.task_num_
+</select>
+
 <select id="GeExecution_getNextSortNum" resultClass="java.lang.Integer" parameterClass="java.lang.String">
    select MIN(sort_num_)
 	  from t_ru_conf c

@@ -36,6 +36,22 @@ public class GeExecutionDaoImpl extends BaseDaoiBatis implements GeExecutionDao
     }
     
     @Override
+    public Integer getCurrentSortNum(String executionId)
+    		throws DataAccessException {
+    	if (logger.isDebugEnabled()) {
+    		logger.debug("进入getCurrentSortNum(String executionId), 输入参数[" + executionId + "]");
+		}
+		Integer sortNum = null;
+		Object obj = getSqlMapClientTemplate().queryForObject("GeExecution_getCurrentSortNum",executionId);
+		if(obj != null)
+			sortNum = (Integer)obj;
+		if (logger.isDebugEnabled()) {
+    		logger.debug("离开getCurrentSortNum(String executionId),返回[" + sortNum + "]");
+		} 
+		return sortNum;
+    }
+    
+    @Override
 	public Integer getNextSortNum(String executionId) throws DataAccessException {
 		if (logger.isDebugEnabled()) {
     		logger.debug("进入getNextSortNum(String executionId), 输入参数[" + executionId + "]");

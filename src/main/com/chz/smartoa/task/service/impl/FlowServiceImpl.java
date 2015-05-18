@@ -301,6 +301,20 @@ public class FlowServiceImpl implements FlowService {
 		}
 	}
 	
+	// 新增待办任务
+	private void addTodoTask(GeExecution execution, Integer sortNum) {
+		// 查询流程
+		ReProcdef procdef = repositoryService.findReProcdefByExecutionId(execution.getExecutionId());
+		if (sortNum == null) { // 没找到下个节点
+			// 结束流程，审批完成
+			runtimeService.completeTask(execution.getExecutionId(),ExecutionStatus.Complete.getVal());
+			// 发送完成邮件
+			noticeHandler.completeNotice(procdef.getComplete_remind_(),execution);
+		} else {
+			addTodoTask(execution, sortNum, procdef);
+		}
+	}
+	
 	//新增待办任务
 	private void addTodoTask(GeExecution execution,Integer sortNum,ReProcdef procdef){
 		int isNext = 1; //是否流转到下一步：1，是; 0，否
@@ -386,11 +400,12 @@ public class FlowServiceImpl implements FlowService {
 		}
 		//删除当前任务
 		runtimeService.deleteRuTaskByExecutionId(executionId);
-		//当前是否还有待办任务（阅处除外）
-		GeExecution execution = taskService.getGeExecution(executionId);
-		execution.setTaskNum(execution.getTaskNum()-1);//回退一步
+		
 		//进入流程下一步
-		addTodoTask(execution);
+		GeExecution execution = taskService.getGeExecution(executionId);
+		//查询当前流程sort_num_
+		Integer sortNum = taskService.getNextSortNum(execution.getExecutionId());
+		addTodoTask(execution, sortNum);
 	}
 
 	public void setTaskService(TaskService taskService) {

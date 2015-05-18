@@ -67,6 +67,10 @@ public class TaskServiceImpl implements TaskService {
 		return ruTaskDao.getTodoTask(taskId,user);
 	}
 	@Override
+	public Integer getCurrentSortNum(String executionId) {
+		return geExecutionDao.getCurrentSortNum(executionId);
+	}
+	@Override
 	public Integer getNextSortNum(String executionId) {
 		return geExecutionDao.getNextSortNum(executionId);
 	}

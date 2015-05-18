@@ -60,6 +60,13 @@ public interface TaskService {
 	Map<String,Object> getTodoTask(String taskId,String user);
 	
 	/**
+	 * 获取当前审批节点
+	 * @param executionId
+	 * @return SortNum
+	 */
+	Integer getCurrentSortNum(String executionId);
+	
+	/**
 	 * 获取下一个审批节点
 	 * @param executionId
 	 * @return SortNum

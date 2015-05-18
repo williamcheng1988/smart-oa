@@ -20,6 +20,13 @@ public interface GeExecutionDao {
 	 * @throws DataAccessException
 	 */
 	String insertGeExecution(GeExecution geExecution) throws DataAccessException ;
+	/**
+	 * 查询当前处理节点
+	 * @param executionId
+	 * @return
+	 * @throws DataAccessException
+	 */
+	Integer getCurrentSortNum(String executionId) throws DataAccessException;
 	
 	/**
 	 * 查询下一个处理节点
