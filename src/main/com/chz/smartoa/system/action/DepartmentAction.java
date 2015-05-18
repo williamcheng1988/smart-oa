@@ -100,7 +100,7 @@ public class DepartmentAction extends BaseAction{
 			}else{
 				if(dpment != null){
 					dpment.setStatus(1);  // 有效
-					dpment.setCreateUser(getLoginStaff().getCreateUser());
+					dpment.setCreateUser(getLoginStaff().getLoginName());
 					departmentBiz.insertDepartment(dpment);
 					operateLogBiz.info(OperateLogType.DEPARTMENT_MANAGE, dpment.getDepartmentId(),dpment.getDepartmentName(), "部门新增成功");
 					msg ="true";

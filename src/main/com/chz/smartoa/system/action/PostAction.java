@@ -55,7 +55,7 @@ public class PostAction extends BaseAction{
 					Post insertPost = new Post();
 					insertPost.setPostId(postId);
 					insertPost.setPostName(postName);
-					insertPost.setCreateUser(getLoginStaff().getCreateUser());
+					insertPost.setCreateUser(getLoginStaff().getLoginName());
 					postBiz.insertPost(insertPost);
 					operateLogBiz.info(OperateLogType.POST_MANAGE, postId,postName, "新岗位定义成功");
 					msg ="true";

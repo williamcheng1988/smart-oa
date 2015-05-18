@@ -83,7 +83,7 @@ public class DepartmentPostAction extends BaseAction{
 			if(departmentPost != null){
 				msg = "exist";
 			}else{
-				dps.setCreateUser(getLoginStaff().getCreateUser());
+				dps.setCreateUser(getLoginStaff().getLoginName());
 				departmentPostBiz.insertDepartmentPost(dps);
 				operateLogBiz.info(OperateLogType.DEP_POST_STAFF_MANAGE, String.valueOf(dps.getDepartmentId()),String.valueOf(dps.getStaffIds()), "新增用户岗位成功");
 				msg ="true";
