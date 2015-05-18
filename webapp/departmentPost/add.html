@@ -162,7 +162,9 @@
 			   dataType:"json",
 			   success: function(json){
 				   if(json == 'true'){
-					   $('#postId').combobox('reload');      
+					   $("#ptPostId").textbox('setValue','');
+					   $("#ptPostName").textbox('setValue','');
+					   $('#postId').combobox('reload');  
 					   $('#addPostWin').window('close');
 				   }else if(json == 'postIsNull'){
 				      alert("岗位编号不能为空！");

@@ -37,16 +37,16 @@
 	    			</td>
 	    		</tr>
 	    		<tr>
-				    <th width="50%" align="right">级别：</td>
+				    <th width="50%" align="right">部门级别：</td>
 				    <td width="50%" align="left">
-				    	<input class="easyui-textbox" type="text" id="level" name="dpment.level" value="$!dpment.level" ></input>
+				    	<input class="easyui-numberbox" type="text" id="level" name="dpment.level" value="$!dpment.level" ></input>
 				    </td>
 				</tr>
 				#if($!dpment.parentId != '')
 	    		<tr>
 				  	<th align="right">是否有效：</td>
 				    <td align="left">
-				    	<select id="status" name="dpment.status" style="width: 100px;" class="easyui-combobox">
+				    	<select id="status" name="dpment.status" style="width: 100px;" class="easyui-combobox" editable="false">
 				    		<option value="1" #if($!dpment.status == 1) selected="selected" #end >有效</option>
 				    		<option value="0" #if($!dpment.status == 0) selected="selected" #end >失效</option>
 				    	</select>
