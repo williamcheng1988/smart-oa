@@ -178,12 +178,15 @@ public class RuConf extends BaseDomain implements Serializable{
 	@Override
 	public String toString() {
 		return "RuConf [conf_id_=" + conf_id_ + ", sort_num_=" + sort_num_
-				+ ", execution_id_=" + execution_id_ + ", task_desc_=" + task_desc_
-				+ ", action_type_=" + action_type_ + ", action_obj_="
+				+ ", execution_id_=" + execution_id_ + ", task_desc_="
+				+ task_desc_ + ", action_type_=" + action_type_
+				+ ", action_obj_src_=" + action_obj_src_ + ", action_obj_="
 				+ action_obj_ + ", action_obj_type_=" + action_obj_type_
 				+ ", is_turn_=" + is_turn_ + ", is_ask_=" + is_ask_
-				+ ", expiry_days_=" + expiry_days_ + ", arrive_remind_="
-				+ arrive_remind_ + ", expiry_remind_=" + expiry_remind_
-				+ ", template_id_=" + template_id_ + "]";
+				+ ", is_modify_=" + is_modify_ + ", expiry_days_="
+				+ expiry_days_ + ", arrive_remind_=" + arrive_remind_
+				+ ", expiry_remind_=" + expiry_remind_ + ", template_id_="
+				+ template_id_ + ", action_obj_name_=" + action_obj_name_
+				+ ", is_edit_=" + is_edit_ + "]";
 	}
 }

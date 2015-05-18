@@ -168,11 +168,13 @@ public class ReConf extends BaseDomain implements Serializable{
 	public String toString() {
 		return "ReConf [conf_id_=" + conf_id_ + ", sort_num_=" + sort_num_
 				+ ", procdef_id_=" + procdef_id_ + ", task_desc_=" + task_desc_
-				+ ", action_type_=" + action_type_ + ", action_obj_="
-				+ action_obj_ + ", action_obj_type_=" + action_obj_type_
-				+ ", is_turn_=" + is_turn_ + ", is_ask_=" + is_ask_
-				+ ", expiry_days_=" + expiry_days_ + ", arrive_remind_="
-				+ arrive_remind_ + ", expiry_remind_=" + expiry_remind_
-				+ ", template_id_=" + template_id_ + "]";
+				+ ", action_type_=" + action_type_ + ", action_obj_src_="
+				+ action_obj_src_ + ", action_obj_=" + action_obj_
+				+ ", action_obj_type_=" + action_obj_type_ + ", is_turn_="
+				+ is_turn_ + ", is_ask_=" + is_ask_ + ", is_modify_="
+				+ is_modify_ + ", expiry_days_=" + expiry_days_
+				+ ", arrive_remind_=" + arrive_remind_ + ", expiry_remind_="
+				+ expiry_remind_ + ", template_id_=" + template_id_
+				+ ", action_obj_name_=" + action_obj_name_ + "]";
 	}
 }

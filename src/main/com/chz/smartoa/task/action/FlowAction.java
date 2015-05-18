@@ -29,7 +29,6 @@ import com.chz.smartoa.task.pojo.ApproveResult;
 import com.chz.smartoa.task.pojo.GeExecution;
 import com.chz.smartoa.task.pojo.HiTask;
 import com.chz.smartoa.task.pojo.HiTaskVo;
-import com.chz.smartoa.task.pojo.ReConf;
 import com.chz.smartoa.task.pojo.RuConf;
 import com.chz.smartoa.task.pojo.RuTaskVo;
 import com.chz.smartoa.task.service.FlowService;
