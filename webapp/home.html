@@ -9,7 +9,21 @@
 	<link rel="stylesheet" type="text/css" href="themes/icon.css">
 	<link rel="stylesheet" type="text/css" href="css/smart.css">
 	<script type="text/javascript" src="jquery.easyui.min.js"></script>
-	<script type="text/javascript" src="locale/easyui-lang-zh_CN.js"></script>   
+	<script type="text/javascript" src="locale/easyui-lang-zh_CN.js"></script>  
+	<style type="text/css">
+		.line 
+		{ 
+		width:100%;
+		height:1px;
+		padding:0px;
+		margin:0px;
+		filter: progid:DXImageTransform.Microsoft.Gradient(startColorStr='#CC3300',endColorStr='#F9F900',gradientType='1'); 
+		background: -moz-linear-gradient(left, #CC3300, #F9F900); 
+		background: -o-linear-gradient(left,#CC3300, #F9F900); 
+		background: -webkit-gradient(linear, 0% 0%, 100% 0%, from(#CC3300), to(#F9F900)); 
+		} 
+		/* #FF0000 */
+	</style> 
 </head>
 <body class="easyui-layout" style="padding:10px;">
 		<div data-options="region:'center'">
@@ -25,7 +39,7 @@
 				 	<p style="font-size: 14px;font-weight: bold;">
 				 		<a class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-computer_edit'" href="#">草稿箱</a>&nbsp;
 				 	</p>
-				 	<div style="width:100%;height:1px;margin:0px auto;padding:0px;background-color:#D5D5D5;overflow:hidden;"></div>
+				 	<div class="line"></div>
 				 	 <div id="draftList"></div>
 			</div>
 			<div style="width:47%;float: right; padding-top: 5px;padding-right: 13px;min-height: 20%"">
@@ -34,7 +48,7 @@
 					<p style="font-size: 14px;font-weight: bold;">
 				 		<a class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-ok'" href="#">待办任务</a>&nbsp;
 				 	</p>
-					<div style="width:100%;height:1px;margin:0px auto;padding:0px;background-color:#D5D5D5;overflow:hidden;"></div>
+					<div class="line"></div>
 				 	 <div id="todoTasks"></div>
 			</div>
 			<div style="width:98%;float: left;padding-top: 8px;padding-left: 13px;">
@@ -63,7 +77,7 @@
 					<p style="font-size: 14px;font-weight: bold;">
 						<a class="easyui-linkbutton" data-options="plain:true" href="#" onclick="addPanel('日程设置','workPlanInfo/manager.html')">我的日程</a>
 					</p>
-					<div style="width:100%;height:1px;margin:0px auto;padding:0px;background-color:#D5D5D5;overflow:hidden;"></div>
+					<div class="line"></div>
 					<div id="planListForWork" style="margin-left: 12px; padding-left: 5px;">
 					</div>
 				</div>
@@ -72,7 +86,7 @@
 				<div>
 					<p style="font-size: 14px;font-weight: bold;">
 					<a class="easyui-linkbutton" data-options="plain:true" href="#">通讯录</a>&nbsp;</p>
-					<div style="width:100%;height:1px;margin:0px auto;padding:0px;background-color:#D5D5D5;overflow:hidden;line-height: 40px;"></div>
+					<div class="line" style="margin-bottom: 10px;" ></div>
 					<div style="width:90%;margin-left: 20px;">
 						<input class="easyui-searchbox" data-options="prompt:'',searcher:doSearch" style="width:99%"></input>
 						<table id="dg" class="easyui-datagrid"
