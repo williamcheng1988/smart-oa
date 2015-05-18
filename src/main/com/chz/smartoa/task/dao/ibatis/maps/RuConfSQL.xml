@@ -150,8 +150,8 @@
 <![CDATA[
 select * from (
 	SELECT
-	       		c.conf_id_,
-	       		c.sort_num_,
+	      c.conf_id_,
+	      c.sort_num_,
 				c.execution_id_,
 				c.task_desc_,
 				c.action_type_,
@@ -165,20 +165,19 @@ select * from (
 				c.arrive_remind_,
 				c.expiry_remind_,
 				c.template_id_,
-				0 is_edit_,
+				IF(c.sort_num_ < e.task_num_,0,1) is_edit_,
 				CASE action_obj_type_
 						WHEN 1 THEN (select real_name from t_staff where login_name = action_obj_)
 						WHEN 2 THEN (select role_name from t_role where role_id = action_obj_)
 						END action_obj_name_
-				from t_ru_conf c , t_ge_execution g 	
-	      where c.execution_id_ = g.execution_id_
-	      and c.sort_num_ <= g.task_num_
-	      and c.conf_id_ not in (select conf_id_ from t_ru_task where execution_id_ = #executionId#)
-		  and c.execution_id_ = #executionId#
+				from t_ru_conf c,t_ge_execution e
+        where c.execution_id_ = e.execution_id_
+	      and c.sort_num_ != e.task_num_
+		    and c.execution_id_ = #executionId#
 	UNION
 	SELECT
-	       		c.conf_id_,
-	       		c.sort_num_,
+	      c.conf_id_,
+	      c.sort_num_,
 				c.execution_id_,
 				c.task_desc_,
 				c.action_type_,
@@ -192,16 +191,14 @@ select * from (
 				c.arrive_remind_,
 				c.expiry_remind_,
 				c.template_id_,
-				1 is_edit_,
+				IF(ISNULL(t.conf_id_),0,1) is_edit_,
 				CASE action_obj_type_
 						WHEN 1 THEN (select real_name from t_staff where login_name = action_obj_)
 						WHEN 2 THEN (select role_name from t_role where role_id = action_obj_)
 						END action_obj_name_
-				from t_ru_conf c , t_ge_execution g 	
-	      where c.execution_id_ = g.execution_id_
-	      and c.sort_num_ >= g.task_num_
-	      and c.conf_id_ in (select conf_id_ from t_ru_task where execution_id_ = #executionId#)
-	      and c.execution_id_ = #executionId#
+				from t_ru_conf c LEFT JOIN t_ru_task t on c.conf_id_ = t.conf_id_
+				WHERE sort_num_ = (select task_num_ from t_ge_execution where execution_id_ = #executionId#)
+				and c.execution_id_ = #executionId#
 	) temp
 	ORDER BY is_edit_,sort_num_
 	]]>
@@ -216,8 +213,8 @@ select * from
 	          WHEN 2 THEN (select role_name from t_role where role_id = action_obj_)
 	          END action_obj_name_      
 	FROM T_RU_CONF
-	WHERE execution_id_ = #execution_id_#
-  and sort_num_ != (select task_num_ from t_ge_execution where execution_id_ = #execution_id_#)
+	WHERE sort_num_ != (select task_num_ from t_ge_execution where execution_id_ = #execution_id_#)
+    and execution_id_ = #execution_id_#
 UNION
 SELECT c.conf_id_,sort_num_,task_desc_,action_type_,action_obj_type_,IF(ISNULL(t.conf_id_),0,1) is_doing_,
 	  CASE action_obj_type_ 

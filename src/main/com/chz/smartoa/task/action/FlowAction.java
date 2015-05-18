@@ -312,7 +312,7 @@ public class FlowAction extends BaseAction{
 					for (RuConf conf : ruconfs) {
 						if(conf.getIs_edit_() == 1){
 							lineNos += i+",";
-							toDeleteIds += conf.getConf_id_();
+							toDeleteIds += conf.getConf_id_()+",";
 						}
 						i++;
 					}
