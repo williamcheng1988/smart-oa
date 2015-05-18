@@ -60,10 +60,10 @@ public class StartupServlet extends HttpServlet
         ServerInfo.wac = WebApplicationContextUtils.getRequiredWebApplicationContext(config.getServletContext());
         //加载权限验证资源
         initResource();
-        //加载定时任务
-        initTimerTask();
         //初始化邮件
         initEmail(config);
+        //加载定时任务
+        initTimerTask();
         //初始化通知模板
         initNoticeTemplate(config);
         //初始化模板工具
