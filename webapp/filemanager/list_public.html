@@ -13,9 +13,10 @@
 
 <body>
 		<div class="easyui-layout" data-options="fit:true">
-			<div data-options="region:'west',split:true" style="width:20%;padding:10px">
-				<br/>
-				<ul id="tt" class="easyui-tree" data-options="url:'../dictionary!treeForPublic.do',method:'get',animate:true,dnd:true"></ul>
+			<div data-options="region:'west',split:true,tools:'#tool'" title="公共信息" style="width:220px;">
+				<div data-options="region:'west',split:true" style="width:20%;padding:10px">
+					<ul id="tt" class="easyui-tree" data-options="url:'../dictionary!treeForPublic.do',method:'get',animate:true,dnd:true"></ul>
+				</div>
 			</div>
 			<div data-options="region:'center'" style="padding:2px">
 				<div id="tb" style="padding:15px;height:auto">
