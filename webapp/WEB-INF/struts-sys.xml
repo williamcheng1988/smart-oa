@@ -29,6 +29,7 @@
         
         <action name="process" class="processAction">
             <result name="beforeInsertReconf" type="velocity">/process/processDetail.html</result>
+            <result name="beforeInsertReconf_dept" type="velocity">/process/processDetail_dept.html</result>
             <result name="list" type="velocity">/process/list.html</result>
         </action>
         
