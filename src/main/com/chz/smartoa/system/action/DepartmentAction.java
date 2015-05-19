@@ -1,12 +1,9 @@
 package com.chz.smartoa.system.action;
 
-import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
-
 import com.chz.smartoa.common.base.BaseAction;
 import com.chz.smartoa.common.base.DataGrid;
 import com.chz.smartoa.common.base.TreeData;
@@ -42,14 +39,14 @@ public class DepartmentAction extends BaseAction{
 	private String jsonStr;
 	
 	
-	@SuppressWarnings("rawtypes")
 	public String queryDepartment(){
 		try {
 			if(StringUtils.isNotEmpty(parentId)){
 				departmentList = departmentBiz.getDepartmentByParentId(parentId);
 				dataGrid = new DataGrid(1,departmentList);
 			}else{
-				dataGrid = new DataGrid(0,new ArrayList());
+				departmentList = departmentBiz.getDepartmentByParentId("root");
+				dataGrid = new DataGrid(1,departmentList);
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());

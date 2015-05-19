@@ -54,14 +54,14 @@ public class DepartmentPostAction extends BaseAction{
 	
 	
 	
-	@SuppressWarnings("rawtypes")
 	public String queryDepartmentPost(){
 		try {
 			if(StringUtils.isNotEmpty(departmentId)){
 				dpsList = departmentPostBiz.findListByDepartmentId(departmentId);
 				dataGrid = new DataGrid(1,dpsList);
 			}else{
-				dataGrid = new DataGrid(0,new ArrayList());
+				dpsList = departmentPostBiz.findListByDepartmentId("root");
+				dataGrid = new DataGrid(0,dpsList);
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
