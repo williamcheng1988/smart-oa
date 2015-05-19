@@ -9,6 +9,8 @@ import org.apache.log4j.Logger;
 
 import com.chz.smartoa.common.base.BaseAction;
 import com.chz.smartoa.common.base.DataGrid;
+import com.chz.smartoa.fileUpload.util.PerpertyNames;
+import com.chz.smartoa.fileUpload.util.PerpertiesTool;
 import com.chz.smartoa.system.action.OperateResult;
 import com.chz.smartoa.system.constant.OperateLogType;
 import com.chz.smartoa.system.pojo.DictionaryConfig;
@@ -99,6 +101,9 @@ public class ProcessAction extends BaseAction{
 				for (int i = 1; i <= reConfs.size(); i++) {
 					lineNos += i+",";
 				}
+			}
+			if("DEPARTMENT".equals(PerpertiesTool.getPro(PerpertyNames.PROJECT_VERSION_TYPE))){
+				return "beforeInsertReconf_dept";
 			}
 			return "beforeInsertReconf";
 		}

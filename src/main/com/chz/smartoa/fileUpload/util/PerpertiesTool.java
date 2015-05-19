@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;  
 import java.util.Set;
+
 import org.apache.log4j.Logger;
 
 
@@ -30,8 +31,13 @@ public class PerpertiesTool {
 		return pTool;
 	}
 	
-	public static Map<String, String> getProMap(){
+	public Map<String, String> getProMap(){
 		return propertiesMap;
+	}
+	
+	//** 外部调用推荐些方法(配合PerpertyNames使用) ** 遵循高内聚！！
+	public static String getPro(String propertName){
+		return getInstance().getProMap().get(propertName);
 	}
 	
 	
@@ -46,7 +52,7 @@ public class PerpertiesTool {
 				Set keyValue = properties.keySet();
 	            for (Iterator it = keyValue.iterator(); it.hasNext();){
 	        	   String key = (String) it.next();
-	        	   String value = new String(((String) properties.get(key)).getBytes("ISO8859-1"), "GBK");
+	        	   String value = new String((String) properties.get(key));
 	        	   propertiesMap.put(key, value);
 	            }
 			}
