@@ -58,6 +58,12 @@ public class DictionaryConfigAction extends BaseAction{
 		try {
 			if(StringUtils.isNotEmpty(dictionaryId)){
 				dictionaryList = dictionaryConfigBiz.findDictionarytCfgByParentId(Integer.valueOf(dictionaryId));
+				if(dictionaryList != null){
+					DictionaryConfig cfg = dictionaryConfigBiz.findDictionarytCfgById(Integer.valueOf(dictionaryId));
+					if(cfg != null){
+						dictionaryList.add(cfg);
+					}
+				}
 				dataGrid = new DataGrid(1,dictionaryList);
 			}else{
 				dataGrid = new DataGrid(0,new ArrayList());
