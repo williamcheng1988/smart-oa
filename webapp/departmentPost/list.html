@@ -17,9 +17,9 @@
 				<ul id="tt" class="easyui-tree" data-options="url:'../departmentManager!genDepartmentTree.do',method:'get',animate:true,dnd:true"></ul>
 			</div>
 			<div data-options="region:'center'" style="padding:2px">
-				<div id="title" align="center" class="datagrid-toolbar page_title"></div>
-				<input id="departmentId" name="departmentId" type="hidden" >
-				<input id="departmentName" name="departmentName" type="hidden" >
+				<div id="title" align="center" class="datagrid-toolbar page_title">松大科技</div>
+				<input id="departmentId" name="departmentId" value="root" type="hidden" >
+				<input id="departmentName" name="departmentName" value="松大科技" type="hidden" >
 				<table id="dg" class="easyui-datagrid" style="width:100%;height:auto;"
 						data-options="rownumbers:true,url:'../departmentPostRelation!queryDepartmentPost.do',singleSelect:false,border:false,method:'get',toolbar:'#tb',autoRowHeight:false">
 					<thead>

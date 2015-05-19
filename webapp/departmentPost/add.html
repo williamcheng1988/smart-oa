@@ -18,11 +18,19 @@
 	    <form id="ff" class="easyui-form" method="post" data-options="novalidate:true" action="departmentPostRelation!saveDepartmentPost.do">
 	    	<table cellpadding="10px" class="table_form" style="width: 70%;">
 			  <tr>
+			    <th width="40%" align="right">部门名称：</td>
+			    <td width="60%" align="left">
+			    	<input type="hidden" name="dps.departmentId"  value="$!departmentId" />
+			    	<input class="easyui-textbox" type="text"  value="$!departmentName" disabled="disabled"></input>
+			    </td>
+			  </tr>
+			  <tr>
 			    <th width="40%" align="right">岗位名称：</td>
 			    <td width="60%" align="left">
 			    	<input class="easyui-combobox" 
 			    	        id="postId"
 							name="dps.postId"
+							editable='false'
 							data-options="
 									url:'postManager!getAllPost.do',
 									method:'get',
@@ -35,16 +43,9 @@
 			    </td>
 			  </tr>
 			  <tr>
-			    <th width="40%" align="right">部门名称：</td>
-			    <td width="60%" align="left">
-			    	<input type="hidden" name="dps.departmentId"  value="$!departmentId" />
-			    	<input class="easyui-textbox" type="text"  value="$!departmentName" disabled="disabled"></input>
-			    </td>
-			  </tr>
-			  <tr>
 			    <th width="40%" align="right">用户账号：</td>
 			    <td width="60%" align="left" style="border:none;">
-			    	<select id="staffIds" name="dps.staffIds" class="easyui-combobox" data-options="multiple:true" style="width: 132px;">
+			    	<select id="staffIds" name="dps.staffIds" class="easyui-combobox" data-options="multiple:true" style="width: 242px;">
 						<!-- <option value="">&nbsp;</option> -->
 						#optionTag("NORMAL_USERS")
 					</select>
@@ -118,9 +119,9 @@
 				if(json.msg == 'true'){
 				  location.href="departmentPost/list.html";
 			    }else if(json.msg == 'exist'){
-			    	alert("部门编号已存在，请修改后再保存！");
+			    	alert("该部门下的岗位已存在用户账号记录,如需添加,请进行修改操作");
 			    }else{
-				   alert("部门信息保存失败，请稍后重试！");
+				   alert("部门信息保存失败,请稍后重试！");
 			    }
 			},
 			error:function(){
