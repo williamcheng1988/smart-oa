@@ -18,22 +18,6 @@
 	    <form id="ff" class="easyui-form" method="post" data-options="novalidate:true" action="departmentPostRelation!saveDepartmentPost.do">
 	    	<table cellpadding="10px" class="table_form" style="width: 70%;">
 			  <tr>
-			    <th width="40%" align="right">用户账号：</td>
-			    <td width="60%" align="left" style="border:none;">
-			    	<select id="staffIds" name="dps.staffIds" class="easyui-combobox" data-options="multiple:true" style="width: 132px;">
-						<!-- <option value="">&nbsp;</option> -->
-						#optionTag("NORMAL_USERS")
-					</select>
-			    </td>
-			  </tr>
-			  <tr>
-			    <th width="40%" align="right">部门名称：</td>
-			    <td width="60%" align="left">
-			    	<input type="hidden" name="dps.departmentId"  value="$!departmentId" />
-			    	<input class="easyui-textbox" type="text"  value="$!departmentName" disabled="disabled"></input>
-			    </td>
-			  </tr>
-			  <tr>
 			    <th width="40%" align="right">岗位名称：</td>
 			    <td width="60%" align="left">
 			    	<input class="easyui-combobox" 
@@ -49,6 +33,22 @@
 							">
 			    	&nbsp;&nbsp;&nbsp;
 			    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="$('#addPostWin').window('open')">&nbsp;定&nbsp;义&nbsp;新&nbsp;岗&nbsp;位</a>
+			    </td>
+			  </tr>
+			  <tr>
+			    <th width="40%" align="right">部门名称：</td>
+			    <td width="60%" align="left">
+			    	<input type="hidden" name="dps.departmentId"  value="$!departmentId" />
+			    	<input class="easyui-textbox" type="text"  value="$!departmentName" disabled="disabled"></input>
+			    </td>
+			  </tr>
+			  <tr>
+			    <th width="40%" align="right">用户账号：</td>
+			    <td width="60%" align="left" style="border:none;">
+			    	<select id="staffIds" name="dps.staffIds" class="easyui-combobox" data-options="multiple:true" style="width: 132px;">
+						<!-- <option value="">&nbsp;</option> -->
+						#optionTag("NORMAL_USERS")
+					</select>
 			    </td>
 			  </tr>
 		      <tr>
