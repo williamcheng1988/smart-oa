@@ -137,56 +137,39 @@ public class StaffAction extends BaseAction {
 
 
 	public String main() throws SQLException, IOException, ClassNotFoundException{
-		// 得到登录用户信息
-		this.staff = this.getLoginStaff();
-		// 拷贝系统所有操作资源
-		this.resources = ResourceMgr.getInstance().deepCopy();
-
-		String loginName = LoginUtils.getLoginStaff().getLoginName();
-		//查询用户可操作资源ID
-		List<String> resourceIds = this.staffBiz.listResourceIds(LoginUtils.getLoginStaff().getLoginName());
-		// 过滤用户权限
-		this.filterResource(this.resources, resourceIds);
-
-		//查询用户数据权限
-		int permission = this.staffBiz.getHasAllDataPermission(loginName);
-		if(permission == 1){//查看所有数据权限
-			LoginUtils.getLoginStaff().getPermission().getDataPermissions().put(Permission.ALL_DATA, 1);
-		}else{
-			List<String> projectIds = this.staffBiz.getOnwerProjectId(loginName);
-			if((projectIds != null) && (projectIds.size() > 0)){
-				LoginUtils.getLoginStaff().getPermission().getDataPermissions().put(Permission.PROJECT_IDS,projectIds);
-			}
-			LoginUtils.getLoginStaff().getPermission().getDataPermissions().put(Permission.LOGIN_NAME,loginName);
-		}
-
+		initMenu();
 		return "index";
 	}
 
 	public String basicHome() throws SQLException, IOException, ClassNotFoundException{
+		initMenu();
+		return "basic_home";
+	}
+	
+	private void initMenu() throws SQLException, IOException, ClassNotFoundException{
 		// 得到登录用户信息
 		this.staff = this.getLoginStaff();
 		// 查询系统所有操作资源
 		this.resources = ResourceMgr.getInstance().deepCopy();
 
 		String loginName = LoginUtils.getLoginStaff().getLoginName();
-		//查询用户可操作资源ID
+		// 查询用户可操作资源ID
 		List<String> resourceIds = this.staffBiz.listResourceIds(LoginUtils.getLoginStaff().getLoginName());
 		// 过滤用户权限
 		this.filterResource(this.resources, resourceIds);
 
-		//查询用户数据权限
-		int permission = this.staffBiz.getHasAllDataPermission(loginName);
-		if(permission == 1){//查看所有数据权限
-			LoginUtils.getLoginStaff().getPermission().getDataPermissions().put(Permission.ALL_DATA, 1);
-		}else{
-			List<String> projectIds = this.staffBiz.getOnwerProjectId(loginName);
-			if((projectIds != null) && (projectIds.size() > 0)){
-				LoginUtils.getLoginStaff().getPermission().getDataPermissions().put(Permission.PROJECT_IDS,projectIds);
-			}
-			LoginUtils.getLoginStaff().getPermission().getDataPermissions().put(Permission.LOGIN_NAME,loginName);
-		}
-		return "basic_home";
+		// 查询用户数据权限
+//		int permission = this.staffBiz.getHasAllDataPermission(loginName);
+//		if (permission == 1) {// 查看所有数据权限
+//			LoginUtils.getLoginStaff().getPermission().getDataPermissions()
+//					.put(Permission.ALL_DATA, 1);
+//		} else {
+//			List<String> projectIds = this.staffBiz.getOnwerProjectId(loginName);
+//			if ((projectIds != null) && (projectIds.size() > 0)) {
+//				LoginUtils.getLoginStaff().getPermission().getDataPermissions().put(Permission.PROJECT_IDS, projectIds);
+//			}
+//			LoginUtils.getLoginStaff().getPermission().getDataPermissions().put(Permission.LOGIN_NAME, loginName);
+//		}
 	}
 
 	private void filterResource(List<Resource> resources,List<String> resourceIds){

@@ -71,30 +71,6 @@ public class StaffBizImpl implements StaffBiz {
 			staff.setPwdErrCount("0");
 			staffDao.updateStaff(staff);
 		}
-
-		// 查询用户的相关角色列表
-		Permission per = new Permission();
-		List<Role> roles = roleDao.listStaffRole(staff.getLoginName());
-		if(roles != null && roles.size()>0){
-			staff.setRoles(roles);
-			//加载权限
-			for (Role role : roles) {
-				if("Y".equals(role.getSuperAdmin())){
-					per.setAdmin(true);
-					break;
-				}
-			}
-			List<String> uris = staffDao.listOperationUri(staff.getLoginName());
-			per.setOperationUris(uris);
-		}
-		staff.setPermission(per);
-
-		// 查询用户所属的组织
-		if(!StringUtils.isEmpty(staff.getDepartmentId())){
-			Department department = departmentDao.findDepartment(staff.getDepartmentId());
-			staff.setDepartment(department);
-		}
-		
 		return staff;
 	}
 
