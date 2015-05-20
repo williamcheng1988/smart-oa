@@ -1,5 +1,6 @@
 package com.chz.smartoa.task.service.impl;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,9 +17,9 @@ import com.chz.smartoa.delegation.pojo.DelegationLog;
 import com.chz.smartoa.task.Handler.NoticeHandler;
 import com.chz.smartoa.task.Handler.UserHandler;
 import com.chz.smartoa.task.dao.GeExecutionDao;
-import com.chz.smartoa.task.dao.RuConfDao;
 import com.chz.smartoa.task.dao.RuTaskDao;
 import com.chz.smartoa.task.enumcode.ExecutionStatus;
+import com.chz.smartoa.task.exception.NotFoundUserByPostException;
 import com.chz.smartoa.task.exception.NotFoundUserByRoleException;
 import com.chz.smartoa.task.pojo.GeExecution;
 import com.chz.smartoa.task.pojo.RuConf;
@@ -72,7 +73,7 @@ public class RuntimeServiceImpl implements RuntimeService {
 	}
 
 	@Override
-	public int insertRuTasks(RuConf ruconf,GeExecution execution,int upLink)throws NotFoundUserByRoleException, DataAccessException {
+	public int insertRuTasks(RuConf ruconf,GeExecution execution,int upLink)throws NotFoundUserByRoleException, DataAccessException, NotFoundUserByPostException, NullPointerException{
 		int cnt = 0;//插入待办条数记录
 		RuTask task = new RuTask();// 待办任务
 		task.setExecutionId(execution.getExecutionId());
@@ -86,6 +87,12 @@ public class RuntimeServiceImpl implements RuntimeService {
 			cnt += insertRuTask(task, ruconf.getArrive_remind_(), upLink);
 		}else if (ruconf.getAction_obj_type_() == 2) {// 角色
 			List<String> userList = userHandler.listUsersByRole(ruconf.getAction_obj_(),execution.getProjectId());
+			for (String user : userList) {
+				task.setAssignee(user);
+				cnt += insertRuTask(task, ruconf.getArrive_remind_(), upLink);
+			}
+		}else if(ruconf.getAction_obj_type_() == 3) {// 岗位
+			List<String> userList = userHandler.listUsersByPost(execution.getDepartmentId(),ruconf.getAction_obj_(), ruconf.getAction_obj_src_());
 			for (String user : userList) {
 				task.setAssignee(user);
 				cnt += insertRuTask(task, ruconf.getArrive_remind_(), upLink);
@@ -225,6 +232,7 @@ public class RuntimeServiceImpl implements RuntimeService {
 		execution.setProjectId(projectId);
 		execution.setPriority(priority);
 		execution.setOwner(LoginUtils.getLoginStaff().getLoginName());
+		execution.setDepartmentId(LoginUtils.getLoginStaff().getDepartmentId());
 		if(status == 1){
 			execution.setTaskStatus(ExecutionStatus.Approving.getVal());
 		}else{

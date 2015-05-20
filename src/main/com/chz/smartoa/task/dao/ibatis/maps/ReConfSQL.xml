@@ -85,6 +85,7 @@
 			CASE action_obj_type_
 					WHEN 1 THEN (select real_name from t_staff where login_name = action_obj_)
 					WHEN 2 THEN (select role_name from t_role where role_id = action_obj_)
+					WHEN 3 THEN (select post_name from t_post where post_id = action_obj_)
 					END action_obj_name_
 			from t_re_conf
 	where procdef_id_ = #procdef_id_#

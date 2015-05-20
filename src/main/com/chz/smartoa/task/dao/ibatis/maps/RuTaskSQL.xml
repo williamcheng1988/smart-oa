@@ -252,7 +252,7 @@ select count(1)
   from t_ru_task ru
   LEFT JOIN t_ru_conf rc on ru.conf_id_ = rc.conf_id_
  where ru.execution_id_ = #executionId#
-   AND rc.action_obj_type_ != 4
+   AND rc.action_type_ != 4
 ]]>
 </select>
 

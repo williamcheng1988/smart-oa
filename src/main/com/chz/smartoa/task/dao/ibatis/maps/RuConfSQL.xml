@@ -135,6 +135,7 @@
 			CASE action_obj_type_
 					WHEN 1 THEN (select real_name from t_staff where login_name = action_obj_)
 					WHEN 2 THEN (select role_name from t_role where role_id = action_obj_)
+					WHEN 3 THEN (select post_name from t_post where post_id = action_obj_)
 					END action_obj_name_
 			from t_ru_conf
 	where execution_id_ = #execution_id_#
@@ -169,6 +170,7 @@ select * from (
 				CASE action_obj_type_
 						WHEN 1 THEN (select real_name from t_staff where login_name = action_obj_)
 						WHEN 2 THEN (select role_name from t_role where role_id = action_obj_)
+						WHEN 3 THEN (select post_name from t_post where post_id = action_obj_)
 						END action_obj_name_
 				from t_ru_conf c,t_ge_execution e
         where c.execution_id_ = e.execution_id_
@@ -195,6 +197,7 @@ select * from (
 				CASE action_obj_type_
 						WHEN 1 THEN (select real_name from t_staff where login_name = action_obj_)
 						WHEN 2 THEN (select role_name from t_role where role_id = action_obj_)
+						WHEN 3 THEN (select post_name from t_post where post_id = action_obj_)
 						END action_obj_name_
 				from t_ru_conf c LEFT JOIN t_ru_task t on c.conf_id_ = t.conf_id_
 				WHERE sort_num_ = (select task_num_ from t_ge_execution where execution_id_ = #executionId#)
@@ -211,6 +214,7 @@ select * from
 	  CASE action_obj_type_ 
 	          WHEN 1 THEN (select real_name from t_staff where login_name = action_obj_)
 	          WHEN 2 THEN (select role_name from t_role where role_id = action_obj_)
+	          WHEN 3 THEN (select post_name from t_post where post_id = action_obj_)
 	          END action_obj_name_      
 	FROM T_RU_CONF
 	WHERE sort_num_ != (select task_num_ from t_ge_execution where execution_id_ = #execution_id_#)
@@ -220,6 +224,7 @@ SELECT c.conf_id_,sort_num_,task_desc_,action_type_,action_obj_type_,IF(ISNULL(t
 	  CASE action_obj_type_ 
 	          WHEN 1 THEN (select real_name from t_staff where login_name = action_obj_)
 	          WHEN 2 THEN (select role_name from t_role where role_id = action_obj_)
+	          WHEN 3 THEN (select post_name from t_post where post_id = action_obj_)
 	          END action_obj_name_      
 	FROM T_RU_CONF c LEFT JOIN t_ru_task t on c.conf_id_ = t.conf_id_
 	WHERE sort_num_ = (select task_num_ from t_ge_execution where execution_id_ = #execution_id_#)

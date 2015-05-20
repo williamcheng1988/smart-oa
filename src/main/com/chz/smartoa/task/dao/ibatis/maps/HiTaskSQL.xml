@@ -174,7 +174,7 @@ ORDER BY GE_E.START_TIME_ DESC
           WHEN 1 THEN (select GROUP_CONCAT(task_desc_)
                         from t_ru_conf
                        where conf_id_ in (select DISTINCT conf_id_ from t_ru_task where execution_id_= A.EXECUTION_ID_)
-                         AND action_obj_type_ != 4)
+                         AND action_type_ != 4)
           WHEN 2 THEN '流程完结[通过]'
           WHEN 3 THEN '流程完结[不通过]'
           WHEN 4 THEN '废弃'
@@ -185,7 +185,7 @@ ORDER BY GE_E.START_TIME_ DESC
                                 from t_ru_task t
                                 LEFT JOIN t_ru_conf c on t.conf_id_ = c.conf_id_
                                 LEFT JOIN t_staff s on t.assignee_ = s.login_name
-                               where c.action_obj_type_ != 4
+                               where c.action_type_ != 4
                                  and t.execution_id_ = A.EXECUTION_ID_)
           ELSE ''
           END DEAL_MANS_      

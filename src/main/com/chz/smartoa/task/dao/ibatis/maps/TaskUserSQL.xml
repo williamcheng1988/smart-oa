@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<!-- Always ensure to use the correct XML header as above! -->
+<sqlMap namespace="TaskUser">
+
+<!-- 查询部门岗位用户 -->
+<select id="TaskUser_deptPostStaffIds" resultClass="string" parameterClass="java.util.Map">
+	select staff_ids from t_department_post_staff where dept_id = #deptId# and post_id = #postId#
+</select>
+
+<!-- 查询上级部门 -->
+<select id="TaskUser_parentDeptId" resultClass="string" parameterClass="string">
+	select parent_id from t_department where department_id = #deptId#
+</select>
+
+<!-- 查询部门名称 -->
+<select id="TaskUser_deptName" resultClass="string" parameterClass="string">
+	select department_name from t_department where department_id = #deptId#
+</select>
+
+<!-- 查询岗位名称 -->
+<select id="TaskUser_postName" resultClass="string" parameterClass="string">
+	select post_name from t_post where post_id = #postId#
+</select>
+
+</sqlMap>

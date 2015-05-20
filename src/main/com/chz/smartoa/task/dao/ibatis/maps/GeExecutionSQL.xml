@@ -23,6 +23,7 @@
 <resultMap id="geExecution_result2" class="geExecution">
     <result property="executionId" column="EXECUTION_ID_"/>
     <result property="owner" column="OWNER_"/>
+    <result property="departmentId" column="DEPARTMENT_ID_"/>
     <result property="taskStatus" column="TASK_STATUS_"/>
     <result property="version" column="VERSION_"/>
     <result property="templateId" column="TEMPLATE_ID_"/>
@@ -42,6 +43,7 @@
     INSERT INTO T_GE_EXECUTION (
             EXECUTION_ID_, 
             OWNER_, 
+            DEPARTMENT_ID_,
             TASK_STATUS_, 
             VERSION_, 
             TEMPLATE_ID_, 
@@ -56,6 +58,7 @@
     VALUES (
        		#executionId#,
 		       		#owner#,
+		       		#departmentId#,
 		       		#taskStatus#,
 		       		#version#,
 		       		#templateId#,

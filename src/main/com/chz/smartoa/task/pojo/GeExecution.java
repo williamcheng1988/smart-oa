@@ -22,6 +22,10 @@ public class GeExecution extends BaseDomain{
 	 */
 	private String owner;
 	/**
+	 * 所属部门
+	 */
+	private String departmentId;
+	/**
 	 * 0:暂存,1:审批中2:审批通过,3:审批不通过,4:任务作废
 	 */
 	private Integer taskStatus;
@@ -81,6 +85,12 @@ public class GeExecution extends BaseDomain{
 	}
 	public void setOwner(String owner) {
 		this.owner = owner;
+	}
+	public String getDepartmentId() {
+		return departmentId;
+	}
+	public void setDepartmentId(String departmentId) {
+		this.departmentId = departmentId;
 	}
 	public Integer getTaskStatus() {
 		return this.taskStatus;

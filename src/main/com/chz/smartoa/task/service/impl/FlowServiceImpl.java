@@ -301,7 +301,7 @@ public class FlowServiceImpl implements FlowService {
 		}
 	}
 	
-	// 新增待办任务
+	// 新增待办任务(此方法不通用，提供给【修改流程】使用)
 	private void addTodoTask(GeExecution execution, Integer sortNum) {
 		// 查询流程
 		ReProcdef procdef = repositoryService.findReProcdefByExecutionId(execution.getExecutionId());

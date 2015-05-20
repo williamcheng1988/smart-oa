@@ -115,6 +115,12 @@ public class RuConf extends BaseDomain implements Serializable{
 	public void setAction_obj_type_(int action_obj_type_) {
 		this.action_obj_type_ = action_obj_type_;
 	}
+	public String getAction_obj_src_() {
+		return action_obj_src_;
+	}
+	public void setAction_obj_src_(String action_obj_src_) {
+		this.action_obj_src_ = action_obj_src_;
+	}
 	public int getIs_turn_() {
 		return is_turn_;
 	}

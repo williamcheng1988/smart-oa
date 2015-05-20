@@ -11,7 +11,8 @@ public enum TaskError {
 	NotFoundReConf(3003),
 	TaskInvalid(3004),
 	NotFoundProject(3005),
-	ApproveResultInvalid(3006);
+	ApproveResultInvalid(3006),
+	NotFoundUserByPost(3007);
 	
 	private int val;
 	private TaskError(int val) {

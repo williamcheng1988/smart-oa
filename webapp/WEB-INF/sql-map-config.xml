@@ -30,6 +30,7 @@
   <sqlMap resource="com/chz/smartoa/task/dao/ibatis/maps/RuConfSQL.xml" />
  <sqlMap resource="com/chz/smartoa/task/dao/ibatis/maps/RuTaskSQL.xml" />
  <sqlMap resource="com/chz/smartoa/task/dao/ibatis/maps/HiTaskSQL.xml" />
+ <sqlMap resource="com/chz/smartoa/task/dao/ibatis/maps/TaskUserSQL.xml" />
  
  <sqlMap resource="com/chz/smartoa/system/dao/ibatis/maps/NoticeSQL.xml" />
  
