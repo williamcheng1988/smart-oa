@@ -1,7 +1,9 @@
 package com.chz.smartoa.system.dao.impl;
 
 import java.util.List;
+
 import org.springframework.orm.ibatis.support.SqlMapClientDaoSupport;
+
 import com.chz.smartoa.common.base.TreeData;
 import com.chz.smartoa.system.dao.DepartmentDao;
 import com.chz.smartoa.system.pojo.Department;
@@ -47,6 +49,14 @@ public class DepartmentDaoImpl extends SqlMapClientDaoSupport implements Departm
 	@Override
 	public void updateDepartment(Department department) {
 		getSqlMapClientTemplate().update("dpt_updateDpt", department);
+	}
+
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Department> getAllDepartment() {
+		List<Department> dList = (List<Department>)getSqlMapClientTemplate().queryForList("dpt_allDepartment");
+		return dList;
 	}
 
 }

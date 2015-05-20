@@ -1,9 +1,11 @@
 package com.chz.smartoa.system.action;
 
 import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
+
 import com.chz.smartoa.common.base.BaseAction;
 import com.chz.smartoa.common.base.DataGrid;
 import com.chz.smartoa.common.base.TreeData;
@@ -11,6 +13,8 @@ import com.chz.smartoa.system.constant.OperateLogType;
 import com.chz.smartoa.system.pojo.Department;
 import com.chz.smartoa.system.service.DepartmentBiz;
 import com.chz.smartoa.system.service.OperateLogBiz;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 
 @Controller
@@ -80,6 +84,14 @@ public class DepartmentAction extends BaseAction{
 			logger.error(e.getMessage());
 		}
 		return list;
+	}
+	
+	
+	public String getAllDepartment(){
+		departmentList = departmentBiz.getAllDepartment();
+		Gson gson = new GsonBuilder().create();
+		jsonStr = gson.toJson(departmentList);
+		return "json";
 	}
 	
 	

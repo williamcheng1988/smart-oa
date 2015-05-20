@@ -95,6 +95,15 @@
 		]]>
 	</select>
 	
+	<!--  查找部门信息 (根据父ID获取子列表) -->
+	<select id="dpt_allDepartment" resultClass="dpt" >
+		<![CDATA[
+		    SELECT DEPARTMENT_ID AS departmentId,
+			       DEPARTMENT_NAME AS departmentName
+			  FROM T_DEPARTMENT 
+		]]>
+	</select>
+	
 	
 	
 	<!-- 新增岗位 -->
