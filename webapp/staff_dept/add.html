@@ -60,18 +60,9 @@
 							<tr>
 								<th align="center">所属部门</th>
 								<td colspan="3">
-								    <!--  
-									<input id="departmentId" name="staff.departmentId" class="easyui-combotree" 
-									       data-options="url:'departmentManager!getAllDepartment.do',
-									                     method:'get',
-									                     valueField:'departmentId',
-									                     textField:'departmentName',
-									                     required:true" 
-									                     style="width:100px;">
-									-->
-									<input class="easyui-combobox" name="staff.departmentId" style="width:100px;" 
+									<input class="easyui-combotree" id="departmentId" name="staff.departmentId" style="width:50%;"
 									        data-options="
-											url: 'departmentManager!getAllDepartment.do',
+											url: 'departmentManager!genDepartmentTree.do',
 											method: 'get',
 											valueField:'departmentId',
 											textField:'departmentName',
@@ -132,6 +123,11 @@
 	<div id="ui_mask" style="display:none;min-height:100%;" class="datagrid-mask"></div>
 	<div id="ui_mask_msg" style="display:none; left: 50%; height: 16px; margin-left: -85.5px; line-height: 16px;" class="datagrid-mask-msg">正在处理，请稍待。。。</div>
 <script>
+	
+	$(function(){
+		$('#departmentId').combotree('setValue', '$!departmentId');
+	});
+	
 	function submitForm(){
 		$('#ff').form('submit',{
 			onSubmit:function(){

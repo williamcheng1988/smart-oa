@@ -61,9 +61,9 @@
 							<tr>
 								<th align="center">所属部门</th>
 								<td colspan="3">
-									<input class="easyui-combobox" id="departmentId" name="staff.departmentId" style="width:100px;" 
+									<input class="easyui-combotree" id="departmentId" name="staff.departmentId" style="width:50%;" 
 									        data-options="
-											url: 'departmentManager!getAllDepartment.do',
+											url: 'departmentManager!genDepartmentTree.do',
 											method: 'get',
 											valueField:'departmentId',
 											textField:'departmentName',
@@ -126,7 +126,7 @@
 <script>
 
 	$(function(){
-		$('#departmentId').combobox('setValue', '$!staff.departmentId');
+		$('#departmentId').combotree('setValue', '$!staff.departmentId');
 	});
 
 	function submitForm(){
