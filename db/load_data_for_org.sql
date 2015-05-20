@@ -17,6 +17,7 @@ insert into t_resource_option values('department_manager','跳转新增部门界
 insert into t_resource_option values('department_manager','跳转修改部门界面','departmentManager!toEditPage.do');
 insert into t_resource_option values('department_manager','保存新增部门信息','departmentManager!saveDepartment.do');
 insert into t_resource_option values('department_manager','保存修改后的部门信息','departmentManager!saveUpdate.do');
+insert into t_resource_option values('department_manager','获取所有部门信息','departmentManager!getAllDepartment.do');
 
 insert into t_resource_option values('post_manager','获取用户所属部门列表','departmentPostRelation!queryDepartmentPost.do');
 insert into t_resource_option values('post_manager','保存新定义的岗位','postManager!savePost.do');
