@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<script type="text/javascript" src="../jquery.min.js"></script>
+	<link id="easyuiTheme" rel="stylesheet" type="text/css" href="../themes/default/easyui.css">
+	<script type="text/javascript" charset="UTF-8" src="../themes/themes.js"></script>
+	<link rel="stylesheet" type="text/css" href="../themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../css/smart.css">
+	<script type="text/javascript" src="../jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="../locale/easyui-lang-zh_CN.js"></script>      
+</head>
+<body>
+	<div class="easyui-layout" data-options="fit:true">
+		<div data-options="region:'west',split:true" style="width:20%;padding:10px">
+			<ul id="tt" class="easyui-tree" data-options="url:'../departmentManager!genDepartmentTree.do',method:'get',animate:true,dnd:true"></ul>
+		</div>
+		<div data-options="region:'center'" style="padding:2px">
+			<div id="title" align="center" class="datagrid-toolbar page_title">松大科技</div>
+				<input id="departmentId" name="departmentId" value="root" type="hidden" >
+				<input id="departmentName" name="departmentName" value="松大科技" type="hidden" >
+				<table id="dg" class="easyui-datagrid" style="width:100%;height:auto;"
+					   data-options="rownumbers:true,singleSelect:false,border:false,url:'../staff!list.do',method:'get',toolbar:'#tb',autoRowHeight:true,pagination:true,pageSize:10">
+					<thead>
+						<tr>
+							<th data-options="field:'id',checkbox:true"></th>
+							<th data-options="field:'loginName',width:'14%'">登录名</th>
+							<th data-options="field:'realName',width:'14%'">姓名</th>
+							<th data-options="field:'sex',width:'8%',formatter:formatSex">性别</th>
+							<th data-options="field:'telephone',width:'12%',">电话</th>
+							<th data-options="field:'email',width:'20%'">Email</th>
+							<th data-options="field:'status',width:'8%',formatter:formatStatus">状态</th>
+							<th data-options="field:'stateOpert',width:'16%',align:'center',formatter:formatOpert">操作</th>
+						</tr>
+					</thead>
+				</table>
+				<div style="width:99%;padding: 5px;" align="center">
+					<a href="javascript:modify()" class="easyui-linkbutton" iconCls="icon-edit">&nbsp;修&nbsp;改&nbsp;</a>&nbsp;&nbsp;&nbsp;
+					<a href="javascript:remove()" class="easyui-linkbutton" iconCls="icon-cancel">&nbsp;注&nbsp;销&nbsp;</a>&nbsp;&nbsp;&nbsp;
+					<a href="javascript:reset()" class="easyui-linkbutton" iconCls="icon-clear">&nbsp;重置密码&nbsp;</a>&nbsp;&nbsp;&nbsp;
+					<a href="../staff!insert.do" class="easyui-linkbutton" iconCls="icon-add">&nbsp;新&nbsp;增&nbsp;</a>&nbsp;&nbsp;&nbsp;
+				</div>
+				<div id="ui_mask" style="display:none" class="datagrid-mask"></div>
+				<div id="ui_mask_msg" style="display:none; left: 50%; height: 16px; margin-left: -85.5px; line-height: 16px;" class="datagrid-mask-msg">正在处理，请稍待。。。</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+<script type="text/javascript">
+	
+	$('#tt').tree({
+		onClick: function(node){
+			var id = node.id;
+			$('#title').text(node.text);
+			$("#departmentName").val(node.text);
+			$("#departmentId").val(node.id);
+         var params = '{"departmentId":"' + id + '"}';   // 封装查询参数
+         $('#dg').datagrid('load',eval('(' + params + ')')); 
+		}
+	});
+
+
+	function queryData(){
+		var paramsArray = $("#queryParams").serializeArray();
+		var results ='{';
+		$.each(paramsArray, function(i, field){
+			val = $.trim(field.value);
+			if(val){
+		  	 	results += '"'+field.name + '":"' + val + '",';
+			}
+		});
+		results += '}';
+		$('#dg').datagrid('load',eval('(' + results + ')')); 
+	}
+	$(function(){
+		 $('#queryButton').bind('click',queryData);
+		 $('#dg').datagrid('getPager').pagination({
+				onSelectPage:function(pageNum, pageSize){
+					$('#dg').datagrid({pageNumber:pageNum,pageSize:pageSize});
+					queryData;  
+			}
+		});
+	}); 
+	//格式化数据
+	function formatSex(val,row){
+		if(val == 1){
+			return '男';
+		}else if(val == 2){
+			return '女';
+		}else{
+			return "保密";
+		}
+	}
+	//格式化数据
+	function formatStatus(val,row){
+		if (val == 0){
+    		return '<font color="green">待审核</font>';
+		}else if(val == 1){
+			return '<font color="green">正常</font>';
+		}else if(val == 2){
+			return '<font color="red">锁定</font>';
+    	}else if(val == 3){
+    		return '<font color="red">已注销</font>';
+    	}
+	}
+	//格式化数据
+	function formatOpert(val,row){
+		if(!val){
+			return '';
+		}
+		var arr = val.split(',');
+		if (arr[0] == 1){
+    		return '<input type="button" onclick="lock(0,\''+arr[1]+'\')" value="锁定" />';
+		}else if (arr[0] == 2){
+			return '<input type="button" onclick="lock(1,\''+arr[1]+'\')" value="解锁" />';
+		}
+		return '';
+	}
+	//注销
+	function remove(){
+		var ids="";
+		var names= [];
+		var rows = $('#dg').datagrid('getSelections');
+		for(var i=0; i<rows.length; i++){
+			 if (!ids) {
+			   	ids =  rows[i].loginName;
+			 } else {
+				ids += "," + rows[i].loginName;
+			 }   
+			 names.push(rows[i].realName);
+		}
+		if (!ids || ids.length == 0) {
+			alert("请选择要注销的账户");
+			return;
+		}
+		var answer = confirm("请确认是否注销以下账户?注销后不可恢复！\n"+names.join('\n'));
+		if (answer) {
+			$('#ui_mask').css('display','block');
+			$('#ui_mask_msg').css('display','block');
+			var url = '../staff!delete.do';
+            var params = {
+            		loginName: ids
+            };
+            jQuery.post(url, params, function(data){
+            		window.location.reload();
+            });
+		}
+	}
+	//重置密码
+	function reset(){
+		var ids="";
+		var names= [];
+		var rows = $('#dg').datagrid('getSelections');
+		for(var i=0; i<rows.length; i++){
+			 if (!ids) {
+			   	ids =  rows[i].loginName;
+			 } else {
+				ids += "," + rows[i].loginName;
+			 }   
+			 names.push(rows[i].realName);
+		}
+		if (!ids || ids.length == 0) {
+			alert("请选择要重置密码的账户");
+			return;
+		}
+		var answer = confirm("请确认是否重置以下账户密码?\n"+names.join('\n'));
+		if (answer) {
+			$('#ui_mask').css('display','block');
+			$('#ui_mask_msg').css('display','block');
+			var url = '../staff!reset.do';
+            var params = {
+            		loginName: ids
+            };
+            jQuery.post(url, params, function(data){
+            	alert(data.msg);
+            	$('#ui_mask').css('display','none');
+        		$('#ui_mask_msg').css('display','none');
+            });
+		}
+	}
+	//修改
+	function modify(){
+		var ids="";
+		var names= [];
+		var rows = $('#dg').datagrid('getSelections');
+		for(var i=0; i<rows.length; i++){
+			 if (!ids) {
+			   	ids =  rows[i].loginName;
+			 } else {
+				alert("修改项目时不能多选");
+				return;	
+			 }   
+		}
+		if (!ids) {
+			alert("请选择要修改的项目");
+			return;
+		}
+		window.location.href="../staff!update.do?loginName="+ids;
+	}
+	// 加锁/解锁
+	function lock(type,loginName) {
+		var tip = '加锁';
+		var url = '../staff!lock.do';
+		if(type == 1){
+			tip = '解锁';
+			url = '../staff!unlock.do';
+		}
+		if(confirm("确定"+tip+"吗？")){
+            var params = {
+                loginName: loginName
+            };
+            jQuery.post(url, params,function(data){
+            		window.location.reload();
+            });
+		}
+	}
+</script>
