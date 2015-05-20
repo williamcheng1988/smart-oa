@@ -19,6 +19,8 @@ import com.chz.smartoa.common.base.BaseAction;
 import com.chz.smartoa.common.base.DataGrid;
 import com.chz.smartoa.common.util.CookieUtil;
 import com.chz.smartoa.common.util.LoginUtils;
+import com.chz.smartoa.fileUpload.util.PerpertiesTool;
+import com.chz.smartoa.fileUpload.util.PerpertyNames;
 import com.chz.smartoa.global.ResourceMgr;
 import com.chz.smartoa.system.constant.OperateLogType;
 import com.chz.smartoa.system.exception.PasswordMustChangeException;
@@ -66,6 +68,8 @@ public class StaffAction extends BaseAction {
 	private int todoCount;
 	// 跟踪任务列表
 	private List<HiTaskVo> historyList;
+	
+	private String departmentId;    // 部门编号
 
 	/**
 	 * 登录
@@ -249,11 +253,24 @@ public class StaffAction extends BaseAction {
 	 */
 	public String list() {
 		// 如果是分页查询，调用基类方法设置分页属性（start,limit,sort,order等）
-		this.setPagination(this.staff);
-		// 得到分页结果
-		this.staffs = this.staffBiz.listStaff(this.staff);
-		// 封装数据
-		this.dataGrid = new DataGrid(this.staffBiz.listStaffCount(this.staff), this.staffs);
+		if("DEPARTMENT".equals(PerpertiesTool.getPro(PerpertyNames.PROJECT_VERSION_TYPE))){
+			if(StringUtils.isEmpty(departmentId)){
+				departmentId = "root";
+			}
+			Staff sf = new Staff();
+			sf.setDepartmentId(departmentId);
+			this.setPagination(sf);
+			// 得到分页结果
+			this.staffs = this.staffBiz.listStaff(sf);
+			// 封装数据
+			this.dataGrid = new DataGrid(this.staffBiz.listStaffCount(sf), this.staffs);
+		}else{
+			this.setPagination(this.staff);
+			// 得到分页结果
+			this.staffs = this.staffBiz.listStaff(this.staff);
+			// 封装数据
+			this.dataGrid = new DataGrid(this.staffBiz.listStaffCount(this.staff), this.staffs);
+		}
 		return BaseAction.DATA_GRID;
 	}
 
@@ -270,6 +287,10 @@ public class StaffAction extends BaseAction {
 
 	public String beforeInsert(){
 		this.roles = this.staffBiz.getRoles(new Role());
+		if("DEPARTMENT".equals(PerpertiesTool.getPro(PerpertyNames.PROJECT_VERSION_TYPE))){
+			//System.out.println(departmentId);
+			return "beforeInsert_dept";
+		}
 		return "beforeInsert";
 	}
 
@@ -361,6 +382,9 @@ public class StaffAction extends BaseAction {
 					role.setChecked(true);
 				}
 			}
+		}
+		if("DEPARTMENT".equals(PerpertiesTool.getPro(PerpertyNames.PROJECT_VERSION_TYPE))){
+			return "beforeUpdate_dept";
 		}
 		return "beforeUpdate";
 	}
@@ -629,5 +653,13 @@ public class StaffAction extends BaseAction {
 	public String getNewPassword() {
 		return this.newPassword;
 	}
+
+	public String getDepartmentId() {
+		return departmentId;
+	}
+	public void setDepartmentId(String departmentId) {
+		this.departmentId = departmentId;
+	}
+	
 }
 
