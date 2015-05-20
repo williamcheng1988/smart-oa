@@ -15,11 +15,15 @@
         </action>
         
         <action name="staff" class="staffAction">
-            <result name="beforeInsert" type="velocity">/staff/add.html</result> 
+            <result name="beforeInsert" type="velocity">/staff/add.html</result>
             <result name="beforeUpdate" type="velocity">/staff/modify.html</result>
             <result name="beforeChangePassword" type="velocity">/staff/changePassword.html</result>               
             <result name="logout" type="redirect">/login.html</result>
             <result name="view" type="velocity">/staff/view.html</result>
+            
+            <result name="beforeInsert_dept" type="velocity">/staff_dept/add.html</result> 
+            <result name="beforeUpdate_dept" type="velocity">/staff_dept/modify.html</result> 
+            
         </action>
         
         <action name="role" class="roleAction">
