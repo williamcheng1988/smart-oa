@@ -363,6 +363,7 @@ create table T_GE_EXECUTION
 	business_title_ VARCHAR(100),
 	project_id_ VARCHAR(100),
 	owner_ VARCHAR(64) not null,
+	department_id_ VARCHAR(100),
 	template_id_ VARCHAR(200) not null,
 	procdef_id_ VARCHAR(64),
 	task_status_ int not null,
