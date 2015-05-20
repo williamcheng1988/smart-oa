@@ -42,4 +42,8 @@ public class DepartmentBizImpl implements DepartmentBiz {
 	public void updateDepartment(Department department) {
 		departmentDao.updateDepartment(department);
 	}
+	@Override
+	public List<Department> getAllDepartment() {
+		return departmentDao.getAllDepartment();
+	}
 }
