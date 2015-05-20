@@ -17,4 +17,6 @@ public interface DepartmentBiz {
 	public void insertDepartment(Department department);
 	
 	public void updateDepartment(Department department);
+	
+	public List<Department> getAllDepartment();
 }
