@@ -288,7 +288,6 @@ public class StaffAction extends BaseAction {
 	public String beforeInsert(){
 		this.roles = this.staffBiz.getRoles(new Role());
 		if("DEPARTMENT".equals(PerpertiesTool.getPro(PerpertyNames.PROJECT_VERSION_TYPE))){
-			//System.out.println(departmentId);
 			return "beforeInsert_dept";
 		}
 		return "beforeInsert";
