@@ -171,7 +171,7 @@
   		  	</td>
   		  	<td>
   		  	&nbsp;&nbsp;
-  			 	<select id="sel_staff" class="input" style="width: 150px">
+  			 	<select id="sel_staff" class="easyui-combobox" data-options="editable:false" style="width: 150px">
   			 			#optionTag("NORMAL_USERS")	
 				</select>
   		  	</td>
@@ -185,7 +185,7 @@
   		  	</td>
   		  	<td>
   		  	&nbsp;&nbsp;
-  		  		<select id="sel_role" class="input" disabled style="width: 150px">
+  		  		<select id="sel_role" class="easyui-combobox"  data-options="editable:false" disabled style="width: 150px">
   		  				#optionTag("NORMAL_ROLES")	
 				</select>
   		  	</td>
@@ -276,21 +276,29 @@ function bindClick(id){
 
 function chooseActionObject(lineNo){
 	$('#lineNo_box').val(lineNo);
-	$('#sel_role').val(null);
-	$('#sel_staff').val(null);
+	$('#sel_role').combobox('setValue','');
+	$('#sel_staff').combobox('setValue','');
 	var actionType = $("input[name=action_obj_type_"+lineNo+"]").val();
 	var actionObject = $("input[name=action_obj_"+lineNo+"]").val();
 	if(actionType){
 		if(actionType == 2){
 			$("input[name=actionObjectType][value=2]").prop("checked",true);
-			$("#sel_role").prop("disabled",false);
-			$("#sel_staff").prop("disabled",true);
-			$('#sel_role').val(actionObject);
+			//$("#sel_role").prop("disabled",false);
+			//$("#sel_staff").prop("disabled",true);
+			//$('#sel_role').val(actionObject);
+			$('#sel_staff').combobox('disable');
+			$('#sel_role').combobox('enable');
+			$('#sel_staff').combobox('setValue','');
+			$('#sel_role').combobox('setValue',actionObject);
 		}else{
 			$("input[name=actionObjectType][value=1]").prop("checked",true);
-			$("#sel_role").prop("disabled",true);
-			$("#sel_staff").prop("disabled",false);
-			$('#sel_staff').val(actionObject);
+			//$("#sel_role").prop("disabled",true);
+			//$("#sel_staff").prop("disabled",false);
+			//$('#sel_staff').val(actionObject);
+			$('#sel_staff').combobox('enable');
+			$('#sel_role').combobox('disable');
+			$('#sel_staff').combobox('setValue',actionObject);
+			$('#sel_role').combobox('setValue','');
 		}
 	}
 	$('#ui_mask').css('display','block');
@@ -299,14 +307,19 @@ function chooseActionObject(lineNo){
 
 $("input[name=actionObjectType]").bind("click", function(e){
 	if($(this).val() == 1){
-		$("#sel_staff").prop("disabled",false);
-		$("#sel_role").prop("disabled",true);
-		$("#sel_role").val(-1);
+		//$("#sel_staff").prop("disabled",false);
+		//$("#sel_role").prop("disabled",true);
+		//$("#sel_role").val(-1);
+		$('#sel_staff').combobox('enable');
+		$('#sel_role').combobox('disable');
+		$('#sel_role').combobox('setValue','');
 	}else{
-		$("#sel_staff").prop("disabled",true);
-		$("#sel_role").prop("disabled",false);
-		$("#sel_staff").val(-1);
-		
+		//$("#sel_staff").prop("disabled",true);
+		//$("#sel_role").prop("disabled",false);
+		//$("#sel_staff").val(-1);
+		$('#sel_staff').combobox('disable');
+		$('#sel_staff').combobox('setValue','');
+		$('#sel_role').combobox('enable');
 	}
 }); 
 function submitForm(){
@@ -314,13 +327,13 @@ function submitForm(){
 	var lineNo = $('#lineNo_box').val();
 	if(type == 1){
 		$("input[name=action_obj_type_"+lineNo+"]").val(1);
-		$("input[name=action_obj_"+lineNo+"]").val($("#sel_staff").val());
-		$("#action_obj_name_"+lineNo).textbox('setValue', $("#sel_staff").find("option:selected").text());
+		$("input[name=action_obj_"+lineNo+"]").val($("#sel_staff").combobox("getValue"));
+		$("#action_obj_name_"+lineNo).textbox('setValue', $("#sel_staff").combobox("getText"));
 		//$("input[name=action_obj_name_"+lineNo+"]").val($("#sel_staff").find("option:selected").text());
 	}else{
 		$("input[name=action_obj_type_"+lineNo+"]").val(2);
-		$("input[name=action_obj_"+lineNo+"]").val($("#sel_role").val());
-		$("#action_obj_name_"+lineNo).textbox('setValue',$("#sel_role").find("option:selected").text());
+		$("input[name=action_obj_"+lineNo+"]").val($("#sel_role").combobox("getValue"));
+		$("#action_obj_name_"+lineNo).textbox('setValue',$("#sel_role").combobox("getText"));
 		//$("input[name=action_obj_name_"+lineNo+"]").val($("#sel_role").find("option:selected").text());
 	}
 	jQuery.parser.parse("input[name=action_obj_name_"+lineNo+"]");

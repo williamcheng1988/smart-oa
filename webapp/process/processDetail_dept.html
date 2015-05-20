@@ -146,7 +146,7 @@
 		</div>
 <div id="ui_mask" style="display:none" class="datagrid-mask"></div>
 <div id="ui_mask_msg" style="display:none; left: 50%; height: 16px; margin-left: -85.5px; line-height: 16px;" class="datagrid-mask-msg">正在处理，请稍待。。。</div>
-<div id="dlg" class="easyui-dialog" title="&nbsp;选择处理对象" style="width:470px;height:160px;max-width:800px;padding:10px"
+<div id="dlg" class="easyui-dialog" title="&nbsp;选择处理对象" style="width:470px;height:190px;max-width:800px;padding:10px"
 		data-options="closed: true,
 		closable:false,
 		buttons: [{
@@ -167,13 +167,14 @@
   <input type="hidden" id="lineNo_box" />
   <div class="modal-body">
   		  <table style="border:0;width: 100%">
+  		  <tr><td>&nbsp;</td><td><span id="showTips" style="color:red"></span></td></tr>
   		  <tr style="width: 30%">
   		 	<td align="right">
   		 		 <label><input type="radio" name="actionObjectType" value="1" checked>&nbsp;人员</label>
   		  	</td>
   		  	<td>
   		  	&nbsp;&nbsp;
-  			 	<select id="sel_staff" class="input" style="width: 150px">
+  			 	<select id="sel_staff" class="easyui-combobox" data-options="editable:false" style="width: 150px">
   			 			#optionTag("NORMAL_USERS")	
 				</select>&nbsp;
   		  	</td>
@@ -187,13 +188,13 @@
   		  	</td>
   		  	<td>
   		  	&nbsp;&nbsp;
-  		  	<select id="sel_post" class="input" disabled style="width: 150px">
+  		  	<select id="sel_post" class="easyui-combotree" data-options="url:'departmentManager!genDepartmentTree.do',method:'get'" disabled style="width: 150px">
   		  		     #optionTag("NORMAL_POSTS")	
 			</select>
 			&nbsp;&nbsp;
-			<select id="sel_post_src" class="input" title="指定部门" disabled style="width: 150px">
-  		  		     #optionTag("NORMAL_POSTS")	
-			</select>
+			<!-- <select id="sel_post_src" class="input" title="指定部门" disabled style="width: 150px">
+  		  		     ##optionTag("NORMAL_POSTS")	
+			</select> -->
 			<!-- 
 			<input id="sel_post_src"  class="easyui-combotree" data-options="url:'departmentManager!genDepartmentTree.do',method:'get'" style="width:200px;">
 			 -->
@@ -273,6 +274,17 @@ $(function() {
     		$("[name='lineNos']").val(lineNos.replace(line_no+",",""));
  		}); 
 	}); 
+    
+    $('#sel_post').combotree({
+    	onSelect: function(node){
+			if('root'!=node.id){
+				$('#showTips').html('');
+				//$('#sel_post').combotree('setValue',node.id);
+			}else{
+				$('#showTips').html('请选择子部门!');
+			}
+		}
+	});
 })
 
 function bindClick(id){
@@ -284,26 +296,38 @@ function bindClick(id){
 
 function chooseActionObject(lineNo){
 	$('#lineNo_box').val(lineNo);
-	$('#sel_post').val(null);
-	$('#sel_post_src').val(null);
-	$('#sel_staff').val(null);
+	//$('#sel_post').val(null);
+	//$('#sel_post_src').val(null);
+	//$('#sel_staff').val(null);
+	$('#sel_post').combotree('setValue','');
+	$('#sel_staff').combobox('setValue','');
+	
 	var actionType = $("input[name=action_obj_type_"+lineNo+"]").val();
 	var actionObject = $("input[name=action_obj_"+lineNo+"]").val();
 	var actionObjectSrc = $("input[name=action_obj_src_"+lineNo+"]").val();
 	if(actionType){
-		if(actionType == 2){
+		//TODO 确认此处是否应该修改为 3
+		if(actionType == 3){
 			$("input[name=actionObjectType][value=3]").prop("checked",true);
-			$("#sel_post").prop("disabled",false);
-			$("#sel_post_src").prop("disabled",false);
-			$("#sel_staff").prop("disabled",true);
-			$('#sel_post').val(actionObject);
-			$("#sel_post_src").val(actionObjectSrc);
+			//$("#sel_post").prop("disabled",false);
+			//$("#sel_post_src").prop("disabled",false);
+			//$("#sel_staff").prop("disabled",true);
+			//$('#sel_post').val(actionObject);
+			//$("#sel_post_src").val(actionObjectSrc);
+			$('#sel_staff').combobox('disable');
+			$('#sel_post').combotree('enable');
+			$('#sel_staff').combobox('setValue','');
+			$('#sel_post').combotree('setValue',actionObject);
 		}else{
 			$("input[name=actionObjectType][value=1]").prop("checked",true);
-			$("#sel_post").prop("disabled",true);
-			$("#sel_post_src").prop("disabled",true);
-			$("#sel_staff").prop("disabled",false);
-			$('#sel_staff').val(actionObject);
+			//$("#sel_post").prop("disabled",true);
+			//$("#sel_post_src").prop("disabled",true);
+			//$("#sel_staff").prop("disabled",false);
+			//$('#sel_staff').val(actionObject);
+			$('#sel_staff').combobox('enable');
+			$('#sel_post').combotree('disable');
+			$('#sel_staff').combobox('setValue',actionObject);
+			$('#sel_post').combotree('setValue','');
 		}
 	}
 	$('#ui_mask').css('display','block');
@@ -312,17 +336,22 @@ function chooseActionObject(lineNo){
 
 $("input[name=actionObjectType]").bind("click", function(e){
 	if($(this).val() == 1){
-		$("#sel_staff").prop("disabled",false);
-		$("#sel_post").prop("disabled",true);
-		$("#sel_post_src").prop("disabled",true);
-		$("#sel_post").val(-1);
-		$("#sel_post_src").val(-1);
+		//$("#sel_staff").prop("disabled",false);
+		//$("#sel_post").prop("disabled",true);
+		//$("#sel_post_src").prop("disabled",true);
+		//$("#sel_post").val(-1);
+		//$("#sel_post_src").val(-1);
+		$('#sel_staff').combobox('enable');
+		$('#sel_post').combotree('disable');
+		$('#sel_post').combotree('setValue','');
 	}else{
-		$("#sel_staff").prop("disabled",true);
-		$("#sel_post").prop("disabled",false);
-		$("#sel_post_src").prop("disabled",false);
-		$("#sel_staff").val(-1);
-		
+		//$("#sel_staff").prop("disabled",true);
+		//$("#sel_post").prop("disabled",false);
+		//$("#sel_post_src").prop("disabled",false);
+		//$("#sel_staff").val(-1);
+		$('#sel_staff').combobox('disable');
+		$('#sel_post').combotree('enable');
+		$('#sel_staff').combobox('setValue','');
 	}
 }); 
 function submitForm(){
@@ -330,18 +359,18 @@ function submitForm(){
 	var lineNo = $('#lineNo_box').val();
 	if(type == 1){
 		$("input[name=action_obj_type_"+lineNo+"]").val(1);
-		$("input[name=action_obj_"+lineNo+"]").val($("#sel_staff").val());
-		$("#action_obj_name_"+lineNo).textbox('setValue', $("#sel_staff").find("option:selected").text());
+		$("input[name=action_obj_"+lineNo+"]").val($("#sel_staff").combobox('getValue'));
+		$("#action_obj_name_"+lineNo).textbox('setValue', $("#sel_staff").combobox('getText'));
 	}else{
 		$("input[name=action_obj_type_"+lineNo+"]").val(3);
-		$("input[name=action_obj_"+lineNo+"]").val($("#sel_post").val());
-		$("input[name=action_obj_src_"+lineNo+"]").val($("#sel_post_src").val());
-		var deptName = $("#sel_post_src").find("option:selected").text();
-		var objName = $("#sel_post").find("option:selected").text();
-		if(deptName){
-			objName = deptName+"-"+objName;
-		}
-		$("#action_obj_name_"+lineNo).textbox('setValue',objName);
+		$("input[name=action_obj_"+lineNo+"]").val($("#sel_post").combotree('getValue'));
+		//$("input[name=action_obj_src_"+lineNo+"]").val($("#sel_post_src").val());
+		//var deptName = $("#sel_post_src").find("option:selected").text();
+		//var objName = $("#sel_post").find("option:selected").text();
+		//if(deptName){
+		//	objName = deptName+"-"+objName;
+		//}
+		$("#action_obj_name_"+lineNo).textbox('setValue',$("#sel_post").combotree('getText'));
 	}
 	jQuery.parser.parse("input[name=action_obj_name_"+lineNo+"]");
 	$('#dlg').dialog('close');
