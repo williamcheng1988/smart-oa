@@ -9,6 +9,11 @@ insert into t_resource
 VALUES
 ('post_manager','system_setting','岗位管理','departmentPost/list.html',null,1,'AUTH',10);
 
+insert into t_resource
+(resource_id,parent_id,resource_name,address_url,resource_desc,resource_type,auth_type,sort_num)
+values
+('staff_dept_manage','system_setting','用户管理','staff_dept/list.html',null,1,'AUTH',11);
+
 
 -- 添加访问权限sql
 insert into t_resource_option values('department_manager','加载部门配置菜单','departmentManager!genDepartmentTree.do');
