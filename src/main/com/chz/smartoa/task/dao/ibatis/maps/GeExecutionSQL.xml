@@ -136,6 +136,7 @@
     SELECT
        		EXECUTION_ID_,
 		       		OWNER_,
+		       		DEPARTMENT_ID_,
 		       		TASK_STATUS_,
 		       		VERSION_,
 		       		TEMPLATE_ID_,
