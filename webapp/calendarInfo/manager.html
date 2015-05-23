@@ -92,10 +92,10 @@
 				   data: "selectDate="+selectDate,
 				   dataType:"json",
 				   success: function(json){
-					   if(json[0] == 'true'){
-						   $('#id').val(json[1].id);
-						   $('#holidayType').combobox('setValue', json[1].holidayType);
-						   $("#holidayDesc").val(json[1].holidayDesc);
+					   if(json.msg == 'true'){
+						   $('#id').val(json.id);
+						   $('#holidayType').combobox('setValue', json.holidayType);
+						   $("#holidayDesc").val(json.holidayDesc);
 					   }else{
 						   $('#id').val('');
 						   $('#holidayType').combobox('setValue', '');
@@ -120,10 +120,10 @@
 				   data: "selectDate="+selectDate,
 				   dataType:"json",
 				   success: function(json){
-					   if(json[0] == 'true'){
-						   $('#id').val(json[1].id);
-						   $('#holidayType').combobox('setValue', json[1].holidayType);
-						   $("#holidayDesc").val(json[1].holidayDesc);
+					   if(json.msg == 'true'){
+						   $('#id').val(json.id);
+						   $('#holidayType').combobox('setValue', json.holidayType);
+						   $("#holidayDesc").val(json.holidayDesc);
 					   }else{
 						   $('#id').val('');
 						   $('#holidayType').combobox('setValue', '');
@@ -171,15 +171,15 @@
 				   data: "id="+id,
 				   dataType:"json",
 				   success: function(json){
-					   if(json == 'true'){
+					   if(json.code == 1){
 						   $('#id').val('');
 						   $('#holidayType').combobox('setValue', '');
 						   $("#holidayDesc").val('');
 						   $('#dg').datagrid('load',{
 							   selectDate: dateSet
-							});
+							}); 
 					   }else{
-						   alert("删除失败，请稍候重试!");
+						   alert(json.msg);
 					   }
 				   }
 				});
@@ -215,12 +215,12 @@
 				   data: "calendar.dateSet="+dateSet + "&calendar.holidayType=" + holidayType + "&calendar.holidayDesc=" + holidayDesc + "&id=" + id,
 				   dataType:"json",
 				   success: function(json){
-					   if(json[0] == 'true'){
-						   $("#id").val(json[1]);
+					   if(json.msg == 'true'){
+						   $("#id").val(json.id);
 						   $('#dg').datagrid('load',{
 							   selectDate: dateSet
 							});
-					   }else if(json[0] == "manyData"){
+					   }else if(json.msg == "manyData"){
 						   alert("每一天的日期只能设置一条记录!");
 					   }else{
 						   alert("保存失败，请稍候重试!");

@@ -156,7 +156,7 @@
 				   data: "mainIds="+ids,
 				   dataType:"json",
 				   success: function(json){
-					   if(json == 'true'){
+					   if(json.code == 1){
 						  $('#dg').datagrid('load',{
 							  queryName: queryName,
 							  startDt: startDt,
@@ -205,7 +205,7 @@
 				   data: "mainIds="+ids,
 				   dataType:"json",
 				   success: function(json){
-					   if(json == 'true'){
+					   if(json.code == 1){
 						   $('#dg').datagrid('load',{
 								  queryName: queryName,
 								  startDt: startDt,
@@ -296,7 +296,7 @@
 				   data: "mainIds="+ids,
 				   dataType:"json",
 				   success: function(json){
-					   if(json == 'true'){
+					   if(json.code == 1){
 						   $('#dg').datagrid('load',{
 								  queryName: queryName,
 								  startDt: startDt,

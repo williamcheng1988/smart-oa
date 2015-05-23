@@ -93,9 +93,13 @@ public class WorkPlanAction extends BaseAction{
 			e.printStackTrace();
 			msg = "false";
 		}
-		Gson gson = new GsonBuilder().create();
-		jsonStr = gson.toJson(msg);
-		return "json";
+		
+		if(msg.equals("true")){
+			operateResult = new OperateResult(1, "日程记录保存成功！");
+		}else{
+			operateResult = new OperateResult(-1, "日程记录保存失败，请稍候重试!");
+		}
+		return OPER_RESULT;
 	}
 	
 	
@@ -121,15 +125,17 @@ public class WorkPlanAction extends BaseAction{
 			e.printStackTrace();
 			msg = "false";
 		}
-		Gson gson = new GsonBuilder().create();
-		jsonStr = gson.toJson(msg);
-		return "json";
+		if(msg.equals("true")){
+			operateResult = new OperateResult(1, "日程记录保存修改成功！");
+		}else{
+			operateResult = new OperateResult(-1, "日程记录保存修改失败，请稍候重试!");
+		}
+		return OPER_RESULT;
 	}
 	
 	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public String toEidt(){
-		List list = new ArrayList();
+		WorkPlan pageWorkPlan = new WorkPlan();
 		try {
 			workPlan = workPlanBiz.getWorkPlanById(workPlan.getId());
 			String workTime = workPlan.getWorkTime();
@@ -140,20 +146,20 @@ public class WorkPlanAction extends BaseAction{
 				selectHour = null;
 				selectMin = null;
 			}
-			list.add(selectHour);
-			list.add(selectMin);
-			list.add(workPlan.getWorkDesc());
-			list.add(workPlan.getNoticeType());
+			
+			pageWorkPlan.setSelectHour(selectHour);
+			pageWorkPlan.setSelectMin(selectMin);
+			pageWorkPlan.setWorkDesc(workPlan.getWorkDesc());
+			pageWorkPlan.setNoticeType(workPlan.getNoticeType());
 			msg = "true";
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			e.printStackTrace();
 			msg = "false";
 		}
-		list.add(msg);
-		Gson gson = new GsonBuilder().create();
-		jsonStr = gson.toJson(list);
-		return "json";
+		pageWorkPlan.setMsg(msg);
+		entry = pageWorkPlan;
+		return ENTRY;
 	}
 	
 	
@@ -170,9 +176,12 @@ public class WorkPlanAction extends BaseAction{
 			e.printStackTrace();
 			msg = "false";
 		}
-		Gson gson = new GsonBuilder().create();
-		jsonStr = gson.toJson(msg);
-		return "json";
+		if(msg.equals("true")){
+			operateResult = new OperateResult(1, "日程记录删除成功！");
+		}else{
+			operateResult = new OperateResult(-1, "日程记录删除失败，请稍候重试!");
+		}
+		return OPER_RESULT;
 	}
 	
 	
@@ -233,13 +242,16 @@ public class WorkPlanAction extends BaseAction{
 					}
 				}
 			}
-			Gson gson = new GsonBuilder().create();
-			jsonStr = gson.toJson(workPlanList);
+			dataList = workPlanList;
+			//Gson gson = new GsonBuilder().create();
+			//jsonStr = gson.toJson(workPlanList);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());
 		}
-		return "json";
+		//return "json";
+		
+		return DATA_LIST;
 	}
 	
 	

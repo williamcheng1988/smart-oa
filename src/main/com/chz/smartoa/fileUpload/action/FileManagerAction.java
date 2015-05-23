@@ -20,6 +20,7 @@ import com.chz.smartoa.fileUpload.service.FileGroupBiz;
 import com.chz.smartoa.fileUpload.service.FileManagerBiz;
 import com.chz.smartoa.fileUpload.service.RoleFiletypeBiz;
 import com.chz.smartoa.fileUpload.util.FileQuery;
+import com.chz.smartoa.system.action.OperateResult;
 import com.chz.smartoa.system.constant.OperateLogType;
 import com.chz.smartoa.system.pojo.DictionaryConfig;
 import com.chz.smartoa.system.service.DictionaryConfigBiz;
@@ -208,29 +209,6 @@ public class FileManagerAction extends BaseAction{
 		return DATA_GRID;
 	}
 	
-	/**
-	 * 查询列表数据
-	 * @return
-	 */
-	/**
-	public String query(){
-		FileQuery q = new FileQuery();
-		try {
-			if(StringUtils.isNotEmpty(menuType)){
-				q.setMenuType(menuType);
-			}
-			if(StringUtils.isNotBlank(fileTypeId)){
-				q.setFileTypeId(Integer.valueOf(fileTypeId));
-			}
-			fileList = fileManagerBiz.findFileManager(q, 0, 30,false);
-			dataGrid = new DataGrid(1,fileList);
-		}catch (Exception e){
-			logger.error(e.getMessage());
-		}
-		return DATA_GRID;
-	}
-	*/
-	
 
 	
 	// 获取点击树形菜单的文件类型名称
@@ -263,9 +241,11 @@ public class FileManagerAction extends BaseAction{
 			dictionaryId = "93";   // 暂时文件类型
 		}
 		dictionaryList = dictionaryConfigBiz.findCfgByParentIdForIsvalid(Integer.valueOf(dictionaryId));
-		Gson gson = new GsonBuilder().create();
-		jsonStr = gson.toJson(dictionaryList);
-		return "json";
+		dataList = dictionaryList;
+		//Gson gson = new GsonBuilder().create();
+		//jsonStr = gson.toJson(dictionaryList);
+		//return "json";
+		return DATA_LIST;
 	}
 	
 	
@@ -282,9 +262,11 @@ public class FileManagerAction extends BaseAction{
 		allList.add(fm.getFileTypeId());
 		allList.add(fm.getFileTypeSubId());
 		allList.add(fm.getId());
-		Gson gson = new GsonBuilder().create();
-		jsonStr = gson.toJson(allList);
-		return "json";
+		dataList = allList;
+		return DATA_LIST;
+//		Gson gson = new GsonBuilder().create();
+//		jsonStr = gson.toJson(allList);
+//		return "json";
 	}
 	
 	/**
@@ -293,9 +275,11 @@ public class FileManagerAction extends BaseAction{
 	 */
 	public String getSonList(){
 		dictionaryList = dictionaryConfigBiz.findCfgByParentIdForIsvalid(Integer.valueOf(dictionaryId));
-		Gson gson = new GsonBuilder().create();
-		jsonStr = gson.toJson(dictionaryList);
-		return "json";
+		dataList = dictionaryList;
+		return DATA_LIST;
+//		Gson gson = new GsonBuilder().create();
+//		jsonStr = gson.toJson(dictionaryList);
+//		return "json";
 	}
 	
 	/**
@@ -326,9 +310,16 @@ public class FileManagerAction extends BaseAction{
 			logger.error(e.getMessage());
 			msg = "false";
 		}
-		Gson gson = new GsonBuilder().create();
-		jsonStr = gson.toJson(msg);
-		return "json";
+		if(msg.equals("true")){
+			operateResult = new OperateResult(1, "文件删除成功！");
+		}else{
+			operateResult = new OperateResult(-1, "文件删除失败，请稍候重试!");
+		}
+		return OPER_RESULT;
+		
+//		Gson gson = new GsonBuilder().create();
+//		jsonStr = gson.toJson(msg);
+//		return "json";
 	}
 	
 	
@@ -350,9 +341,15 @@ public class FileManagerAction extends BaseAction{
 			msg = "false";
 			logger.error(e.getMessage());
 		}
-		Gson gson = new GsonBuilder().create();
-		jsonStr = gson.toJson(msg);
-		return "json";
+		if(msg.equals("true")){
+			operateResult = new OperateResult(1, "文件公开成功！");
+		}else{
+			operateResult = new OperateResult(-1, "文件公开失败，请稍候重试!");
+		}
+		return OPER_RESULT;
+//		Gson gson = new GsonBuilder().create();
+//		jsonStr = gson.toJson(msg);
+//		return "json";
 	}
 	
 	
@@ -368,9 +365,15 @@ public class FileManagerAction extends BaseAction{
 			msg = "false";
 			logger.error(e.getMessage());
 		}
-		Gson gson = new GsonBuilder().create();
-		jsonStr = gson.toJson(msg);
-		return "json";
+		if(msg.equals("true")){
+			operateResult = new OperateResult(1, "文件不公开成功！");
+		}else{
+			operateResult = new OperateResult(-1, "文件不公开失败，请稍候重试!");
+		}
+		return OPER_RESULT;
+//		Gson gson = new GsonBuilder().create();
+//		jsonStr = gson.toJson(msg);
+//		return "json";
 	}
 
 	
@@ -393,13 +396,15 @@ public class FileManagerAction extends BaseAction{
 					}
 				}
 			}
-			Gson gson = new GsonBuilder().create();
-			jsonStr = gson.toJson(fileList);
+//			Gson gson = new GsonBuilder().create();
+//			jsonStr = gson.toJson(fileList);
+			dataList = fileList;
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());
 		}
-		return "json";
+		return DATA_LIST;
+		//return "json";
 	}
 	
 	
@@ -451,14 +456,15 @@ public class FileManagerAction extends BaseAction{
 					}
 				}
 			}
-			
-			Gson gson = new GsonBuilder().create();
-			jsonStr = gson.toJson(pList);
+			dataList = pList;
+//			Gson gson = new GsonBuilder().create();
+//			jsonStr = gson.toJson(pList);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());
 		}
-		return "json";
+		//return "json";
+		return DATA_LIST;
 	}
 	
 	
@@ -482,13 +488,15 @@ public class FileManagerAction extends BaseAction{
 					}
 				}
 			}
-			Gson gson = new GsonBuilder().create();
-			jsonStr = gson.toJson(tList);
+//			Gson gson = new GsonBuilder().create();
+//			jsonStr = gson.toJson(tList);
+			dataList = tList;
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());
 		}
-		return "json";
+		//return "json";
+		return DATA_LIST;
 	}
 	
 	

@@ -1,12 +1,9 @@
 package com.chz.smartoa.system.action;
 
-import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
-
 import com.chz.smartoa.common.base.BaseAction;
 import com.chz.smartoa.common.base.DataGrid;
 import com.chz.smartoa.system.constant.OperateLogType;

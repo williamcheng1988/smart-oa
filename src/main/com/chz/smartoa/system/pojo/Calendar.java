@@ -20,6 +20,7 @@ public class Calendar extends BaseDomain{
 	
 	private String startDt;
 	private String endDt;
+	private String msg;
 	
 	
 	public Long getId() {
@@ -83,6 +84,12 @@ public class Calendar extends BaseDomain{
 	}
 	public void setEndDt(String endDt) {
 		this.endDt = endDt;
+	}
+	public String getMsg() {
+		return msg;
+	}
+	public void setMsg(String msg) {
+		this.msg = msg;
 	}
 
 }

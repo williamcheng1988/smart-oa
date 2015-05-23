@@ -63,11 +63,13 @@
 			 fileElementId : 'file', // 文件上传空间的id属性     
 				   success : function(json) 
 				   {    
-					   if(json == "type"){
+					   if(json.msg == "type"){
 						   alert("该附件类型不在允许上传的范围内!");
-					   }else if(json == "size"){
+						   $('#managerFileSpan').html('<input type="file" id="file" name="file" size="55px;" />');
+					   }else if(json.msg == "size"){
 						   alert("附件大小超过10M不允许上传!");
-					   }else if(json == 'true'){
+						   $('#managerFileSpan').html('<input type="file" id="file" name="file" size="55px;" />');
+					   }else if(json.msg == 'true'){
 						  alert("附件修改成功！"); 
 						  if(dicType == '1'){
 							  location.href="filemanager/list_public.html";
@@ -133,7 +135,9 @@
 				<tr>
 					<td>
 						&nbsp;&nbsp;
-					    <input type="file" id="file" name="file" size="55px;"/>
+						<span id='managerFileSpan'>
+					    	<input type="file" id="file" name="file" size="55px;"/>
+					    </span>
 					    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						<a id="addButton" class="easyui-linkbutton" onclick="updateAjaxUpload();">保存修改</a>
 						&nbsp;&nbsp;

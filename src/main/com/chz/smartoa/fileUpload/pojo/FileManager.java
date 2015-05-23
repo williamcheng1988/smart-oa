@@ -39,6 +39,8 @@ public class FileManager extends BaseDomain{
 	private String fileStatus;
 	private String realName;
 	
+	private String msg;
+	
 	
 	
 	public FileManager() {
@@ -176,6 +178,14 @@ public class FileManager extends BaseDomain{
 
 	public void setRealName(String realName) {
 		this.realName = realName;
+	}
+
+	public String getMsg() {
+		return msg;
+	}
+
+	public void setMsg(String msg) {
+		this.msg = msg;
 	}
 
 }

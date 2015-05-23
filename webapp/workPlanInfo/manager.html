@@ -190,17 +190,20 @@
 			   data: "workPlan.id="+id,
 			   dataType:"json",
 			   success: function(json){
-				   if(json[4] == 'true'){
-					   $('#workHour').combobox('setValue', json[0]);
-					   $('#workMin').combobox('setValue', json[1]);
-					   $("#workDesc").val(json[2]);
-					   var noticeType = json[3].split(',');
-					   for(var i=0;i<noticeType.length;i++){
-						   if(noticeType[i] == 1){
-							   document.getElementById('messageNotice').checked = true;
-						   }else if(noticeType[i] == 2){
-							   document.getElementById('emailNotice').checked = true;
-						   }
+				   if(json.msg == 'true'){
+					   $('#workHour').combobox('setValue', json.selectHour);
+					   $('#workMin').combobox('setValue', json.selectMin);
+					   $("#workDesc").val(json.workDesc);
+					   var noticeTypeParm = json.noticeType;
+					   if(noticeTypeParm){
+						   var noticeType = noticeTypeParm.split(',');
+						   for(var i=0;i<noticeType.length;i++){
+							   if(noticeType[i] == 1){
+								   document.getElementById('messageNotice').checked = true;
+							   }else if(noticeType[i] == 2){
+								   document.getElementById('emailNotice').checked = true;
+							   }
+						   } 
 					   }
 				   }else{
 					   alert("进入修改操作失败，请稍候重试");
@@ -219,7 +222,7 @@
 				   data: "workPlan.id="+id,
 				   dataType:"json",
 				   success: function(json){
-					   if(json == 'true'){
+					   if(json.code == 1){
 						   $('#isUpdate').val('');
 						   $('#id').val('');
 						   $('#workHour').combobox('setValue', '');
@@ -278,7 +281,7 @@
 			   data: "workPlan.workDate="+workDate + "&selectHour=" + workHour + "&selectMin=" + workMin + "&noticeType=" + noticeTypeParm + "&workPlan.workDesc=" + workDesc + "&isUpdate=" + isUpdate + "&id=" + id,
 			   dataType:"json",
 			   success: function(json){
-				   if(json == 'true'){
+				   if(json.code == 1){
 					   $('#isUpdate').val('');
 					   $('#id').val('');
 					   $('#workHour').combobox('setValue', '');

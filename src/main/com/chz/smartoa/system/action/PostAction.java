@@ -1,9 +1,11 @@
 package com.chz.smartoa.system.action;
 
 import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
+
 import com.chz.smartoa.common.base.BaseAction;
 import com.chz.smartoa.system.constant.OperateLogType;
 import com.chz.smartoa.system.pojo.Post;
@@ -69,9 +71,9 @@ public class PostAction extends BaseAction{
 			e.printStackTrace();
 			msg ="false";
 		}
-		Gson gson = new GsonBuilder().create();
-		jsonStr = gson.toJson(msg);
-		return "json";
+		
+		operateResult = new OperateResult(1, msg);
+		return OPER_RESULT;
 	}
 	
 	

@@ -43,9 +43,9 @@ function saveAddFile(){
 		 fileElementId : 'file', // 文件上传空间的id属性     
 			   success : function(json) 
 			   {    
-				   if(json == "type"){
+				   if(json.msg == "type"){
 					   alert("该附件类型不在允许上传的范围内!");
-				   }else if(json == "size"){
+				   }else if(json.msg == "size"){
 					   alert("附件大小超过10M不允许上传!");
 				   }else{
 					   var str = "<tr><td><label>&nbsp;<img src='images/point1.gif'>&nbsp;&nbsp;<a href='javascript:seeFileCentent(\"" + json.id + "\")'><font color='red'>" + json.fileDisplayname + "</font></a>&nbsp;&nbsp;"
@@ -53,8 +53,8 @@ function saveAddFile(){
 					   		+ "<input id='" + json.id +"' name='file_params' type='hidden' value='" + json.id + "' />"
 					   		+ "</label></td></tr>";
 					   $("#fileListTab").html($("#fileListTab").html()+str);
-					   $('#fileSpan').html('<input id="file" name="file" type="file" onfocus="beforValidata();" onchange="saveAddFile()" />');
 				   }
+				   $('#fileSpan').html('<input id="file" name="file" type="file" onfocus="beforValidata();" onchange="saveAddFile()" />');
 			    },
 			    error : function(XMLHttpRequest, textStatus, errorThrown) 
 			     {  
@@ -161,9 +161,9 @@ function saveUpdateFile(){
 			     },     
 			   success : function(json) 
 			   {    
-				   if(json == "type"){
+				   if(json.msg == "type"){
 					   alert("该附件类型不在允许上传的范围内!");
-				   }else if(json == "size"){
+				   }else if(json.msg == "size"){
 					   alert("附件大小超过10M不允许上传!");
 				   }else{
 					   var str = "<tr><td><label>&nbsp;<img src='images/point1.gif'>&nbsp;&nbsp;<a href='javascript:seeFileCentent(\"" + json.id + "\")'><font color='red'>" + json.fileNumber + json.fileDisplayname + "</font></a>&nbsp;&nbsp;"
@@ -171,11 +171,11 @@ function saveUpdateFile(){
 				   		+ "<input id='" + json.id +"' name='file_params' type='hidden' value='" + json.id + "' />"
 				   		+ "</label></td></tr>";
 					   $("#fileListTab").html($("#fileListTab").html()+str);
-					   $('#auditFileSpan').html('<input type="file" id="ufile" name="ufile" /><font color="red">（附件大小应小于10MB）</font>');
 					   //$('#updateDIV').window('close');
 					   document.getElementById("fileUploadContentDiv").style.display="none";
 					   document.getElementById("fileAddDiv").style.display="block";
 				   }
+				   $('#auditFileSpan').html('<input type="file" id="ufile" name="ufile" /><font color="red">（附件大小应小于10MB）</font>');
 			   }
 	}); 
 	
@@ -310,9 +310,9 @@ function saveAddFileForAudit(){
 			     },     
 			   success : function(json) 
 			   {    
-				   if(json == "type"){
+				   if(json.msg == "type"){
 					   alert("该附件类型不在允许上传的范围内!");
-				   }else if(json == "size"){
+				   }else if(json.msg == "size"){
 					   alert("附件大小超过10M不允许上传!");
 				   }else{
 					   var str = "<tr><td><label>&nbsp;<img src='images/point1.gif'>&nbsp;&nbsp;<a href='javascript:seeFileCententForAudit(\"" + json.id + "\")'><font color='red'>" + json.fileNumber + json.fileDisplayname + "</font></a>&nbsp;&nbsp;"
@@ -320,8 +320,8 @@ function saveAddFileForAudit(){
 					   		+ "<input id='" + json.id +"' name='file_params' type='hidden' value='" + json.id + "' />"
 					   		+ "</label></td></tr>";
 					   $("#fileListTab").html($("#fileListTab").html()+str);
-					   $('#fileSpan').html('<input id="file" name="file" type="file" onfocus="beforValidataForAudit();" onchange="saveAddFileForAudit()" /><font color="red">（附件大小应小于10MB）</font>');
 				   }
+				   $('#fileSpan').html('<input id="file" name="file" type="file" onfocus="beforValidataForAudit();" onchange="saveAddFileForAudit()" /><font color="red">（附件大小应小于10MB）</font>');
 			    }
 	}); 
 }

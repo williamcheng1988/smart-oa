@@ -114,7 +114,6 @@ public class CalendarAction extends BaseAction{
 	 * 保存新增的日历记录数据
 	 * @return
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public String saveAdd(){
 		String sDate = null;
 		try {
@@ -139,15 +138,14 @@ public class CalendarAction extends BaseAction{
 			e.printStackTrace();
 			msg = "false";
 		}
-		Gson gson = new GsonBuilder().create();
-		List list = new ArrayList();
-		list.add(msg);
+		Calendar cdar = new Calendar();
+		cdar.setMsg(msg);
 		if(msg.equals("true")){
 			List<Calendar> calList = calendarBiz.getCalendarByDate(sDate);
-			list.add(calList.get(0).getId());
+			cdar.setId(calList.get(0).getId());
 		}
-		jsonStr = gson.toJson(list);
-		return "json";
+		entry = cdar;
+		return ENTRY;
 	}
 	
 	
@@ -155,7 +153,6 @@ public class CalendarAction extends BaseAction{
 	 * 保存修改后的日历记录数据
 	 * @return
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public String saveModify(){
 		try {
 			Calendar ca = calendarBiz.findCalendarById(Long.valueOf(id));
@@ -173,12 +170,11 @@ public class CalendarAction extends BaseAction{
 			e.printStackTrace();
 			msg = "false";
 		}
-		Gson gson = new GsonBuilder().create();
-		List list = new ArrayList();
-		list.add(msg);
-		list.add(id);
-		jsonStr = gson.toJson(list);
-		return "json";
+		Calendar cdar = new Calendar();
+		cdar.setMsg(msg);
+		cdar.setId(Long.valueOf(id));
+		entry = cdar;
+		return ENTRY;
 	}
 	
 	
@@ -195,13 +191,15 @@ public class CalendarAction extends BaseAction{
 			e.printStackTrace();
 			msg = "false";
 		}
-		Gson gson = new GsonBuilder().create();
-		jsonStr = gson.toJson(msg);
-		return "json";
+		if(msg.equals("true")){
+			operateResult = new OperateResult(1, "日历记录删除成功！");
+		}else{
+			operateResult = new OperateResult(-1, "删除失败，请稍候重试!");
+		}
+		return OPER_RESULT;
 	}
 	
 	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public String findCalendar(){
 		Calendar cdar = null;
 		if(StringUtils.isNotBlank(selectDate)){
@@ -215,12 +213,9 @@ public class CalendarAction extends BaseAction{
 		}else{
 			msg = "false";
 		}
-		List list = new ArrayList();
-		list.add(msg);
-		list.add(cdar);
-		Gson gson = new GsonBuilder().create();
-		jsonStr = gson.toJson(list);
-		return "json";
+		cdar.setMsg(msg);
+		entry = cdar;
+		return ENTRY;
 	}
 	
 	

@@ -161,14 +161,14 @@
 			   timeout : 300000, 
 			   dataType:"json",
 			   success: function(json){
-				   if(json == 'true'){
+				   if(json.msg == 'true'){
 					   $("#ptPostId").textbox('setValue','');
 					   $("#ptPostName").textbox('setValue','');
 					   $('#postId').combobox('reload');  
 					   $('#addPostWin').window('close');
-				   }else if(json == 'postIsNull'){
+				   }else if(json.msg == 'postIsNull'){
 				      alert("岗位编号不能为空！");
-				   }else if(json == 'exist'){
+				   }else if(json.msg == 'exist'){
 				      alert("岗位编号已存在，请修改后再保存！");
 				   }else{
 					  alert("岗位新增失败，请稍后重试！");

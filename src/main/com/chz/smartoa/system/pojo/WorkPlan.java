@@ -24,6 +24,10 @@ public class WorkPlan extends BaseDomain{
 	private String endDt;
 	private String selectDate;
 	
+	private String selectHour;
+	private String selectMin;
+	private String msg;
+	
 	
 	public Long getId() {
 		return id;
@@ -103,6 +107,24 @@ public class WorkPlan extends BaseDomain{
 	}
 	public void setSelectDate(String selectDate) {
 		this.selectDate = selectDate;
+	}
+	public String getSelectHour() {
+		return selectHour;
+	}
+	public void setSelectHour(String selectHour) {
+		this.selectHour = selectHour;
+	}
+	public String getSelectMin() {
+		return selectMin;
+	}
+	public void setSelectMin(String selectMin) {
+		this.selectMin = selectMin;
+	}
+	public String getMsg() {
+		return msg;
+	}
+	public void setMsg(String msg) {
+		this.msg = msg;
 	}
 	
 }
