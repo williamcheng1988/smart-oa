@@ -83,10 +83,10 @@ xf.createField = function(label, value, callback, self, formNode) {
 	input.onblur = function() {
 		if(label==xf.field.attrName()){
 			//cannot contain invalid chars
-			if(/[@#\$%\^&\*]+/g.test(this.value)){
+			if(!/^[\dA-Za-z_-]{1,200}$/.test(this.value)){
 				jQuery.messager.show({
 					title:'提示！',
-					msg:'name属性不能含有[@#$%^&*\\]等特殊字符！',
+					msg:'name属性只能包含<span style="color:red">字母数字下划线中线</span>等不超过200个字符！',
 					showType:'slide',
 					style:{
 						right:'',
@@ -1144,6 +1144,7 @@ xf.field.attrItems = function (){return '数据选项';}
 xf.field.attrDic = function (){return '数据字典';}
 xf.field.attrResources = function (){return '值源';}
 xf.field.attrDataType = function (){return '数据类型';}
+xf.field.attrMultiple = function (){return '多选项';}
 xf.field.attrRequired = function (){return '必输项';}
 xf.field.attrReadOnly = function (){return '只读项';}
 xf.field.attrReportFlag = function (){return '报表标志';}
@@ -1804,9 +1805,10 @@ xf.field.Select = function(parentNode) {
 	this.col = array[4];
 	this.name = 'select-' + this.row + '-' + this.col;
 	this.items = '';
+	this.multiple = false;
 	this.required = false;
 	this.readOnly = false;
-	this.reportFlag = false;		//Add by William
+	this.reportFlag = false;
 	this.alias = this.name;
 	this.dic='';
 	this.dicsArr=[];
@@ -1824,6 +1826,7 @@ xf.field.Select.prototype.doExport = function() {
 		+ '","items":"' + this.items
 		+ '","dic":"' + this.dic
 		+ '","required":' + this.required
+		+ ',"multiple":' + this.multiple
 		+ ',"readOnly":' + this.readOnly
 		+ ',"reportFlag":' + this.reportFlag		//Add by William
 		+ '}';
@@ -1835,6 +1838,7 @@ xf.field.Select.prototype.viewForm = function(formNode) {
 	xf.createField(xf.field.attrAlias(), this.alias, this.updateAlias, this, formNode);
 	xf.createSelect(xf.field.attrDic(), this.dic, this.updateDic, this, formNode,xf_f_select_dicData);
 	xf.createField(xf.field.attrItems(), this.items, this.updateItems, this, formNode);
+	xf.createBooleanField(xf.field.attrMultiple(), this.multiple, this.updateMultiple, this, formNode);
 	xf.createBooleanField(xf.field.attrRequired(), this.required, this.updateRequired, this, formNode);
 	xf.createBooleanField(xf.field.attrReadOnly(), this.readOnly, this.updateReadOnly, this, formNode);
 	//Add by William
@@ -1847,19 +1851,7 @@ xf.field.Select.prototype.updateName = function(value) {
 }
 
 xf.field.Select.prototype.updateDic = function(value) {
-	//if(value){
-	//	this.name = value;
-	//	this.alias = value;
-	//}
 	this.dic = value;
-	
-	//FIEXE :ajax request dictionary datas
-	
-	//更新所有选项
-	//if(arguments.length>1){
-	//	var formNode = arguments[1];
-	//	this.viewForm(formNode);
-	//}
 }
 
 xf.field.Select.prototype.updateItems = function(value) {
@@ -1889,6 +1881,10 @@ xf.field.Select.prototype.updateItems = function(value) {
 
 xf.field.Select.prototype.updateAlias = function(value) {
 	this.alias = value;
+}
+
+xf.field.Select.prototype.updateMultiple = function(value) {
+	this.multiple = value;
 }
 
 xf.field.Select.prototype.updateRequired = function(value) {

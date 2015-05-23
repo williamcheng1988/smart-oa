@@ -97,7 +97,7 @@
 	jQuery.extend(jQuery.fn.validatebox.defaults.rules, {
 		selectValueRequired: {
 			validator: function(value,param){
-				console.info($(param[0]).find("option:contains('"+value+"')").val());
+				//console.info($(param[0]).find("option:contains('"+value+"')").val());
 				return $(param[0]).find("option:contains('"+value+"')").val() != '';
 			},
 			message: 'select value required.'

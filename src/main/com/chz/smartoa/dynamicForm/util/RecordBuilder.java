@@ -294,6 +294,10 @@ public class RecordBuilder {
         	}else{
         		listProp = new ArrayList<FormProp>();
         	}
+        	if(!StringUtils.isEmpty(prop.getValue()) 
+    				&& prop.getValue().startsWith("[") && prop.getValue().endsWith("]")){
+        		prop.setValue(prop.getValue().substring(1, prop.getValue().length()-1));
+        	}
     		listProp.add(prop);
     		
     		groupMap.put(extensionCode, listProp);
