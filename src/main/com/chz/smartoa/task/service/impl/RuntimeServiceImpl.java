@@ -1,6 +1,7 @@
 package com.chz.smartoa.task.service.impl;
 
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,21 +83,19 @@ public class RuntimeServiceImpl implements RuntimeService {
 		
 		logger.debug("处理对象：" + ruconf.getAction_obj_type_());
 		
-		if (ruconf.getAction_obj_type_() == 1) {// 个人
-			task.setAssignee(ruconf.getAction_obj_());
-			cnt += insertRuTask(task, ruconf.getArrive_remind_(), upLink);
+		List<String> userList = null;
+		if (ruconf.getAction_obj_type_() == 1) {// 个人,多个用户以逗号分隔
+			String objStr = ruconf.getAction_obj_();
+			userList = Arrays.asList(objStr.split(","));
 		}else if (ruconf.getAction_obj_type_() == 2) {// 角色
-			List<String> userList = userHandler.listUsersByRole(ruconf.getAction_obj_(),execution.getProjectId());
-			for (String user : userList) {
-				task.setAssignee(user);
-				cnt += insertRuTask(task, ruconf.getArrive_remind_(), upLink);
-			}
+			userList = userHandler.listUsersByRole(ruconf.getAction_obj_(),execution.getProjectId());
 		}else if(ruconf.getAction_obj_type_() == 3) {// 岗位
-			List<String> userList = userHandler.listUsersByPost(execution.getDepartmentId(),ruconf.getAction_obj_(), ruconf.getAction_obj_src_());
-			for (String user : userList) {
-				task.setAssignee(user);
-				cnt += insertRuTask(task, ruconf.getArrive_remind_(), upLink);
-			}
+			userList = userHandler.listUsersByPost(execution.getDepartmentId(),ruconf.getAction_obj_(), ruconf.getAction_obj_src_());
+		}
+		logger.debug("处理用户帐号：" + userList);
+		for (String user : userList) {
+			task.setAssignee(user);
+			cnt += insertRuTask(task, ruconf.getArrive_remind_(), upLink);
 		}
 		return cnt;
 	}

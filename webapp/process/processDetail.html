@@ -171,7 +171,7 @@
   		  	</td>
   		  	<td>
   		  	&nbsp;&nbsp;
-  			 	<select id="sel_staff" class="easyui-combobox" data-options="editable:false" style="width: 150px">
+  			 	<select id="sel_staff" class="easyui-combobox" data-options="editable:false,multiple:true" style="width: 150px">
   			 			#optionTag("NORMAL_USERS")	
 				</select>
   		  	</td>
@@ -239,14 +239,6 @@ $(function() {
 			chooseActionObject(lineNum);
 		});
 	});
-	
-	$('#action_type_1').combobox({
-		onSelect: function(i,v){
-			alert(i+":"+v);
-		}
-	});
-	
- //   $('#dlg').dialog('close');
 	var line_no = $("#processDetailGrid tbody").find("tr").length;
     $("#newLineBtn").bind("click", function(e) {
     	line_no++;
@@ -283,18 +275,12 @@ function chooseActionObject(lineNo){
 	if(actionType){
 		if(actionType == 2){
 			$("input[name=actionObjectType][value=2]").prop("checked",true);
-			//$("#sel_role").prop("disabled",false);
-			//$("#sel_staff").prop("disabled",true);
-			//$('#sel_role').val(actionObject);
 			$('#sel_staff').combobox('disable');
 			$('#sel_role').combobox('enable');
 			$('#sel_staff').combobox('setValue','');
 			$('#sel_role').combobox('setValue',actionObject);
 		}else{
 			$("input[name=actionObjectType][value=1]").prop("checked",true);
-			//$("#sel_role").prop("disabled",true);
-			//$("#sel_staff").prop("disabled",false);
-			//$('#sel_staff').val(actionObject);
 			$('#sel_staff').combobox('enable');
 			$('#sel_role').combobox('disable');
 			$('#sel_staff').combobox('setValue',actionObject);
@@ -307,16 +293,10 @@ function chooseActionObject(lineNo){
 
 $("input[name=actionObjectType]").bind("click", function(e){
 	if($(this).val() == 1){
-		//$("#sel_staff").prop("disabled",false);
-		//$("#sel_role").prop("disabled",true);
-		//$("#sel_role").val(-1);
 		$('#sel_staff').combobox('enable');
 		$('#sel_role').combobox('disable');
 		$('#sel_role').combobox('setValue','');
 	}else{
-		//$("#sel_staff").prop("disabled",true);
-		//$("#sel_role").prop("disabled",false);
-		//$("#sel_staff").val(-1);
 		$('#sel_staff').combobox('disable');
 		$('#sel_staff').combobox('setValue','');
 		$('#sel_role').combobox('enable');
@@ -329,12 +309,10 @@ function submitForm(){
 		$("input[name=action_obj_type_"+lineNo+"]").val(1);
 		$("input[name=action_obj_"+lineNo+"]").val($("#sel_staff").combobox("getValue"));
 		$("#action_obj_name_"+lineNo).textbox('setValue', $("#sel_staff").combobox("getText"));
-		//$("input[name=action_obj_name_"+lineNo+"]").val($("#sel_staff").find("option:selected").text());
 	}else{
 		$("input[name=action_obj_type_"+lineNo+"]").val(2);
 		$("input[name=action_obj_"+lineNo+"]").val($("#sel_role").combobox("getValue"));
 		$("#action_obj_name_"+lineNo).textbox('setValue',$("#sel_role").combobox("getText"));
-		//$("input[name=action_obj_name_"+lineNo+"]").val($("#sel_role").find("option:selected").text());
 	}
 	jQuery.parser.parse("input[name=action_obj_name_"+lineNo+"]");
 	$('#dlg').dialog('close');

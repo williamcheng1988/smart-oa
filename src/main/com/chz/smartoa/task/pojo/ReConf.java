@@ -98,6 +98,12 @@ public class ReConf extends BaseDomain implements Serializable{
 	public void setAction_type_(int action_type_) {
 		this.action_type_ = action_type_;
 	}
+	public String getAction_obj_src_() {
+		return action_obj_src_;
+	}
+	public void setAction_obj_src_(String action_obj_src_) {
+		this.action_obj_src_ = action_obj_src_;
+	}
 	public String getAction_obj_() {
 		return action_obj_;
 	}

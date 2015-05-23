@@ -167,15 +167,14 @@
   <input type="hidden" id="lineNo_box" />
   <div class="modal-body">
   		  <table style="border:0;width: 100%">
-  		  <tr><td>&nbsp;</td><td><span id="showTips" style="color:red"></span></td></tr>
   		  <tr style="width: 30%">
   		 	<td align="right">
   		 		 <label><input type="radio" name="actionObjectType" value="1" checked>&nbsp;人员</label>
   		  	</td>
   		  	<td>
   		  	&nbsp;&nbsp;
-  			 	<select id="sel_staff" class="easyui-combobox" data-options="editable:false" style="width: 150px">
-  			 			#optionTag("NORMAL_USERS")	
+  			 	<select id="sel_staff" class="easyui-combobox" data-options="editable:false,multiple:true" style="width: 150px">
+  			 		 #optionTag("NORMAL_USERS")	
 				</select>&nbsp;
   		  	</td>
   		  </tr>
@@ -188,16 +187,12 @@
   		  	</td>
   		  	<td>
   		  	&nbsp;&nbsp;
-  		  	<select id="sel_post" class="easyui-combotree" data-options="url:'departmentManager!genDepartmentTree.do',method:'get'" disabled style="width: 150px">
+  		  	<select id="sel_post" class="easyui-combobox" ata-options="editable:false" disabled style="width: 150px">
   		  		     #optionTag("NORMAL_POSTS")	
 			</select>
 			&nbsp;&nbsp;
-			<!-- <select id="sel_post_src" class="input" title="指定部门" disabled style="width: 150px">
-  		  		     ##optionTag("NORMAL_POSTS")	
-			</select> -->
-			<!-- 
-			<input id="sel_post_src"  class="easyui-combotree" data-options="url:'departmentManager!genDepartmentTree.do',method:'get'" style="width:200px;">
-			 -->
+			<select id="sel_post_src" class="easyui-combotree" data-options="editable:false,url:'departmentManager!genDepartmentTree.do',method:'get'" disabled style="width: 150px">
+			</select>
   		  	</td>
   		  </tr>
   		</table> 
@@ -207,7 +202,6 @@
 </html>
 <script type="text/javascript">
 function actionChange(lineNo,val){
-	//alert(val);
 	if(val==3||val==4){
 		$("input[name=is_turn_"+lineNo+"]").prop("disabled",true);
 		$("input[name=is_ask_"+lineNo+"]").prop("disabled",true);
@@ -249,13 +243,6 @@ $(function() {
 			chooseActionObject(lineNum);
 		});
 	});
-	
-	$('#action_type_1').combobox({
-		onSelect: function(i,v){
-			alert(i+":"+v);
-		}
-	});
-	
 	var line_no = $("#processDetailGrid tbody").find("tr").length;
     $("#newLineBtn").bind("click", function(e) {
     	line_no++;
@@ -274,17 +261,6 @@ $(function() {
     		$("[name='lineNos']").val(lineNos.replace(line_no+",",""));
  		}); 
 	}); 
-    
-    $('#sel_post').combotree({
-    	onSelect: function(node){
-			if('root'!=node.id){
-				$('#showTips').html('');
-				//$('#sel_post').combotree('setValue',node.id);
-			}else{
-				$('#showTips').html('请选择子部门!');
-			}
-		}
-	});
 })
 
 function bindClick(id){
@@ -296,38 +272,30 @@ function bindClick(id){
 
 function chooseActionObject(lineNo){
 	$('#lineNo_box').val(lineNo);
-	//$('#sel_post').val(null);
-	//$('#sel_post_src').val(null);
-	//$('#sel_staff').val(null);
-	$('#sel_post').combotree('setValue','');
+	$('#sel_post').combobox('setValue','');
+	$('#sel_post_src').combotree('setValue','');
 	$('#sel_staff').combobox('setValue','');
 	
 	var actionType = $("input[name=action_obj_type_"+lineNo+"]").val();
 	var actionObject = $("input[name=action_obj_"+lineNo+"]").val();
 	var actionObjectSrc = $("input[name=action_obj_src_"+lineNo+"]").val();
 	if(actionType){
-		//TODO 确认此处是否应该修改为 3
 		if(actionType == 3){
 			$("input[name=actionObjectType][value=3]").prop("checked",true);
-			//$("#sel_post").prop("disabled",false);
-			//$("#sel_post_src").prop("disabled",false);
-			//$("#sel_staff").prop("disabled",true);
-			//$('#sel_post').val(actionObject);
-			//$("#sel_post_src").val(actionObjectSrc);
 			$('#sel_staff').combobox('disable');
-			$('#sel_post').combotree('enable');
+			$('#sel_post').combobox('enable');
+			$('#sel_post_src').combotree('enable');
 			$('#sel_staff').combobox('setValue','');
-			$('#sel_post').combotree('setValue',actionObject);
+			$('#sel_post').combobox('setValue',actionObject);
+			$('#sel_post_src').combotree('setValue',actionObjectSrc);
 		}else{
 			$("input[name=actionObjectType][value=1]").prop("checked",true);
-			//$("#sel_post").prop("disabled",true);
-			//$("#sel_post_src").prop("disabled",true);
-			//$("#sel_staff").prop("disabled",false);
-			//$('#sel_staff').val(actionObject);
+			$('#sel_post').combobox('disable');
+			$('#sel_post_src').combotree('disable');
 			$('#sel_staff').combobox('enable');
-			$('#sel_post').combotree('disable');
+			$('#sel_post_src').combotree('setValue','');
+			$('#sel_post').combobox('setValue','');
 			$('#sel_staff').combobox('setValue',actionObject);
-			$('#sel_post').combotree('setValue','');
 		}
 	}
 	$('#ui_mask').css('display','block');
@@ -336,24 +304,19 @@ function chooseActionObject(lineNo){
 
 $("input[name=actionObjectType]").bind("click", function(e){
 	if($(this).val() == 1){
-		//$("#sel_staff").prop("disabled",false);
-		//$("#sel_post").prop("disabled",true);
-		//$("#sel_post_src").prop("disabled",true);
-		//$("#sel_post").val(-1);
-		//$("#sel_post_src").val(-1);
 		$('#sel_staff').combobox('enable');
-		$('#sel_post').combotree('disable');
-		$('#sel_post').combotree('setValue','');
+		$('#sel_post').combobox('disable');
+		$('#sel_post_src').combotree('disable');
+		$('#sel_post').combobox('setValue','');
+		$('#sel_post_src').combotree('setValue','');
 	}else{
-		//$("#sel_staff").prop("disabled",true);
-		//$("#sel_post").prop("disabled",false);
-		//$("#sel_post_src").prop("disabled",false);
-		//$("#sel_staff").val(-1);
 		$('#sel_staff').combobox('disable');
-		$('#sel_post').combotree('enable');
+		$('#sel_post').combobox('enable');
+		$('#sel_post_src').combotree('enable');
 		$('#sel_staff').combobox('setValue','');
 	}
 }); 
+
 function submitForm(){
 	var type = $("input[name=actionObjectType]:checked").val(); 
 	var lineNo = $('#lineNo_box').val();
@@ -363,14 +326,14 @@ function submitForm(){
 		$("#action_obj_name_"+lineNo).textbox('setValue', $("#sel_staff").combobox('getText'));
 	}else{
 		$("input[name=action_obj_type_"+lineNo+"]").val(3);
-		$("input[name=action_obj_"+lineNo+"]").val($("#sel_post").combotree('getValue'));
-		//$("input[name=action_obj_src_"+lineNo+"]").val($("#sel_post_src").val());
-		//var deptName = $("#sel_post_src").find("option:selected").text();
-		//var objName = $("#sel_post").find("option:selected").text();
-		//if(deptName){
-		//	objName = deptName+"-"+objName;
-		//}
-		$("#action_obj_name_"+lineNo).textbox('setValue',$("#sel_post").combotree('getText'));
+		$("input[name=action_obj_"+lineNo+"]").val($("#sel_post").combobox('getValue'));
+		$("input[name=action_obj_src_"+lineNo+"]").val($("#sel_post_src").combotree('getValue'));
+		var deptName = $("#sel_post_src").combobox('getText');
+		var objName = $("#sel_post").combobox('getText');
+		if(deptName){
+			objName = deptName+"-"+objName;
+		}
+		$("#action_obj_name_"+lineNo).textbox('setValue',objName);
 	}
 	jQuery.parser.parse("input[name=action_obj_name_"+lineNo+"]");
 	$('#dlg').dialog('close');
