@@ -41,9 +41,8 @@ public class PostAction extends BaseAction{
 	
 	public String getAllPost(){
 		postList = postBiz.findAllPost();
-		Gson gson = new GsonBuilder().create();
-		jsonStr = gson.toJson(postList);
-		return "json";
+		dataList = postList;
+		return DATA_LIST;
 	}
 	
 	
