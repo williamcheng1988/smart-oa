@@ -78,7 +78,7 @@
 				    <th colspan="2" align="center">
 				        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				    	<a href="javascript:savePost()" class="easyui-linkbutton">&nbsp;保&nbsp;存&nbsp;</a>&nbsp;&nbsp;
-        				<a href="javascript:void(0)" class="easyui-linkbutton" onclick="$('#addPostWin').window('close')">&nbsp;返&nbsp;回&nbsp;</a>
+        				<a href="javascript:close()" class="easyui-linkbutton">&nbsp;返&nbsp;回&nbsp;</a>
 				    </td>
 				  </tr>
 			</table>
@@ -165,6 +165,7 @@
 					   $("#ptPostId").textbox('setValue','');
 					   $("#ptPostName").textbox('setValue','');
 					   $('#postId').combobox('reload');  
+					   $('#postId').combobox('setValue', postId);
 					   $('#addPostWin').window('close');
 				   }else if(json.msg == 'postIsNull'){
 				      alert("岗位编号不能为空！");
@@ -177,6 +178,13 @@
 			   }
 			});
 		
+	}
+	
+	
+	function close(){
+		$("#ptPostId").textbox('setValue','');
+		$("#ptPostName").textbox('setValue','');
+		$('#addPostWin').window('close');
 	}
 	
 </script>

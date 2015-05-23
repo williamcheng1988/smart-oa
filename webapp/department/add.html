@@ -40,7 +40,7 @@
 			  <tr>
 			    <th width="40%" align="right">部门级别：</td>
 			    <td width="60%" align="left">
-			    	<input class="easyui-numberbox" type="text" id="level" name="dpment.level" ></input>
+			    	<input class="easyui-numberbox" type="text" id="level" name="dpment.level" value="1"></input>
 			    </td>
 			  </tr>
 		      <tr>
@@ -85,6 +85,9 @@
 				if(level){
 					if(isNaN(level)){
 						alert("部门级别只能输入数字！");
+						return false;
+					}else if(level <= 0){
+						alert("部门级别必须大于0！");
 						return false;
 					}
 				}else{
