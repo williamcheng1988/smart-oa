@@ -86,7 +86,6 @@ public class FileLoadAction extends BaseAction{
 		FileManager pageFm = new FileManager();
 		InputStream is = null;
 		OutputStream os = null;
-		Gson gson = new GsonBuilder().create();
 		boolean allowUpload = this.validateFileType(fileFileName);
 		boolean allowSize = this.validateFileSize(file);
 		if(allowUpload && allowSize){
@@ -136,24 +135,20 @@ public class FileLoadAction extends BaseAction{
 				fm.setUpdateId(fid);
 				fileManagerBiz.insertFileManager(fm); //保存上传文件记录
 				entry = fm;
-				//jsonStr = gson.toJson(fm);
 			} catch (FileNotFoundException e) {
 				msg = "false";
 				pageFm.setMsg(msg);
 				entry = pageFm;
-				//jsonStr = gson.toJson(msg);
 				logger.error(e.getMessage());
 			} catch (IOException e) {
 				msg = "false";
 				pageFm.setMsg(msg);
 				entry = pageFm;
-				//jsonStr = gson.toJson(msg);
 				logger.error(e.getMessage());
 			} catch(Exception e) {
 				msg = "false";
 				pageFm.setMsg(msg);
 				entry = pageFm;
-				//jsonStr = gson.toJson(msg);
 				logger.error(e.getMessage());
 			} finally {
 				try {
@@ -166,7 +161,6 @@ public class FileLoadAction extends BaseAction{
 				} catch (IOException e) {
 					msg = "false";
 					logger.error(e.getMessage());
-					//jsonStr = gson.toJson(msg);
 					pageFm.setMsg(msg);
 					entry = pageFm;
 				}  
@@ -179,10 +173,8 @@ public class FileLoadAction extends BaseAction{
 			}
 			pageFm.setMsg(msg);
 			entry = pageFm;
-			//jsonStr = gson.toJson(msg);
 		}
 		return ENTRY;
-		//return "json";
 	}
 	
 	
@@ -205,7 +197,6 @@ public class FileLoadAction extends BaseAction{
 			}
 		}
 		
-		//Gson gson = new GsonBuilder().create();
 		if(isUpdate){
 			FileManager fmger = fileManagerBiz.findFileManagerById(updateId);    // 获取待更新的记录
 			List<FileManager> flist = fileManagerBiz.findByFileUpdateId(fmger.getUpdateId());
@@ -292,7 +283,6 @@ public class FileLoadAction extends BaseAction{
 			fileManagerBiz.insertFileManager(fm);  //保存上传文件记录
 			FileManager filemanager = fileManagerBiz.findFileManagerById(fid);
 			entry = filemanager;
-			//jsonStr = gson.toJson(filemanager);
 		}else{
 			if(!allowUpload){
 				msg = "type";
@@ -301,9 +291,7 @@ public class FileLoadAction extends BaseAction{
 			}
 			pageFm.setMsg(msg);
 			entry = pageFm;
-			//jsonStr = gson.toJson(msg);
 		}
-		//return "json";
 		return ENTRY;
 	}
 	
@@ -328,7 +316,6 @@ public class FileLoadAction extends BaseAction{
 			}
 		}
 		
-		//Gson gson = new GsonBuilder().create();
 		if(isUpdate){
 			FileManager fmger = fileManagerBiz.findFileManagerById(updateId);    // 获取待更新的记录
 			List<FileManager> flist = fileManagerBiz.findByFileUpdateId(fmger.getUpdateId());
@@ -419,7 +406,6 @@ public class FileLoadAction extends BaseAction{
 			fg.setFileId(fid);
 			fileGroupBiz.addFileGroup(fg);  // 保存文件流程组
 			FileManager filemanager = fileManagerBiz.findFileManagerById(fid);
-			//jsonStr = gson.toJson(filemanager);
 			entry = filemanager;
 		}else{
 			if(!allowUpload){
@@ -427,11 +413,9 @@ public class FileLoadAction extends BaseAction{
 			}else if(!allowSize){
 				msg = "size";
 			}
-			//jsonStr = gson.toJson(msg);
 			pageFm.setMsg(msg);
 			entry = pageFm;
 		}
-		//return "json";
 		return ENTRY;
 	}
 	
@@ -445,7 +429,6 @@ public class FileLoadAction extends BaseAction{
 		FileManager pageFm = new FileManager();
 		InputStream is = null;
 		OutputStream os = null;
-		//Gson gson = new GsonBuilder().create();
 		boolean allowUpload = this.validateFileType(fileFileName);
 		boolean allowSize = this.validateFileSize(file);
 		if(allowUpload && allowSize){
@@ -497,7 +480,6 @@ public class FileLoadAction extends BaseAction{
 				fg.setFileId(fid);
 				fileGroupBiz.addFileGroup(fg);  // 保存文件流程组
 				
-				//jsonStr = gson.toJson(fm);
 				entry = fm;
 				
 			} catch (FileNotFoundException e) {
@@ -541,9 +523,7 @@ public class FileLoadAction extends BaseAction{
 			}
 			pageFm.setMsg(msg);
 			entry = pageFm;
-			//jsonStr = gson.toJson(msg);
 		}
-		//return "json";
 		return ENTRY;
 	}
 	
@@ -568,7 +548,6 @@ public class FileLoadAction extends BaseAction{
 			}
 		}
 		
-		Gson gson = new GsonBuilder().create();
 		if(isUpdate){
 			FileManager fmer = fileManagerBiz.findFileManagerById(updateId);
 			List<FileManager> flist = fileManagerBiz.findByFileUpdateId(fmer.getUpdateId());
@@ -647,17 +626,14 @@ public class FileLoadAction extends BaseAction{
 				}  
 			}
 			
-			//jsonStr = gson.toJson(msg);
 		}else{
 			if(!allowUpload){
 				msg = "type";
 			}else if(!allowSize){
 				msg = "size";
 			}
-			//jsonStr = gson.toJson(msg);
 		}
 		operateResult = new OperateResult(1, msg);
-		//return "json";
 		return OPER_RESULT;
 	}
 	

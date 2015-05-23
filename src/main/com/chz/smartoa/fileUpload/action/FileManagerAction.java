@@ -242,9 +242,6 @@ public class FileManagerAction extends BaseAction{
 		}
 		dictionaryList = dictionaryConfigBiz.findCfgByParentIdForIsvalid(Integer.valueOf(dictionaryId));
 		dataList = dictionaryList;
-		//Gson gson = new GsonBuilder().create();
-		//jsonStr = gson.toJson(dictionaryList);
-		//return "json";
 		return DATA_LIST;
 	}
 	
@@ -264,9 +261,6 @@ public class FileManagerAction extends BaseAction{
 		allList.add(fm.getId());
 		dataList = allList;
 		return DATA_LIST;
-//		Gson gson = new GsonBuilder().create();
-//		jsonStr = gson.toJson(allList);
-//		return "json";
 	}
 	
 	/**
@@ -277,9 +271,6 @@ public class FileManagerAction extends BaseAction{
 		dictionaryList = dictionaryConfigBiz.findCfgByParentIdForIsvalid(Integer.valueOf(dictionaryId));
 		dataList = dictionaryList;
 		return DATA_LIST;
-//		Gson gson = new GsonBuilder().create();
-//		jsonStr = gson.toJson(dictionaryList);
-//		return "json";
 	}
 	
 	/**
@@ -316,10 +307,6 @@ public class FileManagerAction extends BaseAction{
 			operateResult = new OperateResult(-1, "文件删除失败，请稍候重试!");
 		}
 		return OPER_RESULT;
-		
-//		Gson gson = new GsonBuilder().create();
-//		jsonStr = gson.toJson(msg);
-//		return "json";
 	}
 	
 	
@@ -347,9 +334,6 @@ public class FileManagerAction extends BaseAction{
 			operateResult = new OperateResult(-1, "文件公开失败，请稍候重试!");
 		}
 		return OPER_RESULT;
-//		Gson gson = new GsonBuilder().create();
-//		jsonStr = gson.toJson(msg);
-//		return "json";
 	}
 	
 	
@@ -371,9 +355,6 @@ public class FileManagerAction extends BaseAction{
 			operateResult = new OperateResult(-1, "文件不公开失败，请稍候重试!");
 		}
 		return OPER_RESULT;
-//		Gson gson = new GsonBuilder().create();
-//		jsonStr = gson.toJson(msg);
-//		return "json";
 	}
 
 	
@@ -396,15 +377,12 @@ public class FileManagerAction extends BaseAction{
 					}
 				}
 			}
-//			Gson gson = new GsonBuilder().create();
-//			jsonStr = gson.toJson(fileList);
 			dataList = fileList;
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());
 		}
 		return DATA_LIST;
-		//return "json";
 	}
 	
 	
@@ -457,13 +435,10 @@ public class FileManagerAction extends BaseAction{
 				}
 			}
 			dataList = pList;
-//			Gson gson = new GsonBuilder().create();
-//			jsonStr = gson.toJson(pList);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());
 		}
-		//return "json";
 		return DATA_LIST;
 	}
 	
@@ -488,14 +463,11 @@ public class FileManagerAction extends BaseAction{
 					}
 				}
 			}
-//			Gson gson = new GsonBuilder().create();
-//			jsonStr = gson.toJson(tList);
 			dataList = tList;
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());
 		}
-		//return "json";
 		return DATA_LIST;
 	}
 	

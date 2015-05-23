@@ -290,7 +290,11 @@ function todoTaskRequestData() {
 			   dataType:"json",
 			   success: function(json){
 				   $("#workPlanContentDIV").empty();
-				   $("#workPlanContentDIV").append(json);
+				   if(json.code == 1){
+					   $("#workPlanContentDIV").append(json.msg);
+				   }else{
+					   alert("获取详细内容失败，请稍后重试！");
+				   }
 				   $('#workPlanDIV').window('open');
 			   }
 			});

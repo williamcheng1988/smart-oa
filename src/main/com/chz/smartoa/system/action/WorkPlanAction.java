@@ -4,8 +4,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+
 import com.chz.smartoa.common.base.BaseAction;
 import com.chz.smartoa.common.base.DataGrid;
 import com.chz.smartoa.system.pojo.WorkPlan;
@@ -243,14 +245,10 @@ public class WorkPlanAction extends BaseAction{
 				}
 			}
 			dataList = workPlanList;
-			//Gson gson = new GsonBuilder().create();
-			//jsonStr = gson.toJson(workPlanList);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());
 		}
-		//return "json";
-		
 		return DATA_LIST;
 	}
 	
@@ -262,13 +260,13 @@ public class WorkPlanAction extends BaseAction{
 	public String firstPgeeForSeeContent(){
 		try {
 			WorkPlan wp = workPlanBiz.getWorkPlanById(workPlan.getId());
-			Gson gson = new GsonBuilder().create();
-			jsonStr = gson.toJson(wp.getWorkDesc());
+			operateResult = new OperateResult(1, wp.getWorkDesc());
 		} catch (Exception e) {
+			operateResult = new OperateResult(-1, "获取日程详细内容失败！");
 			e.printStackTrace();
 			logger.error(e.getMessage());
 		}
-		return "json";
+		return OPER_RESULT;
 	}
 	
 	
