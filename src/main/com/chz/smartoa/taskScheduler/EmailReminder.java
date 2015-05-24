@@ -47,7 +47,7 @@ public class EmailReminder extends AbstractTask {
 					//查询抄送人地址
 					if (StringUtils.isNotEmpty(notice.getCcPeople())) {
 						List<String> ccs = (List<String>) baseService.queryForList("Staff_email", notice.getCcPeople().split(","));
-						email.setTo(ccs);
+						email.setCc(ccs);
 					}
 					email.setSubject(notice.getTitle());
 					email.setMsg(notice.getContent());

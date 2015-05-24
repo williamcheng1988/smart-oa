@@ -36,6 +36,7 @@ public class NoticeHandler {
 	 * @param executionId
 	 */
 	public void arriveNotice(final int isSend, final String user,final String executionId) {
+		System.out.println("aa");
 		new Thread() { //异步处理
 			public void run() {
 				try {
@@ -52,6 +53,7 @@ public class NoticeHandler {
 					noticeBiz.insert(notice);
 				} catch (Exception e) {
 					logger.error("组装到达提醒失败："+e);
+					System.out.println(e);
 				}
 			}
 		}.start();

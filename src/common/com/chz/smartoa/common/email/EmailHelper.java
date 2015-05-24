@@ -197,10 +197,10 @@ public class EmailHelper
             	email.addTo(to);
 			}
             for (String cc : emailMessage.getCc()) {
-            	email.addTo(cc);
+            	email.addCc(cc);
 			}
             for (String bcc : emailMessage.getBcc()) {
-            	email.addTo(bcc);
+            	email.addBcc(bcc);
 			}
             email.setCharset(charset);
             email.setSubject(emailMessage.getSubject());
