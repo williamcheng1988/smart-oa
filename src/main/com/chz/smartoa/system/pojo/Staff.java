@@ -2,6 +2,8 @@ package com.chz.smartoa.system.pojo;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.chz.smartoa.common.base.BaseDomain;
 
 /**
@@ -147,7 +149,11 @@ public class Staff extends BaseDomain {
 	}
 
 	public String getDepartmentId() {
-		return this.departmentId;
+		if(StringUtils.isEmpty(departmentId)){
+			 return "root";
+		}else{
+			return this.departmentId;
+		}
 	}
 
 	public void setDepartmentId(String departmentId) {
