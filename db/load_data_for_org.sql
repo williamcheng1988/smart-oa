@@ -10,13 +10,15 @@ VALUES
 ('post_manager','system_setting','岗位管理','departmentPost/list.html',null,1,'AUTH',10);
 
 -- 如果存在用户管理，先删除
-DELETE from t_resource where resource_name = '用户管理';
+-- DELETE from t_resource where resource_name = '用户管理';
+
+update t_resource set address_url='staff_dept/list.html' where resource_name='用户管理';
 
 -- 重新插入用户管理
-insert into t_resource
-(resource_id,parent_id,resource_name,address_url,resource_desc,resource_type,auth_type,sort_num)
-values
-('staff_dept_manage','system_setting','用户管理','staff_dept/list.html',null,1,'AUTH',1);
+-- insert into t_resource
+-- (resource_id,parent_id,resource_name,address_url,resource_desc,resource_type,auth_type,sort_num)
+-- values
+-- ('staff_manage','system_setting','用户管理','staff_dept/list.html',null,1,'AUTH',1);
 
 
 -- 添加访问权限sql

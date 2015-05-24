@@ -18,7 +18,7 @@ drop table IF EXISTS  T_HI_TASK;
 drop table IF EXISTS  T_HI_TASK_USER;
 drop table IF EXISTS  T_RU_TASK;
 drop table IF EXISTS  T_RE_CONF;
-drop table IF EXISTS  T_RE_PROCDEF;
+drop table IF EXISTS  T_RU_CONF;
 drop table IF EXISTS  T_RE_PROCDEF;
 drop table IF EXISTS  T_GE_EXECUTION;
 drop table IF EXISTS  t_notice;
