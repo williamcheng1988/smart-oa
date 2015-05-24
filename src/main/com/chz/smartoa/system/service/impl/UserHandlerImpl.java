@@ -64,7 +64,7 @@ public class UserHandlerImpl implements UserHandler {
 		}
 		
 		if (StringUtils.isEmpty(targetDeptId)) {
-			throw new NotFoundUserByPostException(TaskError.NotFoundUserByPost.getVal(),"获取部门ID为空：未配置下一步流程的处理部门或发起人部门为空！");
+			throw new NotFoundUserByPostException(TaskError.NotFoundUserByPost.getVal(),"获取部门ID为空：发起人尚未设置部门！");
 		}
 		//查询部门岗位对应用户,指定部门找不到就去其上级部门找
 		String staffIds = null;
