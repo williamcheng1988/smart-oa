@@ -15,9 +15,10 @@ drop table IF EXISTS t_post;
 drop table IF EXISTS t_delegation;
 drop table IF EXISTS t_delegation_log;
 drop table IF EXISTS  T_HI_TASK;
+drop table IF EXISTS  T_HI_TASK_USER;
 drop table IF EXISTS  T_RU_TASK;
 drop table IF EXISTS  T_RE_CONF;
-drop table IF EXISTS  T_RU_CONF;
+drop table IF EXISTS  T_RE_PROCDEF;
 drop table IF EXISTS  T_RE_PROCDEF;
 drop table IF EXISTS  T_GE_EXECUTION;
 drop table IF EXISTS  t_notice;
@@ -413,6 +414,14 @@ create table T_RU_TASK
 );
 -- alter table T_RU_TASK add foreign key (execution_id_) references T_GE_EXECUTION (execution_id_) on delete cascade on update cascade;
 
+create table T_HI_TASK_USER
+(
+	EXECUTION_ID_ VARCHAR(64) not null,
+	ASSIGNEE_ VARCHAR(64) not null,
+	CONF_ID_ int(10) not null,
+	CREATE_TIME_ datetime
+);
+
 -- 流程任务历史数据表
 create table T_HI_TASK
 (
@@ -567,28 +576,10 @@ from t_ge_execution;
 CREATE OR REPLACE VIEW view_process_user
 AS
 select e.execution_id_ executionId,e.OWNER_  loginName,e.task_status_ status from t_ge_execution e
-UNION	
-select e.execution_id_ executionId,c.action_obj_  loginName,e.task_status_ status
+UNION DISTINCT
+select DISTINCT e.execution_id_ executionId,u.ASSIGNEE_  loginName,e.task_status_ status
 	from t_ge_execution e 
-	LEFT JOIN t_re_conf c  on  e.procdef_id_ = c.procdef_id_
-	where c.action_obj_type_ = 1 -- 用户
-UNION
-select e.execution_id_ executionId,sr.login_name loginName,e.task_status_ status
-	from t_ge_execution e 
-	LEFT JOIN t_re_conf c  on  e.procdef_id_ = c.procdef_id_
-	LEFT JOIN t_role r on c.action_obj_ = r.role_id
-	LEFT JOIN t_staff_role  sr on r.role_id = sr.role_id
-	where e.business_key_ = sr.project_id
-	and r.role_type = 2 -- 项目角色
-	and c.action_obj_type_ = 2 -- 角色
-UNION
-select e.execution_id_ executionId,sr.login_name loginName,e.task_status_ status
-	from t_ge_execution e 
-	LEFT JOIN t_re_conf c  on  e.procdef_id_ = c.procdef_id_
-	LEFT JOIN t_role r on c.action_obj_ = r.role_id
-	LEFT JOIN t_staff_role  sr on r.role_id = sr.role_id
-	where r.role_type = 1 -- 公司角色
-	and c.action_obj_type_ = 2; -- 角色
+	LEFT JOIN t_hi_task_user u on  e.execution_id_ = u.execution_id_;
 	
 
 -- 字典配置表
