@@ -39,7 +39,7 @@
 			<td align="right" style="padding-right: 20px;vertical-align: middle;">
 				<span id="login_tips"></span>
 				<a href="#" onclick="chooseTheme()" class="easyui-linkbutton" data-options="iconCls:'icon-themes',plain:true">主题</a>
-				<a href="#" onclick="switchTopic('home')" class="easyui-linkbutton" data-options="iconCls:'icon-switch',plain:true">切换</a>
+				<!-- <a href="#" onclick="switchTopic('home')" class="easyui-linkbutton" data-options="iconCls:'icon-switch',plain:true">切换</a> -->
 			</td>
 		</tr>
 		<tr>
@@ -54,7 +54,7 @@
 		</table>
 	</div>
 	<!-- 导航 -->
-	<div id="left_nav"data-options="region:'west',border:false,title:'系统导航'" style="width:200px;padding:0px;display: none;overflow-x:hidden;overflow-y: hidden">
+	<div id="left_nav"data-options="region:'west',border:false,title:'系统导航'" style="width:200px;padding:0px;display: none;overflow-x:hidden;">
 		<div id="aa" class="easyui-accordion" data-options="headerCls:'accordion-header'" style="width:100%;">
 		#if($resources)
 			#foreach($entry in $resources)
@@ -71,7 +71,7 @@
 				#end
 				#if($display)
 				<!--<div title="$!entry.resourceName" data-options="iconCls:'$!entry.iconName',height:30" style="overflow:auto;padding:2px;"> -->
-					<div title="<span class='tt-inner'>
+					<div #if($velocityCount==2) data-options="selected:true" #end title="<span class='tt-inner'>
 					#if($!entry.iconName)
 						<img src='themes/icons/$!entry.iconName'/>
 					#end
@@ -129,6 +129,7 @@
 		}
 	}
 	$(function(){
+		$("#aa").accordion("select",0);
 		$("#left_nav").show();
 		$('#tt').tabs('add',{
 			title : '主页',
