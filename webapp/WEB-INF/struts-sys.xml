@@ -46,6 +46,7 @@
             <result name="historyPage" type="velocity">/flow/historyList.html</result>  
             <result name="approveResult" type="velocity">/flow/approveResult.html</result> 
             <result name="modifyFlow" type="velocity">/flow/flowDetail.html</result> 
+            <result name="modifyFlow_dept" type="velocity">/flow/flowDetail_dept.html</result> 
         </action>  
         
         
