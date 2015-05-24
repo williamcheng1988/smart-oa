@@ -74,7 +74,7 @@
 			SELECT * from (SELECT t.task_id_
 					          FROM t_ge_execution e
 					          JOIN t_ru_task t ON e.execution_id_ = t.execution_id_
-					          JOIN t_re_conf c ON t.conf_id_ = c.conf_id_
+					          JOIN t_ru_conf c ON t.conf_id_ = c.conf_id_
 					         WHERE e.task_num_ = c.sort_num_
 					           AND e.execution_id_ = #executionId#) temp)
 	]]>

@@ -149,13 +149,13 @@
 <script type="text/javascript">
 	function deal(dealType) {
 		var dealDesc = "";
-		if("MODIFY"){ //修改流程步骤
+		if("MODIFY"== dealType){ //修改流程步骤
 			location="flow!manage.do?executionId=$!{task.execution_id_}&approve_type_="+dealType;
 			return false;
 		}else if("SKIP"== dealType){
 			dealDesc = "跳过当前步骤";
 		}else if("INVALID" == dealType){
-			dealType = "将该流程作废";
+			dealDesc = "将该流程作废";
 		}
 		if(!confirm("请确认是否"+dealDesc+"?此操作不可恢复！")){
 			return;

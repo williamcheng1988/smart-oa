@@ -102,7 +102,7 @@ function populatPropsFunc(props){
 				parentNode = currentDiv.parent();
 				
 				roleFieldName_compare = $('.UserSelection').find(".easyui-combobox").attr("comboname");
-				//$('.UserSelection').html('');
+				$('.UserSelection').html('');
 			}
 			//alert(countOfUserSelection);
 			//将控件数重置为0
