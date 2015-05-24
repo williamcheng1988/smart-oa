@@ -534,6 +534,9 @@ VALUES('项目角色','NORMAL_ROLES_PROJECTS',-1,1,2,'select role_id dictionary_
 INSERT into T_DICTIONARY_CONFIG(DICTIONARY_NAME,DICTIONARY_KEY,PARENT_ID,IS_VALID,CONFIG_TYPE,SQL_VALUE)
 VALUES('流程','PROCESS_PROCDEF',-1,1,2,'select DISTINCT name_ dictionary_key,name_ dictionary_name from t_re_procdef where procdef_status_ = 1 ORDER BY create_time_ DESC');
 
+INSERT into T_DICTIONARY_CONFIG(DICTIONARY_NAME,DICTIONARY_KEY,PARENT_ID,IS_VALID,CONFIG_TYPE,SQL_VALUE)
+VALUES('岗位','NORMAL_POSTS',-1,1,2,'select post_id dictionary_key,post_name dictionary_name from t_post ORDER BY post_id DESC');
+
 
 -- 资源模块
 INSERT INTO t_resource(resource_id,parent_id,resource_name,address_url,resource_desc,resource_type,auth_type,sort_num) VALUES ('formTemplateType_manage', 'system_setting', '模板管理', 'dynamicForm/formTemplateType/list-form-template-type.html', NULL, '1', 'AUTH', 3);
