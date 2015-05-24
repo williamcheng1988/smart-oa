@@ -380,6 +380,7 @@ public class FlowAction extends BaseAction{
 				conf.setAction_type_(Integer.parseInt(parasMap.get("action_type_"+i)[0]));
 				conf.setAction_obj_type_(Integer.parseInt(parasMap.get("action_obj_type_"+i)[0]));
 				conf.setAction_obj_(parasMap.get("action_obj_"+i)[0]);
+				conf.setAction_obj_(parasMap.get("action_obj_src_"+i)!=null?parasMap.get("action_obj_src_"+i)[0]:"");
 				//转办
 				if (parasMap.containsKey("is_turn_"+i)) {
 					conf.setIs_turn_(Integer.parseInt(parasMap.get("is_turn_"+i)[0].trim()));
