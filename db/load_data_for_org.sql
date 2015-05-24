@@ -41,3 +41,6 @@ insert into t_resource_option values('post_manager','保存修改后的用户岗
 -- 初始化部门sql
 INSERT into t_department(department_id,department_name,department_desc,parent_id,level,status,create_user,create_date,last_update_date)
 VALUES('root','松大科技','','',1,1,'system',SYSDATE(),SYSDATE());
+
+
+update t_staff set department_id='root';
