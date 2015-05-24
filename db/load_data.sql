@@ -180,7 +180,7 @@ INSERT INTO t_schedule_task
   (ID,TASK_NAME,TASK_DESC,GROUP_ID,GROUP_NAME,EXPRESS,HANDLER_CLASS,PARAMETERS,CATEGORY,STARTDATE,STATUS,DELETEFLAG)
 VALUES
   ('DCFC_timedEmailReminder','DCFC定时邮件提醒任务','这个JOB12点调用一次','DCFC_timedReminder','启动定时邮件提醒任务',
-'0 00 12 * * ?','com.chz.smartoa.taskScheduler.TimedEmailReminder','times=1','','',0,0);	
+'0 00 12 * * ? 2013','com.chz.smartoa.taskScheduler.TimedEmailReminder','times=1','','',0,0);	
 
 -- 初始化管理员权限
 insert into t_role_resource
