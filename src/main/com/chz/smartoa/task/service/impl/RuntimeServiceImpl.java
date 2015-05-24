@@ -25,6 +25,7 @@ import com.chz.smartoa.task.exception.NotFoundUserByRoleException;
 import com.chz.smartoa.task.pojo.GeExecution;
 import com.chz.smartoa.task.pojo.RuConf;
 import com.chz.smartoa.task.pojo.RuTask;
+import com.chz.smartoa.task.pojo.HiTaskAssignee;
 import com.chz.smartoa.task.service.HistoryService;
 import com.chz.smartoa.task.service.RuntimeService;
 
@@ -101,6 +102,7 @@ public class RuntimeServiceImpl implements RuntimeService {
 	}
 	
 	private int insertRuTask(RuTask task, int arriveRemind, int upLink) {
+		String taskUser = task.getAssignee();
 		// 查询是否有委托
 		Delegation delegation = this.findDelegationByFromuser(task.getAssignee());
 		logger.debug("查询用户" + task.getAssignee() + "委托！" + delegation);
@@ -128,8 +130,11 @@ public class RuntimeServiceImpl implements RuntimeService {
 				return 0;
 			}
 		}
+		
 		// 插入待办任务到DB
 		ruTaskDao.insertRuTask(task);
+		// 插入处理用户记录便于数据权限
+		ruTaskDao.insertRuTaskUserLog(new HiTaskAssignee(task.getExecutionId(),taskUser,String.valueOf(task.getConfId())));
 		// 发送到达提醒邮件
 		noticeHandler.arriveNotice(arriveRemind,task.getAssignee(),task.getExecutionId());
 		return 1;

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="HiTaskUser_">
+<typeAlias alias="hiTaskAssignee" type="com.chz.smartoa.task.pojo.HiTaskAssignee"/> 
+
+<insert id="HiTaskUser_insertHiTaskUser_" parameterClass="hiTaskAssignee" >
+<![CDATA[
+   INSERT INTO T_HI_TASK_USER (
+			EXECUTION_ID_,
+			ASSIGNEE_,
+			CONF_ID_,
+			CREATE_TIME_
+        )
+    VALUES (
+			#execution_id_#,
+			#assignee_#,
+			#conf_id_#,
+			now()
+	)
+]]>
+</insert>
+</sqlMap>

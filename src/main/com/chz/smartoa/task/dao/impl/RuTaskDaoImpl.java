@@ -12,6 +12,7 @@ import com.chz.smartoa.task.dao.RuTaskDao;
 import com.chz.smartoa.task.pojo.GeExecution;
 import com.chz.smartoa.task.pojo.RuTask;
 import com.chz.smartoa.task.pojo.RuTaskVo;
+import com.chz.smartoa.task.pojo.HiTaskAssignee;
 
 /**
  * RuTaskDao接口实现类.
@@ -32,6 +33,19 @@ public class RuTaskDaoImpl extends BaseDaoiBatis implements RuTaskDao
     	getSqlMapClientTemplate().insert("RuTask_insertRuTask", ruTask);
 		if (logger.isDebugEnabled()) {
     		logger.debug("离开insertRuTask(RuTask), 返回[" + null + "]");
+		}
+    	return null;
+    }
+    
+    @Override
+    public String insertRuTaskUserLog(HiTaskAssignee log)
+    		throws DataAccessException {
+    	if (logger.isDebugEnabled()) {
+    		logger.debug("进入insertRuTaskUserLog(TaskUserLog), 输入参数[" + log + "]");
+    	}
+    	getSqlMapClientTemplate().insert("HiTaskUser_insertHiTaskUser_", log);
+		if (logger.isDebugEnabled()) {
+    		logger.debug("离开insertRuTaskUserLog(TaskUserLog), 返回[" + null + "]");
 		}
     	return null;
     }

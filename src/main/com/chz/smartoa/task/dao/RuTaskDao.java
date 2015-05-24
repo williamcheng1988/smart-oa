@@ -8,6 +8,7 @@ import org.springframework.dao.DataAccessException;
 import com.chz.smartoa.task.pojo.GeExecution;
 import com.chz.smartoa.task.pojo.RuTask;
 import com.chz.smartoa.task.pojo.RuTaskVo;
+import com.chz.smartoa.task.pojo.HiTaskAssignee;
 
 
 /**
@@ -24,6 +25,13 @@ public interface RuTaskDao {
 	 * @throws DataAccessException
 	 */
     String insertRuTask(RuTask ruTask) throws DataAccessException ;
+    /**
+	 * 插入处理任务用户记录
+	 * @param HiTaskAssignee
+	 * @return
+	 * @throws DataAccessException
+	 */
+    String insertRuTaskUserLog(HiTaskAssignee log) throws DataAccessException ;
     /**
      * 删除任务
      * @param id 任务Id
