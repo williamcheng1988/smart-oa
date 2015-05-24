@@ -13,6 +13,8 @@ import com.chz.smartoa.common.base.BaseAction;
 import com.chz.smartoa.common.base.DataGrid;
 import com.chz.smartoa.common.util.LoginUtils;
 import com.chz.smartoa.dynamicForm.util.PublicFunction;
+import com.chz.smartoa.fileUpload.util.PerpertiesTool;
+import com.chz.smartoa.fileUpload.util.PerpertyNames;
 import com.chz.smartoa.form.constants.FormConstants;
 import com.chz.smartoa.system.action.OperateResult;
 import com.chz.smartoa.system.constant.OperateLogType;
@@ -323,6 +325,9 @@ public class FlowAction extends BaseAction{
 						}
 						i++;
 					}
+				}
+				if("DEPARTMENT".equals(PerpertiesTool.getPro(PerpertyNames.PROJECT_VERSION_TYPE))){
+					return "modifyFlow_dept";
 				}
 				return "modifyFlow";
 			}else if("SKIP".equals(approve_type_)){

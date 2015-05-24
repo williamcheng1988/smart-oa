@@ -35,10 +35,10 @@
 
   <body>
   <div align="center" class="datagrid-toolbar page_title">
-		【$!{reProcdef.name_}&nbsp;V$!{reProcdef.version_}】流程配置
-	</div>
+		修改流程
+  </div>
 <div class="content-inner">
-<form id="processDetailForm"  class="easyui-form" method="post" data-options="novalidate:true"  action="flow!saveReconf.do">
+<form id="processDetailForm"  class="easyui-form" method="post" data-options="novalidate:true" action="flow!saveReconf.do">
 <input type="hidden" name="executionId" value="${executionId}">
 <input type="hidden" name="lineNos" value="$!{lineNos}">
 <input type="hidden" name="toDeleteIds" value="$!{toDeleteIds}">
@@ -72,12 +72,12 @@
 									<td>
 										<input type="hidden" name="action_obj_type_${velocityCount}" value="${ruConf.action_obj_type_}">
 										<input type="hidden" name="action_obj_${velocityCount}" value="${ruConf.action_obj_}">
-										<input type="hidden" name="action_obj_src_${velocityCount}" value="">
+										<input type="hidden" name="action_obj_src_${velocityCount}" value="${ruConf.action_obj_src_}">
 										<input type="text" name="action_obj_name_${velocityCount}" id="action_obj_name_${velocityCount}" class="easyui-textbox bindClick" data-options="required:true#if($ruConf.is_edit_ == 0),disabled:true #end" linenum="${velocityCount}" value="$!{ruConf.action_obj_name_}">
 									</td>
 									<td>
-										<input type="checkbox" name="is_turn_${velocityCount}" #if($ruConf.is_edit_ == 0) disabled #end #if($ruConf.action_type_ == 3||$ruConf.action_type_ == 4) disabled #elseif($ruConf.is_turn_ == 1)  checked="checked" #end value="1">转办
-										<input type="checkbox" name="is_ask_${velocityCount}" #if($ruConf.is_edit_ == 0) disabled #end #if($ruConf.action_type_ == 3||$ruConf.action_type_ == 4) disabled #elseif($ruConf.is_ask_ == 1)  checked="checked" #end value="1">协办
+											<input type="checkbox" name="is_turn_${velocityCount}" #if($ruConf.is_edit_ == 0) disabled #end #if($ruConf.action_type_ == 3||$ruConf.action_type_ == 4) disabled #elseif($ruConf.is_turn_ == 1)  checked="checked" #end value="1">转办
+											<input type="checkbox" name="is_ask_${velocityCount}" #if($ruConf.is_edit_ == 0) disabled #end #if($ruConf.action_type_ == 3||$ruConf.action_type_ == 4) disabled #elseif($ruConf.is_ask_ == 1)  checked="checked" #end value="1">协办
 											<!-- 
 											<input type="checkbox" name="is_modify_${velocityCount}" #if($ruConf.is_modify_ == 1)  checked="checked" #end value="1">流程变更
 											 -->
@@ -122,7 +122,7 @@
 		</div>
 <div id="ui_mask" style="display:none" class="datagrid-mask"></div>
 <div id="ui_mask_msg" style="display:none; left: 50%; height: 16px; margin-left: -85.5px; line-height: 16px;" class="datagrid-mask-msg">正在处理，请稍待。。。</div>
-<div id="dlg" class="easyui-dialog" title="&nbsp;选择处理对象" style="width:350px;height:160px;max-width:800px;padding:10px"
+<div id="dlg" class="easyui-dialog" title="&nbsp;选择处理对象" style="width:470px;height:190px;max-width:800px;padding:10px"
 		data-options="closed: true,
 		closable:false,
 		buttons: [{
@@ -150,22 +150,25 @@
   		  	<td>
   		  	&nbsp;&nbsp;
   			 	<select id="sel_staff" class="easyui-combobox" data-options="editable:false" style="width: 150px">
-  			 			#optionTag("NORMAL_USERS")	
-				</select>
+  			 		 #optionTag("NORMAL_USERS")	
+				</select>&nbsp;
   		  	</td>
   		  </tr>
   		   <tr>
-  		   <td></td><td></td>
+  		   <td></td>&nbsp;<td></td>
   		   </tr>
-  		   <tr>
+  		  <tr>
   		  	<td align="right">
-  		  	 	<label><input type="radio" name="actionObjectType" value="2" >&nbsp;角色</label>
+  		  	 	<label><input type="radio" name="actionObjectType" value="3" >&nbsp;岗位</label>
   		  	</td>
   		  	<td>
   		  	&nbsp;&nbsp;
-  		  		<select id="sel_role" class="easyui-combobox"  data-options="editable:false" disabled style="width: 150px">
-  		  				#optionTag("NORMAL_ROLES")	
-				</select>
+  		  	<select id="sel_post" class="easyui-combobox" data-options="editable:false" disabled style="width: 150px">
+  		  		     #optionTag("NORMAL_POSTS")	
+			</select>
+			&nbsp;&nbsp;
+			<select id="sel_post_src" class="easyui-combotree" data-options="editable:true,url:'departmentManager!genDepartmentTree.do',method:'get'" disabled style="width: 150px">
+			</select>
   		  	</td>
   		  </tr>
   		</table> 
@@ -202,7 +205,7 @@ function formSubmit(){
 				$('#ui_mask_msg').css('display','none');
 				alert(json.msg);
 			}else{
-				location.href="flow!view.do?executionId=${executionId}&timestamp="(new Date()).valueOf(); 
+				location.href="flow!view.do?executionId=${executionId}&timestamp="+jQuery.now();
 			}
 		},
 		error:function(){
@@ -228,7 +231,7 @@ $(function() {
 	var line_no = $("#processDetailGrid tbody").find("tr").length;
     $("#newLineBtn").bind("click", function(e) {
     	line_no++;
-    	var newRow = '<tr line_no="'+line_no+'"><td><input style="width:25px;" class="easyui-numberbox" data-options="required:true,min:1,max:99" name="sort_num_'+line_no+'" value="'+line_no+'" type="text"></td><td><input type="text" name="task_desc_'+line_no+'" class="easyui-textbox" data-options="required:true,validType:\'length[0,20]\'"></td><td><select id="action_change_'+line_no+'" linenum="'+line_no+'" name="action_type_'+line_no+'" class="changeClass"><option value="1">审批(并行)</option><option value="2">审批(异或)</option><option value="3">阅处</option><option value="4">传阅</option></select></td><td><input type="hidden" name="action_obj_type_'+line_no+'"><input type="hidden" name="action_obj_'+line_no+'"><input type="text" class="easyui-textbox" data-options="required:true,validType:\'length[1,20]\'" linenum="'+line_no+'" id="action_obj_name_'+line_no+'" name="action_obj_name_'+line_no+'" onclick="chooseActionObject('+line_no+');"></td><td><input type="checkbox" name="is_turn_'+line_no+'" value="1">转办<input type="checkbox" name="is_ask_'+line_no+'" value="1">协办<!-- <input type="checkbox" name="is_modify_'+line_no+'" value="1">流程变更 --></td><td><input style="width:25px;" class="easyui-numberbox" data-options="required:true,min:1,max:99"  type="text" name="expiry_days_'+line_no+'" value="1"></td><td><input type="checkbox" name="arrive_remind_'+line_no+'" value="1">到达<input type="checkbox" name="expiry_remind_'+line_no+'" value="1">超时</td><td><input type="checkbox" class="selectedItem" key="selectedItem" value="'+line_no+'"</td></tr>';
+    	var newRow = '<tr line_no="'+line_no+'"><td><input style="width:25px;" class="easyui-numberbox" data-options="required:true,min:1,max:99" name="sort_num_'+line_no+'" value="'+line_no+'" type="text"></td><td><input type="text" name="task_desc_'+line_no+'" class="easyui-textbox" data-options="required:true,validType:\'length[0,20]\'"></td><td><select id="action_change_'+line_no+'" linenum="'+line_no+'" name="action_type_'+line_no+'" class="changeClass"><option value="1">审批(并行)</option><option value="2">审批(异或)</option><option value="3">阅处</option><option value="4">传阅</option></select></td><td><input type="hidden" name="action_obj_type_'+line_no+'"><input type="hidden" name="action_obj_'+line_no+'"><input type="hidden" name="action_obj_src_'+line_no+'"><input type="text" class="easyui-textbox" data-options="required:true,validType:\'length[1,20]\'" linenum="'+line_no+'" id="action_obj_name_'+line_no+'" name="action_obj_name_'+line_no+'" onclick="chooseActionObject('+line_no+');"></td><td><input type="checkbox" name="is_turn_'+line_no+'" value="1">转办<input type="checkbox" name="is_ask_'+line_no+'" value="1">协办<!-- <input type="checkbox" name="is_modify_'+line_no+'" value="1">流程变更 --></td><td><input style="width:25px;" class="easyui-numberbox" data-options="required:true,min:1,max:99"  type="text" name="expiry_days_'+line_no+'" value="1"></td><td><input type="checkbox" name="arrive_remind_'+line_no+'" value="1">到达<input type="checkbox" name="expiry_remind_'+line_no+'" value="1">超时</td><td><input type="checkbox" class="selectedItem" key="selectedItem" value="'+line_no+'"</td></tr>';
    		$("#processDetailGrid tbody tr:last").after(newRow);
    		var newLineNos = $("[name='lineNos']").val()+line_no+",";
    		$("[name='lineNos']").val(newLineNos);
@@ -236,7 +239,7 @@ $(function() {
    		bindClick('action_obj_name_'+line_no);
    		
    		$('#action_change_'+line_no).combobox({
-   			editable:false,
+			editable:false,
 			onChange:function(){actionChange($(this).attr('linenum'),$(this).combobox('getValue'));}
 		});
 	}); 
@@ -259,23 +262,30 @@ function bindClick(id){
 
 function chooseActionObject(lineNo){
 	$('#lineNo_box').val(lineNo);
-	$('#sel_role').combobox('setValue','');
+	$('#sel_post').combobox('setValue','');
+	$('#sel_post_src').combotree('setValue','');
 	$('#sel_staff').combobox('setValue','');
+	
 	var actionType = $("input[name=action_obj_type_"+lineNo+"]").val();
 	var actionObject = $("input[name=action_obj_"+lineNo+"]").val();
+	var actionObjectSrc = $("input[name=action_obj_src_"+lineNo+"]").val();
 	if(actionType){
-		if(actionType == 2){
-			$("input[name=actionObjectType][value=2]").prop("checked",true);
+		if(actionType == 3){
+			$("input[name=actionObjectType][value=3]").prop("checked",true);
 			$('#sel_staff').combobox('disable');
-			$('#sel_role').combobox('enable');
+			$('#sel_post').combobox('enable');
+			$('#sel_post_src').combotree('enable');
 			$('#sel_staff').combobox('setValue','');
-			$('#sel_role').combobox('setValue',actionObject);
+			$('#sel_post').combobox('setValue',actionObject);
+			$('#sel_post_src').combotree('setValue',actionObjectSrc);
 		}else{
 			$("input[name=actionObjectType][value=1]").prop("checked",true);
+			$('#sel_post').combobox('disable');
+			$('#sel_post_src').combotree('disable');
 			$('#sel_staff').combobox('enable');
-			$('#sel_role').combobox('disable');
+			$('#sel_post_src').combotree('setValue','');
+			$('#sel_post').combobox('setValue','');
 			$('#sel_staff').combobox('setValue',actionObject);
-			$('#sel_role').combobox('setValue','');
 		}
 	}
 	$('#ui_mask').css('display','block');
@@ -285,25 +295,35 @@ function chooseActionObject(lineNo){
 $("input[name=actionObjectType]").bind("click", function(e){
 	if($(this).val() == 1){
 		$('#sel_staff').combobox('enable');
-		$('#sel_role').combobox('disable');
-		$('#sel_role').combobox('setValue','');
+		$('#sel_post').combobox('disable');
+		$('#sel_post_src').combotree('disable');
+		$('#sel_post').combobox('setValue','');
+		$('#sel_post_src').combotree('setValue','');
 	}else{
 		$('#sel_staff').combobox('disable');
+		$('#sel_post').combobox('enable');
+		$('#sel_post_src').combotree('enable');
 		$('#sel_staff').combobox('setValue','');
-		$('#sel_role').combobox('enable');
 	}
 }); 
+
 function submitForm(){
 	var type = $("input[name=actionObjectType]:checked").val(); 
 	var lineNo = $('#lineNo_box').val();
 	if(type == 1){
 		$("input[name=action_obj_type_"+lineNo+"]").val(1);
-		$("input[name=action_obj_"+lineNo+"]").val($("#sel_staff").combobox("getValue"));
-		$("#action_obj_name_"+lineNo).textbox('setValue', $("#sel_staff").combobox("getText"));
+		$("input[name=action_obj_"+lineNo+"]").val($("#sel_staff").combobox('getValue'));
+		$("#action_obj_name_"+lineNo).textbox('setValue', $("#sel_staff").combobox('getText'));
 	}else{
-		$("input[name=action_obj_type_"+lineNo+"]").val(2);
-		$("input[name=action_obj_"+lineNo+"]").val($("#sel_role").combobox("getValue"));
-		$("#action_obj_name_"+lineNo).textbox('setValue',$("#sel_role").combobox("getText"));
+		$("input[name=action_obj_type_"+lineNo+"]").val(3);
+		$("input[name=action_obj_"+lineNo+"]").val($("#sel_post").combobox('getValue'));
+		$("input[name=action_obj_src_"+lineNo+"]").val($("#sel_post_src").combotree('getValue'));
+		var deptName = $("#sel_post_src").combobox('getText');
+		var objName = $("#sel_post").combobox('getText');
+		if(deptName){
+			objName = deptName+"-"+objName;
+		}
+		$("#action_obj_name_"+lineNo).textbox('setValue',objName);
 	}
 	jQuery.parser.parse("input[name=action_obj_name_"+lineNo+"]");
 	$('#dlg').dialog('close');
