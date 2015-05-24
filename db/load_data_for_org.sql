@@ -9,8 +9,12 @@ insert into t_resource
 VALUES
 ('post_manager','system_setting','岗位管理','departmentPost/list.html',null,1,'AUTH',10);
 
--- 如果存在用户管理，先删除
--- DELETE from t_resource where resource_name = '用户管理';
+-- 加载部门菜单
+insert into t_resource
+(resource_id,parent_id,resource_name,address_url,resource_desc,resource_type,auth_type,sort_num)
+VALUES
+('department_menu','other','加载部门配置菜单','departmentManager!genDepartmentTree.do',null,1,'LOGIN_AUTH',1);
+
 
 update t_resource set address_url='staff_dept/list.html' where resource_name='用户管理';
 
@@ -22,7 +26,7 @@ update t_resource set address_url='staff_dept/list.html' where resource_name='�
 
 
 -- 添加访问权限sql
-insert into t_resource_option values('department_manager','加载部门配置菜单','departmentManager!genDepartmentTree.do');
+-- insert into t_resource_option values('department_manager','加载部门配置菜单','departmentManager!genDepartmentTree.do');
 insert into t_resource_option values('department_manager','点击左侧部门菜单获取子项列表','departmentManager!queryDepartment.do');
 insert into t_resource_option values('department_manager','跳转新增部门界面','departmentManager!insetDepartment.do');
 insert into t_resource_option values('department_manager','跳转修改部门界面','departmentManager!toEditPage.do');
