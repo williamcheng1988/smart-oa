@@ -180,7 +180,8 @@
             		loginName: ids
             };
             jQuery.post(url, params, function(data){
-            	alert(data.msg);
+            	var json = eval('(' + data + ')');
+            	alert(json.msg);
             	$('#ui_mask').css('display','none');
         		$('#ui_mask_msg').css('display','none');
             });
