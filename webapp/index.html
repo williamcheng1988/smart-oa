@@ -22,12 +22,6 @@
 .accordion-header{
 	height: 27px;
 }
-/*滚动条样式*/
-::-webkit-scrollbar {width: 14px;height: 14px;}
-::-webkit-scrollbar-track,::-webkit-scrollbar-thumb {border-radius: 999px;border: 5px solid transparent;}
-::-webkit-scrollbar-track {box-shadow: 1px 1px 5px rgba(0,0,0,.2) inset;}
-::-webkit-scrollbar-thumb {min-height: 20px;background-clip: content-box;box-shadow: 0 0 0 5px rgba(0,0,0,.2) inset;}
-::-webkit-scrollbar-corner {background: transparent;}
 </style>	
 </head>
 <body class="easyui-layout">
@@ -54,8 +48,8 @@
 		</table>
 	</div>
 	<!-- 导航 -->
-	<div id="left_nav"data-options="region:'west',border:false,title:'系统导航'" style="width:200px;padding:0px;display: none;overflow-x:hidden;">
-		<div id="aa" class="easyui-accordion" data-options="headerCls:'accordion-header'" style="width:100%;">
+	<div id="left_nav"data-options="region:'west',border:false,title:'系统导航'" style="width:15%;padding:0px;display: none;">
+		<div id="aa" class="easyui-accordion" data-options="height:35,headerCls:'accordion-header'" style="width:100%;height:100%;">
 		#if($resources)
 			#foreach($entry in $resources)
 				#set($display = false)   
@@ -75,10 +69,10 @@
 					#if($!entry.iconName)
 						<img src='themes/icons/$!entry.iconName'/>
 					#end
-					&nbsp;$!entry.resourceName</span>" style="overflow:auto;padding:3px;">
+					&nbsp;$!entry.resourceName</span>" style="overflow:auto;padding:0px;">
 						#foreach($sub in $entry.resources)
 							#if($sub.checked)
-							<a class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-point1'" style="width:90%;padding-left:10px;text-align: left;"
+							<a class="easyui-linkbutton" data-options="plain:true,iconCls:'$!sub.iconName'" style="width:90%;padding-left:10px;text-align: left;"
 							onclick="addPanel('$!sub.resourceName','$!sub.addressUrl')">$!sub.resourceName</a>
 							#end
 						#end
