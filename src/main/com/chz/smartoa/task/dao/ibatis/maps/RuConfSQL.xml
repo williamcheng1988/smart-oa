@@ -170,7 +170,8 @@ select * from (
 				CASE action_obj_type_
 						WHEN 1 THEN (select real_name from t_staff where login_name = action_obj_)
 						WHEN 2 THEN (select role_name from t_role where role_id = action_obj_)
-						WHEN 3 THEN (select post_name from t_post where post_id = action_obj_)
+						WHEN 3 THEN 
+						IF(ISNULL(c.action_obj_src_),(select post_name from t_post where post_id = action_obj_),CONCAT((select department_name from t_department where department_id = c.action_obj_src_),'-',(select post_name from t_post where post_id = action_obj_)))
 						END action_obj_name_
 				from t_ru_conf c,t_ge_execution e
         where c.execution_id_ = e.execution_id_
@@ -197,7 +198,8 @@ select * from (
 				CASE action_obj_type_
 						WHEN 1 THEN (select real_name from t_staff where login_name = action_obj_)
 						WHEN 2 THEN (select role_name from t_role where role_id = action_obj_)
-						WHEN 3 THEN (select post_name from t_post where post_id = action_obj_)
+						WHEN 3 THEN 
+						IF(ISNULL(c.action_obj_src_),(select post_name from t_post where post_id = action_obj_),CONCAT((select department_name from t_department where department_id = c.action_obj_src_),'-',(select post_name from t_post where post_id = action_obj_)))
 						END action_obj_name_
 				from t_ru_conf c LEFT JOIN t_ru_task t on c.conf_id_ = t.conf_id_
 				WHERE sort_num_ = (select task_num_ from t_ge_execution where execution_id_ = #executionId#)
