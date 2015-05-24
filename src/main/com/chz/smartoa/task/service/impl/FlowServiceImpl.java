@@ -404,7 +404,7 @@ public class FlowServiceImpl implements FlowService {
 		//进入流程下一步
 		GeExecution execution = taskService.getGeExecution(executionId);
 		//查询当前流程sort_num_
-		Integer sortNum = taskService.getNextSortNum(execution.getExecutionId());
+		Integer sortNum = taskService.getCurrentSortNum(execution.getExecutionId());
 		addTodoTask(execution, sortNum);
 	}
 
