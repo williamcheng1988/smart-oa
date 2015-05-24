@@ -666,7 +666,7 @@ INSERT INTO `t_resource` (`resource_id`, `parent_id`, `resource_name`, `address_
 INSERT INTO `t_resource` (`resource_id`, `parent_id`, `resource_name`, `address_url`, `resource_desc`, `resource_type`, `auth_type`, `icon_name`, `sort_num`) VALUES ('formTmp-fb9242e7-9f34-4159-bf60-2089b3c1c9a5', 'formTmpType-0cb4a172-4954-45d7-a0b9-388985331e85', '项目总结报告', 'flow!launch.do?formTemplateId=fb9242e7-9f34-4159-bf60-2089b3c1c9a5', NULL, '1', 'AUTH', NULL, 6);
 
 -- 邮件定时任务
-INSERT INTO `t_schedule_task` VALUES ('DCFC_EmailReminder', '邮件定时任务', '每30秒调用一次', 'DCFC_EmailReminder', '邮件定时任务', '0/30 * * * * ?', 'com.chz.smartoa.taskScheduler.EmailReminder', NULL, NULL, NULL, 0, 0);
+INSERT INTO `t_schedule_task` VALUES ('DCFC_EmailReminder', '邮件定时任务', '每分钟调用一次', 'DCFC_EmailReminder', '邮件定时任务', '1 * * * * ?', 'com.chz.smartoa.taskScheduler.EmailReminder', NULL, NULL, NULL, 0, 0);
 
 
 
