@@ -77,7 +77,7 @@ public class UserHandlerImpl implements UserHandler {
 				if(StringUtils.isEmpty(staffIds)){//查询上级部门
 					targetDeptId = String.valueOf(baseDao.queryForObject("TaskUser_parentDeptId",targetDeptId));
 				}
-			} while (StringUtils.isEmpty(targetDeptId)||StringUtils.isNotEmpty(staffIds));
+			} while (StringUtils.isNotEmpty(targetDeptId)&&StringUtils.isEmpty(staffIds));
 			
 			if(StringUtils.isEmpty(staffIds)){//如果没有找到岗位配置，抛出异常
 				String deptName = String.valueOf(baseDao.queryForObject("TaskUser_deptName", deptId));

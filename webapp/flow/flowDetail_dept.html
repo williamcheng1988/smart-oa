@@ -72,7 +72,7 @@
 									<td>
 										<input type="hidden" name="action_obj_type_${velocityCount}" value="${ruConf.action_obj_type_}">
 										<input type="hidden" name="action_obj_${velocityCount}" value="${ruConf.action_obj_}">
-										<input type="hidden" name="action_obj_src_${velocityCount}" value="${ruConf.action_obj_src_}">
+										<input type="hidden" name="action_obj_src_${velocityCount}" value="$!{ruConf.action_obj_src_}">
 										<input type="text" name="action_obj_name_${velocityCount}" id="action_obj_name_${velocityCount}" class="easyui-textbox bindClick" data-options="required:true#if($ruConf.is_edit_ == 0),disabled:true #end" linenum="${velocityCount}" value="$!{ruConf.action_obj_name_}">
 									</td>
 									<td>
