@@ -213,6 +213,9 @@ public class CalendarAction extends BaseAction{
 		}else{
 			msg = "false";
 		}
+		if(cdar == null){
+			cdar = new Calendar();
+		}
 		cdar.setMsg(msg);
 		entry = cdar;
 		return ENTRY;
