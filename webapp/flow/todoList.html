@@ -42,4 +42,12 @@ $(function(){
 function formatOpert(val,row){
 	return '<a class="easyui-linkbutton" data-options="plain:true" href="../flow!approve.do?taskId='+row.taskId+'">'+val+'</a>';
 }
+
+var timestamp=new Date().getTime();
+function refresh(){
+	var now = new Date().getTime();
+	if((now - timestamp) > 60*1000){
+		$('#dg').datagrid('load',null);
+	}
+}
 </script>

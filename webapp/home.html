@@ -24,6 +24,12 @@
 		background: -webkit-gradient(linear, 0% 0%, 100% 0%, from(#CC3300), to(#F9F900)); 
 		} 
 		/* #FF0000 */
+		.datagrid-body td, .datagrid-footer td {
+		    border-style: dotted;
+		    border-width: 0 0 1px;
+		    margin: 0;
+		    padding: 0;
+		}
 	</style> 
 </head>
 <body class="easyui-layout" style="padding:10px;">
@@ -44,21 +50,16 @@
 				 	 <div id="draftList" style=""></div>
 			</div>
 			<div style="width:47%;float: right;padding-right: 13px;min-height: 20%"">
-				<!-- <div id="todoTasks" class="easyui-panel" title="&nbsp;待办任务" data-options="iconCls:'icon-ok'" style="height:98%;">
-				</div> -->
 					<p style="font-size: 14px;font-weight: bold;">
-				 		<a class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-ok'" href="#">待办任务</a>&nbsp;
+				 		<a class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-ok'" href="#" onclick="addPanel('待办任务','flow/todoList.html')">待办任务</a>&nbsp;
 				 	</p>
 					<div class="line"></div>
 				 	 <div id="todoTasks"></div>
 			</div>
 			<div style="width:98%;float: left;padding-top: 8px;padding-left: 13px;">
-				<!-- <div id="historyTasks" class="" title="&nbsp;任务跟踪" data-options="iconCls:'icon-mini-view',boder:false" style="width:99%;height:auto;"> -->
-					<p style="font-size: 14px;font-weight: bold;">
-				 		<a class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-mini-view'" href="#">&nbsp;任务跟踪</a>&nbsp;
-				 	</p>
-					<table id="dg_historyTasks" class="easyui-datagrid" style="width:100%;border:none;"
-							data-options="singleSelect:false,url:'flow!historyList.do',method:'get',autoRowHeight:false,pagination:true,pageSize:10,boder:false">
+				 	<a class="easyui-linkbutton" style="font-size: 14px;font-weight: bold;" data-options="plain:true,iconCls:'icon-mini-view'" href="#" onclick="addPanel('任务跟踪','flow!historyListPage.do')">&nbsp;任务跟踪</a>&nbsp;
+					<table id="dg_historyTasks" class="easyui-datagrid" style="width:100%;border: none;"
+							data-options="singleSelect:false,url:'flow!historyList.do',method:'get',autoRowHeight:false,pagination:true,pageSize:10,showPageList:false,striped:true">
 						<thead>
 							<tr>
 								<th data-options="field:'businessTitle',width:'20%',formatter:formatOpert">任务名称</th>
@@ -68,7 +69,6 @@
 							</tr>
 						</thead>
 					</table>
-				<!-- </div> -->
 			</div>
 		<!-- main end -->
 		</div>
@@ -122,15 +122,25 @@
 $(function(){
 	draftRequestData();
 	todoTaskRequestData();
-	//fileForAfficheRequestData();
 	workPlanForRequestData();
+	
+	//设置分页控件 
+	var p = $('#dg_historyTasks').datagrid('getPager'); 
+	$(p).pagination({
+		layout:['list','first','prev','next','last','sep','links']
+	});  
 });
 
+var timestamp=new Date().getTime();
 function refresh(){
-	draftRequestData();
-	todoTaskRequestData();
-	workPlanForRequestData();
-	$('#dg_historyTasks').datagrid('load',null);
+	var now = new Date().getTime();
+	if((now - timestamp) > 60*1000){
+		timestamp = now;
+		draftRequestData();
+		todoTaskRequestData();
+		workPlanForRequestData();
+		$('#dg_historyTasks').datagrid('load',null);
+	}
 }
 
 function doSearch(value){
@@ -206,49 +216,6 @@ function todoTaskRequestData() {
             }
         });
     };
-    
-    /**
-    function fileForAfficheRequestData() {
-        jQuery.ajax({
-            url:'afficheInfo!firstPageForNewAffiche.do',
-            type:'post',
-            dataType:'json',
-            success:function(data){
-            	//删除所有行
-            	$("#fileListForAffiche").empty();
-            	if(data.length >= 1){
-            		for(var m =0;m<data.length;m++){
-            			var jsonobj = data[m];
-            			if(jsonobj){
-            				var newRow = '<a class="easyui-linkbutton" data-options="plain:true,iconCls:\'icon-point3\'" style="width:99%;padding-left:10px;text-align: left;" onclick="seeAfficeContent(\''+ jsonobj.id + '\')">'+ jsonobj.afficheTitle + '&nbsp;&nbsp;&nbsp;(' + jsonobj.updateDtStr + ')</a><br/>';
-                			$("#fileListForAffiche").append(newRow);
-            			}
-            		}
-            	}else{
-            		document.getElementById("hidDiv").style.display="none";
-            	}
-            	//easyUI重新宣染
-            	jQuery.parser.parse($('#fileListForAffiche'));
-            }
-      });
-    };    
-
- 	// 查看公告内容
-	function seeAfficeContent(id){
-		jQuery.ajax({
-			   type: "POST",
-			   url: "afficheInfo!firstPgeeForSeeContent.do",
-			   data: "ids="+id,
-			   dataType:"json",
-			   success: function(json){
-				   $("#afficheContentDIV").empty();
-				   $("#afficheContentDIV").append(json);
-				   $('#afficheDIV').window('open');
-			   }
-			});
-	}
- 	
- 	*/
  	
 	function workPlanForRequestData() {
         jQuery.ajax({
@@ -359,6 +326,4 @@ function addPanel(title, url) {
 						});
 	}
 }
-
-
 </script>
