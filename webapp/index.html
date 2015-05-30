@@ -49,7 +49,7 @@
 	</div>
 	<!-- 导航 -->
 	<div data-options="region:'west',border:false,title:'系统导航'" style="width:15%;padding:0px;">
-		<div id="aa" class="easyui-accordion" data-options="height:35,headerCls:'accordion-header'" style="width:100%;height:100%;">
+		<div id="aa" class="easyui-accordion" data-options="height:35,headerCls:'accordion-header'" style="width:100%;height:100%;display: none;">
 		#if($resources)
 			#foreach($entry in $resources)
 				#set($display = false)   
@@ -132,10 +132,11 @@
 			style : 'overflow:hidden;padding:10px',
 			content : '<iframe id="home" name="home" frameborder="0" src="home.html" width="100%" height="99%"></iframe>'  
 		});
+		$("#aa").show();
+		jQuery.parser.parse("#aa");
 		$('#tt').tabs({    
 		    onSelect:function(title){    
 		    	if(title == "主页" || title == "待办任务"){
-		    		alert('refresh');
 		    		document.getElementById('home').contentWindow.refresh();
 		    	}
 		    }    
