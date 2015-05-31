@@ -120,6 +120,7 @@
 </html>
 <script type="text/javascript">
 $(function(){
+	setInterval(timerRefresh,3*60*1000);	
 	draftRequestData();
 	todoTaskRequestData();
 	workPlanForRequestData();
@@ -130,6 +131,11 @@ $(function(){
 		layout:['list','first','links','last']
 	});  
 });
+
+function timerRefresh(){
+	todoTaskRequestData();
+	$('#dg_historyTasks').datagrid('load',null);
+}
 
 var timestamp=new Date().getTime();
 function refresh(){
