@@ -99,6 +99,7 @@
 		<property name="repositoryService" ref="repositoryService"/>
 		<property name="taskService" ref="taskService"/>
 		<property name="noticeBiz" ref="noticeBiz"/>
+		<property name="baseService" ref="baseService"/>
 	</bean>	
 
 	<bean id="resourceBiz" class="com.chz.smartoa.system.service.impl.ResourceBizImpl">

@@ -103,4 +103,30 @@
  limit 0,50
 </select>
 
+
+<select id="Notice_TaskExecutionInfo" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+<![CDATA[
+	SELECT
+		(
+			SELECT
+				CONCAT(TFTT.TYPE, ' >> ', TFT. NAME)
+			FROM
+				T_FORM_TEMPLATE TFT,
+				T_FORM_TEMPLATE_TYPE TFTT
+			WHERE
+				TFTT.ID = TFT.TYPE_ID
+			AND TFT.ID = template_id_
+		) template_name_,
+		business_key_,
+		business_title_,
+		s.real_name,
+		(select department_name from t_department where department_id = department_id_) department_name_,
+		priority_,
+		desc_,
+		date_format(start_time_, '%Y-%m-%d %k:%i') start_time_
+	FROM t_ge_execution e LEFT JOIN t_staff s ON e.OWNER_ = s.login_name
+	where e.execution_id_ = #executionId#
+]]>
+</select>
+
 </sqlMap>

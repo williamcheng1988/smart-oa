@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 
 import com.chz.smartoa.common.email.EmailHelper;
 import com.chz.smartoa.common.email.EmailMessage;
+import com.chz.smartoa.common.service.BaseService;
 import com.chz.smartoa.common.util.VelocityUtils;
 import com.chz.smartoa.system.constant.TemplateType;
 import com.chz.smartoa.system.pojo.Notice;
@@ -30,25 +31,30 @@ public class NoticeHandler {
 	
 	private NoticeBiz noticeBiz;
 	
+	private BaseService baseService;
+	
+	
+	
 	/**
 	 * 任务到达提醒
 	 * @param user
 	 * @param executionId
 	 */
 	public void arriveNotice(final int isSend, final String user,final String executionId) {
+		System.out.println("异步插入到达邮件");
 		new Thread() { //异步处理
 			public void run() {
 				try {
-					Map<String, Object> task = taskService.getTaskExecution(executionId);
+					Map<String, Object> content = (Map<String, Object>) baseService.queryForObject("Notice_TaskExecutionInfo", executionId);
 					Notice notice = new Notice();
 					notice.setToPeople(user);
-					notice.setTitle(String.valueOf(task.get("business_title_")));
+					notice.setTitle(String.valueOf(content.get("business_title_")));
 					notice.setStation(0);
 					if (isSend == 1) {
 						notice.setEmail(0);
 					}
-					notice.setContent(VelocityUtils.parseVm(TemplateType.TASK_ARRIVE, task));
-					notice.setHtmlContent(VelocityUtils.parseVm(TemplateType.HTML_TASK_ARRIVE, task));
+					notice.setContent(VelocityUtils.parseVm(TemplateType.TASK_ARRIVE, content));
+					notice.setHtmlContent(VelocityUtils.parseVm(TemplateType.HTML_TASK_ARRIVE, content));
 					noticeBiz.insert(notice);
 				} catch (Exception e) {
 					logger.error("组装到达提醒失败："+e);
@@ -200,5 +206,9 @@ public class NoticeHandler {
 
 	public void setNoticeBiz(NoticeBiz noticeBiz) {
 		this.noticeBiz = noticeBiz;
+	}
+
+	public void setBaseService(BaseService baseService) {
+		this.baseService = baseService;
 	}
 }
