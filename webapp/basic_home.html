@@ -291,7 +291,7 @@
 		var timestamp=new Date().getTime();
 		function refresh(){
 			var now = new Date().getTime();
-			if((now - timestamp) > 60*1000){
+			if((now - timestamp) > 15*1000){
 				timestamp = now;
 				draftRequestData();
 				timerTodoTaskRequestData();
