@@ -1,0 +1,77 @@
+<HTML>
+<head>
+<meta http-equiv="Content-Type" content="text/HTML; charset=utf-8" />
+<title>OA办公系统</title>
+<style type="text/CSS">
+body{padding: 20px;background-color: #FFF;font: 100.01% "Trebuchet MS",Verdana,Arial,sans-serif;text-align:center;}
+div#nifty{margin: 0 auto;background: #f4f4f4;width: 700px;}
+p {padding:10px}
+div.rtop, div.rbottom{display:block;background: #FFF}
+div.rtop div, div.rbottom div{display:block;height: 1px;overflow: hidden; background: #f4f4f4}
+div.r1{margin: 0 5px}
+div.r2{margin: 0 3px}
+div.r3{margin: 0 2px}
+div.rtop div.r4, div.rbottom div.r4{margin: 0 1px;height: 2px}
+table{padding: 5px;}
+table th{
+	text-align: right;
+	padding-right: 3px;
+	font-size: 12px;
+}
+table td{
+	text-align: left;
+	padding-left: 3px;
+	font-size: 12px;
+}
+</style>
+</head>
+<body>
+<div id="nifty">
+<div class="rtop"><div class="r1"></div><div class="r2"></div><div class="r3"></div><div class="r4"></div></div>
+<!----------------- main start ------------->
+<div style="width: 99%;text-align: center;">
+<br />
+<table style="width: 300px;margin:10px auto;border-spacing:0px;line-height: 0px;">
+<tbody><tr>
+<td style="border-bottom-width: 1px; border-bottom-color: #c0c0c8; border-bottom-style: solid;">&nbsp;</td><td valign="middle" align="center" style="vertical-align: middle; white-space: nowrap; width: 10%; text-align: center; font-weight: bold; font-size: 12px; color:#1fbad6;padding:0 10px;" rowspan="2">
+$!businessTitle | 审阅
+</td><td style="border-bottom-width: 1px; border-bottom-color: #c0c0c8; border-bottom-style: solid;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border-top-width: 1px; border-top-color: #ffffff; border-top-style: solid;">&nbsp;</td><td style="border-top-width: 1px; border-top-color: #ffffff; border-top-style: solid;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<table style="width: 95%;margin:0 auto;">
+<tr>
+<th>编号</th><td colspan="3">$!business_key_</td>
+</tr>
+<tr>
+<th>签报类型</th><td colspan="3">$!template_name_</td>
+</tr>
+<tr>
+<th style="width:20%">发起人</th><td style="width:27%">$!real_name</td><th style="width:20%">发起时间</th><td>$!start_time_</td>
+</tr>
+<tr>
+<th valign="top">请示事项<br/>具体内容</th>
+<td colspan="3">
+$!desc_
+</td>
+</tr>
+<tr>
+<th>处理地址</th><td colspan="3">http://127.0.0.1:8080/aaa.do?aa=111</td>
+</tr>
+</table>
+<br/>
+<br/>
+<div style="width: 95%;border-top: 1px dashed #c0c0c8;text-align: right;margin:0 auto;padding: 5px;font-family:华文行楷">
+做有高度的人  做有高度的事业<br />
+<a href="http://www.sonta.cn" target="_blank" style="text-decoration: none;">深圳市松大科技有限公司</a>
+</div>
+<br/>
+</div>
+<!----------------- main end ------------->
+<div class="rtop"><div class="r4"></div><div class="r3"></div><div class="r2"></div><div class="r1"></div></div>
+</div>
+</body>
+</hmtl>
