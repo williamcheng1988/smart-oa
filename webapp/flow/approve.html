@@ -65,10 +65,10 @@
 								</td>
 								<td align="center" class="tasktd1" width="25%">
 								#if($readonly)
-									#if($!task.priority_ == 1)<label style="display: inline;color:#FF7F27;font-weight: normal;">紧急！ </label>#end
-									#if($!task.priority_ == 2)<label style="display: inline;color:red;font-weight: normal;">加急！ </label>#end
+									#if($!task.priority_ == 1)<label style="display: inline;color:#FF7F27;font-weight:bold;">紧急！ </label>#end
+									#if($!task.priority_ == 2)<label style="display: inline;color:red;font-weight:bold;">加急！ </label>#end
 								#else
-								<label style="display: inline;color:#FF7F27;font-weight: normal;"><input type="checkbox" name="priority_" value="1" #if($!task.priority_ == 1) checked #end>紧急</label>
+								<label style="display: inline;color:#FF7F27;font-weight:bold;"><input type="checkbox" name="priority_" value="1" #if($!task.priority_ == 1) checked #end>紧急</label>
 								<!-- 
 								是否紧急：
 									<label style="display: inline;font-weight: normal;"><input type="radio" name="priority_" value="0" checked>普通</label>

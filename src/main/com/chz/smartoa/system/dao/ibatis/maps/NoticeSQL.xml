@@ -119,6 +119,8 @@
 		) template_name_,
 		business_key_,
 		business_title_,
+		owner_,
+		procdef_id_,
 		s.real_name,
 		(select department_name from t_department where department_id = department_id_) department_name_,
 		priority_,

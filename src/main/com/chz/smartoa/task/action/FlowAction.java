@@ -115,7 +115,7 @@ public class FlowAction extends BaseAction{
 					//紧急程度
 					importantGrade_ = flowService.getImportantGrade(formTemplateId);
 					if(importantGrade_ > 0 && execution.getPriority() > 0){
-						importantGrade_ = execution.getPriority();
+						priority_ = execution.getPriority();
 					}
 					//填报基本信息
 					formMap = flowService.getPage(execution.getTemplateId(),execution.getBusinessKey());
@@ -153,7 +153,7 @@ public class FlowAction extends BaseAction{
 				paramMap.put(FormConstants.LOGIN_NAME, staff.getLoginName());
 			}
 			//发起流程
-			executionId = flowService.createProcess(formTemplateId,title_,desc_,status_,importantGrade_,executionId,paramMap);
+			executionId = flowService.createProcess(formTemplateId,title_,desc_,status_,priority_,executionId,paramMap);
 			
 			if(status_ == 1){
 				operateResult = new OperateResult(1, "流程发起成功！");
