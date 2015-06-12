@@ -4,7 +4,7 @@
 	<default-from>671253007@qq.com</default-from>
 	
     <!-- 设置缺省的FROM地址别名-->
-	<default-from-alias>OA办公系统</default-from-alias>
+	<default-from-alias>OA信使</default-from-alias>
 	
     <!-- 设置SMTP服务器名称 -->
 	<host-name>smtp.qq.com</host-name>

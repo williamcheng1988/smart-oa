@@ -1,0 +1,81 @@
+<HTML>
+<head>
+<meta http-equiv="Content-Type" content="text/HTML; charset=utf-8" />
+<style type="text/CSS">
+body{padding: 10px;background-color: #FFF;font: 100.01% "Trebuchet MS",Verdana,Arial,sans-serif;}
+div#nifty{margin: 0 auto;background: #f4f4f4;min-width: 700px;}
+div.rtop, div.rbottom{display:block;background: #FFF}
+div.rtop div, div.rbottom div{display:block;height: 1px;overflow: hidden; background: #f4f4f4}
+div.r1{margin: 0 5px}
+div.r2{margin: 0 3px}
+div.r3{margin: 0 2px}
+div.rtop div.r4, div.rbottom div.r4{margin: 0 1px;height: 2px}
+table{border-collapse: collapse;}
+table th{
+	text-align: right;
+	padding: 6px;
+	font-size: 12px;
+	border: 1px solid #E2E2E2;
+	border-collapse: collapse;
+}
+table td{
+	text-align: left;
+	padding: 6px;
+	font-size: 12px;
+	border: 1px solid #E2E2E2;
+	border-collapse: collapse;
+}
+</style>
+</head>
+<body>
+<div id="nifty">
+<div class="rtop"><div class="r1"></div><div class="r2"></div><div class="r3"></div><div class="r4"></div></div>
+<!----------------- main start ------------->
+<div style="text-align: center;">
+<br />
+<div  style="width: 90%;margin:0 auto;text-align: left;padding: 0px 0 8px 0;font-size: 14px;" >
+您提交的签报：$!business_title_ &nbsp;已被退回，请修改后重新提交！
+</div>
+<table style="width: 90%;margin:0 auto;">
+<tr>
+<tr>
+<th colspan="4" style="text-align: center;">$!template_name_<br/>
+<div style="width: 100%;text-align: right;">
+$!business_key_
+</div>
+</th>
+</tr>
+<th>请示要点</th><td colspan="2">$!business_title_</td>
+<td style="text-align: center;">
+#if($!priority_ == 1)<label style="display: inline;color:red;font-weight: normal;">紧急！ </label>#end
+</td>
+</tr>
+<tr>
+<th style="width:15%">报送人</th><td style="width:40%">$!real_name</td><th style="width:15%">报送时间</th><td>$!start_time_</td>
+</tr>
+<tr>
+#if($desc_)
+<th valign="top">请示内容</th>
+<td colspan="3" style="padding-right: 25px;">
+$!desc_
+</td>
+</tr>
+#end
+</table>
+<br/>
+<div style="width: 95%;text-align: right;margin:0 auto;padding: 5px;">
+<a href="$WWW_ADDRSS/flow!approve.do?taskId=$!task_id_" target="_blank" style="text-decoration: none;">现在处理 >>></a>
+</div>
+<br/>
+<br/>
+<div style="width: 95%;border-top: 1px dashed #c0c0c8;text-align: right;margin:0 auto;padding: 5px;font-family:华文行楷">
+做有高度的人  做有高度的事业<br />
+<a href="http://www.sonta.cn" target="_blank" style="text-decoration: none;">松特高新</a>
+</div>
+<br/>
+</div>
+<!----------------- main end ------------->
+<div class="rtop"><div class="r4"></div><div class="r3"></div><div class="r2"></div><div class="r1"></div></div>
+</div>
+</body>
+</hmtl>
