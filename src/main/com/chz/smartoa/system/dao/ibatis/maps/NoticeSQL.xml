@@ -109,7 +109,7 @@
 	SELECT
 		(
 			SELECT
-				CONCAT(TFTT.TYPE, ' >> ', TFT. NAME)
+				CONCAT(TFTT.TYPE, '&nbsp;签报<br/>', TFT. NAME)
 			FROM
 				T_FORM_TEMPLATE TFT,
 				T_FORM_TEMPLATE_TYPE TFTT
@@ -119,12 +119,14 @@
 		) template_name_,
 		business_key_,
 		business_title_,
+		e.execution_id_,
 		owner_,
 		procdef_id_,
 		s.real_name,
 		(select department_name from t_department where department_id = department_id_) department_name_,
 		priority_,
 		desc_,
+		(select task_id_ from t_ru_task where execution_id_ = e.execution_id_ ORDER BY arrive_time_ DESC LIMIT 1) task_id_,
 		date_format(start_time_, '%Y-%m-%d %k:%i') start_time_
 	FROM t_ge_execution e LEFT JOIN t_staff s ON e.OWNER_ = s.login_name
 	where e.execution_id_ = #executionId#

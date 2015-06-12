@@ -38,7 +38,7 @@
 								<td colspan="2" class="tasktd2">
 									<input class="easyui-textbox" id="title_" name="title_" style="width: 50%;" data-options="required:true,validType:['length[0,80]']" value="$!title_">&nbsp;
 								</td>
-								<td align="center" class="tasktd1" width="25%">
+								<td style="text-align: center;" class="tasktd1" width="25%">
 								#if($!importantGrade_ > 0)
 								<!-- 2015-05-17
 								是否紧急：
@@ -46,7 +46,7 @@
 									<label style="display: inline;color:#FF7F27;font-weight: normal;"><input type="radio" name="priority_" value="1" #if($priority_ == 1) checked #end>紧急</label>
 									<label style="display: inline;color: red;font-weight: normal;"><input type="radio" name="priority_" value="2" #if($priority_ == 2) checked #end>加急</label>
 									 -->
-									 <label style="display: inline;color:#FF7F27;font-weight:bold;"><input type="checkbox" name="priority_" value="1" #if($priority_ == 1) checked #end>&nbsp;紧急</label>
+									 <label style="display: inline;color:red;font-weight:bold;"><input type="checkbox" name="priority_" value="1" #if($priority_ == 1) checked #end>&nbsp;紧急</label>
 								#end
 								</td>
 							</tr>

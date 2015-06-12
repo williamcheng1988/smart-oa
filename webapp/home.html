@@ -137,16 +137,11 @@ function timerRefresh(){
 	$('#dg_historyTasks').datagrid('load',null);
 }
 
-var timestamp=new Date().getTime();
 function refresh(){
-	var now = new Date().getTime();
-	if((now - timestamp) > 15*1000){
-		timestamp = now;
-		draftRequestData();
-		todoTaskRequestData();
-		workPlanForRequestData();
-		$('#dg_historyTasks').datagrid('load',null);
-	}
+	draftRequestData();
+	todoTaskRequestData();
+	workPlanForRequestData();
+	$('#dg_historyTasks').datagrid('load',null);
 }
 
 function doSearch(value){

@@ -288,17 +288,12 @@
 		   timerFileForTechnologyRequestData();
 		});
 		
-		var timestamp=new Date().getTime();
 		function refresh(){
-			var now = new Date().getTime();
-			if((now - timestamp) > 15*1000){
-				timestamp = now;
-				draftRequestData();
-				timerTodoTaskRequestData();
-				timerHistoryTaskRequestData();
-				timerFileForPublicRequestData();
-				timerFileForTechnologyRequestData();
-			}
+			draftRequestData();
+			timerTodoTaskRequestData();
+			timerHistoryTaskRequestData();
+			timerFileForPublicRequestData();
+			timerFileForTechnologyRequestData();
 		}
 		
 		/** 

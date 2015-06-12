@@ -110,7 +110,7 @@
      SELECT 
 	     HI_T.APPROVE_TYPE_, 
 	     HI_T.APPROVE_DESC_, 
-	     date_format(HI_T.END_TIME_,'%Y-%m-%d %k:%i:%s') END_TIME_,
+	     date_format(HI_T.END_TIME_,'%Y-%m-%d %k:%i') END_TIME_,
 	     S.REAL_NAME
    FROM T_HI_TASK HI_T
    LEFT JOIN T_STAFF S ON HI_T.ASSIGNEE_ = S.LOGIN_NAME
@@ -167,36 +167,48 @@ ORDER BY GE_E.START_TIME_ DESC
        A.BUSINESS_KEY_,
        A.BUSINESS_TITLE_,
        A.TEMPLATE_ID_,
-       date_format(A.start_time_,'%Y-%m-%d %k:%i:%s') start_time_,
+       date_format(A.start_time_,'%Y-%m-%d %k:%i') start_time_,
        S.REAL_NAME,
        CASE A.task_status_
           WHEN 0 THEN '申请提交'
-          WHEN 1 THEN (select GROUP_CONCAT(task_desc_)
+          WHEN 1 THEN 
+							CASE task_num_ 
+							WHEN 0 	THEN '退回修改'
+							ELSE
+							(select GROUP_CONCAT(task_desc_)
                         from t_ru_conf
                        where conf_id_ in (select DISTINCT conf_id_ from t_ru_task where execution_id_= A.EXECUTION_ID_)
                          AND action_type_ != 4)
+							END
           WHEN 2 THEN '流程完结[通过]'
           WHEN 3 THEN '流程完结[不通过]'
           WHEN 4 THEN '废弃'
           END DEAL_STEPS_,
        CASE A.task_status_ 
           WHEN 0 THEN (select real_name from t_staff where login_name = A.owner_)
-          WHEN 1 THEN (select GROUP_CONCAT(DISTINCT s.real_name)
+          WHEN 1 THEN 
+							CASE task_num_ 
+							WHEN 0 	THEN S.REAL_NAME
+							ELSE 
+							(select GROUP_CONCAT(DISTINCT s.real_name)
                                 from t_ru_task t
                                 LEFT JOIN t_ru_conf c on t.conf_id_ = c.conf_id_
                                 LEFT JOIN t_staff s on t.assignee_ = s.login_name
                                where c.action_type_ != 4
                                  and t.execution_id_ = A.EXECUTION_ID_)
+							END
           ELSE ''
           END DEAL_MANS_      
-	  FROM (SELECT DISTINCT
+    FROM
+     (SELECT DISTINCT
 	             GE_E.EXECUTION_ID_,
 	             GE_E.BUSINESS_KEY_,
 	             GE_E.BUSINESS_TITLE_,
 	             GE_E.TEMPLATE_ID_,
-	             GE_E.start_time_,
-	             GE_E.task_status_,
-	             GE_E.owner_
+	             GE_E.START_TIME_,
+	             GE_E.TASK_STATUS_,
+	             GE_E.TASK_NUM_,
+	             GE_E.OWNER_
     FROM T_HI_TASK HI_T LEFT JOIN T_GE_EXECUTION GE_E ON HI_T.EXECUTION_ID_ = GE_E.EXECUTION_ID_
 ]]>
   <dynamic prepend="WHERE">

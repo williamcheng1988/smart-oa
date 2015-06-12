@@ -5,8 +5,8 @@ public enum TemplateType {
 	HTML_TASK_ARRIVE("html_task_arrive.vm"),
 	TASK_ARRIVE("task_arrive.vm"),
 	//任务退回邮件提醒
-	HTML_TASK_RETURN("html_task_reture.vm"),
-	TASK_RETURN("task_reture.vm"),
+	HTML_TASK_RETURN("html_task_return.vm"),
+	TASK_RETURN("task_return.vm"),
 	//任务超时邮件提醒
 	HTML_TASK_EXPIRY("html_task_expiry.vm"),
 	TASK_EXPIRY("task_expiry.vm"),

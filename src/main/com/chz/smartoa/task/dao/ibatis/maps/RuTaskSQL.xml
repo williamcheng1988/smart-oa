@@ -141,7 +141,7 @@
 <![CDATA[
     SELECT
        		TASK_ID_,
-		        	date_format(ARRIVE_TIME_,'%Y-%m-%d %k:%i:%s') ARRIVE_TIME_,
+		        	date_format(ARRIVE_TIME_,'%Y-%m-%d %k:%i') ARRIVE_TIME_,
 		       		CONSULT_,
 		       		CONF_ID_,
 		       		DELEGATION_,
@@ -194,10 +194,10 @@
 <![CDATA[
    SELECT 	 
    			 RU_T.TASK_ID_,
-   			 date_format(RU_T.ARRIVE_TIME_,'%Y-%m-%d %k:%i:%s') ARRIVE_TIME_,
+   			 date_format(RU_T.ARRIVE_TIME_,'%Y-%m-%d %k:%i') ARRIVE_TIME_,
       		 GE_E.BUSINESS_KEY_,
 			 GE_E.BUSINESS_TITLE_,    
-			 date_format(GE_E.START_TIME_,'%Y-%m-%d %k:%i:%s') START_TIME_,
+			 date_format(GE_E.START_TIME_,'%Y-%m-%d %k:%i') START_TIME_,
 			 GE_E.PRIORITY_,
 			 S.REAL_NAME
 	FROM T_RU_TASK RU_T LEFT JOIN T_GE_EXECUTION GE_E ON RU_T.EXECUTION_ID_ = GE_E.EXECUTION_ID_
@@ -215,10 +215,10 @@ ORDER BY ge_e.start_time_ DESC
 <![CDATA[
    SELECT 	 
    			 RU_T.TASK_ID_,
-   			 date_format(RU_T.ARRIVE_TIME_,'%Y-%m-%d %k:%i:%s') ARRIVE_TIME_,
+   			 date_format(RU_T.ARRIVE_TIME_,'%Y-%m-%d %k:%i') ARRIVE_TIME_,
       		 GE_E.BUSINESS_KEY_,
 			 GE_E.BUSINESS_TITLE_,    
-			 date_format(GE_E.START_TIME_,'%Y-%m-%d %k:%i:%s') START_TIME_,
+			 date_format(GE_E.START_TIME_,'%Y-%m-%d %k:%i') START_TIME_,
 			 GE_E.PRIORITY_,
 			 S.REAL_NAME
 	FROM T_RU_TASK RU_T LEFT JOIN T_GE_EXECUTION GE_E ON RU_T.EXECUTION_ID_ = GE_E.EXECUTION_ID_

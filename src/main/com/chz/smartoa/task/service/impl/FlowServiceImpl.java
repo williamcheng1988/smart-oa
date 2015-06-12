@@ -295,7 +295,7 @@ public class FlowServiceImpl implements FlowService {
 			//结束流程，审批完成
 			runtimeService.completeTask(execution.getExecutionId(),ExecutionStatus.Complete.getVal());
 			//发送完成邮件
-			noticeHandler.completeNotice(procdef.getComplete_remind_(),execution);
+			noticeHandler.completeNotice(procdef.getComplete_remind_(),execution.getExecutionId());
 		}else{
 			addTodoTask(execution,sortNum, procdef);
 		}
@@ -309,7 +309,7 @@ public class FlowServiceImpl implements FlowService {
 			// 结束流程，审批完成
 			runtimeService.completeTask(execution.getExecutionId(),ExecutionStatus.Complete.getVal());
 			// 发送完成邮件
-			noticeHandler.completeNotice(procdef.getComplete_remind_(),execution);
+			noticeHandler.completeNotice(procdef.getComplete_remind_(),execution.getExecutionId());
 		} else {
 			addTodoTask(execution, sortNum, procdef);
 		}
@@ -339,7 +339,7 @@ public class FlowServiceImpl implements FlowService {
 				if(sortNum == null){ //没找到下个节点
 					//结束流程，审批完成
 					runtimeService.completeTask(execution.getExecutionId(),ExecutionStatus.Complete.getVal());
-					noticeHandler.completeNotice(procdef.getComplete_remind_(),execution);
+					noticeHandler.completeNotice(procdef.getComplete_remind_(),execution.getExecutionId());
 					//结束循环
 					isNext = 0;
 				}
@@ -383,7 +383,7 @@ public class FlowServiceImpl implements FlowService {
 		//记录操作日志
 		operateLogBiz.info(OperateLogType.TASK_MANAGE,execution.getExecutionId(), execution.getBusinessTitle(),"流程废弃成功");
 		//发送完成邮件，废弃
-		noticeHandler.abolishNotice(execution);
+		noticeHandler.abolishNotice(executionId);
 	}
 	
 	@Override
