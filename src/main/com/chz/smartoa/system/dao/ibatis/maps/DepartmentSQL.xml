@@ -80,7 +80,7 @@
 				   CREATE_DATE AS createDate,
 				   LAST_UPDATE_DATE AS lastUpdateDate
 			  FROM T_DEPARTMENT 
-			 WHERE PARENT_ID = #parentId#
+			 WHERE PARENT_ID = #parentId# OR DEPARTMENT_ID = #parentId#
 		]]>
 	</select>
 	
