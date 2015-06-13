@@ -41,8 +41,9 @@
 		    str_to_date(#endDate:DATE#,'%Y-%m-%d %k:%i:%s'),
 		    #delegationId#,
         	now(),
+        	#status#
 		    )
-			#status#
+			
 ]]>
 </insert>
 
