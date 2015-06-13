@@ -18,8 +18,8 @@
 			</div>
 			<div data-options="region:'center'" style="padding:2px">
 				<div id="title" align="center" class="datagrid-toolbar page_title">松大科技</div>
-				<input id="departmentId" name="departmentId" value="root" type="hidden" >
-				<input id="departmentName" name="departmentName" value="松大科技" type="hidden" >
+				<input id="departmentId" name="departmentId" type="hidden" >
+				<input id="departmentName" name="departmentName" type="hidden" >
 				<table id="dg" class="easyui-datagrid" style="width:100%;height:auto;"
 						data-options="rownumbers:true,url:'../departmentPostRelation!queryDepartmentPost.do',singleSelect:false,border:false,method:'get',toolbar:'#tb',autoRowHeight:false">
 					<thead>
@@ -56,6 +56,21 @@
          $('#dg').datagrid('load',eval('(' + params + ')')); 
 		}
 	});
+	 
+	 $(function(){
+	 		jQuery.ajax({
+				   type: "POST",
+				   url: "../departmentManager!getDepartmentInfo.do",
+				   dataType:"json",
+				   success: function(json){
+					   if(json){
+						   $('#departmentId').val(json.departmentId);
+						   $('#departmentName').val(json.departmentName);
+						   $('#title').html(json.departmentName);
+					   }
+				   }
+				});
+		});
 
     
 	function addPost(){

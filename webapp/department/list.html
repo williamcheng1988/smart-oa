@@ -17,9 +17,9 @@
 				<ul id="tt" class="easyui-tree" data-options="url:'../departmentManager!genDepartmentTree.do',method:'get',animate:true,dnd:true"></ul>
 			</div>
 			<div data-options="region:'center'" style="padding:2px">
-				<div id="title" align="center" class="datagrid-toolbar page_title">松大科技</div>
-				<input id="parentId" name="parentId" value="root" type="hidden" >
-				<input id="parentName" name="parentName" value="松大科技"  type="hidden" >
+				<div id="title" align="center" class="datagrid-toolbar page_title"></div>
+				<input id="parentId" name="parentId" type="hidden" >
+				<input id="parentName" name="parentName"  type="hidden" >
 				<table id="dg" class="easyui-datagrid" style="width:100%;height:auto;"
 						data-options="rownumbers:true,url:'../departmentManager!queryDepartment.do',singleSelect:false,border:false,method:'get',toolbar:'#tb',autoRowHeight:false">
 					<thead>
@@ -46,6 +46,21 @@
 </html>
   
  <script language="javascript">
+ 
+ 	$(function(){
+ 		jQuery.ajax({
+			   type: "POST",
+			   url: "../departmentManager!getDepartmentInfo.do",
+			   dataType:"json",
+			   success: function(json){
+				   if(json){
+					   $('#parentId').val(json.departmentId);
+					   $('#parentName').val(json.departmentName);
+					   $('#title').html(json.departmentName);
+				   }
+			   }
+			});
+	});
  
 	 $('#tt').tree({
 		onClick: function(node){
