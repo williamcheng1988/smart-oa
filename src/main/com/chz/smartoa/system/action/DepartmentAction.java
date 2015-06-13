@@ -59,6 +59,15 @@ public class DepartmentAction extends BaseAction{
 		return DATA_GRID;
 	}
 	
+	public String getDepartmentInfo(){
+		if(StringUtils.isEmpty(parentId)){
+			parentId = "root";
+		}
+		Department dept = departmentBiz.findDepartment(parentId);
+		entry = dept;
+		return ENTRY;
+	}
+	
 	
 	public String genDepartmentTree(){
 		List<TreeData> treeList = generateTree("");
