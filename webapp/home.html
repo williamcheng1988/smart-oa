@@ -134,14 +134,14 @@ $(function(){
 
 function timerRefresh(){
 	todoTaskRequestData();
-	$('#dg_historyTasks').datagrid('load',null);
+	$('#dg_historyTasks').datagrid('reload',null);
 }
 
 function refresh(){
 	draftRequestData();
 	todoTaskRequestData();
 	workPlanForRequestData();
-	$('#dg_historyTasks').datagrid('load',null);
+	$('#dg_historyTasks').datagrid('reload',null);
 }
 
 function doSearch(value){
