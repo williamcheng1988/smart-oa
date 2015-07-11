@@ -59,7 +59,7 @@
 			<div style="width:98%;float: left;padding-top: 8px;padding-left: 13px;">
 				 	<a class="easyui-linkbutton" style="font-size: 14px;font-weight: bold;" data-options="plain:true,iconCls:'icon-mini-view'" href="#" onclick="addPanel('任务跟踪','flow!historyListPage.do')">&nbsp;任务跟踪</a>&nbsp;
 					<table id="dg_historyTasks" class="easyui-datagrid" style="width:100%;border: none;"
-							data-options="singleSelect:false,url:'flow!historyList.do',method:'get',autoRowHeight:false,pagination:true,pageSize:10,showPageList:false,striped:true">
+							data-options="singleSelect:false,url:'flow!historyList.do',method:'get',autoRowHeight:false,pagination:true,pageSize:10,showPageList:false,striped:true,loadMsg:''">
 						<thead>
 							<tr>
 								<th data-options="field:'businessTitle',width:'20%',formatter:formatOpert">任务名称</th>
