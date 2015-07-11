@@ -45,6 +45,7 @@ create table t_department
   department_desc  varchar(100),
   parent_id        varchar(16),
   level            int(2),
+  sort             int(4),
   status           int(1) not null default 1,
   create_user      varchar(20) not null,
   create_date      datetime not null,
@@ -56,6 +57,7 @@ create table t_department
 --  comment on column t_department.department_desc is '组织描述';
 --  comment on column t_department.parent_id is '父级组织ID';
 --  comment on column t_department.level is '组织级别';
+--  comment on column t_department.sort is '排序ID';
 --  comment on column t_department.status is '状态：1有效 0无效';
 --  comment on column t_department.email is '组织的邮件';
 --  comment on column t_department.create_user is '组织创建者';
