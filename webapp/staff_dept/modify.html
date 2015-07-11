@@ -140,6 +140,12 @@
 
 	$(function(){
 		$('#departmentId').combotree('setValue', '$!staff.departmentId');
+		
+		if('$!staff.loginName'=='stAdmin'){
+			$('input[name=roleIds]').each(function(){
+				$(this).attr('disabled','disabled');
+			});
+		}
 	});
 
 	function submitForm(){
