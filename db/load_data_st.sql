@@ -1,5 +1,5 @@
 -- 初始化组织机构
-insert into t_department(department_id,department_name,parent_id,level,status,sort,create_user,create_date,last_update_date) VALUES
+insert into t_department(department_id,department_name,parent_id,level,status,sort_num,create_user,create_date,last_update_date) VALUES
 ('root','松特高薪','',1,1,1,'system',SYSDATE(),SYSDATE()),
 ('st_zjb','总经办','root',2,1,1,'system',SYSDATE(),SYSDATE()),
 ('st_xzzx','行政中心','root',2,1,2,'system',SYSDATE(),SYSDATE()),

@@ -45,7 +45,7 @@ create table t_department
   department_desc  varchar(100),
   parent_id        varchar(16),
   level            int(2),
-  sort             int(4),
+  sort_num             int(4),
   status           int(1) not null default 1,
   create_user      varchar(20) not null,
   create_date      datetime not null,
@@ -57,7 +57,7 @@ create table t_department
 --  comment on column t_department.department_desc is '组织描述';
 --  comment on column t_department.parent_id is '父级组织ID';
 --  comment on column t_department.level is '组织级别';
---  comment on column t_department.sort is '排序ID';
+--  comment on column t_department.sort_num is '排序ID';
 --  comment on column t_department.status is '状态：1有效 0无效';
 --  comment on column t_department.email is '组织的邮件';
 --  comment on column t_department.create_user is '组织创建者';
@@ -149,7 +149,7 @@ create table t_staff
   pay_attendance       double,
   pay_hrcost           double,
   pwd_err_count        int(2) default 0,
-  title				   varchar(64)
+  position				   varchar(64)
 );
 --  comment on table t_staff is '成员表';
 --  comment on column t_staff.login_name is '登录名';
@@ -172,7 +172,7 @@ create table t_staff
 --  comment on column t_staff.expire_date is '成员帐号过期时间';
 --  comment on column t_staff.last_update_date is '成员最后修改时间';
 --  comment on column t_staff.pwd_err_count is '密码连续输入错误的次数';
---  comment on column t_staff.title is '职务,关联字典';
+--  comment on column t_staff.position is '职务,关联字典';
 
 alter table t_staff add primary key (login_name);
 alter table t_staff add foreign key (department_id) references t_department (department_id) on delete cascade on update cascade;

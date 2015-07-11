@@ -2,12 +2,12 @@
 insert into t_resource
 (resource_id,parent_id,resource_name,address_url,resource_desc,resource_type,auth_type,sort_num)
 VALUES
-('department_manager','system_setting','部门管理','department/list.html',null,1,'AUTH',9);
+('department_manager','system_setting','部门管理','department/list.html',null,1,'AUTH',0);
 
 insert into t_resource
 (resource_id,parent_id,resource_name,address_url,resource_desc,resource_type,auth_type,sort_num)
 VALUES
-('post_manager','system_setting','岗位管理','departmentPost/list.html',null,1,'AUTH',10);
+('post_manager','system_setting','岗位管理','departmentPost/list.html',null,1,'AUTH',2);
 
 -- 加载部门菜单
 insert into t_resource
