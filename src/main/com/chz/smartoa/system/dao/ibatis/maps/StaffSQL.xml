@@ -29,6 +29,7 @@
     <result property="lockDate" column="LOCK_DATE"/>
     <result property="passwordExpireDate" column="PASSWORD_EXPIRE_DATE"/>
     <result property="mobile" column="MOBILE"/>
+    <result property="position" column="POSITION"/>
     <result property="speciality" column="SPECIALITY"/>
     <result property="createDate" column="CREATE_DATE"/>
 </resultMap>
@@ -55,6 +56,7 @@
             LAST_UPDATE_DATE, 
             TELEPHONE,
             MOBILE, 
+            POSITION,
             SPECIALITY, 
             CREATE_DATE
         )
@@ -78,6 +80,7 @@
 		       		now(),
 		       		#telephone#,
 		       		#mobile#,
+		       		#position#,
 		       		#speciality#,
 		        	now()
 		    )
@@ -187,6 +190,9 @@
 	<isNotEmpty prepend="," property="mobile">
      	   		MOBILE = #mobile#
 				</isNotEmpty>
+	<isNotEmpty prepend="," property="position">
+     	   		POSITION = #position#
+				</isNotEmpty>
 	<isNotEmpty prepend="," property="speciality">
      	   		SPECIALITY = #speciality#
 				</isNotEmpty>
@@ -218,6 +224,7 @@
 					date_format(LOCK_DATE,'%Y-%m-%d') LOCK_DATE,
 					date_format(PASSWORD_EXPIRE_DATE,'%Y-%m-%d') PASSWORD_EXPIRE_DATE,
 		       		MOBILE,
+		       		POSITION,
 		       		SPECIALITY,
 					date_format(CREATE_DATE,'%Y-%m-%d') CREATE_DATE
 		    FROM t_staff WHERE LOGIN_NAME = #loginName#
@@ -228,6 +235,7 @@
     SELECT
 		   real_name as realName,
 		   login_name as loginName,
+		   position,
 		   email,
 		   mobile
 	FROM t_staff
@@ -264,6 +272,7 @@
 					date_format(LOCK_DATE,'%Y-%m-%d') LOCK_DATE,
 					date_format(PASSWORD_EXPIRE_DATE,'%Y-%m-%d') PASSWORD_EXPIRE_DATE,
 		       		MOBILE,
+		       		POSITION,
 		       		SPECIALITY,
 					date_format(CREATE_DATE,'%Y-%m-%d') CREATE_DATE
 		    FROM t_staff

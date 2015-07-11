@@ -16,11 +16,11 @@
 			<ul id="tt" class="easyui-tree" data-options="url:'../departmentManager!genDepartmentTree.do',method:'get',animate:true,dnd:true"></ul>
 		</div>
 		<div data-options="region:'center'" style="padding:2px">
-			<div id="title" align="center" class="datagrid-toolbar page_title">松大科技</div>
+			<div id="title" align="center" class="datagrid-toolbar page_title"></div>
 				<input id="departmentId" name="departmentId" value="root" type="hidden" >
-				<input id="departmentName" name="departmentName" value="松大科技" type="hidden" >
+				<input id="departmentName" name="departmentName" value="" type="hidden" >
 				<table id="dg" class="easyui-datagrid" style="width:100%;height:auto;"
-					   data-options="rownumbers:true,singleSelect:false,border:false,url:'../staff!list.do',method:'get',toolbar:'#tb',autoRowHeight:true,pagination:true,pageSize:10">
+					   data-options="rownumbers:true,singleSelect:false,border:false,method:'get',toolbar:'#tb',autoRowHeight:true,pagination:true,pageSize:10">
 					<thead>
 						<tr>
 							<th data-options="field:'id',checkbox:true"></th>
@@ -48,7 +48,6 @@
 </body>
 </html>
 <script type="text/javascript">
-	
 	$('#tt').tree({
 		onClick: function(node){
 			var id = node.id;
@@ -59,22 +58,41 @@
          $('#dg').datagrid('load',eval('(' + params + ')')); 
 		}
 	});
-
+	
+	var deptId = GetQueryParam("deptId");
+	$(function(){
+		var id = $('#departmentId').val();
+		if(deptId){
+			id = deptId;
+		}
+	 	jQuery.ajax({
+				   type: "POST",
+				   url: "../departmentManager!getDepartmentInfo.do?parentId="+id,
+				   dataType:"json",
+				   success: function(json){
+					   if(json){
+						   $('#departmentId').val(json.departmentId);
+						   $('#departmentName').val(json.departmentName);
+						   $('#title').html(json.departmentName);
+					   }
+				   }
+		});
+		queryData();
+	});
 
 	function queryData(){
-		var paramsArray = $("#queryParams").serializeArray();
-		var results ='{';
-		$.each(paramsArray, function(i, field){
-			val = $.trim(field.value);
-			if(val){
-		  	 	results += '"'+field.name + '":"' + val + '",';
-			}
+		var id = $('#departmentId').val();
+		if(deptId){
+			var id = deptId;
+		}
+        $('#dg').datagrid({
+        	url:'../staff!list.do',
+        			queryParams: {
+		        		departmentId: id
+					}
 		});
-		results += '}';
-		$('#dg').datagrid('load',eval('(' + results + ')')); 
 	}
 	$(function(){
-		 $('#queryButton').bind('click',queryData);
 		 $('#dg').datagrid('getPager').pagination({
 				onSelectPage:function(pageNum, pageSize){
 					$('#dg').datagrid({pageNumber:pageNum,pageSize:pageSize});
@@ -222,5 +240,14 @@
             		window.location.reload();
             });
 		}
+	}
+	
+	function GetQueryParam(name){
+		var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+		var r = window.location.search.substr(1).match(reg);
+		if(r != null){
+		  return unescape(r[2]);
+		}
+		return null;
 	}
 </script>

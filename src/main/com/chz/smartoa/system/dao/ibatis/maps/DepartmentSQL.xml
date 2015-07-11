@@ -10,7 +10,6 @@
 	<typeAlias alias="pt" type="com.chz.smartoa.system.pojo.Post"/>
 	<typeAlias alias="dps" type="com.chz.smartoa.system.pojo.DepartmentPostStaffs"/>
 	
-	
 	<!-- 新增部门 -->
 	<insert id="dpt_insertDpt" parameterClass="dpt">
 		INSERT INTO T_DEPARTMENT
@@ -20,6 +19,7 @@
 		 PARENT_ID,
 		 LEVEL,
 		 STATUS,
+		 SORT_NUM,
 		 CREATE_USER,
 		 CREATE_DATE,
 		 LAST_UPDATE_DATE)
@@ -30,6 +30,7 @@
 		 #parentId#,
 		 #level#,
 		 #status#,
+		 #sortNum#,
 		 #createUser#,
 		 SYSDATE(),
 		 SYSDATE())
@@ -43,6 +44,7 @@
 		    DEPARTMENT_DESC = #departmentDesc#,
 		    LEVEL = #level#,
 		    STATUS = #status#,
+		    SORT_NUM = #sortNum#,
 		    LAST_UPDATE_DATE = SYSDATE()
 		WHERE DEPARTMENT_ID = #departmentId#
 	</update>
@@ -57,6 +59,7 @@
 				   PARENT_ID AS parentId,
 				   LEVEL AS level,
 				   STATUS AS status,
+				   SORT_NUM  AS sortNum,
 				   CREATE_USER AS createUser,
 				   CREATE_DATE AS createDate,
 				   LAST_UPDATE_DATE AS lastUpdateDate
@@ -76,12 +79,18 @@
 				   PARENT_ID AS parentId,
 				   LEVEL AS level,
 				   STATUS AS status,
+				   SORT_NUM AS sortNum,
 				   CREATE_USER AS createUser,
 				   CREATE_DATE AS createDate,
 				   LAST_UPDATE_DATE AS lastUpdateDate
 			  FROM T_DEPARTMENT 
-			 WHERE PARENT_ID = #parentId# OR DEPARTMENT_ID = #parentId#
-		]]>
+			 WHERE PARENT_ID = #parentId#
+			 ]]> 
+			 <isEqual compareValue="root">
+     	   		OR DEPARTMENT_ID = 'root'
+		     </isEqual>
+			 ORDER BY SORT_NUM
+		
 	</select>
 	
 	
@@ -92,6 +101,7 @@
 			       DEPARTMENT_NAME text
 			  FROM T_DEPARTMENT 
 			 WHERE PARENT_ID = #parentId#
+			 ORDER BY sort_num
 		]]>
 	</select>
 	
@@ -101,6 +111,7 @@
 		    SELECT DEPARTMENT_ID AS departmentId,
 			       DEPARTMENT_NAME AS departmentName
 			  FROM T_DEPARTMENT 
+			  ORDER BY sort_num
 		]]>
 	</select>
 	

@@ -27,7 +27,7 @@ public class TreeData implements Serializable{
 	
 	private String id;
 	private String text;
-	//是否关闭：OPEN/CLOSED
+	//是否关闭：open/closed
 	private String state;
 	//是否选中：true/false
 	private boolean checked;

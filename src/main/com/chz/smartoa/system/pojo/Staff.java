@@ -1,6 +1,8 @@
 package com.chz.smartoa.system.pojo;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -126,6 +128,10 @@ public class Staff extends BaseDomain {
 	 * 所属组织
 	 */
 	private Department department;
+	/**
+	 * 职务
+	 */
+	private String position;
 	
 	private String id;
 	private String stateOpert;
@@ -365,6 +371,24 @@ public class Staff extends BaseDomain {
 	public void setStateOpert(String stateOpert) {
 		this.stateOpert = stateOpert;
 	}
+
+	public String getPosition() {
+		return position;
+	}
+
+	public void setPosition(String position) {
+		this.position = replaceBlank(position);
+	}
+	
+	private String replaceBlank(String str) {
+        String dest = "";
+        if (str!=null) {
+            Pattern p = Pattern.compile("\\s*|\t|\r|\n");
+            Matcher m = p.matcher(str);
+            dest = m.replaceAll("");
+        }
+        return dest;
+    }
 
 	@Override
 	public String toString() {

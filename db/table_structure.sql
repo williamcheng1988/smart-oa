@@ -149,7 +149,7 @@ create table t_staff
   pay_attendance       double,
   pay_hrcost           double,
   pwd_err_count        int(2) default 0,
-  position				   varchar(64)
+  position				   varchar(200)
 );
 --  comment on table t_staff is '成员表';
 --  comment on column t_staff.login_name is '登录名';

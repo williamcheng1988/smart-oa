@@ -157,6 +157,7 @@ public class DepartmentAction extends BaseAction{
 					uDepartment.setDepartmentName(dpment.getDepartmentName());
 					uDepartment.setLevel(dpment.getLevel());
 					uDepartment.setStatus(dpment.getStatus());
+					uDepartment.setSortNum(dpment.getSortNum());
 					departmentBiz.updateDepartment(uDepartment);
 					operateLogBiz.info(OperateLogType.DEPARTMENT_MANAGE, uDepartment.getDepartmentId(),uDepartment.getDepartmentName(), "部门修改成功");
 					operateResult = new OperateResult(1, "部门信息修改成功！");

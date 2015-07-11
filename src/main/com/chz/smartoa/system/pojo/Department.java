@@ -51,6 +51,11 @@ public class Department extends BaseDomain {
 	
 	private String id;
 	
+	/**
+	 * 排序编号
+	 */
+	private int sortNum;
+	
 	private List<Department> departmentList;
 
 	public String getDepartmentId() {
@@ -138,7 +143,14 @@ public class Department extends BaseDomain {
 		this.id = id;
 	}
 
-	
+	public int getSortNum() {
+		return sortNum;
+	}
+
+	public void setSortNum(int sortNum) {
+		this.sortNum = sortNum;
+	}
+
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
 		sb.append("{");

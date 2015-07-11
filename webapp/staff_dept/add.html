@@ -90,6 +90,7 @@
 								#end
 								</td>
 							</tr>
+							<!-- 
 							<tr>
 								<th align="center">薪酬数据</th>
 								<td colspan="3">
@@ -100,6 +101,15 @@
 											基本工资：<input name="staff.payBase" class="easyui-numberbox" type="text">
 											考勤补贴：<input name="staff.payAttendance" class="easyui-numberbox" type="text"> 
 											人力成本：<input name="staff.PayHrcost" class="easyui-numberbox" id="PayHrcost" type="text"></td>
+							</tr>
+							 -->
+							<tr>
+								<th align="center">职务</th>
+								<td colspan="3">
+									<select name="staff.position" class="easyui-combobox" data-options="multiple:true" style="width: 30%;">
+										#optionTag("DIC_ZHIWU")
+									</select>
+								</td>
 							</tr>
 							<tr>
 								<th align="center">状 态</th>
@@ -116,7 +126,7 @@
 	    	<div style="text-align:center;padding:8px">
 		    	<a href="javascript:submitForm()" class="easyui-linkbutton">&nbsp;保&nbsp;存&nbsp;</a>&nbsp;&nbsp;
 		    	<a href="javascript:clearForm()" class="easyui-linkbutton">&nbsp;重&nbsp;置&nbsp;</a>&nbsp;&nbsp;
-		    	<a href="javascript:history.back()" class="easyui-linkbutton">&nbsp;返&nbsp;回&nbsp;</a>&nbsp;&nbsp;
+		    	<a href="javascript:goBack()" class="easyui-linkbutton">&nbsp;返&nbsp;回&nbsp;</a>&nbsp;&nbsp;
 	   		</div>
 	    </div>
 	</div>
@@ -145,7 +155,7 @@
 					$('#ui_mask_msg').css('display','none');
 					alert(json.msg);
 				}else{
-					location.href="staff_dept/list.html";
+					goBack();
 				}
 			},
 			error:function(){
@@ -159,6 +169,16 @@
 	$(function(){
 		$('#ui_mask').css('height',document.body.scrollHeight);
 	});
+	
+	function goBack(){
+		var url = document.referrer;
+		var idx = url.indexOf("?");
+		if (idx != -1) {
+			  url = url.substring (0,idx);
+		}
+		url += "?deptId="+ $("#departmentId").combobox("getValue");
+		window.location.href = url;
+	}
 </script>
 </body>
 </html>

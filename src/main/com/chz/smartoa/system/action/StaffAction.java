@@ -27,7 +27,6 @@ import com.chz.smartoa.system.exception.PasswordMustChangeException;
 import com.chz.smartoa.system.exception.StaffLockException;
 import com.chz.smartoa.system.exception.StaffLoginNameErrorException;
 import com.chz.smartoa.system.exception.StaffPasswordErrorException;
-import com.chz.smartoa.system.pojo.Permission;
 import com.chz.smartoa.system.pojo.Resource;
 import com.chz.smartoa.system.pojo.Role;
 import com.chz.smartoa.system.pojo.Staff;
