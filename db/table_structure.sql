@@ -148,7 +148,8 @@ create table t_staff
   pay_base             double,
   pay_attendance       double,
   pay_hrcost           double,
-  pwd_err_count        int(2) default 0
+  pwd_err_count        int(2) default 0,
+  title				   varchar(64)
 );
 --  comment on table t_staff is '成员表';
 --  comment on column t_staff.login_name is '登录名';
@@ -171,6 +172,7 @@ create table t_staff
 --  comment on column t_staff.expire_date is '成员帐号过期时间';
 --  comment on column t_staff.last_update_date is '成员最后修改时间';
 --  comment on column t_staff.pwd_err_count is '密码连续输入错误的次数';
+--  comment on column t_staff.title is '职务,关联字典';
 
 alter table t_staff add primary key (login_name);
 alter table t_staff add foreign key (department_id) references t_department (department_id) on delete cascade on update cascade;
