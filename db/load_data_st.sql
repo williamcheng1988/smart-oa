@@ -155,8 +155,19 @@ INSERT into t_staff_role(login_name,role_id)VALUES ('stAdmin',(SELECT role_id fr
 -- 初始化管理员权限
 insert into t_role_resource
 VALUES
+((SELECT role_id from t_role where role_name = '系统管理员'),'system_setting'),
+((SELECT role_id from t_role where role_name = '系统管理员'),'staff_manage'),
 ((SELECT role_id from t_role where role_name = '系统管理员'),'role_manage'),
-((SELECT role_id from t_role where role_name = '系统管理员'),'staff_manage');
+((SELECT role_id from t_role where role_name = '系统管理员'),'process_config'),
+((SELECT role_id from t_role where role_name = '系统管理员'),'post_manager'),
+((SELECT role_id from t_role where role_name = '系统管理员'),'formTemplateType_manage'),
+((SELECT role_id from t_role where role_name = '系统管理员'),'dictionary_manage'),
+((SELECT role_id from t_role where role_name = '系统管理员'),'department_manager'),
+((SELECT role_id from t_role where role_name = '系统管理员'),'delegation_manage'),
+((SELECT role_id from t_role where role_name = '系统管理员'),'calendar_manager'),
+((SELECT role_id from t_role where role_name = '系统管理员'),'system_log'),
+((SELECT role_id from t_role where role_name = '系统管理员'),'log_login'),
+((SELECT role_id from t_role where role_name = '系统管理员'),'log_opt');
 
 
 -- 客户数据初始化
