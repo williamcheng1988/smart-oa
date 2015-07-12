@@ -1,5 +1,6 @@
 package com.chz.smartoa.system.service.impl;
 
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -88,7 +89,7 @@ public class UserHandlerImpl implements UserHandler {
 				String postName = String.valueOf(baseDao.queryForObject("TaskUser_postName", postId));
 				throw new NotFoundUserByPostException(TaskError.NotFoundUserByPost.getVal(),"尚未配置 "+deptName+" 的 "+postName+"!");
 			}
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			throw new NotFoundUserByPostException(TaskError.NotFoundUserByPost.getVal(),"查询岗位SQL异常："+e.getMessage());
 		}
 		//返回岗位对应用户集合
