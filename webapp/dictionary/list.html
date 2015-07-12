@@ -20,7 +20,7 @@
 				<div id="title" align="center" class="datagrid-toolbar page_title"></div>
 				<input id="dictionaryId" name="dictionaryId" type="hidden" >
 				<table id="dg" class="easyui-datagrid" style="width:100%;height:auto;"
-						data-options="rownumbers:true,url:'../dictionary!list.do',singleSelect:false,border:false,method:'get',toolbar:'#tb',autoRowHeight:false">
+						data-options="rownumbers:true,singleSelect:false,border:false,method:'get',toolbar:'#tb',autoRowHeight:false">
 					<thead>
 						<tr>
 						    <th data-options="field:'id',checkbox:true"></th>
@@ -46,6 +46,25 @@
 </html>
   
  <script language="javascript">
+	$(function(){
+		
+		queryData();
+	});
+	
+	function queryData(){
+		var dictionaryId = GetQueryParam("dictionaryId");
+		var id = $('#dictionaryId').val();
+		if(dictionaryId){
+			$('#dictionaryId').val(dictionaryId);
+			id = dictionaryId;
+		}
+   	 	 $('#dg').datagrid({
+     		url:'../dictionary!list.do',
+     			queryParams: {	
+     				dictionaryId:id
+				}
+		});
+	}
  
 	 $('#tt').tree({
 			onClick: function(node){

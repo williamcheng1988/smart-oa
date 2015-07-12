@@ -103,9 +103,7 @@ $(function (){
 					$('#ui_mask_msg').css('display','none');
 					alert(json.msg);
 				}else{
-					$('#ui_mask').css('display','none');
-					$('#ui_mask_msg').css('display','none');
-					location.href="departmentPost/list.html";
+					back();
 				}
 			},
 			error:function(){
@@ -115,7 +113,13 @@ $(function (){
 	}
 	
 	function back(){
-		location.href="departmentPost/list.html";
+		var url = document.referrer;
+		var idx = url.indexOf("?");
+		if (idx != -1) {
+			  url = url.substring (0,idx);
+		}
+		url += "?deptId=$!departmentId";
+		window.location.href = url;
 	}
 	
 </script>

@@ -69,7 +69,7 @@
 			      <tr>
 			        <th colspan="2" align="center">
 			        	<a href="javascript:submitForm()" class="easyui-linkbutton">&nbsp;保&nbsp;存&nbsp;</a>&nbsp;&nbsp;
-			        	<a href="javascript:history.back()" class="easyui-linkbutton">&nbsp;返&nbsp;回&nbsp;</a>&nbsp;&nbsp; 
+			        	<a href="javascript:back()" class="easyui-linkbutton">&nbsp;返&nbsp;回&nbsp;</a>&nbsp;&nbsp; 
 			        	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			        </td>
 			      </tr>
@@ -117,7 +117,7 @@
 				$('#ui_mask_msg').css('display','none');
 				var json = eval('(' + result + ')');
 				if(json.msg == 'true'){
-				  location.href="dictionary/list.html";
+					back();
 			    }else{
 				   alert("字典项保存失败，请稍后重试！");
 			    }
@@ -128,6 +128,14 @@
 		});
 	}
 	
+	function back(){
+		var url = document.referrer;
+		var idx = url.indexOf("?");
+		if (idx != -1) {
+			  url = url.substring (0,idx);
+		}
+		window.location.href =url+"?dictionaryId=$!dictionaryId";
+	}
 </script>
 </body>
 </html>

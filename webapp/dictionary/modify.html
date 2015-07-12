@@ -100,7 +100,7 @@
 	    </form>
     	<div style="text-align:center;padding:8px">
 	    	<a href="javascript:submitForm()" class="easyui-linkbutton">&nbsp;保&nbsp;存&nbsp;</a>&nbsp;&nbsp;
-	    	<a href="javascript:history.back()" class="easyui-linkbutton">&nbsp;返&nbsp;回&nbsp;</a>&nbsp;&nbsp;
+	    	<a href="javascript:back()" class="easyui-linkbutton">&nbsp;返&nbsp;回&nbsp;</a>&nbsp;&nbsp;
    		</div>
 	</div>
 	<div id="ui_mask" style="display:none" class="datagrid-mask"></div>
@@ -131,15 +131,27 @@
 					$('#ui_mask_msg').css('display','none');
 					alert(json.msg);
 				}else{
-					$('#ui_mask').css('display','none');
-					$('#ui_mask_msg').css('display','none');
-					location.href="dictionary/list.html";
+					back();
 				}
 			},
 			error:function(){
 			    alert("系统异常，请稍后再试...");
 			}
 		});
+	}
+	
+	function back(){
+		var url = document.referrer;
+		var idx = url.indexOf("?");
+		if (idx != -1) {
+			  url = url.substring (0,idx);
+		}
+		var id = '$!config.parentId';
+		if(!id || id == '-1'){
+			id = '$!config.id';
+		}
+		url += "?dictionaryId="+id;
+		window.location.href = url;
 	}
 </script>
 </body>

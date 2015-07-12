@@ -21,7 +21,7 @@
 				<input id="parentId" name="parentId" type="hidden" >
 				<input id="parentName" name="parentName"  type="hidden" >
 				<table id="dg" class="easyui-datagrid" style="width:100%;height:auto;"
-						data-options="rownumbers:true,url:'../departmentManager!queryDepartment.do',singleSelect:false,border:false,method:'get',toolbar:'#tb',autoRowHeight:false">
+						data-options="rownumbers:true,singleSelect:false,border:false,method:'get',toolbar:'#tb',autoRowHeight:false">
 					<thead>
 						<tr>
 						    <th data-options="field:'id',width:'2%',checkbox:true"></th>
@@ -47,23 +47,41 @@
 </html>
   
  <script language="javascript">
- 
- 	$(function(){
- 		jQuery.ajax({
-			   type: "POST",
-			   url: "../departmentManager!getDepartmentInfo.do",
-			   dataType:"json",
-			   success: function(json){
-				   if(json){
-					   $('#parentId').val(json.departmentId);
-					   $('#parentName').val(json.departmentName);
-					   $('#title').html(json.departmentName);
-				   }
-			   }
+ 	var deptId = GetQueryParam("deptId");
+	$(function(){
+				var id = $('#departmentId').val();
+				if(deptId){
+					id = deptId;
+				}
+			 	jQuery.ajax({
+						   type: "POST",
+						   url: "../departmentManager!getDepartmentInfo.do?parentId="+id,
+						   dataType:"json",
+						   success: function(json){
+							   if(json){
+								   $('#parentId').val(json.departmentId);
+								   $('#parentName').val(json.departmentName);
+								   $('#title').html(json.departmentName);
+							   }
+						   }
 			});
+			queryData();
 	});
- 
-	 $('#tt').tree({
+	
+	function queryData(){
+		var id = $('#parentId').val();
+		if(deptId){
+			var id = deptId;
+		}
+        $('#dg').datagrid({
+        	url:'../departmentManager!queryDepartment.do',
+        			queryParams: {
+        				parentId: id
+					}
+		});
+	}
+ 	
+	$('#tt').tree({
 		onClick: function(node){
 			var id = node.id;
 			$('#title').text(node.text);
@@ -121,7 +139,8 @@
 			alert("请选择要修改的部门记录");
 			return;
 		}
-		window.location.href="../departmentManager!toEditPage.do?departmentId="+id;
+		var parentId = $('#parentId').val();
+		window.location.href="../departmentManager!toEditPage.do?departmentId="+id+"&parentId="+parentId;
 	}
 	
  	

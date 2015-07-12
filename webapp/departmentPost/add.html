@@ -120,7 +120,7 @@
 				$('#ui_mask_msg').css('display','none');
 				var json = eval('(' + result + ')');
 				if(json.msg == 'true'){
-				  location.href="departmentPost/list.html";
+				   back();
 			    }else if(json.msg == 'exist'){
 			    	alert("该部门下的岗位已存在用户账号记录,如需添加,请进行修改操作");
 			    }else{
@@ -134,7 +134,13 @@
 	}
 	
 	function back(){
-		location.href="departmentPost/list.html";
+		var url = document.referrer;
+		var idx = url.indexOf("?");
+		if (idx != -1) {
+			  url = url.substring (0,idx);
+		}
+		url += "?deptId=$!departmentId";
+		window.location.href = url;
 	}
 	
 	

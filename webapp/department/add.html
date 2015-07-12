@@ -113,7 +113,7 @@
 				$('#ui_mask_msg').css('display','none');
 				var json = eval('(' + result + ')');
 				if(json.msg == 'true'){
-				  location.href="department/list.html";
+				 	back();
 			    }else if(json.msg == 'exist'){
 			    	alert("部门编号已存在，请修改后再保存！");
 			    }else{
@@ -127,7 +127,13 @@
 	}
 	
 	function back(){
-		location.href="department/list.html";
+		var url = document.referrer;
+		var idx = url.indexOf("?");
+		if (idx != -1) {
+			  url = url.substring (0,idx);
+		}
+		url += "?deptId=$!parentId";
+		window.location.href = url;
 	}
 	
 </script>

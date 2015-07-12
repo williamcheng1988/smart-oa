@@ -118,9 +118,7 @@
 					$('#ui_mask_msg').css('display','none');
 					alert(json.msg);
 				}else{
-					$('#ui_mask').css('display','none');
-					$('#ui_mask_msg').css('display','none');
-					location.href="department/list.html";
+					back();
 				}
 			},
 			error:function(){
@@ -130,7 +128,13 @@
 	}
 	
 	function back(){
-		location.href="department/list.html";
+		var url = document.referrer;
+		var idx = url.indexOf("?");
+		if (idx != -1) {
+			  url = url.substring (0,idx);
+		}
+		url += "?deptId=$!parentId";
+		window.location.href = url;
 	}
 </script>
 </body>
