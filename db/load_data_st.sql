@@ -35,7 +35,7 @@ insert into t_department(department_id,department_name,parent_id,level,status,so
 insert into t_staff
 (login_name,real_name,password,department_id,position,mobile,email,status,create_user,create_date)
 VALUES  
-('stAdmin','系统管理员','21218cca77804d2ba1922c33e0151105',(select department_id from t_department where department_id='root'),null,'13724335201','315307864@qq.com',1,'admin',SYSDATE()),
+('suadmin','系统管理员','32309148f9eec5dd2e609f2a827af759',(select department_id from t_department where department_id='root'),null,'13724335201','315307864@qq.com',1,'admin',SYSDATE()),
 ('zhangyanli','张彦礼','21218cca77804d2ba1922c33e0151105',		(select department_id from t_department where department_name='总经办' and level=2),(select DICTIONARY_KEY from t_dictionary_config where DICTIONARY_KEY like 'DIC_ZHIWU%' and DICTIONARY_NAME='董事长'),'13602585817','ocean702@126.com',1,'init',SYSDATE()),
 ('pengguohua','彭国华','21218cca77804d2ba1922c33e0151105',		(select department_id from t_department where department_name='总经办' and level=2),(select DICTIONARY_KEY from t_dictionary_config where DICTIONARY_KEY like 'DIC_ZHIWU%' and DICTIONARY_NAME='副董事长'),'13603062891','pgh_sz@163.com',1,'init',SYSDATE()),
 ('zhangyansong','张彦松','21218cca77804d2ba1922c33e0151105',	(select department_id from t_department where department_name='总经办' and level=2),(select DICTIONARY_KEY from t_dictionary_config where DICTIONARY_KEY like 'DIC_ZHIWU%' and DICTIONARY_NAME='总经理'),'13838050003','ocean523@126.com',1,'init',SYSDATE()),
