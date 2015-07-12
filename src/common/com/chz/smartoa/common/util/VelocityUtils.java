@@ -34,7 +34,7 @@ public class VelocityUtils {
     public static String parseVm(TemplateType template,Map<String, Object> params) throws Exception{
     	String path = template.getPath();
 		try {
-			Template t = velocityEngine.getTemplate(path);
+			Template t = velocityEngine.getTemplate(path, "UTF-8");
 			VelocityContext ctx = new VelocityContext();
 	    	if(params != null && params.size() > 0){
 	    		for (String key :params.keySet()) {
