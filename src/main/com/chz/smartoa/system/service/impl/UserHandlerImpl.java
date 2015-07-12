@@ -61,6 +61,7 @@ public class UserHandlerImpl implements UserHandler {
 		String targetDeptId = deptId;
 		if(StringUtils.isEmpty(targetDeptId)){//指定部门为空则取相对部门:指定部门优先于相对部门
 			targetDeptId = onwerDeptId;
+			deptId = targetDeptId;
 		}
 		
 		if (StringUtils.isEmpty(targetDeptId)) {
@@ -73,7 +74,10 @@ public class UserHandlerImpl implements UserHandler {
 				Map<String, String> params = new HashMap<String, String>();
 				params.put("deptId", targetDeptId);
 				params.put("postId", postId);
-				staffIds = String.valueOf(baseDao.queryForObject("TaskUser_deptPostStaffIds", params));
+				Object obj = baseDao.queryForObject("TaskUser_deptPostStaffIds", params);
+				if(obj != null){
+					staffIds = String.valueOf(obj);
+				}
 				if(StringUtils.isEmpty(staffIds)){//查询上级部门
 					targetDeptId = String.valueOf(baseDao.queryForObject("TaskUser_parentDeptId",targetDeptId));
 				}
@@ -82,7 +86,7 @@ public class UserHandlerImpl implements UserHandler {
 			if(StringUtils.isEmpty(staffIds)){//如果没有找到岗位配置，抛出异常
 				String deptName = String.valueOf(baseDao.queryForObject("TaskUser_deptName", deptId));
 				String postName = String.valueOf(baseDao.queryForObject("TaskUser_postName", postId));
-				throw new NotFoundUserByPostException(TaskError.NotFoundUserByPost.getVal(),"尚未配置"+deptName+"的"+postName+"!");
+				throw new NotFoundUserByPostException(TaskError.NotFoundUserByPost.getVal(),"尚未配置 "+deptName+" 的 "+postName+"!");
 			}
 		} catch (Exception e) {
 			throw new NotFoundUserByPostException(TaskError.NotFoundUserByPost.getVal(),"查询岗位SQL异常："+e.getMessage());

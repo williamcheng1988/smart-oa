@@ -25,6 +25,7 @@ import com.chz.smartoa.task.enumcode.RecodeType;
 import com.chz.smartoa.task.enumcode.TaskError;
 import com.chz.smartoa.task.enumcode.TaskResult;
 import com.chz.smartoa.task.exception.ApproveResultInvalidException;
+import com.chz.smartoa.task.exception.NotFoundReProcedfException;
 import com.chz.smartoa.task.exception.NotFoundUserByPostException;
 import com.chz.smartoa.task.exception.NotFoundUserByRoleException;
 import com.chz.smartoa.task.exception.TaskInvalidException;
@@ -170,9 +171,12 @@ public class FlowAction extends BaseAction{
 		}catch (NotFoundUserByPostException e) {
 			logger.error(e);
 			operateResult = new OperateResult(-4, e.getMessage());
+		}catch (NotFoundReProcedfException e) {
+			logger.error(e);
+			operateResult = new OperateResult(-5, e.getMessage());
 		}catch (Exception e) {
 			logger.error(e);
-			operateResult = new OperateResult(-5, "未知异常:"+e.getMessage());
+			operateResult = new OperateResult(-6, "未知异常:"+e.getMessage());
 		}
 		return OPER_RESULT;
 	}

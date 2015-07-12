@@ -108,7 +108,7 @@ public class FlowServiceImpl implements FlowService {
 			//查询最新版本流程 By 流程名称
 			ReProcdef procdef = repositoryService.findReProcdefByName(procdefName);
 			if(procdef == null){
-				throw new NotFoundReProcedfException(TaskError.NotFoundReProcdef.getVal(), "未找到流程："+procdef);
+				throw new NotFoundReProcedfException(TaskError.NotFoundReProcdef.getVal(), "未找到流程："+procdefName);
 			}
 			String procdefId = procdef.getProcdef_id_();
 			//插入流程实例
