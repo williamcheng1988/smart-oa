@@ -170,6 +170,13 @@ VALUES
 ((SELECT role_id from t_role where role_name = '系统管理员'),'log_opt');
 
 
+-- 初始化岗位
+insert into t_post VALUES
+('DEPT_HEAD','部门负责人','suadmin',SYSDATE(),SYSDATE()),
+('DEPT_ASSISTANT','部门助理','suadmin',SYSDATE(),SYSDATE()),
+('STAFF_EXPENSE_ACCOUNTANT','财务报销专员','suadmin',SYSDATE(),SYSDATE());
+
+
 -- 客户数据初始化
 -- 模板类型
 INSERT INTO `t_form_template_type` (`ID`, `SEQUENCE`, `TYPE`, `DESCRIPTION`, `STATUS`, `CREATE_USER`, `CREATE_DATE`, `UPDATE_USER`, `UPDATE_DATE`) VALUES ('0cb4a172-4954-45d7-a0b9-388985331e85', 2, '项目管理', '本类任务流程用于信诺投资公司的客户（含合伙基金、内部部门）运作有关的各类事宜', 0, 'admin', '2015-3-21 15:45:32', 'admin', '2015-3-21 15:45:32');

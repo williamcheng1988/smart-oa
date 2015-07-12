@@ -60,7 +60,7 @@ insert into t_resource
 (resource_id,parent_id,resource_name,address_url,resource_desc,resource_type,auth_type,sort_num)
 values
 	('staff_manage','system_setting','用户管理','staff/list.html',null,1,'AUTH',1),
-	('role_manage','system_setting','角色管理','role/list.html',null,1,'AUTH',2),
+	('role_manage','system_setting','角色&权限管理','role/list.html',null,1,'AUTH',2),
 	('delegation_manage','system_setting','授权管理','delegation!manageList.do',null,1,'AUTH',3),
 	('process_config','system_setting','流程配置','process!listPage.do',null,1,'AUTH',4);
 	
