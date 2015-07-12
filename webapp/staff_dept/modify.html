@@ -141,7 +141,7 @@
 	$(function(){
 		$('#departmentId').combotree('setValue', '$!staff.departmentId');
 		
-		if('$!staff.loginName'=='stAdmin'){
+		if('$!staff.loginName'=='suadmin'){
 			$('input[name=roleIds]').each(function(){
 				$(this).attr('disabled','disabled');
 			});
