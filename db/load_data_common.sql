@@ -497,7 +497,7 @@ VALUES('岗位','NORMAL_POSTS',-1,1,2,'select post_id dictionary_key,post_name d
 -- 资源模块
 INSERT INTO t_resource(resource_id,parent_id,resource_name,address_url,resource_desc,resource_type,auth_type,sort_num) VALUES ('formTemplateType_manage', 'system_setting', '模板管理', 'dynamicForm/formTemplateType/list-form-template-type.html', NULL, '1', 'AUTH', 3);
 INSERT INTO t_resource_option VALUES ('formTemplateType_manage', '模板列表管理', 'formTemplate!list.do');
-INSERT INTO t_resource(resource_id,parent_id,resource_name,address_url,resource_desc,resource_type,auth_type,icon_name,sort_num) VALUES ('reportStatistics_manage', 'root', '报表统计', '', NULL, '1', 'LOGIN_AUTH','total.png',299);
+INSERT INTO t_resource(resource_id,parent_id,resource_name,address_url,resource_desc,resource_type,auth_type,icon_name,sort_num) VALUES ('reportStatistics_manage', 'root', '报表统计', '', NULL, '1', 'AUTH','total.png',299);
 INSERT INTO t_resource(resource_id,parent_id,resource_name,address_url,resource_desc,resource_type,auth_type,sort_num) VALUES ('formStatistics_manage', 'reportStatistics_manage', '填报统计', 'dynamicForm/statistics/formStatistics.html', NULL, '1', 'AUTH', 5);
 
 -- 客户首页
