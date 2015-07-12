@@ -177,6 +177,13 @@ insert into t_post VALUES
 ('STAFF_EXPENSE_ACCOUNTANT','财务报销专员','suadmin',SYSDATE(),SYSDATE());
 
 
+-- 流程初始数据
+INSERT INTO t_re_procdef VALUES ('79a9a563-746c-4479-9d1c-7c1ef3f21511', '费用报销流程', 1, 1, 1, 'suadmin,dingling', 1, 1, '2015-7-12 11:34:25');
+INSERT INTO t_re_conf VALUES (1, 1, '79a9a563-746c-4479-9d1c-7c1ef3f21511', '部门助理审批', 2, 'DEPT_ASSISTANT', 3, '', 1, 1, 0, 1, 1, 1, NULL);
+INSERT INTO t_re_conf VALUES (2, 2, '79a9a563-746c-4479-9d1c-7c1ef3f21511', '部门负责人审批', 1, 'DEPT_HEAD', 3, 'root', 0, 0, 0, 1, 1, 0, NULL);
+INSERT INTO t_re_conf VALUES (3, 3, '79a9a563-746c-4479-9d1c-7c1ef3f21511', '财务部报销专员', 2, 'STAFF_EXPENSE_ACCOUNTANT', 3, 'st_cwzx_001', 1, 1, 0, 1, 1, 0, NULL);
+
+
 -- 客户数据初始化
 -- 模板类型
 INSERT INTO `t_form_template_type` (`ID`, `SEQUENCE`, `TYPE`, `DESCRIPTION`, `STATUS`, `CREATE_USER`, `CREATE_DATE`, `UPDATE_USER`, `UPDATE_DATE`) VALUES ('0cb4a172-4954-45d7-a0b9-388985331e85', 2, '项目管理', '本类任务流程用于信诺投资公司的客户（含合伙基金、内部部门）运作有关的各类事宜', 0, 'admin', '2015-3-21 15:45:32', 'admin', '2015-3-21 15:45:32');
