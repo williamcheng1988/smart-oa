@@ -180,7 +180,7 @@ insert into t_post VALUES
 -- 流程初始数据
 INSERT INTO t_re_procdef VALUES ('79a9a563-746c-4479-9d1c-7c1ef3f21511', '费用报销流程', 1, 1, 1, 'suadmin,dingling', 1, 1, '2015-7-12 11:34:25');
 INSERT INTO t_re_conf VALUES (1, 1, '79a9a563-746c-4479-9d1c-7c1ef3f21511', '部门助理审批', 2, 'DEPT_ASSISTANT', 3, '', 1, 1, 0, 1, 1, 1, NULL);
-INSERT INTO t_re_conf VALUES (2, 2, '79a9a563-746c-4479-9d1c-7c1ef3f21511', '部门负责人审批', 1, 'DEPT_HEAD', 3, 'root', 0, 0, 0, 1, 1, 0, NULL);
+INSERT INTO t_re_conf VALUES (2, 2, '79a9a563-746c-4479-9d1c-7c1ef3f21511', '部门负责人审批', 1, 'DEPT_HEAD', 3, '', 0, 0, 0, 1, 1, 0, NULL);
 INSERT INTO t_re_conf VALUES (3, 3, '79a9a563-746c-4479-9d1c-7c1ef3f21511', '财务部报销专员', 2, 'STAFF_EXPENSE_ACCOUNTANT', 3, 'st_cwzx_001', 1, 1, 0, 1, 1, 0, NULL);
 
 
