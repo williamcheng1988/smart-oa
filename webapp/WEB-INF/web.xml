@@ -114,8 +114,6 @@
     <filter-name>authorize</filter-name>
     <url-pattern>*.jsp</url-pattern>
   </filter-mapping>
-  
-  
   <filter>
     <filter-name>struts2</filter-name>
     <filter-class>org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter</filter-class>
@@ -130,7 +128,6 @@
     <filter-name>struts2</filter-name>
     <url-pattern>*.do</url-pattern>
   </filter-mapping>
-  
   <error-page>
     <error-code>404</error-code>
     <location>/404.html</location>
