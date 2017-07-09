@@ -14,3 +14,4 @@ pids/*
 target/*
 *.classpath
 /bin/
+*.iml
