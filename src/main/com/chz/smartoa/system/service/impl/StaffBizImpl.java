@@ -36,6 +36,8 @@ public class StaffBizImpl implements StaffBiz {
 	RoleDao roleDao;
 	OperateLogBiz operateLogBiz;
 
+	
+	
 	/**
 	 * 登录.
 	 */
